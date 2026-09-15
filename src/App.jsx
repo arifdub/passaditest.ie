@@ -224,6 +224,77 @@ function TabBar({ tab, onSelect, hidden }) {
   );
 }
 
+
+/* ===========================================================================
+   ERROR BOUNDARY
+
+   Without this, any exception thrown during render produces a blank white
+   page and nothing else — no message on screen, and on a phone there is no
+   console to check. That is a miserable thing to debug.
+
+   With it, the error text and the top of the stack are shown on screen, so a
+   problem can be diagnosed from the phone it happened on.
+   =========================================================================== */
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, info: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  componentDidCatch(error, info) {
+    this.setState({ info });
+    console.error("App crashed:", error, info);
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children;
+
+    const { error, info } = this.state;
+    return (
+      <div className="min-h-screen bg-slate-900 text-white p-5 overflow-auto">
+        <div className="max-w-2xl mx-auto" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+          <h1 className="text-xl font-black tracking-tight mt-4">Something went wrong</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            The app hit an error while loading. The details below are what to
+            send on if you need help fixing it.
+          </p>
+
+          <pre className="mt-5 text-xs bg-slate-800 rounded-xl p-4 overflow-x-auto whitespace-pre-wrap break-words text-red-300">
+{String(error && (error.stack || error.message || error))}
+          </pre>
+
+          {info?.componentStack && (
+            <pre className="mt-3 text-xs bg-slate-800 rounded-xl p-4 overflow-x-auto whitespace-pre-wrap break-words text-slate-400">
+{info.componentStack.trim().split("\n").slice(0, 8).join("\n")}
+            </pre>
+          )}
+
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-5 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl"
+          >
+            Reload
+          </button>
+
+          <button
+            onClick={() => {
+              try { localStorage.clear(); } catch { /* ignore */ }
+              window.location.reload();
+            }}
+            className="mt-2.5 w-full border border-slate-600 text-slate-300 font-bold py-3 rounded-xl"
+          >
+            Clear saved data and reload
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
 /* ===========================================================================
    GATE
    =========================================================================== */
@@ -253,8 +324,10 @@ function Gate() {
    =========================================================================== */
 export default function App() {
   return (
-    <AuthProvider>
-      <Gate />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Gate />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

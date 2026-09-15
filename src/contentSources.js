@@ -19,6 +19,9 @@ import { RULES_CARDS, RULES_CATEGORIES, RULES_CAT } from "./rulesFlashcardsData"
 import { ROAD_SIGNS, ROAD_SIGN_CATEGORIES, ROAD_SIGN_CAT } from "./roadSignsData";
 import { ADI_FLASHCARDS, ADI_FLASHCARD_CATEGORIES, ADI_FLASHCARD_CAT } from "./adiFlashcardsData";
 import ADI_THEORY_PRACTICE_CATEGORIES from "./adiTheoryPracticeData";
+import RULES_QUESTIONS from "./rulesQuestions";
+import ADI_STAGE_ONE_CATEGORIES from "./adiStageOneData";
+import DRIVING_THEORY_CATEGORIES from "./drivingTheoryData";
 
 /* ---------------------------------------------------------------------------
    ADI STAGE 1 MOCK TEST — 151 questions
@@ -39,7 +42,15 @@ const ADI_MOCK_CATEGORIES = null;
    Flashcard decks
    --------------------------------------------------------------------------- */
 const DECKS = {
-  "driving.theory.flashcards": {
+  "adi.theory.flashcards": {
+    cards: ADI_FLASHCARDS,
+    categories: ADI_FLASHCARD_CATEGORIES,
+    cat: ADI_FLASHCARD_CAT,
+    imageCards: false,
+    title: "ADI Flashcards",
+    subtitle: "62 instructor-specific cards",
+  },
+  "adi.theory.rules": {
     cards: RULES_CARDS,
     categories: RULES_CATEGORIES,
     cat: RULES_CAT,
@@ -47,7 +58,18 @@ const DECKS = {
     title: "Rules of the Road",
     subtitle: "153 cards across 20 topics",
   },
-  "driving.full.flashcards": {
+  "adi.theory.signs": {
+    cards: ROAD_SIGNS,
+    categories: ROAD_SIGN_CATEGORIES,
+    cat: ROAD_SIGN_CAT,
+    imageCards: true,
+    title: "Road Signs",
+    subtitle: "199 official signs across 5 categories",
+  },
+
+  /* Learner-driver path. Same decks as above under different module ids, so
+     a learner's progress is tracked separately from an instructor's. */
+  "driving.theory.flashcards": {
     cards: RULES_CARDS,
     categories: RULES_CATEGORIES,
     cat: RULES_CAT,
@@ -63,32 +85,113 @@ const DECKS = {
     title: "Road Signs",
     subtitle: "199 official signs across 5 categories",
   },
-  "adi.theory.flashcards": {
-    cards: ADI_FLASHCARDS,
-    categories: ADI_FLASHCARD_CATEGORIES,
-    cat: ADI_FLASHCARD_CAT,
-    imageCards: false,
-    title: "ADI Flashcards",
-    subtitle: "62 quick-recall cards",
-  },
 };
+
+/* ---------------------------------------------------------------------------
+   ROAD SIGN QUESTIONS
+
+   Built at load time from the 199 signs already in roadSignsData.js rather
+   than stored as a separate file, so adding a sign automatically adds a
+   question. Wrong options are other sign names from the same category, which
+   is what makes them hard — a warning sign's alternatives are other warning
+   signs, not a speed limit.
+   --------------------------------------------------------------------------- */
+function buildSignQuestions() {
+  const byCategory = {};
+  for (const sign of ROAD_SIGNS) {
+    (byCategory[sign.c] = byCategory[sign.c] || []).push(sign);
+  }
+
+  const questions = [];
+  for (const [catId, signs] of Object.entries(byCategory)) {
+    const names = [...new Set(signs.map(s => s.name))];
+    if (names.length < 4) continue;   // too few to make a fair question
+
+    for (const sign of signs) {
+      const others = names.filter(n => n !== sign.name);
+      // Deterministic pick, so the same sign always gets the same options and
+      // a learner isn't re-learning a reshuffled question every visit.
+      const wrong = [];
+      let seed = sign.id * 7919;
+      while (wrong.length < 3 && others.length) {
+        seed = (seed * 1103515245 + 12345) % 2147483648;
+        const pick = others[seed % others.length];
+        if (!wrong.includes(pick)) wrong.push(pick);
+        if (wrong.length >= others.length) break;
+      }
+      if (wrong.length < 3) continue;
+
+      const options = [...wrong, sign.name];
+      // Rotate rather than shuffle, so the answer isn't always last.
+      const shift = sign.id % 4;
+      const rotated = [...options.slice(shift), ...options.slice(0, shift)];
+
+      questions.push({
+        q: "What does this sign mean?",
+        image: sign.img,
+        options: rotated,
+        correct: rotated.indexOf(sign.name),
+        category: ROAD_SIGN_CAT[catId]?.label,
+      });
+    }
+  }
+  return questions;
+}
+
+const SIGN_QUESTIONS = buildSignQuestions();
+
+/* The theory bank is the written questions plus the sign questions. */
+const DRIVING_THEORY_FULL = [
+  ...DRIVING_THEORY_CATEGORIES,
+  {
+    id: "roadsigns",
+    title: "Road Signs",
+    blurb: "Identify the sign — all 199, by category.",
+    questions: SIGN_QUESTIONS,
+  },
+];
 
 /* ---------------------------------------------------------------------------
    Question banks
    --------------------------------------------------------------------------- */
-const QUIZZES = {
-  "adi.theory.mcq": {
-    categories: ADI_THEORY_PRACTICE_CATEGORIES,
-    title: "ADI Theory Practice",
-    subtitle: "126 questions across 6 sections",
+/* Everything the Stage 1 written exam draws on, in one pool: the
+   instructor-specific questions, road law, and sign recognition. */
+const ADI_THEORY_POOL = [
+  ...ADI_STAGE_ONE_CATEGORIES,
+  ...ADI_THEORY_PRACTICE_CATEGORIES,
+  ...RULES_QUESTIONS,
+  {
+    id: "roadsigns",
+    title: "Road Signs",
+    blurb: "Identify the sign — all 199, by category.",
+    questions: SIGN_QUESTIONS,
   },
-  "adi.theory.mock": ADI_MOCK_CATEGORIES
-    ? {
-        categories: ADI_MOCK_CATEGORIES,
-        title: "ADI Stage 1 Mock Test",
-        subtitle: "151 questions across the 5 official exam sections",
-      }
-    : null,
+];
+
+const QUIZZES = {
+  /* ---- Learner driver, category B ---- */
+  "driving.theory.mcq": {
+    categories: DRIVING_THEORY_FULL,
+    title: "Theory Practice MCQs",
+    subtitle: "Questions by topic, plus all 199 road signs",
+  },
+  "driving.theory.mock": {
+    categories: DRIVING_THEORY_FULL,
+    title: "Theory Mock Test",
+    subtitle: "40 questions, timed, pass mark 35",
+  },
+
+  /* ---- ADI Stage 1 ---- */
+  "adi.theory.mcq": {
+    categories: ADI_THEORY_POOL,
+    title: "ADI Theory Practice",
+    subtitle: "478 questions across every Stage 1 topic",
+  },
+  "adi.theory.mock": {
+    categories: ADI_THEORY_POOL,
+    title: "ADI Stage 1 Mock Test",
+    subtitle: "100 questions, timed, drawn across every section",
+  },
 };
 
 /* ---------------------------------------------------------------------------
@@ -103,26 +206,13 @@ const LEARNING = {
     title: "Theory Test — Learning Materials",
     intro: "The topics the theory test draws from, in the order worth studying them.",
     topics: [
-      { label: "Rules of the Road", blurb: "Right of way, road position, overtaking, general conduct." },
-      { label: "Road Signs", blurb: "Regulatory, warning, roadworks, road markings, motorway and information signs." },
-      { label: "Alert Driving", blurb: "Observation, anticipation, hazard perception, distraction." },
-      { label: "Vehicle & Documents", blurb: "Licences, insurance, NCT, tax, vehicle checks." },
-      { label: "Safety Margins", blurb: "Stopping distances, following distances, weather and road surface." },
-      { label: "Speed Limits", blurb: "Default limits, special limits, and where each applies." },
-      { label: "Vulnerable Road Users", blurb: "Pedestrians, cyclists, motorcyclists, children, older people." },
-      { label: "Motorways & Tunnels", blurb: "Joining, lane discipline, breakdowns, tunnel procedure." },
-    ],
-  },
-  "driving.full.learning": {
-    title: "Practical Driving Test — Learning Materials",
-    intro: "What the tester is watching for, and how the test itself runs.",
-    topics: [
-      { label: "Test Day Procedure", blurb: "Documents, the vehicle check, the oral technical questions." },
-      { label: "Fault Grades", blurb: "How grade 1, 2 and 3 faults are marked and what fails a test." },
-      { label: "Manoeuvres", blurb: "Turnabout, reversing around a corner, hill start, parking." },
-      { label: "Road Position & Observation", blurb: "Mirrors, blind spots, lane discipline, junction approach." },
-      { label: "Junctions & Roundabouts", blurb: "Approach speed, positioning, signalling, right of way." },
-      { label: "Progress & Speed", blurb: "Driving to the conditions — hesitancy fails tests too." },
+      { label: "Rules of the Road", blurb: "Right of way, priority, overtaking, general conduct." },
+      { label: "Speed Limits & Safety Margins", blurb: "Default limits, stopping and following distances." },
+      { label: "Road Signs & Markings", blurb: "Sign shapes and colours, markings, reflective studs." },
+      { label: "Road Procedure", blurb: "Junctions, roundabouts, motorways, lane discipline." },
+      { label: "Vulnerable Road Users", blurb: "Pedestrians, cyclists, motorcyclists, children, animals." },
+      { label: "Vehicle & Documents", blurb: "Licensing, insurance, NCT, tyres, warning lights." },
+      { label: "Hazard Awareness & Conditions", blurb: "Anticipation, night driving, weather, skidding." },
     ],
   },
   "adi.theory.learning": {
@@ -134,6 +224,8 @@ const LEARNING = {
       { label: "Pedagogy", blurb: "How people learn, lesson structure, feedback and questioning." },
       { label: "Basic Mechanics & Vehicle Maintenance", blurb: "Systems, checks, faults and their symptoms." },
       { label: "Category B & BE Towing", blurb: "Weights, coupling, stability, licence categories." },
+      { label: "Rules of the Road", blurb: "Road law as examined at Stage 1 — see the flashcards and MCQs." },
+      { label: "Road Signs & Markings", blurb: "All 199 official signs, by category." },
     ],
   },
 };

@@ -101,29 +101,44 @@ export function HomeScreen({ go }) {
             return (
               <button
                 key={path.id}
-                onClick={() => go({ screen: "path", pathId: path.id })}
-                className={`w-full text-left rounded-2xl px-4 py-3.5 shadow-sm transition active:scale-[0.99] ${
-                  dark
-                    ? "bg-blue-600 hover:bg-blue-500"
-                    : "bg-emerald-600 hover:bg-emerald-500"
+                onClick={path.comingSoon ? undefined : () => go({ screen: "path", pathId: path.id })}
+                disabled={path.comingSoon}
+                className={`w-full text-left rounded-2xl px-4 py-3.5 shadow-sm transition ${
+                  path.comingSoon
+                    ? "bg-slate-200 dark:bg-slate-800 cursor-not-allowed"
+                    : dark
+                      ? "bg-blue-600 hover:bg-blue-500 active:scale-[0.99]"
+                      : "bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99]"
                 }`}
               >
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <Icon size={22} className="text-white" />
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+                    path.comingSoon ? "bg-slate-300 dark:bg-slate-700" : "bg-white/20"
+                  }`}>
+                    <Icon size={22} className={path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white"} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 leading-tight">
+                    <p className={`text-[10px] font-bold uppercase tracking-widest leading-tight ${
+                      path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white/70"
+                    }`}>
                       {path.tagline}
                     </p>
-                    <h2 className="text-lg font-black tracking-tight text-white leading-tight">
+                    <h2 className={`text-lg font-black tracking-tight leading-tight ${
+                      path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white"
+                    }`}>
                       {path.label}
                     </h2>
                   </div>
-                  <ChevronRight size={20} className="text-white/60 shrink-0" />
+                  {path.comingSoon ? (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">
+                      Soon
+                    </span>
+                  ) : (
+                    <ChevronRight size={20} className="text-white/60 shrink-0" />
+                  )}
                 </div>
 
-                {p.started && (
+                {p.started && !path.comingSoon && (
                   <div className="mt-2.5">
                     <div className="flex justify-between text-[10px] font-bold text-white/70 mb-1">
                       <span>Your progress</span>

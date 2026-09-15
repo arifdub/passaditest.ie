@@ -264,6 +264,7 @@ function QuizRun({ set, module, instantFeedback, onFinish, onQuit }) {
 
     const entry = {
       q: q.q,
+      image: q.image,
       options: q.options,
       correct: q.correct,
       picked,
@@ -321,13 +322,25 @@ function QuizRun({ set, module, instantFeedback, onFinish, onQuit }) {
       <div className="max-w-2xl mx-auto px-5 py-6 pb-32">
         {q.sectionTitle && (
           <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">
-            {q.sectionTitle}
+            {q.sectionTitle}{q.category ? ` · ${q.category}` : ""}
           </p>
         )}
 
         <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-snug">
           {q.q}
         </h2>
+
+        {/* Road sign questions carry an image — the sign is the question. */}
+        {q.image && (
+          <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex items-center justify-center">
+            <img
+              src={q.image}
+              alt="Road sign"
+              draggable={false}
+              className="max-h-44 w-auto object-contain"
+            />
+          </div>
+        )}
 
         <div className="mt-5 space-y-2.5">
           {q.options.map((opt, i) => {
@@ -437,6 +450,14 @@ function QuizResult({ module, result, onRetry, onExit }) {
                     {item.q}
                   </p>
                 </div>
+
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt="Road sign"
+                    className="mt-3 ml-9 max-h-24 w-auto object-contain"
+                  />
+                )}
 
                 <div className="mt-3 pl-9 space-y-1 text-sm">
                   {!item.correct && (

@@ -109,17 +109,30 @@ function buildSignQuestions() {
 
     for (const sign of signs) {
       const others = names.filter(n => n !== sign.name);
-      // Deterministic pick, so the same sign always gets the same options and
-      // a learner isn't re-learning a reshuffled question every visit.
+      if (others.length < 3) continue;
+
+      /* Pick three wrong answers by stepping through the list at a fixed
+         stride rather than drawing random numbers until three distinct ones
+         turn up. Two reasons:
+
+         1. It always terminates. The previous version looped until it had
+            three distinct picks, and a seeded generator that lost floating
+            point precision could cycle between the same two values forever —
+            which hung the whole module at import time and left the app on a
+            blank screen.
+         2. It is still deterministic, so a given sign always gets the same
+            options and a learner isn't re-learning a reshuffled question.
+
+         Making the stride coprime with the list length guarantees the walk
+         visits distinct entries. */
+      const start = (sign.id * 7) % others.length;
+      let stride = (sign.id % (others.length - 1)) + 1;
+      while (stride > 1 && others.length % stride === 0) stride--;
+
       const wrong = [];
-      let seed = sign.id * 7919;
-      while (wrong.length < 3 && others.length) {
-        seed = (seed * 1103515245 + 12345) % 2147483648;
-        const pick = others[seed % others.length];
-        if (!wrong.includes(pick)) wrong.push(pick);
-        if (wrong.length >= others.length) break;
+      for (let i = 0; i < 3; i++) {
+        wrong.push(others[(start + i * stride) % others.length]);
       }
-      if (wrong.length < 3) continue;
 
       const options = [...wrong, sign.name];
       // Rotate rather than shuffle, so the answer isn't always last.

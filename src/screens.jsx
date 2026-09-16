@@ -2,56 +2,44 @@
   ===========================================================================
   SCREENS
 
-  Everything that isn't a quiz or a flashcard deck. All of it reads from
-  appStructure.js, so adding a section there makes it appear here with no
-  changes to this file.
+  Home is built around the five Stage 1 exam sections. Each shows how much of
+  its bank has been covered and how the last test went. Below them sits the
+  mock test, and below that the flashcard decks — study material rather than
+  assessment, so they don't compete with the sections for attention.
   ===========================================================================
 */
 
 import React from "react";
 import {
-  Car, GraduationCap, BookOpen, Layers, ListChecks, ClipboardCheck,
-  TrendingUp, User, LogOut, Shield, ChevronRight, Sparkles, Trash2,
+  ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
+  TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check,
 } from "lucide-react";
-import {
-  APP_PATHS, PATH_BY_ID, SECTION_BY_ID, ALL_MODULES, isScored,
-} from "./appStructure";
-import { hasContent } from "./contentSources";
+import { ADI_SECTIONS, MOCK, DECKS, PASS_MARK } from "./appStructure";
 import { useAuth } from "./appAuth";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
 import {
-  Logo, Screen, ScreenHeader, ProgressBar, ProgressRing, Tile, EmptyState,
+  Logo, Screen, ScreenHeader, ProgressBar, ProgressRing, EmptyState,
   SecondaryButton, PrimaryButton,
 } from "./ui";
 
-/* Icons by module kind — the blueprint's four tile types. */
-const KIND_ICON = {
-  learning: BookOpen,
-  flashcards: Layers,
-  mcq: ListChecks,
-  mock: ClipboardCheck,
-};
-
-const PATH_ICON = { driving: Car, adi: GraduationCap };
-
-/* Per-section icons so Theory and Practical don't look identical in the list.
-   Falls back to the path's icon for anything not listed. */
 const SECTION_ICON = {
-  "driving.theory": BookOpen,
-  "driving.full": Car,
-  "adi.theory": BookOpen,
-  "adi.practical": Car,
-  "adi.instructability": GraduationCap,
+  "adi.sec.procedure": ClipboardCheck,
+  "adi.sec.safety": ShieldCheck,
+  "adi.sec.pedagogy": GraduationCap,
+  "adi.sec.mechanics": Wrench,
+  "adi.sec.categoryb": Truck,
 };
 
 /* ===========================================================================
-   HOME — screen 3 in the blueprint
+   HOME
    =========================================================================== */
 export function HomeScreen({ go }) {
   const { displayName, subscription, isGuest, exitGuest } = useAuth();
-  const { getPath, overall, weakest } = useProgress();
+  const { getSection, getModule, overall } = useProgress();
+
+  const mock = getModule(MOCK.id);
 
   return (
     <>
@@ -64,136 +52,174 @@ export function HomeScreen({ go }) {
             <Logo size="hero" className="w-[45%] max-w-[190px]" />
           </div>
           <p className="mt-4 text-slate-400 text-sm">Hi {displayName} 👋</p>
-          <h1 className="mt-0.5 text-2xl font-black tracking-tight">
-            Ready to pass your test?
-          </h1>
+          <h1 className="mt-0.5 text-2xl font-black tracking-tight">ADI Theory Test</h1>
+          <p className="mt-1 text-sm text-slate-400">
+            Stage 1 — Approved Driving Instructor
+          </p>
         </div>
       </div>
 
       <Screen>
-        {/* Overall */}
+        {/* Overall coverage */}
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-center gap-4 -mt-10 shadow-lg">
-          <ProgressRing pct={overall.averagePct} size={72} stroke={6} />
+          <ProgressRing pct={overall.coveragePct} size={72} stroke={6} label="covered" />
           <div className="min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-              Overall progress
+              Your progress
             </p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 leading-snug">
-              {overall.testsTaken === 0
-                ? "Take your first test and your progress starts building here."
-                : overall.averagePct >= 85
-                  ? "You're doing great. Keep it up and ace your test."
-                  : "Good start — keep practising to bring your average up."}
+              {overall.answered === 0
+                ? `${overall.total} questions across five sections. Pick one below to start.`
+                : `${overall.answered} of ${overall.total} questions answered` +
+                  (overall.sectionsPassed > 0
+                    ? ` · ${overall.sectionsPassed} of ${overall.sectionCount} sections at pass standard.`
+                    : ".")}
             </p>
           </div>
         </div>
 
-        {/* The two paths */}
-        <p className="mt-6 mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
-          Choose your path
+        {/* The five exam sections */}
+        <p className="mt-6 mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+          The five exam sections
+        </p>
+        <p className="mb-3 text-xs text-slate-400 leading-snug">
+          Each section carries its own pass mark in the real test.
         </p>
 
         <div className="space-y-2.5">
-          {APP_PATHS.map(path => {
-            const Icon = PATH_ICON[path.id] || Car;
-            const p = getPath(path.id);
-            const dark = path.accent === "blue";
+          {ADI_SECTIONS.map(section => {
+            const Icon = SECTION_ICON[section.id] || ClipboardCheck;
+            const p = getSection(section.id);
             return (
               <button
-                key={path.id}
-                onClick={path.comingSoon ? undefined : () => go({ screen: "path", pathId: path.id })}
-                disabled={path.comingSoon}
-                className={`w-full text-left rounded-2xl px-4 py-3.5 shadow-sm transition ${
-                  path.comingSoon
-                    ? "bg-slate-200 dark:bg-slate-800 cursor-not-allowed"
-                    : dark
-                      ? "bg-blue-600 hover:bg-blue-500 active:scale-[0.99]"
-                      : "bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99]"
-                }`}
+                key={section.id}
+                onClick={() => go({ screen: "section", sectionId: section.id })}
+                className="w-full text-left bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 transition hover:border-emerald-400 active:scale-[0.99]"
               >
-                <div className="flex items-center gap-3.5">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
-                    path.comingSoon ? "bg-slate-300 dark:bg-slate-700" : "bg-white/20"
+                <div className="flex items-start gap-3.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    p.passed ? "bg-emerald-500" : "bg-slate-700 dark:bg-slate-600"
                   }`}>
-                    <Icon size={22} className={path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white"} />
+                    <Icon size={18} className="text-white" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-[10px] font-bold uppercase tracking-widest leading-tight ${
-                      path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white/70"
-                    }`}>
-                      {path.tagline}
-                    </p>
-                    <h2 className={`text-lg font-black tracking-tight leading-tight ${
-                      path.comingSoon ? "text-slate-500 dark:text-slate-400" : "text-white"
-                    }`}>
-                      {path.label}
-                    </h2>
-                  </div>
-                  {path.comingSoon ? (
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">
-                      Soon
-                    </span>
-                  ) : (
-                    <ChevronRight size={20} className="text-white/60 shrink-0" />
-                  )}
-                </div>
 
-                {p.started && !path.comingSoon && (
-                  <div className="mt-2.5">
-                    <div className="flex justify-between text-[10px] font-bold text-white/70 mb-1">
-                      <span>Your progress</span>
-                      <span>{p.pct}%</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[10px] font-black text-slate-300 dark:text-slate-600">
+                        {section.number}
+                      </span>
+                      <span className="font-bold text-slate-900 dark:text-white leading-tight">
+                        {section.label}
+                      </span>
                     </div>
-                    <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
-                      <div className="h-1.5 bg-white rounded-full transition-all duration-500"
-                           style={{ width: `${p.pct}%` }} />
+
+                    <div className="mt-2">
+                      <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                        <span>{p.answered} / {p.total} questions</span>
+                        <span>{p.attempts > 0 ? `Best ${p.bestPct}%` : "Not started"}</span>
+                      </div>
+                      <ProgressBar
+                        pct={p.coveragePct}
+                        tone={p.passed ? "emerald" : p.started ? "amber" : "slate"}
+                      />
                     </div>
+
+                    {p.attempts > 0 && (
+                      <p className={`mt-1.5 text-xs font-semibold ${
+                        p.passed
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-amber-600 dark:text-amber-400"
+                      }`}>
+                        {p.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}
+                      </p>
+                    )}
                   </div>
-                )}
+
+                  <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0 mt-2" />
+                </div>
               </button>
             );
           })}
         </div>
 
-        {/* Weakest topics */}
-        {weakest.length > 0 && (
-          <>
-            <p className="mt-6 mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
-              Your weakest topics
-            </p>
-            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
-              {weakest.map(w => (
-                <button
-                  key={w.id}
-                  onClick={() => go({ screen: "module", moduleId: w.id })}
-                  className="w-full text-left px-4 py-3.5 flex items-center gap-3"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                      {w.label}
-                    </p>
-                    <p className="text-xs text-slate-400 truncate">{w.sectionLabel}</p>
-                    <div className="mt-1.5"><ProgressBar pct={w.pct} tone="amber" /></div>
-                  </div>
-                  <span className="text-sm font-black text-slate-900 dark:text-white shrink-0">
-                    {w.pct}%
-                  </span>
-                </button>
-              ))}
+        {/* Mock test */}
+        <p className="mt-6 mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+          Exam simulation
+        </p>
+        <button
+          onClick={() => go({ screen: "mock" })}
+          className="w-full text-left rounded-2xl p-5 bg-slate-900 hover:bg-slate-800 transition active:scale-[0.99]"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+              <Timer size={22} className="text-white" />
             </div>
-          </>
-        )}
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-black tracking-tight text-white">{MOCK.label}</h2>
+              <p className="mt-0.5 text-sm text-slate-300 leading-snug">{MOCK.blurb}</p>
+              {mock.attempts > 0 && (
+                <div className="mt-3">
+                  <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                    <span>Best score</span>
+                    <span>{mock.bestPct}%</span>
+                  </div>
+                  <div className="h-2 bg-white/15 rounded-full overflow-hidden">
+                    <div
+                      className={`h-2 rounded-full ${mock.passed ? "bg-emerald-400" : "bg-amber-400"}`}
+                      style={{ width: `${mock.bestPct}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <ChevronRight size={18} className="text-slate-500 shrink-0 mt-3" />
+          </div>
+        </button>
 
-        {/* Only nag once they've actually got something to lose. */}
-        {isGuest && overall.testsTaken > 0 && (
+        {/* Flashcards */}
+        <p className="mt-6 mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+          Flashcards
+        </p>
+        <p className="mb-3 text-xs text-slate-400 leading-snug">
+          Study material. Useful for learning, but not a substitute for the sections above.
+        </p>
+
+        <div className="space-y-2.5">
+          {DECKS.map(deck => {
+            const p = getModule(deck.id);
+            const known = p.completedIds.length;
+            const pct = deck.count ? Math.round((known / deck.count) * 100) : 0;
+            return (
+              <button
+                key={deck.id}
+                onClick={() => go({ screen: "deck", deckId: deck.id })}
+                className="w-full text-left bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-center gap-3.5 transition hover:border-emerald-400 active:scale-[0.99]"
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                  <Layers size={18} className="text-slate-600 dark:text-slate-300" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-slate-900 dark:text-white">{deck.label}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                    {known > 0 ? `${known} of ${deck.count} marked known` : deck.blurb}
+                  </p>
+                  {known > 0 && (
+                    <div className="mt-2"><ProgressBar pct={pct} tone="slate" /></div>
+                  )}
+                </div>
+                <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0" />
+              </button>
+            );
+          })}
+        </div>
+
+        {isGuest && overall.answered > 0 && (
           <button
             onClick={exitGuest}
             className="mt-6 w-full text-left bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-2xl p-4 flex items-center gap-3"
           >
             <div className="flex-1">
-              <p className="font-bold text-slate-900 dark:text-white text-sm">
-                Save your progress
-              </p>
+              <p className="font-bold text-slate-900 dark:text-white text-sm">Save your progress</p>
               <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-300 leading-snug">
                 Create an account and everything you've studied comes with you.
               </p>
@@ -215,261 +241,99 @@ export function HomeScreen({ go }) {
 }
 
 /* ===========================================================================
-   PATH — Driving Test (2 sections) or ADI (3 sections)
+   PROGRESS
    =========================================================================== */
-export function PathScreen({ pathId, go, onBack }) {
-  const path = PATH_BY_ID[pathId];
-  const { getSection } = useProgress();
-  if (!path) return null;
+export function ProgressScreen({ go }) {
+  const { getSection, getModule, overall } = useProgress();
+  const mock = getModule(MOCK.id);
 
   return (
     <>
-      <ScreenHeader
-        title={path.label}
-        subtitle={path.blurb}
-        onBack={onBack}
-        backLabel="Home"
-      />
-      <Screen>
-        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
-          Select what you're preparing for
-        </p>
-        <div className="space-y-3">
-          {path.sections.map(section => {
-            const s = getSection(section.id);
-            const anyReady = section.modules.some(m => m.ready && hasContent(m));
-            return (
-              <Tile
-                key={section.id}
-                icon={SECTION_ICON[section.id] || PATH_ICON[pathId]}
-                tone={path.accent}
-                label={section.label}
-                blurb={section.blurb}
-                locked={!anyReady}
-                showBar={anyReady && s.scoredCount > 0}
-                pct={s.pct}
-                meta={s.allPassed ? "All sections passed" : "Section progress"}
-                onClick={() => go({ screen: "section", sectionId: section.id })}
-              />
-            );
-          })}
-        </div>
-      </Screen>
-    </>
-  );
-}
-
-/* ===========================================================================
-   SECTION — the module list (learning, flashcards, MCQs, mock test)
-   =========================================================================== */
-export function SectionScreen({ sectionId, go, onBack }) {
-  const section = SECTION_BY_ID[sectionId];
-  const { getSection, getModule } = useProgress();
-  if (!section) return null;
-
-  const s = getSection(sectionId);
-  const path = PATH_BY_ID[section.pathId];
-
-  return (
-    <>
-      <ScreenHeader
-        title={section.label}
-        subtitle={section.blurb}
-        onBack={onBack}
-        backLabel={path?.label}
-      />
-      <Screen>
-        {s.scoredCount > 0 && (
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mb-5">
-            <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">
-              <span>Section progress</span>
-              <span>{s.passedCount} of {s.scoredCount} passed</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-2xl font-black text-slate-900 dark:text-white">{s.pct}%</span>
-              <div className="flex-1"><ProgressBar pct={s.pct} tone={path?.accent} /></div>
-            </div>
-            <p className={`mt-2 text-sm font-semibold ${
-              s.allPassed ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
-            }`}>
-              {s.allPassed
-                ? "Every test in this section is at pass standard."
-                : s.started
-                  ? "Keep going — practise the tests you haven't passed yet."
-                  : "Take a test to start tracking your progress."}
-            </p>
-          </div>
-        )}
-
-        <div className="space-y-2.5">
-          {section.modules.map(module => {
-            const available = module.ready && hasContent(module);
-            const m = getModule(module.id);
-            const scored = isScored(module);
-
-            let meta = "Best score";
-            if (module.kind === "flashcards") meta = "Cards known";
-
-            let pct = m.bestPct;
-            if (module.kind === "flashcards") {
-              const total = module.count || 0;
-              pct = total ? Math.round((m.completedIds.length / total) * 100) : 0;
-            }
-
-            return (
-              <Tile
-                key={module.id}
-                icon={KIND_ICON[module.kind]}
-                tone={path?.accent}
-                label={module.label}
-                blurb={module.blurb}
-                locked={!available}
-                showBar={available && (scored || module.kind === "flashcards")}
-                pct={pct}
-                meta={meta}
-                onClick={() => go({ screen: "module", moduleId: module.id })}
-              />
-            );
-          })}
-        </div>
-      </Screen>
-    </>
-  );
-}
-
-/* ===========================================================================
-   LEARNING MATERIALS
-   =========================================================================== */
-export function LearningScreen({ module, learning, onBack }) {
-  return (
-    <>
-      <ScreenHeader
-        title={learning.title}
-        subtitle={learning.intro}
-        onBack={onBack}
-        backLabel={module.sectionLabel}
-      />
-      <Screen>
-        <div className="space-y-2.5">
-          {learning.topics.map((topic, i) => (
-            <div
-              key={i}
-              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4"
-            >
-              <div className="flex items-start gap-3">
-                <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-500 dark:text-slate-300 shrink-0">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="font-bold text-slate-900 dark:text-white">{topic.label}</p>
-                  <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-snug">
-                    {topic.blurb}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-5 flex items-start gap-3 bg-slate-100 dark:bg-slate-800 rounded-2xl p-4">
-          <Sparkles size={18} className="text-slate-400 mt-0.5 shrink-0" />
-          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            These are the topics, not the full text. The rewritten Rules of the
-            Road already exists as a PDF and ePub — pulling that content into
-            these pages is a separate job.
-          </p>
-        </div>
-      </Screen>
-    </>
-  );
-}
-
-/* ===========================================================================
-   PROGRESS — every module, grouped by path
-   =========================================================================== */
-export function ProgressScreen() {
-  const { getModule, overall } = useProgress();
-
-  const started = ALL_MODULES.filter(m => {
-    const p = getModule(m.id);
-    return p.attempts > 0 || p.completedIds.length > 0;
-  });
-
-  return (
-    <>
-      <ScreenHeader title="My Progress" subtitle="Everything you've studied so far" />
+      <ScreenHeader title="My Progress" subtitle="Across all five exam sections" />
       <Screen>
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex items-center gap-5">
-          <ProgressRing pct={overall.averagePct} size={84} stroke={7} />
+          <ProgressRing pct={overall.coveragePct} size={84} stroke={7} label="covered" />
           <div className="flex-1 grid grid-cols-2 gap-3">
+            <Stat label="Answered" value={overall.answered} />
+            <Stat label="Of" value={overall.total} />
             <Stat label="Tests taken" value={overall.testsTaken} />
-            <Stat label="Best score" value={`${overall.bestPct}%`} />
+            <Stat label="Best score" value={overall.bestPct ? `${overall.bestPct}%` : "—"} />
           </div>
         </div>
 
-        {started.length === 0 ? (
+        {overall.answered === 0 ? (
           <EmptyState
             icon={TrendingUp}
             title="Nothing tracked yet"
-            message="Take a practice test or work through a flashcard deck, and your scores will show up here."
+            message="Answer some questions in any section and your progress will build here."
           />
         ) : (
-          APP_PATHS.map(path => {
-            const rows = path.sections.flatMap(section =>
-              section.modules
-                .filter(m => started.some(s => s.id === m.id))
-                .map(m => ({ ...m, sectionLabel: section.label }))
-            );
-            if (rows.length === 0) return null;
+          <>
+            <p className="mt-6 mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+              By section
+            </p>
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
+              {ADI_SECTIONS.map(s => {
+                const p = getSection(s.id);
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => go({ screen: "section", sectionId: s.id })}
+                    className="w-full text-left px-4 py-3.5"
+                  >
+                    <div className="flex items-baseline justify-between gap-3">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                        {s.number}. {s.short}
+                      </p>
+                      <span className="text-xs font-bold text-slate-400 shrink-0">
+                        {p.answered}/{p.total}
+                      </span>
+                    </div>
+                    <div className="mt-1.5">
+                      <ProgressBar
+                        pct={p.coveragePct}
+                        tone={p.passed ? "emerald" : p.started ? "amber" : "slate"}
+                      />
+                    </div>
+                    <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      {p.attempts > 0
+                        ? `Best ${p.bestPct}% · ${p.attempts} attempt${p.attempts === 1 ? "" : "s"}`
+                        : "Not attempted yet"}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
 
-            return (
-              <div key={path.id} className="mt-6">
-                <p className="mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
-                  {path.label}
+            {mock.attempts > 0 && (
+              <>
+                <p className="mt-6 mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
+                  Mock test
                 </p>
-                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
-                  {rows.map(m => {
-                    const p = getModule(m.id);
-                    const isCards = m.kind === "flashcards";
-                    const pct = isCards && m.count
-                      ? Math.round((p.completedIds.length / m.count) * 100)
-                      : p.bestPct;
-                    return (
-                      <div key={m.id} className="px-4 py-3.5">
-                        <div className="flex items-baseline justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                              {m.label}
-                            </p>
-                            <p className="text-xs text-slate-400 truncate">{m.sectionLabel}</p>
-                          </div>
-                          <span className="text-sm font-black text-slate-900 dark:text-white shrink-0">
-                            {pct}%
-                          </span>
-                        </div>
-                        <div className="mt-1.5">
-                          <ProgressBar
-                            pct={pct}
-                            tone={isCards ? "slate" : p.passed ? "emerald" : "amber"}
-                          />
-                        </div>
-                        {!isCards && p.attempts > 0 && (
-                          <p className={`mt-1.5 text-xs font-semibold ${
-                            p.passed ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
-                          }`}>
-                            {p.passed ? "Passed" : `Keep practising — ${p.passMark}% needed`}
-                            <span className="text-slate-400 font-normal">
-                              {" "}· {p.attempts} attempt{p.attempts === 1 ? "" : "s"}
-                            </span>
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                      Best score
+                    </span>
+                    <span className="text-xl font-black text-slate-900 dark:text-white">
+                      {mock.bestPct}%
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    <ProgressBar pct={mock.bestPct} tone={mock.passed ? "emerald" : "amber"} />
+                  </div>
+                  <p className={`mt-2 text-sm font-semibold ${
+                    mock.passed ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                  }`}>
+                    {mock.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}
+                    <span className="font-normal text-slate-400">
+                      {" "}· {mock.attempts} attempt{mock.attempts === 1 ? "" : "s"}
+                    </span>
+                  </p>
                 </div>
-              </div>
-            );
-          })
+              </>
+            )}
+          </>
         )}
       </Screen>
     </>
@@ -480,18 +344,14 @@ function Stat({ label, value }) {
   return (
     <div>
       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</p>
-      <p className="mt-0.5 text-xl font-black text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">{value}</p>
     </div>
   );
 }
 
-/* ---------------------------------------------------------------------------
-   INSTALL TO HOME SCREEN
-
-   Android gets a real button. iPhone gets instructions, because Safari has no
-   install API — the only way in is the Share menu. Once it's installed the
-   card confirms that and stops taking up space.
-   --------------------------------------------------------------------------- */
+/* ===========================================================================
+   INSTALL CARD
+   =========================================================================== */
 function InstallCard() {
   const { state, promptInstall } = usePwaInstall();
 
@@ -520,7 +380,7 @@ function InstallCard() {
         </div>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
           Add PassDrivingTest to your home screen for full-screen study with no
-          browser bar. Works offline for anything you've already opened.
+          browser bar.
         </p>
         <div className="mt-4">
           <PrimaryButton onClick={promptInstall}>
@@ -540,10 +400,6 @@ function InstallCard() {
           <Smartphone size={18} className="text-emerald-500 shrink-0" />
           <h2 className="font-bold text-slate-900 dark:text-white">Add to your Home Screen</h2>
         </div>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Three taps in Safari and it works like a real app — full screen, no
-          address bar, its own icon.
-        </p>
         <ol className="mt-4 space-y-3">
           <InstallStep n="1">
             Tap the <Share2 size={14} className="inline mx-0.5 -mt-0.5 text-blue-500" />
@@ -557,8 +413,8 @@ function InstallCard() {
           </InstallStep>
         </ol>
         <p className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-400 leading-relaxed">
-          This only works in Safari. If you're in Chrome or another browser on
-          iPhone, open passdrivingtest.ie in Safari first.
+          This only works in Safari. If you're in another browser on iPhone,
+          open passdrivingtest.ie in Safari first.
         </p>
       </div>
     );
@@ -568,12 +424,9 @@ function InstallCard() {
     <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-start gap-3">
       <Smartphone size={18} className="text-slate-400 shrink-0 mt-0.5" />
       <div>
-        <p className="font-semibold text-slate-900 dark:text-white text-sm">
-          Study on your phone
-        </p>
+        <p className="font-semibold text-slate-900 dark:text-white text-sm">Study on your phone</p>
         <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Open passdrivingtest.ie on your phone and you can add it to your home
-          screen as an app.
+          Open passdrivingtest.ie on your phone to add it to your home screen.
         </p>
       </div>
     </div>
@@ -594,7 +447,7 @@ function InstallStep({ n, children }) {
 }
 
 /* ===========================================================================
-   PROFILE & SETTINGS
+   PROFILE
    =========================================================================== */
 export function ProfileScreen({ theme, toggleTheme }) {
   const { profile, displayName, subscription, signOut, mode, isGuest, exitGuest } = useAuth();
@@ -602,7 +455,7 @@ export function ProfileScreen({ theme, toggleTheme }) {
 
   async function handleReset() {
     const ok = window.confirm(
-      "Clear all your progress? Every score and flashcard mark will be deleted. This can't be undone."
+      "Clear all your progress? Every score and answered question will be deleted. This can't be undone."
     );
     if (ok) await resetAll();
   }
@@ -625,17 +478,11 @@ export function ProfileScreen({ theme, toggleTheme }) {
           </div>
         </div>
 
-        {/* Guests get the pitch for an account instead of a subscription card.
-            Their progress is already saved locally, so signing up keeps it
-            rather than starting them over. */}
         {isGuest ? (
           <div className="mt-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-2xl p-5">
-            <h2 className="font-bold text-slate-900 dark:text-white">
-              Keep your progress safe
-            </h2>
+            <h2 className="font-bold text-slate-900 dark:text-white">Keep your progress safe</h2>
             <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Right now your scores live on this device only — clear your
-              browser or switch phone and they're gone. Create an account and
+              Your scores live on this device only. Create an account and
               everything you've already done comes with you.
             </p>
             <div className="mt-4">
@@ -661,24 +508,16 @@ export function ProfileScreen({ theme, toggleTheme }) {
           </div>
         )}
 
-        {/* Settings */}
         <InstallCard />
 
         <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
-          <button
-            onClick={toggleTheme}
-            className="w-full px-4 py-3.5 flex items-center justify-between"
-          >
+          <button onClick={toggleTheme} className="w-full px-4 py-3.5 flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Dark mode</span>
             <span className="text-sm font-semibold text-slate-400">
               {theme === "dark" ? "On" : "Off"}
             </span>
           </button>
-
-          <button
-            onClick={handleReset}
-            className="w-full px-4 py-3.5 flex items-center justify-between"
-          >
+          <button onClick={handleReset} className="w-full px-4 py-3.5 flex items-center justify-between">
             <span className="font-semibold text-slate-900 dark:text-white">Reset my progress</span>
             <Trash2 size={16} className="text-slate-400" />
           </button>
@@ -695,8 +534,8 @@ export function ProfileScreen({ theme, toggleTheme }) {
         )}
 
         <p className="mt-6 text-center text-xs text-slate-400">
-          {overall.testsTaken} test{overall.testsTaken === 1 ? "" : "s"} taken
-          {mode === "local" && " · progress saved on this device only"}
+          {overall.answered} of {overall.total} questions answered
+          {mode === "local" && " · saved on this device only"}
         </p>
       </Screen>
     </>

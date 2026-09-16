@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { ScreenHeader, Screen, ProgressBar, ProgressRing, PrimaryButton, SecondaryButton, Tile } from "./ui";
 import { useProgress } from "./progressStore";
-import { verdictFor } from "./appStructure";
+import { verdictFor, PASS_MARK } from "./appStructure";
 
 /* Fisher–Yates. Returns a new array — never mutates the question bank. */
 function shuffle(arr) {
@@ -48,7 +48,7 @@ export default function QuizPlayer({ module, quiz, onExit }) {
   const [result, setResult] = useState(null);
   const [runKey, setRunKey] = useState(0);
 
-  const { recordResult, getModule } = useProgress();
+  const { recordResult, recordAnswered, getModule } = useProgress();
   const moduleProgress = getModule(module.id);
 
   /* Build a mock test: questions pulled evenly from every section, shuffled. */
@@ -86,6 +86,18 @@ export default function QuizPlayer({ module, quiz, onExit }) {
   };
 
   const finish = async ({ score, total, log, elapsed }) => {
+    /* Credit every question that was actually answered, against the section
+       it belongs to. A mock test draws from all five sections, so this
+       spreads coverage across them rather than parking it on the mock. */
+    const bySection = {};
+    for (const item of log) {
+      if (!item.qid || !item.sectionId) continue;
+      (bySection[item.sectionId] = bySection[item.sectionId] || []).push(item.qid);
+    }
+    for (const [sectionId, qids] of Object.entries(bySection)) {
+      await recordAnswered(sectionId, qids);
+    }
+
     const saved = await recordResult(module.id, score, total);
     setResult({ score, total, log, elapsed, ...saved });
     setStage("result");
@@ -263,12 +275,15 @@ function QuizRun({ set, module, instantFeedback, onFinish, onQuit }) {
     if (picked === null) return;
 
     const entry = {
+      qid: q.qid,
+      sectionId: q.sectionId,
       q: q.q,
       image: q.image,
       options: q.options,
       correct: q.correct,
       picked,
       explain: q.explain,
+      image: q.image,
       sectionTitle: q.sectionTitle,
       isRight: picked === q.correct,
     };

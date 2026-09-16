@@ -28,9 +28,7 @@ import React, {
 } from "react";
 import { supabase, HAS_SUPABASE } from "./supabaseClient";
 import { useAuth } from "./appAuth";
-import {
-  APP_PATHS, ALL_SECTIONS, MODULE_BY_ID, isScored, passMarkFor, verdictFor,
-} from "./appStructure";
+import { ADI_SECTIONS, PASS_MARK, verdictFor } from "./appStructure";
 
 const LOCAL_KEY = "pdt-progress-v1";
 
@@ -179,7 +177,7 @@ export function ProgressProvider({ children }) {
     if (!total || total <= 0) return null;
 
     const pct = Math.round((score / total) * 100);
-    const passMark = passMarkFor(moduleId);
+    const passMark = PASS_MARK;
     const verdict = verdictFor(pct, passMark);
 
     let updatedEntry;
@@ -260,113 +258,125 @@ export function ProgressProvider({ children }) {
     }
   }, [isSignedIn, user?.id]);
 
-  /* ---- readers used by the progress bars ---- */
+  /* -----------------------------------------------------------------------
+     RECORD WHICH QUESTIONS HAVE BEEN SEEN
+
+     Section progress is "how many of this section's questions have you
+     answered", so every answered question's id is stored. Ids come from the
+     question text itself (see adiSections.js), so they survive banks being
+     reordered or extended.
+
+     These are kept in the same completedIds field the flashcards use, which
+     is already a jsonb column and already syncs.
+     ----------------------------------------------------------------------- */
+  const recordAnswered = useCallback(async (sectionId, qids) => {
+    if (!sectionId || !qids?.length) return;
+
+    let merged;
+    setEntries(prev => {
+      const before = prev[sectionId] || emptyEntry();
+      merged = Array.from(new Set([...(before.completedIds || []), ...qids]));
+      const next = {
+        ...prev,
+        [sectionId]: { ...before, completedIds: merged, updatedAt: new Date().toISOString() },
+      };
+      writeLocal(next);
+      return next;
+    });
+
+    if (isSignedIn && HAS_SUPABASE && user?.id) {
+      const { error } = await supabase.from("progress").upsert(
+        { user_id: user.id, module_id: sectionId, completed_ids: merged },
+        { onConflict: "user_id,module_id" }
+      );
+      if (error) console.warn("Answered questions not synced:", error.message);
+    }
+  }, [isSignedIn, user?.id]);
+
+  /* ---- readers ---- */
   const getModule = useCallback((moduleId) => {
-    // Spread over a fresh empty entry so anything saved by an older version of
-    // the app — from before a field existed — still reads back with every key set.
     const entry = { ...emptyEntry(), ...(entries[moduleId] || {}) };
-    const passMark = passMarkFor(moduleId);
     return {
       ...entry,
-      passMark,
+      passMark: PASS_MARK,
       started: entry.attempts > 0 || entry.completedIds.length > 0,
-      verdict: entry.attempts > 0 ? verdictFor(entry.bestPct, passMark) : null,
+      verdict: entry.attempts > 0 ? verdictFor(entry.bestPct, PASS_MARK) : null,
     };
   }, [entries]);
 
-  /* A section's percentage: the average best score across its scored
-     modules. Modules never attempted count as 0, so the bar reflects how much
-     of the section is actually at test standard — not just the bits tried. */
+  /* One of the five exam sections: how much of it has been covered, and how
+     well the last attempt went. */
   const getSection = useCallback((sectionId) => {
-    const section = ALL_SECTIONS.find(s => s.id === sectionId);
-    if (!section) return { pct: 0, started: false, ready: false };
-
-    const scored = section.modules.filter(m => isScored(m) && m.ready);
-    const readyModules = section.modules.filter(m => m.ready);
-    const startedAny = readyModules.some(m => (entries[m.id]?.attempts || 0) > 0
-      || (entries[m.id]?.completedIds?.length || 0) > 0);
-
-    if (scored.length === 0) {
-      return {
-        pct: 0,
-        started: startedAny,
-        ready: readyModules.length > 0,
-        scoredCount: 0,
-        passedCount: 0,
-      };
-    }
-
-    const total = scored.reduce((sum, m) => sum + (entries[m.id]?.bestPct || 0), 0);
-    const passedCount = scored.filter(m => entries[m.id]?.passed).length;
+    const section = ADI_SECTIONS.find(s => s.id === sectionId);
+    const entry = { ...emptyEntry(), ...(entries[sectionId] || {}) };
+    const total = section?.total || 0;
+    const answered = Math.min(entry.completedIds.length, total);
 
     return {
-      pct: Math.round(total / scored.length),
-      started: startedAny,
-      ready: true,
-      scoredCount: scored.length,
-      passedCount,
-      allPassed: passedCount === scored.length,
+      total,
+      answered,
+      remaining: Math.max(0, total - answered),
+      coveragePct: total ? Math.round((answered / total) * 100) : 0,
+      bestPct: entry.bestPct,
+      attempts: entry.attempts,
+      passed: entry.passed,
+      started: answered > 0 || entry.attempts > 0,
+      passMark: PASS_MARK,
+      verdict: entry.attempts > 0 ? verdictFor(entry.bestPct, PASS_MARK) : null,
     };
   }, [entries]);
 
-  const getPath = useCallback((pathId) => {
-    const path = APP_PATHS.find(p => p.id === pathId);
-    if (!path) return { pct: 0, started: false };
-    const sections = path.sections.map(s => getSection(s.id)).filter(s => s.ready);
-    if (sections.length === 0) return { pct: 0, started: false };
-    const pct = Math.round(sections.reduce((sum, s) => sum + s.pct, 0) / sections.length);
-    return { pct, started: sections.some(s => s.started) };
-  }, [getSection]);
-
-  /* Headline numbers for the home screen and the profile page. */
+  /* Headline numbers across all five sections. */
   const overall = useMemo(() => {
-    const scored = Object.entries(entries).filter(([id]) => {
-      const m = MODULE_BY_ID[id];
-      return m && isScored(m);
-    });
-    const attempts = scored.reduce((sum, [, e]) => sum + e.attempts, 0);
-    const avg = scored.length
-      ? Math.round(scored.reduce((sum, [, e]) => sum + e.bestPct, 0) / scored.length)
-      : 0;
-    const best = scored.length
-      ? Math.max(...scored.map(([, e]) => e.bestPct))
-      : 0;
+    let answered = 0, total = 0, attempts = 0;
+    const scores = [];
+    for (const s of ADI_SECTIONS) {
+      const e = entries[s.id];
+      total += s.total;
+      answered += Math.min(e?.completedIds?.length || 0, s.total);
+      attempts += e?.attempts || 0;
+      if (e?.attempts) scores.push(e.bestPct);
+    }
+    const mock = entries["adi.mock"];
     return {
-      averagePct: avg,
-      bestPct: best,
-      testsTaken: attempts,
-      modulesStarted: scored.length,
+      answered,
+      total,
+      coveragePct: total ? Math.round((answered / total) * 100) : 0,
+      averagePct: scores.length
+        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+        : 0,
+      bestPct: scores.length ? Math.max(...scores) : 0,
+      testsTaken: attempts + (mock?.attempts || 0),
+      mockBest: mock?.bestPct || 0,
+      mockAttempts: mock?.attempts || 0,
+      sectionsPassed: ADI_SECTIONS.filter(s => entries[s.id]?.passed).length,
+      sectionCount: ADI_SECTIONS.length,
     };
   }, [entries]);
 
-  /* The three weakest started modules — feeds the "Your weakest topics" card. */
+  /* The weakest sections that have actually been attempted. */
   const weakest = useMemo(() => {
-    return Object.entries(entries)
-      .filter(([id, e]) => MODULE_BY_ID[id] && isScored(MODULE_BY_ID[id]) && e.attempts > 0)
-      .sort((a, b) => a[1].bestPct - b[1].bestPct)
-      .slice(0, 3)
-      .map(([id, e]) => ({
-        id,
-        label: MODULE_BY_ID[id].label,
-        sectionLabel: MODULE_BY_ID[id].sectionLabel,
-        pct: e.bestPct,
-      }));
+    return ADI_SECTIONS
+      .filter(s => (entries[s.id]?.attempts || 0) > 0)
+      .map(s => ({ id: s.id, label: s.label, short: s.short, pct: entries[s.id].bestPct }))
+      .sort((a, b) => a.pct - b.pct)
+      .slice(0, 3);
   }, [entries]);
 
   const value = useMemo(() => ({
     entries,
     syncing,
     recordResult,
+    recordAnswered,
     toggleCardKnown,
     resetModule,
     resetAll,
     getModule,
     getSection,
-    getPath,
     overall,
     weakest,
-  }), [entries, syncing, recordResult, toggleCardKnown, resetModule, resetAll,
-       getModule, getSection, getPath, overall, weakest]);
+  }), [entries, syncing, recordResult, recordAnswered, toggleCardKnown,
+       resetModule, resetAll, getModule, getSection, overall, weakest]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }

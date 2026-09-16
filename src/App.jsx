@@ -17,13 +17,12 @@ import { Home as HomeIcon, BookOpen, TrendingUp, User, Loader2 } from "lucide-re
 import { AuthProvider, useAuth } from "./appAuth";
 import { ProgressProvider } from "./progressStore";
 import AuthScreen from "./AuthScreen";
-import {
-  HomeScreen, PathScreen, SectionScreen, LearningScreen, ProgressScreen, ProfileScreen,
-} from "./screens";
+import { HomeScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
 import FlashcardPlayer from "./FlashcardPlayer";
-import { MODULE_BY_ID } from "./appStructure";
-import { getDeck, getQuiz, getLearning } from "./contentSources";
+import { SECTION_BY_ID, buildMockTest } from "./adiSections";
+import { MOCK, DECK_BY_ID, PASS_MARK } from "./appStructure";
+import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
 
 const TABS = [
@@ -121,52 +120,91 @@ function AppShell() {
 /* Quiz runs and flashcard decks take over the screen — the tab bar would only
    be a way to lose your place mid-test. */
 function isFullScreen(view) {
-  return view.screen === "module";
+  return view.screen === "section" || view.screen === "mock" || view.screen === "deck";
 }
 
 /* ===========================================================================
    SCREEN SWITCH
+
+   Flatter than before. The app is now home -> section, home -> mock, or
+   home -> deck. There are no nested paths left to walk through.
    =========================================================================== */
 function CurrentScreen({ view, go, back, theme, toggleTheme }) {
   switch (view.screen) {
     case "home":
       return <HomeScreen go={go} />;
 
-    case "path":
-      return <PathScreen pathId={view.pathId} go={go} onBack={back} />;
-
-    case "section":
-      return <SectionScreen sectionId={view.sectionId} go={go} onBack={back} />;
-
     case "progress":
-      return <ProgressScreen />;
+      return <ProgressScreen go={go} />;
 
     case "profile":
       return <ProfileScreen theme={theme} toggleTheme={toggleTheme} />;
 
-    case "module": {
-      const module = MODULE_BY_ID[view.moduleId];
-      if (!module) return <NotReady onBack={back} />;
+    /* One of the five exam sections — practice its questions. */
+    case "section": {
+      const section = SECTION_BY_ID[view.sectionId];
+      if (!section || !section.questions.length) return <NotReady onBack={back} />;
+      return (
+        <QuizPlayer
+          key={section.id}
+          module={{
+            id: section.id,
+            label: section.label,
+            sectionLabel: `Section ${section.number}`,
+            kind: "mcq",
+            passMark: PASS_MARK,
+          }}
+          quiz={{
+            title: section.label,
+            subtitle: `${section.total} questions · pass mark ${PASS_MARK}%`,
+            categories: [{
+              id: section.id,
+              title: section.label,
+              blurb: section.blurb,
+              questions: section.questions,
+            }],
+          }}
+          onExit={back}
+        />
+      );
+    }
 
-      if (module.kind === "flashcards") {
-        const deck = getDeck(module.id);
-        if (!deck) return <NotReady onBack={back} />;
-        return <FlashcardPlayer module={module} deck={deck} onExit={back} />;
-      }
+    /* The 100-question mock, drawn across all five sections. */
+    case "mock": {
+      const questions = buildMockTest(MOCK.questionCount);
+      if (!questions.length) return <NotReady onBack={back} />;
+      return (
+        <QuizPlayer
+          key="mock"
+          module={{
+            id: MOCK.id,
+            label: MOCK.label,
+            sectionLabel: "Exam simulation",
+            kind: "mock",
+            questionCount: MOCK.questionCount,
+            passMark: MOCK.passMark,
+          }}
+          quiz={{
+            title: MOCK.label,
+            subtitle: MOCK.blurb,
+            categories: [{ id: "mock", title: MOCK.label, questions }],
+          }}
+          onExit={back}
+        />
+      );
+    }
 
-      if (module.kind === "mcq" || module.kind === "mock") {
-        const quiz = getQuiz(module.id);
-        if (!quiz) return <NotReady onBack={back} />;
-        return <QuizPlayer module={module} quiz={quiz} onExit={back} />;
-      }
-
-      if (module.kind === "learning") {
-        const learning = getLearning(module.id);
-        if (!learning) return <NotReady onBack={back} />;
-        return <LearningScreen module={module} learning={learning} onBack={back} />;
-      }
-
-      return <NotReady onBack={back} />;
+    case "deck": {
+      const deck = DECK_BY_ID[view.deckId];
+      const content = getDeck(view.deckId);
+      if (!deck || !content) return <NotReady onBack={back} />;
+      return (
+        <FlashcardPlayer
+          module={{ id: deck.id, label: deck.label, sectionLabel: "Flashcards" }}
+          deck={content}
+          onExit={back}
+        />
+      );
     }
 
     default:

@@ -1,84 +1,129 @@
-# PassDrivingTest.ie — Step-by-Step Guide
+# PassDrivingTest — ADI Stage 1 app
 
-This is your website's full project, ready to upload to GitHub and go live.
+Unzip this, then upload each folder's contents to the matching place. The
+folder names here mirror your repo, with one exception: **`root`** means the
+top level of the repo, not a folder called "root".
 
-## Part 1 — Get it on GitHub
+---
 
-1. Unzip the file I gave you. You should see a folder with things like
-   `package.json`, `index.html`, and a `src` folder inside.
-2. Go to [github.com](https://github.com) and log in.
-3. Click the **+** icon (top right) → **New repository**.
-4. Name it `passdrivingtest` → leave everything else as default → click
-   **Create repository**.
-5. On the next page, click **uploading an existing file**.
-6. Drag the **whole unzipped folder's contents** (not the zip itself — the
-   files and folders inside it) into the upload box.
-7. Scroll down, click the green **Commit changes** button.
+## Where everything goes
 
-That's it — your code is now on GitHub.
+### `src/` → your repo's `src` folder — 13 files
 
-## Part 2 — Make it live with Vercel
+Upload all of them together. GitHub will warn that most already exist; that's
+expected, they're replacements.
 
-1. Go to [vercel.com](https://vercel.com) and click **Sign Up**.
-2. Choose **Continue with GitHub** and approve the connection.
-3. Click **Add New... → Project**.
-4. Find your `passdrivingtest` repository in the list and click **Import**.
-5. Vercel will detect it's a Vite project automatically. Don't change any
-   settings — just click **Deploy**.
-6. Wait about a minute. You'll get a live link like
-   `passdrivingtest.vercel.app` — click it. Your site is now live on the
-   internet.
-
-## Part 3 — Connect your real domain (passdrivingtest.ie)
-
-1. In your Vercel project, click **Settings → Domains**.
-2. Type `passdrivingtest.ie` and click **Add**.
-3. Vercel will show you one or two DNS records (usually an "A record" and/or
-   a "CNAME record").
-4. Log into wherever you bought your domain (e.g. Blacknight, GoDaddy,
-   Namecheap) and find **DNS settings** or **DNS management**.
-5. Add the records Vercel showed you, exactly as shown.
-6. Wait 10 minutes to a few hours (this is normal — DNS takes time). Then
-   `passdrivingtest.ie` will show your site directly.
-
-You only do Parts 1–3 once. After this, every change you make just needs
-Part 4 below.
-
-## Part 4 — Changing simple details later (phone number, prices, etc.)
-
-You do **not** need to reinstall anything or use your computer's terminal
-for small text changes. Do it straight on the GitHub website:
-
-1. Go to your repository on github.com.
-2. Click into the `src` folder, then click on **`siteConfig.js`**.
-3. Click the **pencil icon** (top right of the file) to edit it.
-4. Change whatever you need — for example:
-   - Your phone number
-   - Your WhatsApp number
-   - Your email
-   - Lesson prices
-5. Scroll down, click **Commit changes**.
-6. That's it. Vercel notices the change automatically and updates your live
-   site within about a minute — no extra steps needed.
-
-**Only use `siteConfig.js` for these simple details.** Everything else
-(colours, layout, the flashcards, page text) lives in `src/App.jsx` — you
-can edit that the same way (pencil icon → change text → Commit changes),
-just be a little more careful there since it's the actual code, not just a
-list of details.
-
-## If something looks broken after an edit
-
-Go to your GitHub repository → click **Commits** (near the top) → find the
-change you just made → click the **"< >"** revert-style icon, or simply
-edit the file again and put the original text back. Nothing is ever lost —
-GitHub keeps every past version.
-
-## Quick reference
-
-| I want to... | Do this |
+| File | What it does |
 |---|---|
-| Change phone/WhatsApp/email/prices | Edit `src/siteConfig.js` on github.com, commit |
-| Change wording/colours/layout | Edit `src/App.jsx` on github.com, commit |
-| See my site update | Wait ~1 minute after committing, refresh the site |
-| Make it an iOS/Android app later | Ask me — the project is already structured for Capacitor |
+| `App.jsx` | Navigation, tab bar, error boundary, signed-in gate |
+| `AuthScreen.jsx` | Login, sign-up, guest entry |
+| `appAuth.jsx` | Accounts, sessions, guest mode, subscription flag |
+| `progressStore.jsx` | Per-question progress, section coverage, Supabase sync |
+| `appStructure.js` | App shape — five sections, mock, decks, pass mark |
+| `adiSections.js` | Files every question into the five exam sections |
+| `adiStageOneData.js` | 72 original ADI questions |
+| `rulesQuestions.js` | Rules of the Road questions (generated from the cards) |
+| `rulesFlashcardsData.js` | The 153 Rules of the Road cards |
+| `contentSources.js` | The three flashcard decks |
+| `screens.jsx` | Home, progress, profile |
+| `QuizPlayer.jsx` | Practice and mock tests, results, review |
+| `FlashcardPlayer.jsx` | Flashcards — swipe, 3D flip |
+| `ui.jsx` | Logo, bars, rings, buttons |
+| `usePwaInstall.js` | Install-to-home-screen detection |
+| `supabaseClient.js` | Database connection |
+
+**Delete `drivingTheoryData.js`** from `src` if it's still there. The category
+B learner bank isn't used now the app is ADI-only.
+
+### `public/` → your repo's `public` folder — 2 files
+
+- `logo.png` — the app loads it from `/logo.png`, which only works from here
+- `sw.js` — replaces the existing service worker; clears stale caches
+
+Leave `public/signs/` alone. Those 240 sign images are still needed.
+
+### `root/vercel.json` → the **top level** of your repo
+
+Not inside a folder. It sits beside `package.json`. Keeps your existing
+keep-alive cron and adds cache rules so a stale `index.html` can't be served
+again.
+
+### `sql/` → Supabase, never GitHub
+
+`app-accounts-and-progress.sql` → supabase.com → your project → **SQL Editor**
+→ **New query** → paste → **Run**. You want "Success. No rows returned."
+
+Then **Authentication → Sign In / Providers**: enable **Email**, and turn
+**Confirm email off** — Supabase's built-in mail is rate-limited and often
+never arrives.
+
+---
+
+## Before you commit — check these four
+
+1. **`package.json`** must list all four dependencies:
+   `react`, `react-dom`, `lucide-react`, `@supabase/supabase-js`.
+   The copy you sent me was missing the last one. The build fails without it.
+
+2. **`roadSignsData.js` must be inside `src`**, not at the repo root.
+
+3. `adiTheoryPracticeData.js` and `adiFlashcardsData.js` must be in `src` too.
+   Those are yours; the app imports all three.
+
+4. **Promote the deployment.** A deployment that says "Staged" has built but
+   isn't serving your domain. Deployments → the latest one → ⋯ → **Promote to
+   Production**. This is what left the old broken version live earlier.
+
+---
+
+## What the app is now
+
+ADI Stage 1 only. Home screen, in order:
+
+**The five exam sections**, each with its own progress bar showing questions
+answered out of the section total:
+
+| Section | Questions |
+|---|---|
+| 1. Driving Test Procedure & Documentation | 68 |
+| 2. Road Safety Precepts & Practices | 430 |
+| 3. Pedagogy | 29 |
+| 4. Basic Mechanics & Vehicle Maintenance | 34 |
+| 5. Category B & BE Towing | 30 |
+
+591 questions in total.
+
+**Mock test** — 100 questions, the length of the real paper, weighted
+25/30/20/15/10 across the five sections. Answers count toward their own
+sections, so one mock moves all five bars.
+
+**Flashcards** — Rules of the Road (153), Road Signs (240), ADI (62). Study
+material, kept below the sections.
+
+Pass mark 75%. Results read Passed / Almost there / Keep practising.
+
+---
+
+## Things worth knowing
+
+**The mock weighting is my estimate.** The RSA doesn't publish a per-section
+question count. Drawing in proportion to bank size gave Road Safety 54 of 100,
+because it absorbs all the sign questions — which would train candidates for
+the wrong exam. The weights are one line at the top of `adiSections.js`.
+
+**Two sections are thin.** Pedagogy has 29 questions and Category B & BE has
+30, but the mock draws 20 and 10 from them. Candidates will see those
+repeatedly. Worth growing first — Workbook 4 is a good source for Pedagogy.
+
+**`rulesQuestions.js` needs a read-through.** It was already in your project
+and its own header says the wrong answers were generated automatically. Those
+questions feed Section 2. Worth checking before charging anyone.
+
+**Your workbooks are out of date on one point.** They give the default rural
+road limit as 80 km/h. It has been 60 km/h since 7 February 2025. The
+questions here use 60.
+
+**Copyright.** No question, option or explanation is copied or reworded from
+the Resource Workbooks or The Motor Car Mechanical Principles. They were used
+to establish what the exam covers — the syllabus and section structure — and
+the questions were written fresh against those facts.

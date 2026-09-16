@@ -207,6 +207,10 @@ export const ALL_QUESTIONS = ADI_SECTIONS.flatMap(s => s.questions);
 
 export const TOTAL_QUESTIONS = ALL_QUESTIONS.length;
 
+/* Lets a paused session be rebuilt from stored question ids alone, rather
+   than writing whole questions into browser storage. */
+export const QUESTION_BY_QID = Object.fromEntries(ALL_QUESTIONS.map(q => [q.qid, q]));
+
 /* ---------------------------------------------------------------------------
    MOCK TEST
 

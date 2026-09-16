@@ -25,6 +25,7 @@
 */
 
 import ADI_STAGE_ONE from "./adiStageOneData";
+import ADI_EXPANSION from "./adiExpansionData";
 import ADI_PRACTICE from "./adiTheoryPracticeData";
 import RULES_QUESTIONS from "./rulesQuestions";
 import { ROAD_SIGNS, ROAD_SIGN_CAT } from "./roadSignsData";
@@ -114,6 +115,7 @@ const SECTION_DEFS = [
       ...pick(ADI_PRACTICE, "driving-test-procedure"),
       ...pick(ADI_STAGE_ONE, "adi-s1-testing"),
       ...pick(ADI_STAGE_ONE, "adi-s1-law"),
+      ...pick(ADI_EXPANSION, "adi-exp-procedure"),
       ...pick(RULES_QUESTIONS, "documents"),
     ],
   },
@@ -147,6 +149,7 @@ const SECTION_DEFS = [
     sources: [
       ...pick(ADI_PRACTICE, "pedagogy"),
       ...pick(ADI_STAGE_ONE, "adi-s1-pedagogy"),
+      ...pick(ADI_EXPANSION, "adi-exp-pedagogy"),
     ],
   },
   {
@@ -159,6 +162,7 @@ const SECTION_DEFS = [
     sources: [
       ...pick(ADI_PRACTICE, "mechanics-maintenance"),
       ...pick(ADI_STAGE_ONE, "adi-s1-mechanics"),
+      ...pick(ADI_EXPANSION, "adi-exp-mechanics"),
     ],
   },
   {
@@ -170,6 +174,7 @@ const SECTION_DEFS = [
     accent: "emerald",
     sources: [
       ...pick(ADI_PRACTICE, "category-b-be-towing"),
+      ...pick(ADI_EXPANSION, "adi-exp-categoryb"),
     ],
   },
 ];

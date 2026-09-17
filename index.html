@@ -91,35 +91,52 @@
   --green:#16a34a; --green-d:#15803d; --green-l:#dcfce7;
   --amber:#b45309; --amber-l:#fef3c7;
   --wrap:1060px; --read:720px;
+
+  /* One number controls the rhythm of the whole page.
+
+     It was 60px top and bottom, so every section boundary opened a 120px gap —
+     on a phone that's an eighth of the screen with nothing in it, and there are
+     eight of them. Section padding alone came to 1,162px of the page.
+
+     40 on a phone, more on a desktop where the text column is narrower relative
+     to the window and the page needs the breathing room to not look cramped. */
+  --sp:40px;
 }
+@media(min-width:760px){ :root{ --sp:56px } }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
 body{
   margin:0; background:var(--bg); color:var(--body);
-  font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  /* 1.58 rather than 1.65. Over a page this long that single change is worth
+     roughly 300px, and at this measure it still reads comfortably — 1.65 is
+     generous for a 720px column, not necessary for it. */
+  font:17px/1.58 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3,h4{color:var(--ink); line-height:1.2; margin:0 0 .5em; letter-spacing:-.02em}
+h1,h2,h3,h4{color:var(--ink); line-height:1.2; margin:0 0 .4em; letter-spacing:-.02em}
 h1{font-size:clamp(2rem,5.2vw,3.1rem); font-weight:800; letter-spacing:-.03em}
-h2{font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:800; margin-top:0}
-h3{font-size:1.2rem; font-weight:700}
+h2{font-size:clamp(1.45rem,3.4vw,2rem); font-weight:800; margin-top:0}
+h3{font-size:1.15rem; font-weight:700}
 h4{font-size:1rem; font-weight:700}
-p{margin:0 0 1.1em}
+/* 0.9em rather than 1.1: paragraphs here are short, and a gap nearly the height
+   of a line makes consecutive ones read as separate blocks rather than one
+   argument. */
+p{margin:0 0 .9em}
 a{color:var(--green-d)}
-ul,ol{margin:0 0 1.1em; padding-left:1.3em}
-li{margin-bottom:.5em}
+ul,ol{margin:0 0 .9em; padding-left:1.3em}
+li{margin-bottom:.4em}
 strong{color:var(--ink); font-weight:650}
 img{max-width:100%; height:auto}
 
 .wrap{max-width:var(--wrap); margin:0 auto; padding:0 20px}
 .read{max-width:var(--read)}
-section{padding:60px 0; border-top:1px solid var(--line)}
+section{padding:var(--sp) 0; border-top:1px solid var(--line)}
 section.alt{background:var(--bg-2)}
 /* The header sticks and is 62px tall, so an anchor jump lands with the heading
    hidden underneath it. scroll-margin pushes the landing point down past it —
    plus the notch inset, because on an iPhone the header is that much taller. */
 [id]{scroll-margin-top:calc(78px + env(safe-area-inset-top))}
-.lede{font-size:1.12rem; color:var(--body)}
+.lede{font-size:1.08rem; line-height:1.5; color:var(--body)}
 
 /* ---- header ---- */
 header{
@@ -163,39 +180,49 @@ nav.links a:hover{color:#fff}
 .btn.on-dark:hover{background:#e2e8f0; border-color:#e2e8f0}
 
 /* ---- hero ---- */
-.hero{background:var(--ink); color:#cbd5e1; padding:52px 0 60px; border:0}
+.hero{background:var(--ink); color:#cbd5e1; padding:var(--sp) 0; border:0}
 .hero h1{color:#fff}
-.hero .lede{color:#cbd5e1; font-size:1.18rem; max-width:620px}
-/* The hero logo is gone — see the note in the markup. Top padding grows a
-   little to compensate, so the headline doesn't sit tight under the header. */
-.hero{padding-top:64px}
-.cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
-.hero small{display:block; margin-top:16px; color:#94a3b8; font-size:.88rem}
+.hero .lede{color:#cbd5e1; font-size:1.1rem; line-height:1.5; max-width:600px}
+.hero .lede{max-width:600px}
+.cta-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:20px}
+.hero small{display:block; margin-top:12px; color:#94a3b8; font-size:.88rem}
+/* Four across, always — a fixed 4-column grid rather than auto-fit.
+
+   auto-fit was wrapping them into 2×2 on a phone: 210px tall, and it reads as
+   a table of four facts rather than a strip of headline numbers. Forcing one
+   row costs the labels a couple of extra lines each and saves 120px, and a
+   strip is what this is meant to be. */
 .facts{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  display:grid; grid-template-columns:repeat(4,1fr);
   gap:1px; background:#1e293b; border:1px solid #1e293b; border-radius:14px;
-  overflow:hidden; margin-top:36px;
+  overflow:hidden; margin-top:20px;
 }
-.facts div{background:var(--ink-2); padding:16px 18px}
-.facts b{display:block; color:#fff; font-size:1.35rem; font-weight:800; letter-spacing:-.02em}
-.facts span{display:block; color:#94a3b8; font-size:.8rem; font-weight:600;
-  text-transform:uppercase; letter-spacing:.06em; margin-top:3px}
+.facts div{background:var(--ink-2); padding:12px 10px}
+.facts b{display:block; color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.02em}
+.facts span{display:block; color:#94a3b8; font-size:.68rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em; margin-top:3px; line-height:1.3}
+@media(min-width:620px){
+  .facts div{padding:14px 16px}
+  .facts b{font-size:1.4rem}
+  .facts span{font-size:.78rem; letter-spacing:.06em}
+}
 
 /* ---- steps ---- */
-ol.steps{list-style:none; padding:0; margin:34px 0 0; counter-reset:s}
+ol.steps{list-style:none; padding:0; margin:22px 0 0; counter-reset:s}
 ol.steps>li{
-  counter-increment:s; position:relative; padding:0 0 26px 58px;
-  border-left:2px solid var(--line); margin-left:17px;
+  counter-increment:s; position:relative; padding:0 0 20px 50px;
+  border-left:2px solid var(--line); margin-left:15px;
 }
 ol.steps>li:last-child{border-left-color:transparent; padding-bottom:0}
 ol.steps>li::before{
-  content:counter(s); position:absolute; left:-18px; top:-2px;
-  width:35px; height:35px; border-radius:50%; background:var(--ink); color:#fff;
-  font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center;
+  content:counter(s); position:absolute; left:-16px; top:-2px;
+  width:31px; height:31px; border-radius:50%; background:var(--ink); color:#fff;
+  font-weight:800; font-size:.86rem; display:flex; align-items:center; justify-content:center;
 }
 ol.steps>li.key::before{background:var(--green)}
-ol.steps h3{margin-bottom:.35em}
-ol.steps p{margin-bottom:.5em}
+ol.steps h3{margin-bottom:.3em}
+ol.steps p{margin-bottom:.45em}
+ol.steps>li>p:last-child{margin-bottom:0}
 ol.steps .tag{
   display:inline-block; background:var(--green-l); color:var(--green-d);
   font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
@@ -203,22 +230,22 @@ ol.steps .tag{
 }
 
 /* ---- cards ---- */
-.grid{display:grid; gap:18px; margin-top:30px}
+.grid{display:grid; gap:12px; margin-top:20px}
 .grid.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .grid.c3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px}
-.card h3{margin-top:0}
+.card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px}
+.card h3{margin-top:0; margin-bottom:.35em}
 .card p:last-child,.card ul:last-child{margin-bottom:0}
 .card .num{
-  font-size:.75rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
-  color:var(--green-d); margin-bottom:8px; display:block;
+  font-size:.72rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--green-d); margin-bottom:5px; display:block;
 }
 
 /* ---- table ---- */
-.tablewrap{overflow-x:auto; margin:28px 0 0; -webkit-overflow-scrolling:touch}
-table{width:100%; border-collapse:collapse; font-size:.96rem; min-width:440px}
-caption{text-align:left; color:var(--muted); font-size:.88rem; padding-bottom:10px}
-th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line)}
+.tablewrap{overflow-x:auto; margin:18px 0 0; -webkit-overflow-scrolling:touch}
+table{width:100%; border-collapse:collapse; font-size:.95rem; min-width:440px}
+caption{text-align:left; color:var(--muted); font-size:.86rem; padding-bottom:8px}
+th,td{text-align:left; padding:10px 13px; border-bottom:1px solid var(--line)}
 th{background:var(--bg-2); color:var(--ink); font-weight:700; font-size:.82rem;
   text-transform:uppercase; letter-spacing:.04em}
 td.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:650; color:var(--ink)}
@@ -227,7 +254,7 @@ tr.total td{border-top:2px solid var(--ink); border-bottom:0; font-weight:800; c
 /* ---- callout ---- */
 .note{
   background:var(--amber-l); border:1px solid #fde68a; border-left:4px solid #f59e0b;
-  border-radius:10px; padding:18px 20px; margin:26px 0;
+  border-radius:10px; padding:15px 17px; margin:18px 0;
 }
 .note p:last-child{margin-bottom:0}
 .note strong{color:var(--amber)}
@@ -235,42 +262,51 @@ tr.total td{border-top:2px solid var(--ink); border-bottom:0; font-weight:800; c
 /* ---- faq ---- */
 details{border-bottom:1px solid var(--line); padding:4px 0}
 details summary{
-  cursor:pointer; padding:16px 34px 16px 0; font-weight:650; color:var(--ink);
-  list-style:none; position:relative; font-size:1.02rem;
+  cursor:pointer; padding:14px 34px 14px 0; font-weight:650; color:var(--ink);
+  list-style:none; position:relative; font-size:1rem;
 }
 details summary::-webkit-details-marker{display:none}
 details summary::after{
-  content:"+"; position:absolute; right:6px; top:13px; font-size:1.5rem;
+  content:"+"; position:absolute; right:6px; top:11px; font-size:1.5rem;
   font-weight:400; color:var(--muted); line-height:1;
 }
 details[open] summary::after{content:"\2212"}
-details .a{padding:0 0 18px; color:var(--body)}
+details .a{padding:0 0 15px; color:var(--body)}
 details .a p:last-child{margin-bottom:0}
 
 /* ---- app promo ---- */
 .promo{background:var(--ink); color:#cbd5e1; border:0}
 .promo h2{color:#fff}
 .promo .lede{color:#cbd5e1}
-.promo ul{list-style:none; padding:0; margin:26px 0 0}
-.promo li{padding-left:30px; position:relative; margin-bottom:12px; color:#cbd5e1}
+.promo ul{list-style:none; padding:0; margin:18px 0 0}
+.promo li{padding-left:28px; position:relative; margin-bottom:9px; color:#cbd5e1}
 .promo li::before{
   content:"\2713"; position:absolute; left:0; top:-1px; color:#4ade80; font-weight:800; font-size:1.1rem;
 }
 
 /* ---- footer ---- */
-footer{background:var(--ink); color:#94a3b8; padding:44px 0 34px; font-size:.9rem; border:0}
-footer img{height:54px; width:auto; margin-bottom:16px}
+footer{background:var(--ink); color:#94a3b8; padding:32px 0 26px; font-size:.88rem; border:0}
+footer .brand{padding:0}
+footer .brand img{height:30px; width:30px}
+footer .brand span{font-size:1rem}
 footer a{color:#cbd5e1; text-decoration:none}
 footer a:hover{color:#fff; text-decoration:underline}
-.fcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:30px; margin-bottom:34px}
-.fcols h4{color:#fff; font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:12px}
+/* Three columns side by side from 520px rather than stacking until 570 — on a
+   phone the stacked version was three full-width lists one after another, which
+   is most of the footer's 1,014px. Two columns fit comfortably at 390px. */
+.fcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 20px; margin-bottom:24px}
+.fcols h4{color:#fff; font-size:.75rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px}
 .fcols ul{list-style:none; padding:0; margin:0}
-/* Footer links are a list of tap targets, not prose. At 16px tall with an 8px
-   gap they're smaller than a fingertip and sit close enough together to hit the
-   wrong one. Padding makes each row ~40px without changing how it looks. */
-.fcols li{margin-bottom:2px}
+/* Footer links are a list of tap targets, not prose. Bare 16px text rows sit
+   close enough together to hit the wrong one, so each link gets padding.
+
+   I briefly cut this to 7px while tightening the page and it took the rows to
+   36px. Restoring it costs 36px across all nine links — a third of one percent
+   of the page — which is not a trade worth making against mis-tapping. */
+.fcols li{margin-bottom:0}
 .fcols li a{display:block; padding:9px 0}
-.fine{border-top:1px solid var(--ink-2); padding-top:22px; line-height:1.6; font-size:.84rem}
+.fine{border-top:1px solid var(--ink-2); padding-top:18px; line-height:1.55; font-size:.82rem}
+.fine p{margin-bottom:.7em}
 
 /* ---- sticky mobile CTA ----
    Hidden until the hero's own button has scrolled away. Two identical green
@@ -886,7 +922,13 @@ footer a:hover{color:#fff; text-decoration:underline}
 <!-- ======================= FOOTER ======================= -->
 <footer>
   <div class="wrap">
-    <img src="/logo-mark.png" alt="PassADITest.ie" width="180" height="141">
+    <!-- Same wheel-plus-text lockup as the header, for the same reason: the
+         full logo is a wordmark under a wheel, and at footer size the words
+         turn to mush. -->
+    <a href="/" class="brand" style="margin-bottom:18px" aria-label="PassADITest.ie">
+      <img src="/wheel-sm.png" alt="" width="108" height="108">
+      <span>Pass<i>ADI</i>Test<i>.ie</i></span>
+    </a>
 
     <div class="fcols">
       <div>
@@ -899,11 +941,12 @@ footer a:hover{color:#fff; text-decoration:underline}
         </ul>
       </div>
       <div>
+        <!-- Was three links all pointing at /app. Three ways to say the same
+             thing isn't choice, it's noise. -->
         <h4>Practise</h4>
         <ul>
           <li><a href="/app">Go to the app</a></li>
-          <li><a href="/app">Log in</a></li>
-          <li><a href="/app">Create an account</a></li>
+          <li><a href="/app">Log in or sign up</a></li>
         </ul>
       </div>
       <div>

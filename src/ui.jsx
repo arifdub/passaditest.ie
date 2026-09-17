@@ -164,9 +164,42 @@ export function ScreenHeader({
 }
 
 /* ------------------------------------------------------------------------- */
-export function Screen({ children }) {
+/* The standard page body. `pb-28` clears the tab bar.
+
+   `fill` is for screens that take over the whole display and have no tab bar —
+   the flashcard deck. It becomes a flex column that grows to the bottom of the
+   viewport, so a screen with little content can stretch one block to fill the
+   gap instead of leaving dead space under it. The bottom padding drops to the
+   home-indicator inset, since there's no tab bar to clear. */
+export function Screen({ children, fill }) {
+  if (fill) {
+    return (
+      <div
+        className="max-w-2xl mx-auto px-5 pt-4 flex-1 flex flex-col w-full"
+        style={{ paddingBottom: "max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem))" }}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-5 pt-4 pb-28">
+      {children}
+    </div>
+  );
+}
+
+/* Wraps a header and a `fill` Screen so the two together are exactly one
+   viewport tall, which is what lets the Screen's flex-1 child have a real
+   height to grow into.
+
+   100dvh rather than 100vh: on mobile Safari, 100vh is the height with the
+   address bar hidden, so a 100vh layout sits taller than what you can actually
+   see and the bottom of it is cut off until you scroll. */
+export function FullScreen({ children }) {
+  return (
+    <div className="flex flex-col" style={{ minHeight: "100dvh" }}>
       {children}
     </div>
   );

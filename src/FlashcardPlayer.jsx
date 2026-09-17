@@ -26,7 +26,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from "react"
 import {
   ChevronLeft, ChevronRight, Shuffle, Check, RotateCcw, ListFilter, X,
 } from "lucide-react";
-import { ScreenHeader, Screen } from "./ui";
+import { ScreenHeader, Screen, FullScreen } from "./ui";
 import { useProgress } from "./progressStore";
 
 function shuffle(arr) {
@@ -283,7 +283,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
   const isKnown = card ? known.includes(card.id) : false;
 
   return (
-    <>
+    <FullScreen>
       <ScreenHeader
         compact
         title={deck.title}
@@ -323,9 +323,9 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
         }
       />
 
-      <Screen>
+      <Screen fill>
         {/* Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setShowFilters(v => !v)}
             className="flex items-center gap-1.5 text-sm font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200"
@@ -353,7 +353,9 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
         </div>
 
         {showFilters && (
-          <div className="mt-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3">
+          /* shrink-0 with its own scroll: a 20-topic list would otherwise
+             squeeze the card down to nothing when the filters are open. */
+          <div className="mt-2.5 shrink-0 max-h-[34vh] overflow-y-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3">
             <div className="flex flex-wrap gap-1.5">
               <FilterChip label="All topics" active={catFilter === "all"} onClick={() => applyFilter("all")} />
               <FilterChip label="Still learning" active={catFilter === "unknown"} onClick={() => applyFilter("unknown")} />
@@ -372,7 +374,9 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
 
         {/* Card */}
         {!card ? (
-          <div className="mt-6 text-center py-16 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl">
+          /* Grows too, so an empty deck doesn't leave the same dead space the
+             card screen used to. */
+          <div className="mt-3.5 flex-1 flex flex-col items-center justify-center text-center px-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl">
             <p className="font-bold text-slate-900 dark:text-white">Nothing here</p>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {catFilter === "unknown"
@@ -386,17 +390,25 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
                 elements. Trying to combine translateX and rotateY on one
                 element makes them fight each other — the flip axis moves with
                 the card. Outer handles the swipe, inner handles the flip. */}
-            <div className="mt-3.5 overflow-hidden -mx-1 px-1" style={{ perspective: "1400px" }}>
+            {/* flex-1 rather than a fixed 240px. The card is the one thing on
+                this screen worth making bigger, so it takes whatever height is
+                left after the controls, the nav row and the button — which is
+                what closes the gap at the bottom on a tall phone. min-h keeps
+                it sane on a small one, where flex-1 has little to give. */}
+            <div
+              className="mt-3.5 flex-1 min-h-[200px] relative overflow-hidden rounded-3xl"
+              style={{ perspective: "1400px" }}
+            >
               <div
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
                 onPointerCancel={onPointerUp}
                 style={cardStyle}
-                className="relative w-full min-h-[240px] cursor-grab active:cursor-grabbing select-none"
+                className="absolute inset-0 cursor-grab active:cursor-grabbing select-none"
               >
                 <div
-                  className="relative w-full h-full min-h-[240px]"
+                  className="relative w-full h-full"
                   style={{
                     transformStyle: "preserve-3d",
                     transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -413,7 +425,9 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
                         src={card.img}
                         alt=""
                         draggable={false}
-                        className="max-h-40 w-auto object-contain pointer-events-none"
+                        /* Proportional, so the sign grows with the card on a
+                           big phone instead of floating in a sea of white. */
+                        className="max-h-[55%] max-w-[80%] w-auto object-contain pointer-events-none"
                         loading="lazy"
                       />
                     ) : (
@@ -441,7 +455,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
             </div>
 
             {/* Nav */}
-            <div className="mt-3 flex items-center justify-between gap-3">
+            <div className="mt-3 shrink-0 flex items-center justify-between gap-3">
               <button
                 onClick={() => triggerChange(-1)}
                 className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300"
@@ -466,7 +480,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
               </button>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-3 shrink-0">
               <button
                 onClick={markKnown}
                 className={`w-full font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 ${
@@ -481,7 +495,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
           </>
         )}
       </Screen>
-    </>
+    </FullScreen>
   );
 }
 

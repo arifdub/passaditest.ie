@@ -64,7 +64,28 @@ export function HomeScreen({ go }) {
           style={{ paddingTop: "max(1.5rem, calc(env(safe-area-inset-top) + 0.875rem))" }}
         >
           <div className="flex justify-center">
-            <Logo size="md" />
+            {/* The logo is the way back out to the public site.
+
+                target="_blank" matters more than it looks: when the app is
+                running as an installed home-screen app there is no address
+                bar and no Back button, so a same-window navigation to the
+                landing page would strand someone on it with no way back to
+                their progress. Opening it in the browser instead leaves the
+                app exactly where it was.
+
+                ?stay=1 stops the landing page's own redirect from bouncing
+                straight back here — that redirect exists to make the
+                home-screen icon always open the app, and this is the one
+                case where the landing page was asked for on purpose. */}
+            <a
+              href="/?stay=1"
+              target="_blank"
+              rel="noopener"
+              aria-label="PassADITest.ie — about the ADI qualification"
+              className="inline-block"
+            >
+              <Logo size="md" />
+            </a>
           </div>
           <p className="mt-4 text-slate-400 text-sm">Hi {displayName} 👋</p>
           <h1 className="mt-0.5 text-2xl font-black tracking-tight">ADI Theory Test</h1>
@@ -970,7 +991,7 @@ function InstallCard() {
         </ol>
         <p className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-400 leading-relaxed">
           This only works in Safari. If you're in another browser on iPhone,
-          open passaditest.ie in Safari first.
+          open passaditest.ie/app in Safari first.
         </p>
       </div>
     );
@@ -982,7 +1003,7 @@ function InstallCard() {
       <div>
         <p className="font-semibold text-slate-900 dark:text-white text-sm">Study on your phone</p>
         <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Open passaditest.ie on your phone to add it to your home screen.
+          Open passaditest.ie/app on your phone to add it to your home screen.
         </p>
       </div>
     </div>

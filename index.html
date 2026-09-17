@@ -138,7 +138,9 @@ header{
    header and the words become an unreadable smudge. Text stays crisp at any
    size, on any screen, and weighs nothing. */
 .brand{display:flex; align-items:center; gap:9px; text-decoration:none; padding:8px 0}
-.brand img{height:30px; width:30px; display:block}
+/* 33px — the wheel up 10% from 30. Nudging the mark up without touching the
+   wordmark beside it keeps the two in balance; they were set to match. */
+.brand img{height:33px; width:33px; display:block}
 .brand span{
   color:#fff; font-weight:800; font-size:1.05rem; letter-spacing:-.02em; white-space:nowrap;
 }
@@ -164,13 +166,9 @@ nav.links a:hover{color:#fff}
 .hero{background:var(--ink); color:#cbd5e1; padding:52px 0 60px; border:0}
 .hero h1{color:#fff}
 .hero .lede{color:#cbd5e1; font-size:1.18rem; max-width:620px}
-/* Small, and it stays small on a phone.
-
-   At 300px it filled the entire first screen on a 390px-wide device and pushed
-   the H1 below the fold — so someone arriving from a Google result saw a logo
-   and had to scroll to find out whether they were in the right place. The
-   headline is what confirms that, so the headline goes first. */
-.hero img.logo{width:min(190px,42vw); margin-bottom:20px}
+/* The hero logo is gone — see the note in the markup. Top padding grows a
+   little to compensate, so the headline doesn't sit tight under the header. */
+.hero{padding-top:64px}
 .cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
 .hero small{display:block; margin-top:16px; color:#94a3b8; font-size:.88rem}
 .facts{
@@ -301,7 +299,7 @@ footer a:hover{color:#fff; text-decoration:underline}
 <header>
   <div class="wrap bar">
     <a href="/" class="brand" aria-label="PassADITest.ie home">
-      <img src="/wheel-sm.png" alt="" width="72" height="72">
+      <img src="/wheel-sm.png" alt="" width="108" height="108">
       <span>Pass<i>ADI</i>Test<i>.ie</i></span>
     </a>
     <nav class="links">
@@ -317,7 +315,15 @@ footer a:hover{color:#fff; text-decoration:underline}
 <!-- ======================= HERO ======================= -->
 <section class="hero">
   <div class="wrap">
-    <img src="/logo-hero.png" alt="PassADITest.ie" class="logo" width="440" height="346" fetchpriority="high">
+    <!-- No logo here. The header already carries the brand, and repeating it
+         160px further down pushed the headline — the thing that tells a
+         visitor from Google whether they're in the right place — most of the
+         way down the first screen.
+
+         It also makes the H1 the largest element on first paint, which is
+         what Google measures as Largest Contentful Paint: text renders with
+         the page, an image needs a second request. /logo-hero.png is still
+         published for og:image when the link is shared. -->
     <h1>How to become a driving instructor in Ireland</h1>
     <p class="lede">
       Becoming an RSA Approved Driving Instructor takes three tests, Garda vetting

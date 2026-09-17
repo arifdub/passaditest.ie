@@ -13,7 +13,7 @@
 */
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Home as HomeIcon, BookOpen, TrendingUp, User, Loader2 } from "lucide-react";
+import { Home as HomeIcon, BookOpen, TrendingUp, User, Loader2, Lock } from "lucide-react";
 import { AuthProvider, useAuth } from "./appAuth";
 import { ProgressProvider } from "./progressStore";
 import AuthScreen from "./AuthScreen";
@@ -21,7 +21,7 @@ import { HomeScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
-import { MOCK, DECK_BY_ID, PASS_MARK } from "./appStructure";
+import { MOCK, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
 
@@ -130,6 +130,18 @@ function isFullScreen(view) {
    home -> deck. There are no nested paths left to walk through.
    =========================================================================== */
 function CurrentScreen({ view, go, back, theme, toggleTheme }) {
+  const { isGuest, exitGuest } = useAuth();
+
+  /* A guest can reach a locked section from the Progress tab as well as the
+     home screen, so the check lives here too. The home screen's lock is the
+     signpost; this is the actual gate. */
+  const gated = view.screen === "section" ? view.sectionId
+    : view.screen === "mock" ? MOCK.id
+    : null;
+  if (gated && lockedForGuest(gated, isGuest)) {
+    return <GuestLocked onBack={back} onCreateAccount={exitGuest} />;
+  }
+
   switch (view.screen) {
     case "home":
       return <HomeScreen go={go} />;
@@ -210,6 +222,38 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
     default:
       return <HomeScreen go={go} />;
   }
+}
+
+function GuestLocked({ onBack, onCreateAccount }) {
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6">
+      <div className="max-w-sm text-center">
+        <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center mx-auto">
+          <Lock size={22} className="text-white" />
+        </div>
+        <h2 className="mt-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+          Create a free account
+        </h2>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+          Guests get Section 1 and the flashcards in full. An account opens the
+          other four sections and the mock exam, and keeps everything you've
+          already studied.
+        </p>
+        <button
+          onClick={onCreateAccount}
+          className="mt-5 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl"
+        >
+          Create a free account
+        </button>
+        <button
+          onClick={onBack}
+          className="mt-2 w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2.5"
+        >
+          Go back
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function NotReady({ onBack }) {

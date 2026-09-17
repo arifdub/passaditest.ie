@@ -13,9 +13,9 @@ import React from "react";
 import {
   ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
-  Smartphone, Download, Share2, Check,
+  Smartphone, Download, Share2, Check, Lock,
 } from "lucide-react";
-import { ADI_SECTIONS, MOCK, DECKS, PASS_MARK } from "./appStructure";
+import { ADI_SECTIONS, MOCK, DECKS, PASS_MARK, lockedForGuest } from "./appStructure";
 import { useAuth } from "./appAuth";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
@@ -38,6 +38,7 @@ const SECTION_ICON = {
 export function HomeScreen({ go }) {
   const { displayName, subscription, isGuest, exitGuest } = useAuth();
   const { getSection, getModule, overall } = useProgress();
+  const [lockedPrompt, setLockedPrompt] = React.useState(null);
 
   const mock = getModule(MOCK.id);
 
@@ -90,17 +91,28 @@ export function HomeScreen({ go }) {
           {ADI_SECTIONS.map(section => {
             const Icon = SECTION_ICON[section.id] || ClipboardCheck;
             const p = getSection(section.id);
+            const locked = lockedForGuest(section.id, isGuest);
             return (
               <button
                 key={section.id}
-                onClick={() => go({ screen: "section", sectionId: section.id })}
-                className="w-full text-left bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 transition hover:border-emerald-400 active:scale-[0.99]"
+                onClick={() => locked
+                  ? setLockedPrompt(section.label)
+                  : go({ screen: "section", sectionId: section.id })}
+                className={`w-full text-left bg-white dark:bg-slate-800 border rounded-2xl p-4 transition active:scale-[0.99] ${
+                  locked
+                    ? "border-slate-200 dark:border-slate-700 opacity-70"
+                    : "border-slate-200 dark:border-slate-700 hover:border-emerald-400"
+                }`}
               >
                 <div className="flex items-start gap-3.5">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    p.passed ? "bg-emerald-500" : "bg-slate-700 dark:bg-slate-600"
+                    locked
+                      ? "bg-slate-300 dark:bg-slate-600"
+                      : p.passed ? "bg-emerald-500" : "bg-slate-700 dark:bg-slate-600"
                   }`}>
-                    <Icon size={18} className="text-white" />
+                    {locked
+                      ? <Lock size={17} className="text-white" />
+                      : <Icon size={18} className="text-white" />}
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -113,18 +125,24 @@ export function HomeScreen({ go }) {
                       </span>
                     </div>
 
-                    <div className="mt-2">
-                      <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
-                        <span>{p.answered} / {p.total} questions</span>
-                        <span>{p.attempts > 0 ? `Best ${p.bestPct}%` : "Not started"}</span>
+                    {locked ? (
+                      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                        {p.total} questions · create a free account to unlock
+                      </p>
+                    ) : (
+                      <div className="mt-2">
+                        <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                          <span>{p.answered} / {p.total} questions</span>
+                          <span>{p.attempts > 0 ? `Best ${p.bestPct}%` : "Not started"}</span>
+                        </div>
+                        <ProgressBar
+                          pct={p.coveragePct}
+                          tone={p.passed ? "emerald" : p.started ? "amber" : "slate"}
+                        />
                       </div>
-                      <ProgressBar
-                        pct={p.coveragePct}
-                        tone={p.passed ? "emerald" : p.started ? "amber" : "slate"}
-                      />
-                    </div>
+                    )}
 
-                    {p.attempts > 0 && (
+                    {!locked && p.attempts > 0 && (
                       <p className={`mt-1.5 text-xs font-semibold ${
                         p.passed
                           ? "text-emerald-600 dark:text-emerald-400"
@@ -135,7 +153,9 @@ export function HomeScreen({ go }) {
                     )}
                   </div>
 
-                  <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0 mt-2" />
+                  {locked
+                    ? <Lock size={15} className="text-slate-300 dark:text-slate-600 shrink-0 mt-2.5" />
+                    : <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0 mt-2" />}
                 </div>
               </button>
             );
@@ -147,16 +167,26 @@ export function HomeScreen({ go }) {
           Exam simulation
         </p>
         <button
-          onClick={() => go({ screen: "mock" })}
-          className="w-full text-left rounded-2xl p-5 bg-slate-900 hover:bg-slate-800 transition active:scale-[0.99]"
+          onClick={() => lockedForGuest(MOCK.id, isGuest)
+            ? setLockedPrompt(MOCK.label)
+            : go({ screen: "mock" })}
+          className={`w-full text-left rounded-2xl p-5 bg-slate-900 transition active:scale-[0.99] ${
+            lockedForGuest(MOCK.id, isGuest) ? "opacity-70" : "hover:bg-slate-800"
+          }`}
         >
           <div className="flex items-start gap-3.5">
             <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-              <Timer size={22} className="text-white" />
+              {lockedForGuest(MOCK.id, isGuest)
+                ? <Lock size={20} className="text-white" />
+                : <Timer size={22} className="text-white" />}
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-lg font-black tracking-tight text-white">{MOCK.label}</h2>
-              <p className="mt-0.5 text-sm text-slate-300 leading-snug">{MOCK.blurb}</p>
+              <p className="mt-0.5 text-sm text-slate-300 leading-snug">
+                {lockedForGuest(MOCK.id, isGuest)
+                  ? "Create a free account to unlock the full mock exam."
+                  : MOCK.blurb}
+              </p>
               {mock.attempts > 0 && (
                 <div className="mt-3">
                   <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
@@ -236,6 +266,47 @@ export function HomeScreen({ go }) {
           </p>
         )}
       </Screen>
+
+      {/* Shown when a guest taps something they don't have yet. A sheet rather
+          than a redirect, so they can dismiss it and carry on with Section 1
+          instead of being thrown out to the sign-up form. */}
+      {lockedPrompt && (
+        <div
+          className="fixed inset-0 z-30 bg-slate-900/70 backdrop-blur-sm flex items-end"
+          onClick={() => setLockedPrompt(null)}
+        >
+          <div
+            className="w-full bg-white dark:bg-slate-800 rounded-t-3xl p-6"
+            style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem))" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
+              <Lock size={18} className="text-white" />
+            </div>
+            <h2 className="mt-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+              {lockedPrompt}
+            </h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              Guests get Section&nbsp;1 and the flashcards in full. Create a free
+              account to open the other four sections and the mock exam — and
+              your progress will follow you to any device.
+            </p>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Everything you've already studied comes with you.
+            </p>
+
+            <div className="mt-5 space-y-2.5">
+              <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>
+              <button
+                onClick={() => setLockedPrompt(null)}
+                className="w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2.5"
+              >
+                Not now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

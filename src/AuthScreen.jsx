@@ -18,7 +18,7 @@
 import React, { useState } from "react";
 import {
   Loader2, Mail, Lock, User as UserIcon, AlertCircle, ArrowRight,
-  ListChecks, Timer, Layers, TrendingUp,
+  ListChecks, Timer, Layers, TrendingUp, Eye, EyeOff, Check,
 } from "lucide-react";
 import { Logo } from "./ui";
 import { useAuth } from "./appAuth";
@@ -31,6 +31,8 @@ export default function AuthScreen() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -46,6 +48,10 @@ export default function AuthScreen() {
     }
     if (isSignup && password.length < 6) {
       setMessage({ type: "error", text: "Password must be at least 6 characters." });
+      return;
+    }
+    if (isSignup && password !== confirm) {
+      setMessage({ type: "error", text: "The two passwords don't match." });
       return;
     }
 
@@ -166,31 +172,40 @@ export default function AuthScreen() {
                 <Field icon={Mail} label="Email" type="email" value={email}
                        onChange={setEmail} placeholder="you@email.com" autoComplete="email" />
 
-                <div>
-                  <div className="flex items-baseline justify-between">
-                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">
-                      Password
-                    </label>
-                    {!isSignup && (
-                      <button type="button" onClick={handleForgot}
-                              className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
-                        Forgot?
-                      </button>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                      placeholder={isSignup ? "At least 6 characters" : "Enter your password"}
-                      autoComplete={isSignup ? "new-password" : "current-password"}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                    />
-                  </div>
-                </div>
+                <PasswordField
+                  label="Password"
+                  value={password}
+                  onChange={setPassword}
+                  show={showPassword}
+                  onToggleShow={() => setShowPassword(v => !v)}
+                  placeholder={isSignup ? "At least 6 characters" : "Enter your password"}
+                  autoComplete={isSignup ? "new-password" : "current-password"}
+                  onEnter={handleSubmit}
+                  action={!isSignup && (
+                    <button type="button" onClick={handleForgot}
+                            className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
+                      Forgot?
+                    </button>
+                  )}
+                />
+
+                {/* Confirming the password only matters when setting a new
+                    one. Asking for it at sign-in would be noise. */}
+                {isSignup && (
+                  <PasswordField
+                    label="Confirm password"
+                    value={confirm}
+                    onChange={setConfirm}
+                    show={showPassword}
+                    onToggleShow={() => setShowPassword(v => !v)}
+                    placeholder="Type it again"
+                    autoComplete="new-password"
+                    onEnter={handleSubmit}
+                    match={
+                      confirm.length === 0 ? null : password === confirm
+                    }
+                  />
+                )}
 
                 {message && (
                   <div className={`flex items-start gap-2 text-sm rounded-xl px-3 py-2.5 ${
@@ -218,7 +233,11 @@ export default function AuthScreen() {
                 {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
                 <button
                   type="button"
-                  onClick={() => { setView(isSignup ? "login" : "signup"); setMessage(null); }}
+                  onClick={() => {
+                    setView(isSignup ? "login" : "signup");
+                    setMessage(null);
+                    setConfirm("");
+                  }}
                   className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
                 >
                   {isSignup ? "Sign in" : "Sign up"}
@@ -265,6 +284,58 @@ function Feature({ icon: Icon, title, body }) {
       <Icon size={18} className="text-emerald-400" />
       <p className="mt-2 text-sm font-bold text-white leading-tight">{title}</p>
       <p className="mt-0.5 text-xs text-slate-400 leading-snug">{body}</p>
+    </div>
+  );
+}
+
+/* A password input with a show/hide toggle. The eye sits inside the field so
+   it doesn't take a row of its own, and both password fields on the sign-up
+   form share one toggle — revealing one and not the other would defeat the
+   point of asking twice. */
+function PasswordField({
+  label, value, onChange, show, onToggleShow, placeholder,
+  autoComplete, onEnter, action, match,
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between">
+        <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">
+          {label}
+        </label>
+        {action}
+      </div>
+      <div className="relative">
+        <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && onEnter?.()}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          className="w-full pl-9 pr-20 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+        />
+
+        {/* Tick once the two entries agree, so it's obvious before submitting. */}
+        {match === true && (
+          <Check size={16} className="absolute right-11 top-1/2 -translate-y-1/2 text-emerald-500" />
+        )}
+
+        <button
+          type="button"
+          onClick={onToggleShow}
+          aria-label={show ? "Hide password" : "Show password"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+        >
+          {show ? <EyeOff size={17} /> : <Eye size={17} />}
+        </button>
+      </div>
+
+      {match === false && (
+        <p className="mt-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+          The passwords don't match yet.
+        </p>
+      )}
     </div>
   );
 }

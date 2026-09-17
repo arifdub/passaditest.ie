@@ -68,6 +68,30 @@ export const DECKS = [
 export const DECK_BY_ID = Object.fromEntries(DECKS.map(d => [d.id, d]));
 
 /* ---------------------------------------------------------------------------
+   GUEST ACCESS
+
+   Someone studying without an account gets Section 1 in full, plus the
+   flashcards. The other four sections and the mock test ask them to create an
+   account first.
+
+   Section 1 rather than a taster of each: a whole section is enough to judge
+   whether the app is any good, which is the point of letting anyone in
+   without signing up.
+
+   Defined here so the home screen and the router can't drift apart on it — a
+   locked card that still opens if you reach it another way is worse than no
+   lock at all.
+   --------------------------------------------------------------------------- */
+export const GUEST_SECTION_ID = "adi.sec.procedure";
+
+export function lockedForGuest(id, isGuest) {
+  if (!isGuest) return false;
+  if (id === GUEST_SECTION_ID) return false;
+  if (id?.startsWith("deck.")) return false;   // flashcards stay open
+  return true;
+}
+
+/* ---------------------------------------------------------------------------
    Pass / fail wording. Never the word "failed".
    --------------------------------------------------------------------------- */
 export function verdictFor(pct, passMark = PASS_MARK) {

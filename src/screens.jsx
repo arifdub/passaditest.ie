@@ -15,7 +15,7 @@ import {
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check, Lock,
 } from "lucide-react";
-import { ADI_SECTIONS, MOCK, DECKS, PASS_MARK, lockedForGuest } from "./appStructure";
+import { ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, lockedForGuest } from "./appStructure";
 import { useAuth } from "./appAuth";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
@@ -41,7 +41,6 @@ export function HomeScreen({ go }) {
   const { getSection, getModule, overall } = useProgress();
   const [lockedPrompt, setLockedPrompt] = React.useState(null);
 
-  const mock = getModule(MOCK.id);
 
   /* Combined flashcard progress across every deck. Counted from the real
      decks, so it cannot drift from what the deck screens show. */
@@ -196,49 +195,64 @@ export function HomeScreen({ go }) {
           })}
         </div>
 
-        {/* Mock test */}
+        {/* Mock tests */}
         <p className="mt-6 mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
           Exam simulation
         </p>
-        <button
-          onClick={() => lockedForGuest(MOCK.id, isGuest)
-            ? setLockedPrompt(MOCK.label)
-            : go({ screen: "mock" })}
-          className={`w-full text-left rounded-2xl p-5 bg-slate-900 transition active:scale-[0.99] ${
-            lockedForGuest(MOCK.id, isGuest) ? "opacity-70" : "hover:bg-slate-800"
-          }`}
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-              {lockedForGuest(MOCK.id, isGuest)
-                ? <Lock size={20} className="text-white" />
-                : <Timer size={22} className="text-white" />}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="text-lg font-black tracking-tight text-white">{MOCK.label}</h2>
-              <p className="mt-0.5 text-sm text-slate-300 leading-snug">
-                {lockedForGuest(MOCK.id, isGuest)
-                  ? "Create a free account to unlock the full mock exam."
-                  : MOCK.blurb}
-              </p>
-              {mock.attempts > 0 && (
-                <div className="mt-3">
-                  <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
-                    <span>Best score</span>
-                    <span>{mock.bestPct}%</span>
+
+        <div className="space-y-2.5">
+          {MOCKS.map(paper => {
+            const m = getModule(paper.id);
+            const locked = lockedForGuest(paper.id, isGuest);
+            return (
+              <button
+                key={paper.id}
+                onClick={() => locked
+                  ? setLockedPrompt(paper.label)
+                  : go({ screen: "mock", mockId: paper.id })}
+                className={`w-full text-left rounded-2xl p-4 bg-slate-900 transition active:scale-[0.99] ${
+                  locked ? "opacity-70" : "hover:bg-slate-800"
+                }`}
+              >
+                <div className="flex items-start gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                    {locked
+                      ? <Lock size={20} className="text-white" />
+                      : <Timer size={22} className="text-white" />}
                   </div>
-                  <div className="h-2 bg-white/15 rounded-full overflow-hidden">
-                    <div
-                      className={`h-2 rounded-full ${mock.passed ? "bg-emerald-400" : "bg-amber-400"}`}
-                      style={{ width: `${mock.bestPct}%` }}
-                    />
+
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-base font-black tracking-tight text-white">
+                      {paper.label}
+                    </h2>
+                    <p className="mt-0.5 text-sm text-slate-300 leading-snug">
+                      {locked
+                        ? "Create a free account to unlock the full mock exam."
+                        : paper.blurb}
+                    </p>
+
+                    {!locked && m.attempts > 0 && (
+                      <div className="mt-2.5">
+                        <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                          <span>Best score</span>
+                          <span>{m.bestPct}%{m.passed ? " · passed" : ""}</span>
+                        </div>
+                        <div className="h-2 bg-white/15 rounded-full overflow-hidden">
+                          <div
+                            className={`h-2 rounded-full ${m.passed ? "bg-emerald-400" : "bg-amber-400"}`}
+                            style={{ width: `${m.bestPct}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  <ChevronRight size={18} className="text-slate-500 shrink-0 mt-3" />
                 </div>
-              )}
-            </div>
-            <ChevronRight size={18} className="text-slate-500 shrink-0 mt-3" />
-          </div>
-        </button>
+              </button>
+            );
+          })}
+        </div>
 
         {/* Flashcards */}
         <div className="mt-6 mb-3">
@@ -385,7 +399,6 @@ export function HomeScreen({ go }) {
    =========================================================================== */
 export function ProgressScreen({ go }) {
   const { getSection, getModule, overall } = useProgress();
-  const mock = getModule(MOCK.id);
 
   /* Combined flashcard progress across every deck. Counted from the real
      decks, so it cannot drift from what the deck screens show. */
@@ -463,31 +476,49 @@ export function ProgressScreen({ go }) {
               })}
             </div>
 
-            {mock.attempts > 0 && (
+            {MOCKS.some(m => getModule(m.id).attempts > 0) && (
               <>
                 <p className="mt-6 mb-2.5 text-xs font-bold uppercase tracking-widest text-slate-400">
-                  Mock test
+                  Mock tests
                 </p>
-                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                      Best score
-                    </span>
-                    <span className="text-xl font-black text-slate-900 dark:text-white">
-                      {mock.bestPct}%
-                    </span>
-                  </div>
-                  <div className="mt-2">
-                    <ProgressBar pct={mock.bestPct} tone={mock.passed ? "emerald" : "amber"} />
-                  </div>
-                  <p className={`mt-2 text-sm font-semibold ${
-                    mock.passed ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
-                  }`}>
-                    {mock.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}
-                    <span className="font-normal text-slate-400">
-                      {" "}· {mock.attempts} attempt{mock.attempts === 1 ? "" : "s"}
-                    </span>
-                  </p>
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
+                  {MOCKS.map(paper => {
+                    const m = getModule(paper.id);
+                    return (
+                      <div key={paper.id} className="px-4 py-3.5">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                            {paper.label}
+                          </span>
+                          <span className="text-lg font-black text-slate-900 dark:text-white">
+                            {m.attempts > 0 ? `${m.bestPct}%` : "—"}
+                          </span>
+                        </div>
+                        <div className="mt-1.5">
+                          <ProgressBar
+                            pct={m.bestPct}
+                            tone={m.attempts === 0 ? "slate" : m.passed ? "emerald" : "amber"}
+                          />
+                        </div>
+                        <p className={`mt-1.5 text-xs font-semibold ${
+                          m.attempts === 0
+                            ? "text-slate-400"
+                            : m.passed
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-amber-600 dark:text-amber-400"
+                        }`}>
+                          {m.attempts === 0
+                            ? "Not attempted yet"
+                            : `${m.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}`}
+                          {m.attempts > 0 && (
+                            <span className="font-normal text-slate-400">
+                              {" "}· {m.attempts} attempt{m.attempts === 1 ? "" : "s"}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </>
             )}

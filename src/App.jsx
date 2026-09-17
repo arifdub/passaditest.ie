@@ -21,7 +21,7 @@ import { HomeScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
-import { MOCK, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
+import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
 
@@ -136,7 +136,7 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
      home screen, so the check lives here too. The home screen's lock is the
      signpost; this is the actual gate. */
   const gated = view.screen === "section" ? view.sectionId
-    : view.screen === "mock" ? MOCK.id
+    : view.screen === "mock" ? (view.mockId || MOCKS[0].id)
     : null;
   if (gated && lockedForGuest(gated, isGuest)) {
     return <GuestLocked onBack={back} onCreateAccount={exitGuest} />;
@@ -181,25 +181,27 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
       );
     }
 
-    /* The 100-question mock, drawn across all five sections. */
+    /* A named mock paper. Each is a fixed set of 100 questions with its own
+       score history; the order is reshuffled on every attempt. */
     case "mock": {
-      const questions = buildMockTest(MOCK.questionCount);
+      const paper = MOCK_BY_ID[view.mockId] || MOCKS[0];
+      const questions = buildMockTest(paper.paper, paper.questionCount);
       if (!questions.length) return <NotReady onBack={back} />;
       return (
         <QuizPlayer
-          key="mock"
+          key={paper.id}
           module={{
-            id: MOCK.id,
-            label: MOCK.label,
+            id: paper.id,
+            label: paper.label,
             sectionLabel: "Exam simulation",
             kind: "mock",
-            questionCount: MOCK.questionCount,
-            passMark: MOCK.passMark,
+            questionCount: paper.questionCount,
+            passMark: paper.passMark,
           }}
           quiz={{
-            title: MOCK.label,
-            subtitle: MOCK.blurb,
-            categories: [{ id: "mock", title: MOCK.label, questions }],
+            title: paper.label,
+            subtitle: paper.blurb,
+            categories: [{ id: paper.id, title: paper.label, questions }],
           }}
           onExit={back}
         />

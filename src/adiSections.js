@@ -245,32 +245,94 @@ function shuffle(arr, rand) {
   return out;
 }
 
-export function buildMockTest(length = MOCK_LENGTH) {
-  const rand = Math.random;
-  const available = ADI_SECTIONS.filter(s => s.questions.length > 0);
-  if (!available.length) return [];
+/* ---------------------------------------------------------------------------
+   NAMED MOCK PAPERS
 
-  const scale = length / MOCK_LENGTH;
+   Each mock is a fixed set of 100 questions, not a fresh random draw. That is
+   what makes it a paper you can sit, score, and come back to — two attempts at
+   Mock 2 are comparable, because they are the same 100 questions.
+
+   The papers do not share questions. Each section's pool is shuffled once with
+   a fixed seed, then sliced: Mock 1 takes the first 25 procedure questions,
+   Mock 2 the next 25, and so on. The seed is constant, so every learner on
+   every device gets the same Mock 2 — and it stays the same between sessions.
+
+   Only the presentation order is random, reshuffled on each attempt so nobody
+   learns the answers by position.
+   --------------------------------------------------------------------------- */
+
+/* Changing this reshuffles which questions land in which paper. Don't, once
+   learners have scores against them — their Mock 2 would quietly become a
+   different test. */
+const PARTITION_SEED = 20260917;
+
+function seededRng(seed) {
+  let s = seed >>> 0;
+  return () => {
+    // xorshift32 — small, fast, and stable across engines, which matters
+    // because every device must compute the same partition.
+    s ^= s << 13; s >>>= 0;
+    s ^= s >> 17;
+    s ^= s << 5;  s >>>= 0;
+    return s / 4294967296;
+  };
+}
+
+/* How many whole non-overlapping papers the bank can currently fill. */
+export const MOCK_CAPACITY = (() => {
+  let limit = Infinity;
+  for (const s of ADI_SECTIONS) {
+    const w = MOCK_WEIGHTS[s.id] || 0;
+    if (w > 0) limit = Math.min(limit, Math.floor(s.questions.length / w));
+  }
+  return Number.isFinite(limit) ? limit : 0;
+})();
+
+/* The fixed question set for one paper. `index` is zero-based. */
+function questionsForPaper(index) {
   const picked = [];
-  const shortfall = [];
 
-  for (const s of available) {
-    const want = Math.round((MOCK_WEIGHTS[s.id] || 0) * scale);
-    const take = Math.min(want, s.questions.length);
-    picked.push(...shuffle(s.questions, rand).slice(0, take));
-    // A section with too few questions can't meet its quota; note what's left
-    // so the paper is still the right length.
-    if (take < want) shortfall.push(want - take);
+  for (const section of ADI_SECTIONS) {
+    const want = MOCK_WEIGHTS[section.id] || 0;
+    if (!want || !section.questions.length) continue;
+
+    // Same shuffle every time, per section, so slices are stable.
+    const pool = shuffle(section.questions, seededRng(PARTITION_SEED + hashId(section.id).length * 7919));
+    const start = index * want;
+
+    if (start + want <= pool.length) {
+      picked.push(...pool.slice(start, start + want));
+    } else {
+      /* Past the bank's capacity. Rather than hand back a short paper, wrap
+         around — this paper then shares some questions with an earlier one.
+         Adding questions to the thin sections removes the overlap. */
+      for (let i = 0; i < want; i++) picked.push(pool[(start + i) % pool.length]);
+    }
   }
 
-  // Top up from whatever hasn't been used yet, so the test is always full length.
+  return picked;
+}
+
+/* Public: the questions for a paper, in a fresh random order each attempt. */
+export function buildMockTest(paperNumber = 1, length = MOCK_LENGTH) {
+  const index = Math.max(0, (Number(paperNumber) || 1) - 1);
+  let picked = questionsForPaper(index);
+
+  // Guard against a section being emptied by an edit.
   if (picked.length < length) {
     const used = new Set(picked.map(q => q.qid));
-    const spare = shuffle(ALL_QUESTIONS.filter(q => !used.has(q.qid)), rand);
-    picked.push(...spare.slice(0, length - picked.length));
+    const spare = shuffle(ALL_QUESTIONS.filter(q => !used.has(q.qid)), Math.random);
+    picked = picked.concat(spare.slice(0, length - picked.length));
   }
 
-  return shuffle(picked, rand).slice(0, length);
+  return shuffle(picked, Math.random).slice(0, length);
+}
+
+/* How much of a paper overlaps with another — used by the tests, and worth
+   keeping exported so a regression is easy to spot. */
+export function paperOverlap(a, b) {
+  const A = new Set(questionsForPaper(a - 1).map(q => q.qid));
+  return questionsForPaper(b - 1).filter(q => A.has(q.qid)).length;
 }
 
 export default ADI_SECTIONS;

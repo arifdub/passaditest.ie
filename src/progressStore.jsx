@@ -31,7 +31,7 @@ import React, {
 } from "react";
 import { supabase, HAS_SUPABASE } from "./supabaseClient";
 import { useAuth } from "./appAuth";
-import { ADI_SECTIONS, PASS_MARK, verdictFor } from "./appStructure";
+import { ADI_SECTIONS, MOCKS, PASS_MARK, verdictFor } from "./appStructure";
 
 const LOCAL_KEY = "pdt-progress-v1";
 
@@ -375,9 +375,15 @@ export function ProgressProvider({ children }) {
       graded += e.gradedCount;
       if (e.attempts) scores.push(e.bestPct);
     }
-    const mock = sanitise(entries["adi.mock"]);
-    correct += mock.correctCount;
-    graded += mock.gradedCount;
+    /* Every mock paper counts toward the totals, not just the first. */
+    let mockAttempts = 0, mockBest = 0;
+    for (const m of MOCKS) {
+      const e = sanitise(entries[m.id]);
+      correct += e.correctCount;
+      graded += e.gradedCount;
+      mockAttempts += e.attempts;
+      mockBest = Math.max(mockBest, e.bestPct);
+    }
 
     return {
       answered,
@@ -392,9 +398,9 @@ export function ProgressProvider({ children }) {
         ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
         : 0,
       bestPct: scores.length ? Math.max(...scores) : 0,
-      testsTaken: attempts + mock.attempts,
-      mockBest: mock.bestPct,
-      mockAttempts: mock.attempts,
+      testsTaken: attempts + mockAttempts,
+      mockBest,
+      mockAttempts,
       sectionsPassed: ADI_SECTIONS.filter(s => entries[s.id]?.passed).length,
       sectionCount: ADI_SECTIONS.length,
     };

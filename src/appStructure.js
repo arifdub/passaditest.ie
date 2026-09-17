@@ -17,25 +17,42 @@
   ===========================================================================
 */
 
-import { ADI_SECTIONS, MOCK_LENGTH, TOTAL_QUESTIONS } from "./adiSections";
+import { ADI_SECTIONS, MOCK_LENGTH, TOTAL_QUESTIONS, MOCK_CAPACITY } from "./adiSections";
 
 /* Stage 1 sections each carry their own pass mark. 75% is what the project's
    existing quizzes use and what Irish ADI training providers quote. */
 export const PASS_MARK = 75;
 
-export { ADI_SECTIONS, MOCK_LENGTH, TOTAL_QUESTIONS };
+export { ADI_SECTIONS, MOCK_LENGTH, TOTAL_QUESTIONS, MOCK_CAPACITY };
 
 /* ---------------------------------------------------------------------------
    MOCK TEST
    --------------------------------------------------------------------------- */
-export const MOCK = {
-  id: "adi.mock",
-  label: "Mock Test",
-  blurb: `${MOCK_LENGTH} questions across all five sections, timed.`,
-  questionCount: MOCK_LENGTH,
-  passMark: PASS_MARK,
-  minutes: 90,
-};
+export const MOCKS = [
+  {
+    id: "adi.mock",          // unchanged, so existing scores stay attached
+    paper: 1,
+    label: "Mock Test 1",
+    blurb: `${MOCK_LENGTH} questions across all five sections, timed.`,
+    questionCount: MOCK_LENGTH,
+    passMark: PASS_MARK,
+    minutes: 90,
+  },
+  {
+    id: "adi.mock.2",
+    paper: 2,
+    label: "Mock Test 2",
+    blurb: `A different ${MOCK_LENGTH} questions. No overlap with Mock Test 1.`,
+    questionCount: MOCK_LENGTH,
+    passMark: PASS_MARK,
+    minutes: 90,
+  },
+];
+
+export const MOCK_BY_ID = Object.fromEntries(MOCKS.map(m => [m.id, m]));
+
+/* Kept so anything still importing the old single MOCK keeps working. */
+export const MOCK = MOCKS[0];
 
 /* ---------------------------------------------------------------------------
    FLASHCARDS
@@ -88,7 +105,7 @@ export function lockedForGuest(id, isGuest) {
   if (!isGuest) return false;
   if (id === GUEST_SECTION_ID) return false;
   if (id?.startsWith("deck.")) return false;   // flashcards stay open
-  return true;
+  return true;                                  // every mock paper included
 }
 
 /* ---------------------------------------------------------------------------

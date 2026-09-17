@@ -11,20 +11,19 @@ import React from "react";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 
 /* ------------------------------------------------------------------------- */
-/* The brand lockup, from public/logo.png.
+/* The brand lockup, from public/logo.png — wheel above the wordmark.
 
-   This version of the logo carries a white keyline around every letter, so
-   the dark navy wordmark still reads against the app's dark header — the
-   outline does the work that would otherwise need a light panel behind it.
-   Measured at 16.5:1 for the keyline against slate-900.
+   No panel behind it: the wordmark carries a white keyline around every
+   letter, so the navy fill still reads against the app's dark header.
 
-   Sized by height so the aspect ratio holds at any width. */
+   Sized by height, since this version is nearly square (1.27:1) rather than
+   the wide strip the earlier logo was. */
 export function Logo({ size = "md", className = "" }) {
   const heights = {
-    sm: "h-7",
-    md: "h-9",
-    lg: "h-12",
-    xl: "h-16",
+    sm: "h-12",
+    md: "h-20",
+    lg: "h-28",
+    xl: "h-36",
   };
   return (
     <img

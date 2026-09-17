@@ -1,28 +1,41 @@
 /*
   ===========================================================================
-  LOGIN / SIGN UP  — screen 2 in the blueprint
+  WELCOME / SIGN IN
 
-  Shown whenever nobody is signed in. One screen, toggling between logging in
-  and creating an account, so there's no extra navigation to get wrong.
+  The first screen anyone sees. It does three jobs in order:
+
+    1. Says what the app is — someone arriving from a search result needs to
+       know this is ADI Stage 1 preparation before they're asked for an email.
+    2. Offers an account, for progress that follows them between devices.
+    3. Offers a way in without one, because a sign-up wall before anyone has
+       seen the app costs more users than it gains.
+
+  The welcome panel collapses once the form is open, so the screen doesn't
+  become a scroll on a small phone.
   ===========================================================================
 */
 
 import React, { useState } from "react";
-import { Loader2, Mail, Lock, User as UserIcon, AlertCircle, ArrowRight } from "lucide-react";
+import {
+  Loader2, Mail, Lock, User as UserIcon, AlertCircle, ArrowRight,
+  ListChecks, Timer, Layers, TrendingUp,
+} from "lucide-react";
 import { Logo } from "./ui";
 import { useAuth } from "./appAuth";
+import { TOTAL_QUESTIONS } from "./adiSections";
 
 export default function AuthScreen() {
   const { signIn, signUp, resetPassword, continueAsGuest, mode } = useAuth();
 
-  const [tab, setTab] = useState("login"); // login | signup
+  const [view, setView] = useState("welcome");   // welcome | login | signup
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState(null); // { type, text }
+  const [message, setMessage] = useState(null);
 
-  const isSignup = tab === "signup";
+  const isSignup = view === "signup";
+  const isWelcome = view === "welcome";
 
   async function handleSubmit() {
     setMessage(null);
@@ -51,9 +64,8 @@ export default function AuthScreen() {
         type: "info",
         text: "Account created. Check your email for the confirmation link, then sign in.",
       });
-      setTab("login");
+      setView("login");
     }
-    // On success the auth provider swaps this screen out automatically.
   }
 
   async function handleForgot() {
@@ -73,140 +85,186 @@ export default function AuthScreen() {
 
   return (
     <div
-      className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-5"
+      className="min-h-screen bg-slate-900 flex flex-col items-center px-5"
       style={{
-        paddingTop: "max(2.5rem, calc(env(safe-area-inset-top) + 1.5rem))",
-        paddingBottom: "max(2.5rem, calc(env(safe-area-inset-bottom) + 1.5rem))",
+        paddingTop: "max(2rem, calc(env(safe-area-inset-top) + 1.25rem))",
+        paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.25rem))",
       }}
     >
-      {/* Logo */}
-      <Logo size="lg" className="mb-8" />
+      <div className="w-full max-w-sm flex flex-col items-center">
 
-      {/* Card */}
-      <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl">
-        <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-          {isSignup ? "Create your account" : "Welcome back"}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {isSignup
-            ? "Your progress is saved and follows you to any device."
-            : "Sign in to pick up where you left off."}
-        </p>
+        {/* Logo — large on the welcome view, smaller once the form is open
+            so the fields stay above the keyboard. */}
+        <Logo size={isWelcome ? "xl" : "md"} className="transition-all duration-300" />
 
-        <div className="mt-5 space-y-3">
-          {isSignup && (
-            <Field
-              icon={UserIcon}
-              label="Full name"
-              value={fullName}
-              onChange={setFullName}
-              placeholder="Alex Smith"
-              autoComplete="name"
-            />
-          )}
+        {isWelcome ? (
+          <>
+            <h1 className="mt-6 text-2xl font-black tracking-tight text-white text-center">
+              Welcome
+            </h1>
+            <p className="mt-2 text-sm text-slate-300 text-center leading-relaxed">
+              Preparation for the <span className="text-white font-semibold">RSA ADI
+              Stage&nbsp;1 theory test</span> — the written exam you sit on the way to
+              becoming an Approved Driving Instructor.
+            </p>
 
-          <Field
-            icon={Mail}
-            label="Email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            placeholder="you@email.com"
-            autoComplete="email"
-          />
+            <div className="mt-6 w-full grid grid-cols-2 gap-2.5">
+              <Feature icon={ListChecks} title={`${TOTAL_QUESTIONS}+ questions`}
+                       body="Across all five exam sections" />
+              <Feature icon={Timer} title="Mock tests"
+                       body="100 questions, timed, like the real paper" />
+              <Feature icon={Layers} title="Flashcards"
+                       body="Rules of the Road, road signs, ADI topics" />
+              <Feature icon={TrendingUp} title="Progress tracking"
+                       body="See which sections still need work" />
+            </div>
 
-          <div>
-            <div className="flex items-baseline justify-between">
-              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">
-                Password
-              </label>
-              {!isSignup && (
+            <div className="mt-7 w-full space-y-2.5">
+              <button
+                onClick={() => { setView("signup"); setMessage(null); }}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3.5 rounded-xl transition"
+              >
+                Create an account
+              </button>
+              <button
+                onClick={() => { setView("login"); setMessage(null); }}
+                className="w-full border border-slate-600 hover:border-slate-500 text-white font-bold py-3.5 rounded-xl transition"
+              >
+                I already have an account
+              </button>
+              <button
+                onClick={continueAsGuest}
+                className="w-full flex items-center justify-center gap-2 text-slate-400 hover:text-emerald-400 font-bold py-3 transition"
+              >
+                Continue as guest <ArrowRight size={16} />
+              </button>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-500 text-center leading-relaxed">
+              As a guest your progress saves on this device only. You can create
+              an account later and keep everything you've done.
+            </p>
+          </>
+        ) : (
+          <>
+            <div className="mt-6 w-full bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl">
+              <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
+                {isSignup ? "Create your account" : "Welcome back"}
+              </h1>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {isSignup
+                  ? "Your progress is saved and follows you to any device."
+                  : "Sign in to pick up where you left off."}
+              </p>
+
+              <div className="mt-5 space-y-3">
+                {isSignup && (
+                  <Field icon={UserIcon} label="Full name" value={fullName}
+                         onChange={setFullName} placeholder="Alex Smith" autoComplete="name" />
+                )}
+
+                <Field icon={Mail} label="Email" type="email" value={email}
+                       onChange={setEmail} placeholder="you@email.com" autoComplete="email" />
+
+                <div>
+                  <div className="flex items-baseline justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">
+                      Password
+                    </label>
+                    {!isSignup && (
+                      <button type="button" onClick={handleForgot}
+                              className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
+                        Forgot?
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                      placeholder={isSignup ? "At least 6 characters" : "Enter your password"}
+                      autoComplete={isSignup ? "new-password" : "current-password"}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                    />
+                  </div>
+                </div>
+
+                {message && (
+                  <div className={`flex items-start gap-2 text-sm rounded-xl px-3 py-2.5 ${
+                    message.type === "error"
+                      ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300"
+                      : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
+                  }`}>
+                    <AlertCircle size={16} className="mt-0.5 shrink-0" />
+                    <span>{message.text}</span>
+                  </div>
+                )}
+
                 <button
                   type="button"
-                  onClick={handleForgot}
-                  className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                  onClick={handleSubmit}
+                  disabled={busy}
+                  className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-slate-900 font-bold py-3 rounded-xl transition"
                 >
-                  Forgot?
+                  {busy && <Loader2 size={16} className="animate-spin" />}
+                  {isSignup ? "Create account" : "Login"}
                 </button>
-              )}
-            </div>
-            <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                placeholder={isSignup ? "At least 6 characters" : "Enter your password"}
-                autoComplete={isSignup ? "new-password" : "current-password"}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-              />
-            </div>
-          </div>
+              </div>
 
-          {message && (
-            <div
-              className={`flex items-start gap-2 text-sm rounded-xl px-3 py-2.5 ${
-                message.type === "error"
-                  ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300"
-                  : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
-              }`}
-            >
-              <AlertCircle size={16} className="mt-0.5 shrink-0" />
-              <span>{message.text}</span>
+              <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">
+                {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => { setView(isSignup ? "login" : "signup"); setMessage(null); }}
+                  className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                >
+                  {isSignup ? "Sign in" : "Sign up"}
+                </button>
+              </p>
             </div>
-          )}
 
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-slate-900 font-bold py-3 rounded-xl transition"
-          >
-            {busy && <Loader2 size={16} className="animate-spin" />}
-            {isSignup ? "Create account" : "Login"}
-          </button>
-        </div>
+            <div className="mt-5 w-full space-y-1">
+              <button
+                onClick={continueAsGuest}
+                className="w-full flex items-center justify-center gap-2 border border-slate-600 hover:border-slate-500 text-white font-bold py-3 rounded-xl transition"
+              >
+                Continue as guest <ArrowRight size={16} />
+              </button>
+              <button
+                onClick={() => { setView("welcome"); setMessage(null); }}
+                className="w-full text-sm font-semibold text-slate-400 hover:text-emerald-400 py-2.5"
+              >
+                Back
+              </button>
+            </div>
+          </>
+        )}
 
-        <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">
-          {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
-          <button
-            type="button"
-            onClick={() => { setTab(isSignup ? "login" : "signup"); setMessage(null); }}
-            className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
-          >
-            {isSignup ? "Sign in" : "Sign up"}
-          </button>
+        <p className="mt-6 text-xs text-slate-500 text-center">
+          Full access to all study material — no payment required.
         </p>
 
-        {/* Guest entry. Deliberately below the form and quieter than the main
-            button — most people should make an account, but nobody should be
-            stopped at the door if they'd rather just start studying. */}
-        <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-700">
-          <button
-            type="button"
-            onClick={continueAsGuest}
-            className="w-full flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-600 hover:border-slate-300 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl transition"
-          >
-            Skip for now <ArrowRight size={16} />
-          </button>
-          <p className="mt-2.5 text-center text-xs text-slate-400 leading-relaxed">
-            Start studying straight away. Your progress saves on this device,
-            and you can create an account later to keep it.
+        {mode === "local" && (
+          <p className="mt-3 text-[11px] text-amber-400/80 text-center leading-relaxed">
+            Running without a database connection — accounts are stored on this
+            device only.
           </p>
-        </div>
+        )}
       </div>
+    </div>
+  );
+}
 
-      <p className="mt-6 text-xs text-slate-500 text-center max-w-sm">
-        Full access to all study material — no payment required.
-      </p>
-
-      {mode === "local" && (
-        <p className="mt-3 text-[11px] text-amber-400/80 text-center max-w-sm">
-          Running without a database connection — accounts are stored on this
-          device only. Set the Supabase environment variables to enable real accounts.
-        </p>
-      )}
+/* ------------------------------------------------------------------------- */
+function Feature({ icon: Icon, title, body }) {
+  return (
+    <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-3">
+      <Icon size={18} className="text-emerald-400" />
+      <p className="mt-2 text-sm font-bold text-white leading-tight">{title}</p>
+      <p className="mt-0.5 text-xs text-slate-400 leading-snug">{body}</p>
     </div>
   );
 }

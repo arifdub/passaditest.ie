@@ -48,7 +48,9 @@ export function HomeScreen({ go }) {
           className="max-w-2xl mx-auto px-5 pb-6"
           style={{ paddingTop: "max(1.5rem, calc(env(safe-area-inset-top) + 0.875rem))" }}
         >
-          <Logo size="md" />
+          <div className="flex justify-center">
+            <Logo size="md" />
+          </div>
           <p className="mt-4 text-slate-400 text-sm">Hi {displayName} 👋</p>
           <h1 className="mt-0.5 text-2xl font-black tracking-tight">ADI Theory Test</h1>
           <p className="mt-1 text-sm text-slate-400">

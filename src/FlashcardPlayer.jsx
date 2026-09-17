@@ -431,7 +431,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
                         loading="lazy"
                       />
                     ) : (
-                      <p className="text-lg font-bold text-slate-900 dark:text-white leading-snug">
+                      <p className="rd-card font-bold text-slate-900 dark:text-white">
                         {card.q}
                       </p>
                     )}
@@ -443,8 +443,8 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
                     {deck.cat[card.c] && (
                       <CategoryPill cat={deck.cat[card.c]} back />
                     )}
-                    <p className={`leading-relaxed text-white ${
-                      deck.imageCards ? "text-xl font-bold" : "text-base"
+                    <p className={`text-white ${
+                      deck.imageCards ? "rd-card-lg font-bold" : "rd-card"
                     }`}>
                       {deck.imageCards ? card.name : card.a}
                     </p>
@@ -507,7 +507,15 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
 function CardFace({ children, back }) {
   return (
     <div
-      className={`absolute inset-0 rounded-3xl p-6 flex flex-col items-center justify-center text-center border ${
+      /* overflow-y-auto matters once Reading size is turned up: the card is a
+         fixed height, so a long answer at the largest setting would spill past
+         its edges. It scrolls inside the card instead. overscroll-contain stops
+         that scroll from dragging the page behind it.
+
+         justify-center with overflow is a known trap — content taller than the
+         box gets centred and the top is then unreachable. py-6 plus auto
+         margins on the child does the centring without that failure. */
+      className={`absolute inset-0 rounded-3xl px-6 py-6 flex flex-col text-center border overflow-y-auto overscroll-contain ${
         back
           ? "bg-red-600 dark:bg-red-700 border-red-700 dark:border-red-800"
           : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
@@ -518,7 +526,9 @@ function CardFace({ children, back }) {
         transform: back ? "rotateY(180deg)" : "rotateY(0deg)",
       }}
     >
-      {children}
+      <div className="m-auto w-full flex flex-col items-center">
+        {children}
+      </div>
     </div>
   );
 }

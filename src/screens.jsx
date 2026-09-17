@@ -9,11 +9,12 @@
   ===========================================================================
 */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check, Lock, Play, AlertTriangle, Target,
+  Sun, Moon, Type,
 } from "lucide-react";
 import {
   ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
@@ -24,8 +25,9 @@ import usePwaInstall from "./usePwaInstall";
 import { getDeck } from "./contentSources";
 import {
   Logo, Screen, ScreenHeader, ProgressBar, ProgressRing, EmptyState,
-  SecondaryButton, PrimaryButton,
+  SecondaryButton, PrimaryButton, Toggle, DangerButton, SettingsGroup,
 } from "./ui";
+import { useTextSize } from "./textSize";
 
 const SECTION_ICON = {
   "adi.sec.procedure": ClipboardCheck,
@@ -1029,17 +1031,28 @@ function InstallStep({ n, children }) {
 export function ProfileScreen({ theme, toggleTheme }) {
   const { profile, displayName, subscription, signOut, mode, isGuest, exitGuest } = useAuth();
   const { resetAll, overall } = useProgress();
+  const { sizeId, setSizeId, sizes } = useTextSize();
 
-  async function handleReset() {
-    const ok = window.confirm(
-      "Clear all your progress? Every score and answered question will be deleted. This can't be undone."
-    );
-    if (ok) await resetAll();
+  /* Reset is two taps, not one.
+
+     window.confirm was doing this before, and it works, but it's a grey system
+     dialog with an OK button that looks identical to every other prompt — easy
+     to dismiss on autopilot. This asks in the app, states exactly what
+     disappears, and makes the confirming button the red one. The cancel is
+     the wider, calmer target. */
+  const [confirmingReset, setConfirmingReset] = useState(false);
+  const [resetDone, setResetDone] = useState(false);
+
+  async function doReset() {
+    await resetAll();
+    setConfirmingReset(false);
+    setResetDone(true);
+    setTimeout(() => setResetDone(false), 4000);
   }
 
   return (
     <>
-      <ScreenHeader title="Profile" />
+      <ScreenHeader title="Settings" />
       <Screen>
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex items-center gap-4">
           <div className="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
@@ -1087,18 +1100,155 @@ export function ProfileScreen({ theme, toggleTheme }) {
 
         <InstallCard />
 
-        <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700">
-          <button onClick={toggleTheme} className="w-full px-4 py-3.5 flex items-center justify-between">
-            <span className="font-semibold text-slate-900 dark:text-white">Dark mode</span>
-            <span className="text-sm font-semibold text-slate-400">
-              {theme === "dark" ? "On" : "Off"}
-            </span>
-          </button>
-          <button onClick={handleReset} className="w-full px-4 py-3.5 flex items-center justify-between">
-            <span className="font-semibold text-slate-900 dark:text-white">Reset my progress</span>
-            <Trash2 size={16} className="text-slate-400" />
-          </button>
-        </div>
+        {/* ---- Appearance ---- */}
+        <SettingsGroup title="Appearance">
+          <Toggle
+            label="Dark mode"
+            description={theme === "dark" ? "Easier at night" : "Currently light"}
+            icon={theme === "dark" ? Moon : Sun}
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+          />
+
+          {/* ---- Reading size ----
+
+              Four steps rather than a slider. A slider on a phone is fiddly,
+              gives no sense of what you're choosing until you let go, and
+              invites a value nobody wants. Four labelled buttons showing the
+              actual size are quicker and honest about the range. */}
+          <div className="px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Type size={18} className="text-slate-400 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-900 dark:text-white">Reading size</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Questions, answers and flashcards
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3.5 grid grid-cols-4 gap-2">
+              {sizes.map(s => {
+                const active = s.id === sizeId;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSizeId(s.id)}
+                    aria-pressed={active}
+                    className={`rounded-xl py-2.5 px-1 border transition flex flex-col items-center justify-center gap-0.5 ${
+                      active
+                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40"
+                        : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
+                    }`}
+                  >
+                    {/* Each button is set at the size it selects, so you can
+                        see the choice rather than read a label for it. */}
+                    <span
+                      className={`font-bold leading-none ${
+                        active
+                          ? "text-emerald-700 dark:text-emerald-400"
+                          : "text-slate-700 dark:text-slate-200"
+                      }`}
+                      style={{ fontSize: `${s.scale * 1.05}rem` }}
+                    >
+                      {s.sample}
+                    </span>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                      active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
+                    }`}>
+                      {s.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Live preview, in the same classes the quiz uses — so what you
+                see here is exactly what a question will look like, rather than
+                an approximation you have to go and verify. */}
+            <div className="mt-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 p-3.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">
+                Preview
+              </p>
+              <p className="rd-lead font-bold text-slate-900 dark:text-white">
+                What is the maximum speed limit on a motorway?
+              </p>
+              <p className="rd-option mt-2 text-slate-600 dark:text-slate-300">
+                120 km/h
+              </p>
+            </div>
+          </div>
+        </SettingsGroup>
+
+        {/* ---- Progress ---- */}
+        <SettingsGroup title="Progress">
+          <div className="px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Trash2 size={18} className="text-red-500 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-900 dark:text-white">Reset my progress</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  {overall.answered > 0
+                    ? `${overall.answered} answered questions, ${overall.testsTaken} test${overall.testsTaken === 1 ? "" : "s"} taken`
+                    : "Nothing recorded yet"}
+                </p>
+              </div>
+            </div>
+
+            {resetDone ? (
+              <div className="mt-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 px-3.5 py-3 flex items-center gap-2.5">
+                <Check size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+                  Progress cleared.
+                </p>
+              </div>
+            ) : confirmingReset ? (
+              <div className="mt-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3.5">
+                <div className="flex gap-2.5">
+                  <AlertTriangle size={17} className="text-red-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-slate-900 dark:text-white text-sm">
+                      Delete everything?
+                    </p>
+                    {/* Named specifically. "Your progress" is vague enough
+                        that people tap it without picturing the loss. */}
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Every section score, both mock results, and all
+                      {" "}{overall.answered} answered questions go. Your flashcard
+                      marks go too. This cannot be undone.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3.5 flex gap-2.5">
+                  {/* py-3 rather than py-2.5: at 2.5 these came out 39px tall,
+                      just under the 44px that's reliably tappable — and this is
+                      the worst place in the app to mis-tap. */}
+                  <button
+                    onClick={() => setConfirmingReset(false)}
+                    className="flex-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl"
+                  >
+                    Keep it
+                  </button>
+                  <button
+                    onClick={doReset}
+                    className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition"
+                  >
+                    Yes, reset
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3.5">
+                <DangerButton onClick={() => setConfirmingReset(true)}>
+                  <span className="inline-flex items-center gap-2">
+                    <Trash2 size={16} /> Reset progress
+                  </span>
+                </DangerButton>
+              </div>
+            )}
+          </div>
+        </SettingsGroup>
 
         {!isGuest && (
           <div className="mt-4">

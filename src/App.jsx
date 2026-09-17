@@ -13,9 +13,13 @@
 */
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Home as HomeIcon, BookOpen, Timer, TrendingUp, User, Loader2, Lock } from "lucide-react";
+import {
+  Home as HomeIcon, BookOpen, Timer, TrendingUp, User, Loader2, Lock,
+  Settings as SettingsIcon,
+} from "lucide-react";
 import { AuthProvider, useAuth } from "./appAuth";
 import { ProgressProvider } from "./progressStore";
+import { TextSizeProvider } from "./textSize";
 import AuthScreen from "./AuthScreen";
 import { HomeScreen, MockHubScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
@@ -30,10 +34,14 @@ import { EmptyState } from "./ui";
    "mock" (a paper being sat) — one tap of the tab would otherwise drop the
    learner straight into a 90-minute timed exam. */
 const TABS = [
-  { id: "home",     label: "Home",     icon: HomeIcon },
+  { id: "home",     label: "Home",      icon: HomeIcon },
   { id: "mocks",    label: "Mock Test", icon: Timer },
-  { id: "progress", label: "Progress", icon: TrendingUp },
-  { id: "profile",  label: "Profile",  icon: User },
+  { id: "progress", label: "Progress",  icon: TrendingUp },
+  /* The screen id stays "profile" deliberately — it's only the label that
+     changed, and renaming the route would break the tab/route mapping for no
+     gain. The screen still shows the account details; Settings is simply a
+     better name for what people come here to do. */
+  { id: "profile",  label: "Settings",  icon: SettingsIcon },
 ];
 
 /* ===========================================================================
@@ -428,9 +436,14 @@ function Gate() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <Gate />
-      </AuthProvider>
+      {/* Outside the auth gate on purpose: the reading size is a device
+          preference, not an account one, so it should apply on the welcome
+          and login screens too — and survive signing out. */}
+      <TextSizeProvider>
+        <AuthProvider>
+          <Gate />
+        </AuthProvider>
+      </TextSizeProvider>
     </ErrorBoundary>
   );
 }

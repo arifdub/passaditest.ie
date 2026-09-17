@@ -305,3 +305,93 @@ export function SecondaryButton({ children, onClick, full = true }) {
     </button>
   );
 }
+
+/* ===========================================================================
+   SETTINGS CONTROLS
+   =========================================================================== */
+
+/* A proper switch, not a row that says "On".
+
+   Built on a real <button> with role="switch" and aria-checked, so a screen
+   reader announces it as a switch and says which way it's set. A styled <div>
+   would look identical and tell an assistive user nothing.
+
+   The 44px minimum height is the smallest reliable tap target on a phone; the
+   track itself is smaller than that, so the padding does the work. */
+export function Toggle({ checked, onChange, label, description, icon: Icon }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className="w-full px-4 py-3.5 flex items-center gap-3 text-left min-h-[56px]"
+    >
+      {Icon && (
+        <Icon
+          size={18}
+          className={checked ? "text-emerald-500 shrink-0" : "text-slate-400 shrink-0"}
+        />
+      )}
+
+      <span className="min-w-0 flex-1">
+        <span className="block font-semibold text-slate-900 dark:text-white">
+          {label}
+        </span>
+        {description && (
+          <span className="block text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            {description}
+          </span>
+        )}
+      </span>
+
+      {/* The track. aria-hidden because the button above already carries the
+          state — without this a screen reader reads the switch twice. */}
+      <span
+        aria-hidden="true"
+        className={`relative shrink-0 w-[52px] h-[31px] rounded-full transition-colors duration-200 ${
+          checked ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"
+        }`}
+      >
+        <span
+          className={`absolute top-[3px] left-[3px] w-[25px] h-[25px] rounded-full bg-white shadow-sm transition-transform duration-200 ${
+            checked ? "translate-x-[21px]" : "translate-x-0"
+          }`}
+        />
+      </span>
+    </button>
+  );
+}
+
+/* A destructive action. Red, outlined rather than filled.
+
+   Filled red reads as the primary thing to do on the screen, which is the
+   opposite of true for "delete everything". Outlined is unmistakably a warning
+   without inviting the tap. */
+export function DangerButton({ children, onClick, full = true }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${full ? "w-full" : ""} border-2 border-red-500 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 active:bg-red-100 dark:active:bg-red-950/60 font-bold py-3 px-6 rounded-xl transition`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* A group of settings rows, hairline-separated. */
+export function SettingsGroup({ title, children }) {
+  return (
+    <div className="mt-5">
+      {title && (
+        <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+          {title}
+        </p>
+      )}
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl divide-y divide-slate-100 dark:divide-slate-700 overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+}

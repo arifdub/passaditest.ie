@@ -665,7 +665,9 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
           </div>
         )}
 
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-snug">
+        {/* rd-lead rather than text-lg: this is the text the Reading size
+            setting scales. See textSize.jsx. */}
+        <h2 className="rd-lead font-bold text-slate-900 dark:text-white">
           {q.q}
         </h2>
 
@@ -702,7 +704,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
                     : revealed && isPicked ? <X size={15} />
                     : letter}
                 </span>
-                <span className="text-sm text-slate-800 dark:text-slate-100 leading-snug pt-0.5">
+                <span className="rd-option text-slate-800 dark:text-slate-100 pt-0.5">
                   {opt}
                 </span>
               </button>
@@ -841,13 +843,13 @@ function QuizResult({ module, result, onRetry, onExit }) {
                     {item.image && (
                       <img src={item.image} alt="" className="max-h-24 w-auto object-contain mb-2" />
                     )}
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white leading-snug">
+                    <p className="rd-body font-semibold text-slate-900 dark:text-white">
                       {item.q}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-3 pl-9 space-y-1 text-sm">
+                <div className="mt-3 pl-9 space-y-1 rd-body">
                   {item.skipped ? (
                     <p className="text-amber-600 dark:text-amber-400 font-semibold">
                       Left blank — marked wrong.
@@ -1060,10 +1062,10 @@ function Explanation({ text, inline }) {
 
   const body = (
     <>
-      <p className={`leading-relaxed ${
+      <p className={`rd-body ${
         inline
           ? "text-slate-500 dark:text-slate-400"
-          : "text-sm text-slate-700 dark:text-slate-200"
+          : "text-slate-700 dark:text-slate-200"
       }`}>
         {open || !long ? text : short}
       </p>

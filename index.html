@@ -1318,12 +1318,53 @@ ol.steps h3 .ic{color:var(--green-d); margin-right:.35em; width:1em; height:1em}
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "Organization",
+      "@id": "https://passaditest.ie/#org",
+      "name": "PassADITest.ie",
+      "url": "https://passaditest.ie/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://passaditest.ie/logo-hero.png",
+        "width": 440,
+        "height": 346
+      },
+      "description": "Independent study resource for the RSA Approved Driving Instructor Stage 1 theory test in Ireland.",
+      "areaServed": { "@type": "Country", "name": "Ireland" },
+      "alternateName": [
+        "PassADITest",
+        "Pass ADI Test",
+        "Pass ADI Test Ireland",
+        "PassADITest Ireland"
+      ]
+    },
+    {
       "@type": "WebSite",
       "@id": "https://passaditest.ie/#website",
       "url": "https://passaditest.ie/",
       "name": "PassADITest.ie",
+      "alternateName": ["PassADITest", "Pass ADI Test"],
+      "publisher": { "@id": "https://passaditest.ie/#org" },
       "description": "ADI Stage 1 theory test preparation and a full guide to qualifying as a driving instructor in Ireland.",
       "inLanguage": "en-IE"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://passaditest.ie/#app",
+      "name": "PassADITest — ADI Stage 1 Practice",
+      "url": "https://passaditest.ie/app",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any — runs in a web browser, installable to the home screen",
+      "browserRequirements": "Requires a modern browser. No app store download.",
+      "inLanguage": "en-IE",
+      "publisher": { "@id": "https://passaditest.ie/#org" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "featureList": [
+        "1,024 practice questions across the five Stage 1 exam sections",
+        "Six full mock papers, 100 questions each with a 90-minute countdown",
+        "Marking section by section against each section's own pass mark",
+        "455 flashcards covering rules of the road, road signs and ADI topics",
+        "Works offline once added to the home screen"
+      ]
     },
     {
       "@type": "HowTo",

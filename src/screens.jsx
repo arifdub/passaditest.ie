@@ -19,6 +19,7 @@ import { ADI_SECTIONS, MOCK, DECKS, PASS_MARK, lockedForGuest } from "./appStruc
 import { useAuth } from "./appAuth";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
+import { getDeck } from "./contentSources";
 import {
   Logo, Screen, ScreenHeader, ProgressBar, ProgressRing, EmptyState,
   SecondaryButton, PrimaryButton,
@@ -238,8 +239,13 @@ export function HomeScreen({ go }) {
         <div className="space-y-2.5">
           {DECKS.map(deck => {
             const p = getModule(deck.id);
-            const known = p.completedIds.length;
-            const pct = deck.count ? Math.round((known / deck.count) * 100) : 0;
+            /* Count the real deck rather than the figure in appStructure, so
+               adding cards to a data file can never leave the home screen
+               quoting a stale total. */
+            const content = getDeck(deck.id);
+            const size = content ? content.cards.length : deck.count;
+            const known = Math.min(p.completedIds.length, size);
+            const pct = size ? Math.round((known / size) * 100) : 0;
             return (
               <button
                 key={deck.id}
@@ -252,11 +258,21 @@ export function HomeScreen({ go }) {
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-900 dark:text-white">{deck.label}</p>
                   <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
-                    {known > 0 ? `${known} of ${deck.count} marked known` : deck.blurb}
+                    {known > 0
+                      ? `${known} of ${size} cards known`
+                      : `${size} cards · ${deck.blurb}`}
                   </p>
-                  {known > 0 && (
-                    <div className="mt-2"><ProgressBar pct={pct} tone="slate" /></div>
-                  )}
+                  <div className="mt-2 flex items-center gap-2.5">
+                    <div className="flex-1">
+                      <ProgressBar
+                        pct={pct}
+                        tone={pct === 100 ? "emerald" : known ? "amber" : "slate"}
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold text-slate-400 shrink-0 tabular-nums">
+                      {pct}%
+                    </span>
+                  </div>
                 </div>
                 <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0" />
               </button>

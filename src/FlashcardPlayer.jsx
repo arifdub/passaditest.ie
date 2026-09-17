@@ -68,10 +68,18 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
     return order.map(id => byId[id]).filter(Boolean);
   }, [deck.cards, catFilter, order, known]);
 
-  const total = cards.length;
+  const total = cards.length;                       // cards in the current view
   const card = cards[index] || null;
   const knownInView = cards.filter(c => known.includes(c.id)).length;
-  const pct = total ? Math.round((knownInView / total) * 100) : 0;
+
+  /* Whole-deck figures. These drive the progress bar, so it always means the
+     same thing — "how much of this deck do I know" — whatever filter is on.
+     The filtered count is reported separately rather than replacing it. */
+  const deckTotal = deck.cards.length;
+  const deckKnown = deck.cards.filter(c => known.includes(c.id)).length;
+  const pct = deckTotal ? Math.round((deckKnown / deckTotal) * 100) : 0;
+  const filtered = catFilter !== "all";
+  const remaining = deckTotal - deckKnown;
 
   /* -----------------------------------------------------------------------
      ANIMATION
@@ -284,13 +292,39 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
       />
 
       <Screen>
-        {/* Progress */}
+        {/* Progress — always the whole deck, never just the filtered slice. */}
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4">
-          <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">
-            <span>Marked as known</span>
-            <span>{knownInView} / {total}</span>
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                Cards you know
+              </p>
+              <p className="mt-0.5 text-2xl font-black text-slate-900 dark:text-white leading-none">
+                {deckKnown}
+                <span className="text-base font-bold text-slate-400"> / {deckTotal}</span>
+              </p>
+            </div>
+            <span className={`text-lg font-black shrink-0 ${
+              pct === 100
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-slate-400"
+            }`}>
+              {pct}%
+            </span>
           </div>
-          <ProgressBar pct={pct} />
+
+          <div className="mt-2.5">
+            <ProgressBar pct={pct} tone={pct === 100 ? "emerald" : deckKnown ? "amber" : "slate"} />
+          </div>
+
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            {deckKnown === 0
+              ? `${deckTotal} cards in this deck. Tap "I know this" as you go.`
+              : remaining === 0
+                ? "Every card marked as known. Reset any you want to revisit."
+                : `${remaining} still to learn`}
+            {filtered && ` · showing ${knownInView}/${total} in this filter`}
+          </p>
         </div>
 
         {/* Controls */}

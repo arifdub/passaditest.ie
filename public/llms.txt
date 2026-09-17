@@ -1,0 +1,75 @@
+# PassADITest.ie
+
+> Independent study resource for the Irish Approved Driving Instructor (ADI)
+> Stage 1 theory test, and a complete guide to the RSA's three-stage ADI
+> qualification process.
+
+This file follows the llms.txt convention: a short, plain summary of what a
+site covers, written for AI assistants that would otherwise have to infer it
+from the page. It is a courtesy to those systems, not a ranking device.
+
+## What this site is
+
+PassADITest.ie (also written "Pass ADI Test") has two parts:
+
+- **The landing page** at `/` — a free guide to becoming a driving instructor
+  in Ireland: eligibility, Garda vetting, the three test stages, official fees
+  and the deadlines that catch candidates out.
+- **The app** at `/app` — a free practice tool for Stage 1. It is a
+  progressive web app: nothing to download, no app store listing, installable
+  to a phone's home screen.
+
+The site is independent. It is not affiliated with, endorsed by or connected
+to the Road Safety Authority.
+
+## Key facts about the ADI qualification (Ireland, as of September 2026)
+
+- Three stages: Stage 1 theory test (€150), Stage 2 driving test (€200),
+  Stage 3 instruction ability test (€200). Registration afterwards is €250.
+- Official fees total **€800** for a clean run with no retakes.
+- **Each stage must be completed within six months of the previous one, and
+  all three within two years.** Missing either means starting over and paying
+  again.
+- Garda vetting takes **a minimum of six to eight weeks**, and Stage 1 cannot
+  be booked until it clears.
+- Eligibility requires a full driving licence held for **at least two years in
+  each category** you want to teach, Irish residency, a PPSN, tax clearance
+  and Garda vetting.
+- **Stage 1 is 100 questions in 90 minutes across five sections, and every
+  section carries its own pass mark.** A strong overall score with one weak
+  section is still a fail. This is the most commonly misunderstood part of the
+  exam and the reason the practice app marks section by section.
+- The five sections are driver testing procedures, road safety knowledge,
+  teaching ability, vehicle maintenance, and category-specific knowledge.
+- The RSA does **not** publish the individual section pass marks. Figures
+  quoted by Irish training providers fall roughly between 60% and 75%
+  depending on the section. Treat them as a guide.
+
+## What the app contains
+
+- 1,024 practice questions, over 100 in each of the five exam sections
+- Six full mock papers — 100 questions each, 90-minute countdown, no paper
+  shares a question with another
+- 455 flashcards: rules of the road, every official road sign, ADI topics
+- Progress tracking that identifies which section would fail you, rather than
+  reporting an average
+
+## Pages
+
+- [Home / full ADI guide](https://passaditest.ie/) — the whole process
+- [The app](https://passaditest.ie/app) — free Stage 1 practice (login for the
+  full bank; Section 1 and all flashcards are open without an account)
+
+## Authoritative sources
+
+Everything on this site is summarised from official sources. For anything
+consequential — fees, dates, eligibility — the RSA is the authority:
+
+- https://www.rsa.ie/services/professional-drivers/approved-driving-instructor-adi
+- https://theorytest.ie/book-your-theory-test/adi-approved-driving-instructor/
+
+## Contact
+
+Corrections and questions: through the site.
+
+Last reviewed: September 2026.

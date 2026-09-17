@@ -80,7 +80,11 @@ export default function AuthScreen() {
       }}
     >
       {/* Logo */}
-      <Logo size="hero" className="w-[45%] max-w-[180px] mb-8" />
+      {/* Same reason as the home screen: the navy wordmark needs a light
+          backing to be legible on the dark sign-in screen. */}
+      <div className="inline-flex bg-white rounded-2xl px-4 py-3 mb-8 shadow-sm">
+        <Logo size="hero" className="w-[190px]" />
+      </div>
 
       {/* Card */}
       <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl">

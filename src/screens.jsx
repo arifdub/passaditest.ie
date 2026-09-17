@@ -46,10 +46,17 @@ export function HomeScreen({ go }) {
       <div className="bg-slate-900 text-white">
         <div
           className="max-w-2xl mx-auto px-5 pb-6"
-          style={{ paddingTop: "max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem))" }}
+          style={{ paddingTop: "max(1.5rem, calc(env(safe-area-inset-top) + 0.875rem))" }}
         >
-          <div className="flex justify-center">
-            <Logo size="hero" className="w-[45%] max-w-[190px]" />
+          {/* Left-aligned, on a white chip.
+
+              The wordmark is dark navy, which measures 1.5:1 against this
+              slate-900 header — effectively invisible. Readable text needs
+              about 4.5:1. On white the same logo measures 5.05:1, so the
+              chip is what makes it legible rather than decoration. Padding
+              is tight so there's no dead space around the artwork. */}
+          <div className="inline-flex bg-white rounded-xl px-3 py-2 shadow-sm">
+            <Logo size="hero" className="w-[168px]" />
           </div>
           <p className="mt-4 text-slate-400 text-sm">Hi {displayName} 👋</p>
           <h1 className="mt-0.5 text-2xl font-black tracking-tight">ADI Theory Test</h1>

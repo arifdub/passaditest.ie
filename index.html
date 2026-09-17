@@ -4,6 +4,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+<script>
+/* ===========================================================================
+   INSTALLED APP → STRAIGHT TO THE APP
+
+   A home-screen icon must open the app, never this page.
+
+   The manifest says start_url /app/, which handles an install made from /app.
+   But someone can add to home screen while reading THIS page, and iOS then
+   captures whatever URL is in the address bar — "/" — ignoring the manifest.
+   Their icon would open a marketing page with no way into their progress.
+
+   So the page checks how it was launched. display-mode: standalone is the
+   standard signal; navigator.standalone is Safari's older iOS-only one, and
+   iOS is precisely the case that needs it, so both are tested.
+
+   First thing in <head>, before the stylesheet, so it redirects before
+   anything paints rather than flashing the landing page on every launch.
+   replace() rather than assign() so Back doesn't bounce them straight here
+   again.
+
+   A normal browser visit fails both tests and reads on untouched.
+   =========================================================================== */
+(function () {
+  try {
+    var installed =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true;
+
+    // ?stay=1 is the escape hatch: it lets the app's own logo link open this
+    // page deliberately without being bounced back.
+    var deliberate = location.search.indexOf("stay=1") !== -1;
+
+    if (installed && !deliberate) location.replace("/app/");
+  } catch (e) {
+    /* Old browser, or matchMedia blocked. Showing the landing page is the
+       right thing to fall back to — it has a Go to the app button. */
+  }
+})();
+</script>
+
 <!-- ===========================================================================
      PassADITest.ie — landing page
 
@@ -75,15 +115,22 @@ img{max-width:100%; height:auto}
 .read{max-width:var(--read)}
 section{padding:60px 0; border-top:1px solid var(--line)}
 section.alt{background:var(--bg-2)}
-/* The header is fixed and 62px tall, so an anchor jump lands with the heading
-   hidden underneath it. scroll-margin pushes the landing point down past it. */
-[id]{scroll-margin-top:78px}
+/* The header sticks and is 62px tall, so an anchor jump lands with the heading
+   hidden underneath it. scroll-margin pushes the landing point down past it —
+   plus the notch inset, because on an iPhone the header is that much taller. */
+[id]{scroll-margin-top:calc(78px + env(safe-area-inset-top))}
 .lede{font-size:1.12rem; color:var(--body)}
 
 /* ---- header ---- */
 header{
   position:sticky; top:0; z-index:50; background:rgba(15,23,42,.97);
   backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid #1e293b;
+  /* The page sets viewport-fit=cover so the dark header can run edge to edge
+     behind the status bar. The cost of that is the bar's own contents sit
+     underneath the Dynamic Island unless they're pushed clear of it.
+     env(safe-area-inset-top) is the notch height — 0 on desktop and Android,
+     so max() keeps the normal spacing everywhere else. */
+  padding-top:env(safe-area-inset-top);
 }
 .bar{display:flex; align-items:center; gap:14px; height:62px}
 /* The wheel alone, with the name set in live text beside it.
@@ -423,17 +470,46 @@ footer a:hover{color:#fff; text-decoration:underline}
             Submit the ADI application form with your personal and contact
             details, PPSN, tax clearance access number, driver number, the
             categories you want, and your preferred test centres for Stages 2
-            and 3. There's a digital form on the RSA site.
+            and 3. It's a digital form, submitted directly to the RSA.
+          </p>
+          <p>
+            Have your tax clearance access number and driver number to hand
+            before you start — the form asks for both and there's no saving
+            halfway through.
+          </p>
+          <p style="margin-top:14px">
+            <!-- Straight to the RSA's own application guidance. Opens in a new
+                 tab: someone mid-way through reading the eight steps shouldn't
+                 lose their place to an outbound link, and they'll want to come
+                 back for steps 3 to 8 afterwards. -->
+            <a class="btn"
+               href="https://www.rsa.ie/services/professional-drivers/approved-driving-instructor-adi/become-an-approved-driving-instructor-(adi)/adi-application-form-guidance"
+               target="_blank" rel="noopener">
+              Click here to apply now &rarr;
+            </a>
+            <span style="display:block;margin-top:8px;font-size:.86rem;color:var(--muted)">
+              Opens the RSA's application form guidance in a new tab.
+            </span>
           </p>
         </li>
 
         <li>
-          <h3>Garda vetting</h3>
+          <h3>Garda vetting <span class="tag">allow 6–8 weeks</span></h3>
           <p>
-            You complete the vetting form at an in-person validation appointment
-            with an RSA officer. The RSA works with the Garda National Vetting
-            Bureau on the disclosure. Build time into your plan for this — it
-            runs alongside your study rather than after it.
+            After submitting the form you attend an in-person validation meeting
+            with an RSA officer and complete the vetting form there. The RSA then
+            works with the Garda National Vetting Bureau on the disclosure.
+          </p>
+          <p>
+            <strong>The RSA advises a minimum of six to eight weeks for this</strong>,
+            and you can't book Stage 1 until it's done. So start studying now
+            rather than waiting for clearance — the waiting and the studying are
+            meant to happen at the same time.
+          </p>
+          <p>
+            You must declare any past or current convictions on the form. Failing
+            to disclose can delay or refuse the application, which is a worse
+            outcome than the conviction itself would have been.
           </p>
         </li>
 
@@ -666,13 +742,20 @@ footer a:hover{color:#fff; text-decoration:underline}
 
     <details>
       <summary>How long does it take to become a driving instructor in Ireland?</summary>
-      <div class="a"><p>
-        There's no fixed duration, but there is a ceiling: all three stages must be
-        completed within two years, and each stage within six months of the one
-        before. Most people take somewhere between six months and a year and a
-        half, depending on how quickly they get test dates and how much training
-        they do before Stage 3.
-      </p></div>
+      <div class="a">
+        <p>
+          There's no fixed duration, but there is a ceiling: all three stages must
+          be completed within two years, and each stage within six months of the
+          one before. Most people take somewhere between six months and a year and
+          a half, depending on how quickly they get test dates and how much
+          training they do before Stage 3.
+        </p>
+        <p>
+          The first delay is Garda vetting, which the RSA says takes a minimum of
+          six to eight weeks — and you can't book Stage 1 until it clears. That
+          wait is the best time to study, not to sit still.
+        </p>
+      </div>
     </details>
 
     <details>
@@ -905,7 +988,7 @@ footer a:hover{color:#fff; text-decoration:underline}
         { "@type": "HowToStep", "position": 2, "name": "Apply",
           "text": "Submit the ADI application form with your PPSN, tax clearance access number, driver number, chosen categories and preferred test centres." },
         { "@type": "HowToStep", "position": 3, "name": "Garda vetting",
-          "text": "Complete the Garda vetting form at an in-person validation appointment with an RSA officer." },
+          "text": "Attend an in-person validation meeting with an RSA officer and complete the Garda vetting form. The RSA advises allowing a minimum of six to eight weeks, and Stage 1 cannot be booked until vetting is complete." },
         { "@type": "HowToStep", "position": 4, "name": "Stage 1: theory test",
           "text": "Sit 100 multiple-choice questions in 90 minutes across five sections. Each section has its own pass mark and all five must be reached. Fee EUR 150.",
           "url": "https://passaditest.ie/#stage1" },
@@ -924,7 +1007,7 @@ footer a:hover{color:#fff; text-decoration:underline}
       "@id": "https://passaditest.ie/#faq",
       "mainEntity": [
         { "@type": "Question", "name": "How long does it take to become a driving instructor in Ireland?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no fixed duration, but all three stages must be completed within two years, and each stage within six months of the one before. Most people take between six months and a year and a half, depending on test availability and how much training they do before Stage 3." } },
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no fixed duration, but all three stages must be completed within two years, and each stage within six months of the one before. Most people take between six months and a year and a half, depending on test availability and how much training they do before Stage 3. The first delay is Garda vetting, which the RSA says takes a minimum of six to eight weeks, and Stage 1 cannot be booked until it clears." } },
         { "@type": "Question", "name": "How much does it cost to become a driving instructor in Ireland?",
           "acceptedAnswer": { "@type": "Answer", "text": "Official fees come to 800 euro for a clean run: 150 for Stage 1, 200 each for Stages 2 and 3, and 250 to register. Instructor training from a private provider is a separate and usually larger cost, and every retake is another full test fee." } },
         { "@type": "Question", "name": "Do I need a full licence for two years before applying?",

@@ -1,61 +1,70 @@
-# Landing page at `/`, app at `/app`
+# Landing page v2 — where each file goes in GitHub, plus four fixes
 
-**Read section 1 before you push.** This batch moves a file rather than only
-adding files, and getting that step wrong takes the app offline.
-
-| File | Goes to |
-|---|---|
-| `index.html` | **repo root** — the new landing page |
-| `app/index.html` | **new `app/` folder** — see section 1 |
-| `vite.config.js` | repo root — see section 1 |
-| `public/robots.txt`, `public/sitemap.xml` | `public` |
-| `public/manifest.json` | `public` — start_url moved to `/app/` |
-| `public/logo-hero.png`, `logo-mark.png`, `wheel-sm.png` | `public` |
-| `src/screens.jsx` + 7 others | `src` — carried from previous batches |
-| `sql/add-section-results.sql` | **Supabase SQL editor** — from the last batch, still needs running |
+Replaces the previous landing batch. If you haven't pushed that one, push this
+instead. If you have, this updates it.
 
 ---
 
-## 1. The move — do this first
+## 1. Where these go in GitHub
 
-Right now your repo root has an `index.html` that loads the React app. It has
-to move so the landing page can take that address.
+**The zip mirrors your repo exactly.** Unzip it, and each folder maps
+one-to-one onto a folder in your repository. Same names, same places.
 
 ```
-BEFORE                        AFTER
-index.html   ← the app        index.html      ← the landing page (new)
-                              app/index.html  ← the app (moved)
+your-repo/
+│
+├── index.html          ← REPLACE.  Currently loads the app.
+│                          Becomes the landing page.
+│
+├── app/                ← NEW FOLDER. Create it.
+│   └── index.html         The app's entry point, moved here.
+│
+├── vite.config.js      ← ADD or MERGE (see below)
+│
+├── public/             ← existing folder, add/replace 6 files
+│   ├── robots.txt         new
+│   ├── sitemap.xml        new
+│   ├── manifest.json      replace
+│   ├── logo-hero.png      new
+│   ├── logo-mark.png      new
+│   └── wheel-sm.png       new
+│
+├── src/                ← existing folder, replace 8 files
+│   └── … 8 .jsx/.js files
+│
+└── sql/                ← not GitHub. Supabase SQL editor.
 ```
 
-**Step by step:**
+### The one step that isn't drag-and-drop
 
-1. Create a folder called `app` at the repo root.
-2. **Move** your existing root `index.html` into it → `app/index.html`.
-3. Copy this batch's `index.html` into the root.
-4. Copy `vite.config.js` into the root — **but read the note below first.**
+Your root `index.html` currently loads the app, and the landing page needs that
+filename. So it moves rather than being overwritten:
 
-I've included my own `app/index.html`, and it should work as-is. But yours may
-have things mine doesn't know about — analytics, a font, a verification tag. If
-yours has anything beyond the standard Vite boilerplate, **move yours and take
-only these two changes from mine**:
+**On github.com**, you can't drag a file between folders. Do this instead:
+
+1. Open your existing root `index.html` on GitHub and click the pencil icon.
+2. Change the **filename box** at the top from `index.html` to
+   `app/index.html`. Typing the slash creates the folder — that's GitHub's way
+   of moving a file.
+3. Commit. Your root is now empty of `index.html` and `app/index.html` exists.
+4. Now upload this batch's `index.html` to the root, and the rest of the files
+   to their folders.
+
+I've included my own `app/index.html`, so if you'd rather skip steps 1–3 you
+can just upload mine and delete the old root one. **But check yours first** —
+if it has analytics, a font link or a site-verification tag, mine doesn't know
+about them. In that case move yours and take only these two changes from mine:
 
 ```html
-<!-- add, so the app doesn't compete with the landing page in search -->
 <meta name="robots" content="noindex, follow" />
 ```
 ```js
-// change, so the service worker governs /app only
 navigator.serviceWorker.register("/sw.js", { scope: "/app/" })
 ```
 
-Also check the script tag is `src="/src/main.jsx"` with the **leading slash**. A
-relative `./src/main.jsx` resolves differently at `/app` than at `/app/` and
-will 404 on one of them.
+### vite.config.js
 
-### About `vite.config.js`
-
-**If you already have one, don't replace it.** Copy just the `build` block into
-yours:
+**If you already have one, don't replace it** — copy just this block in:
 
 ```js
 build: {
@@ -65,150 +74,125 @@ build: {
 },
 ```
 
-Yours may have plugins or aliases mine knows nothing about, and overwriting it
-would drop them.
+Yours may have plugins or aliases mine knows nothing about.
 
-No `vercel.json` needed. Vercel serves `/app` from `dist/app/index.html` the
-same way it serves `/` from `dist/index.html`. Your app has no client-side
-router — navigation is React state — so there are no deep links to rewrite.
+### After the push
 
-**After deploying, check `/app` loads before you tell anyone about the landing
-page.**
+Vercel builds both pages. **Check `/app` loads before you tell anyone about the
+landing page.** No `vercel.json` needed — Vercel serves `/app` from
+`dist/app/index.html` automatically.
 
 ---
 
-## 2. What's on the page
+## 2. The header under the Dynamic Island
 
-The whole ADI process, written for someone who has just typed "how to become a
-driving instructor in Ireland" into Google and knows nothing yet.
+The page sets `viewport-fit=cover` so the dark header runs edge to edge behind
+the status bar, which looks right. The cost is that the bar's contents sit
+*under* the Dynamic Island unless they're pushed clear of it.
 
-- **Eligibility** — six requirement cards. The two-year full-licence rule is
-  given its own card because it's the one that most often means "not yet".
-- **The process** — all eight steps in order, as a numbered timeline, with the
-  three test stages highlighted and priced.
-- **The deadline nobody mentions** — six months between stages, two years
-  overall. Called out in a box of its own, because missing it means starting
-  and paying again.
-- **The three tests in detail** — format, duration, what's assessed.
-- **What it costs** — a table totalling **€800** for a clean run, plus the
-  trainee licence and the two-yearly renewal.
-- **The app** — what it does and why per-section marking matters.
-- **Ten FAQs** — the actual questions people search for.
+Fixed with `padding-top: env(safe-area-inset-top)` on the header — the notch
+height, which is 0 on desktop and Android so nothing else changes.
 
-### The numbers, and where each came from
+Verified by forcing a 59px inset (iPhone 15 Pro) in a real browser:
 
-Everything on the page is from official sources:
+```
+no inset (Android/desktop)   header 63px   logo at  8px   button at  7px   clear
+59px inset (iPhone 15 Pro)   header 122px  logo at 67px   button at 66px   clear
+```
 
-| Fact | Source |
-|---|---|
-| Stage 1 €150, ID rules, booking | Driver theory test service |
-| Stage 2 €200, 60–100 minutes | RSA |
-| Stage 3 €200, two 30-minute phases, results in 10 working days | RSA |
-| Trainee licence €50, 6 months, sponsor, 20% supervision, 20 hours | RSA |
-| Registration €250, renewal €250 every 2 years, check test | RSA |
-| Six months between stages, two years overall | RSA |
-| Eligibility, Garda vetting, tax clearance | RSA |
-| Insurance certificate from 9 March 2026 | RSA |
-
-**One thing I would not state as fact:** the individual section pass marks. The
-RSA doesn't publish them, so the FAQ says exactly that and gives the training
-providers' figures as a range rather than as gospel. Putting invented precision
-on a page that ranks is how you end up quoted and wrong.
-
-The footer says the page is independent of the RSA and dates the review to
-September 2026, because fees change and an undated page ages badly.
+Anchor links got the same treatment — `scroll-margin-top` now adds the inset,
+so tapping a nav link on an iPhone doesn't land with the heading behind the
+island.
 
 ---
 
-## 3. Why it's built the way it is
+## 3. Apply now button
 
-**One file, no framework, no build step.** The page is 41KB of HTML with the
-CSS inline and one small script. First view is **82KB over 3 requests with zero
-bytes of JavaScript needed to read it.** Someone on 4G has it readable almost
-immediately — which matters because page speed is a ranking factor and, more to
-the point, people leave.
+A green **Click here to apply now →** button at the end of the Apply step,
+linking to the RSA guidance page you gave me. Opens in a new tab — someone
+halfway through the eight steps shouldn't lose their place, and they need to
+come back for steps 3 to 8.
 
-**The app is `noindex`.** A screen behind a login has nothing to rank, and
-letting it get indexed means two of your own pages competing for the same
-searches, with the worse one sometimes winning.
+I opened the page to check the link was live, and it gave up two facts worth
+adding:
 
-**`robots.txt` deliberately does NOT block `/app`.** This looks wrong and
-isn't. Disallow and noindex cancel each other out: a crawler blocked from
-fetching the page never sees the noindex tag, and Google will still list a
-blocked URL if something links to it — which the landing page does, nine times.
-You'd get a bare URL in the results with no description. Allowing the crawl is
-what lets the noindex actually be obeyed.
-
-**Structured data.** Three JSON-LD blocks: `FAQPage`, `HowTo`, `WebSite`. The
-FAQ one is the valuable one — it's what earns expandable answers directly in
-Google's results. Every answer in it is a copy of what a human reads on the
-page; Google penalises structured data that says something the page doesn't, so
-**if you edit a question, edit both copies.**
-
-**Nine routes into the app**: header button, two hero buttons, the Stage 1 step,
-the promo section, the final CTA, three footer links, and a sticky bar on
-mobile.
+- **Garda vetting takes a minimum of six to eight weeks**, and you can't book
+  Stage 1 until it clears. That's the first real bottleneck and nobody
+  mentions it. It's now on the vetting step and in the FAQ — with the point
+  that the wait is the time to study, which is also the argument for your app.
+- **You must declare any convictions on the form.** Failing to disclose can
+  delay or refuse the application, which is worse than the conviction would
+  have been.
 
 ---
 
-## 4. Things I found and fixed while building it
+## 4. The home-screen icon always opens the app
 
-**Your logo was 665KB.** On the page that's meant to rank, that alone would
-have hurt Core Video Vitals more than everything else combined. Resized and
-quantised to **31KB** — 5% of the size, and I compared them side by side to
-confirm no visible loss. The original stays untouched for the app.
+This needed more than the manifest.
 
-**The header logo was unreadable.** Your logo is a wordmark *under* a wheel;
-shrink that to a 34px header bar and the words become a smudge. The header now
-uses the wheel alone with the name in live text beside it — crisp at any size,
-and 3KB instead of 10.
+The manifest says `start_url: /app/`, which covers an install made from `/app`.
+But someone can add to home screen **while reading the landing page**, and iOS
+then captures whatever is in the address bar — `/` — ignoring the manifest
+entirely. Their icon would open a marketing page with no way into their
+progress.
 
-**The hero logo pushed the H1 below the fold.** At 300px it filled the entire
-first screen on a phone, so someone arriving from a Google result saw a logo and
-had to scroll to find out if they were in the right place. Now 190px, with the
-headline and both buttons above the fold on a 390px screen.
+So the landing page checks how it was launched. If it's running as an installed
+app, it redirects to `/app/` before anything paints. Two signals are tested:
+`display-mode: standalone` (the standard one) and `navigator.standalone`
+(Safari's older iOS-only one — and iOS is exactly the case that needs it).
 
-**The sticky mobile button sat an inch from an identical one.** It now slides
-up only once the hero's button has scrolled away.
+It's the first thing in `<head>`, before the stylesheet, so there's no flash of
+the landing page on every launch. It uses `replace()` rather than `assign()` so
+Back doesn't bounce them straight back.
 
-**The title and description were both too long** — 91 and 225 characters, so
-Google would have truncated both mid-phrase. Now 52 and 154.
+### Getting out to the landing page from inside the app
 
-**Anchor links landed under the header.** Fixed with `scroll-margin-top`.
+**The app's logo is now the link**, and it opens in the browser rather than in
+the app window. That matters: an installed app has no address bar and no Back
+button, so a same-window navigation would strand someone on the landing page
+with no way back to their progress.
 
-**Fourteen mobile tap targets were under 40px**, mostly footer links at 16px
-with 8px gaps — small enough to hit the wrong one. Three remain, all inline
-links inside sentences, which is the correct exception.
+It carries `?stay=1`, which tells the landing page's redirect to leave them
+alone — that redirect exists to make the icon always open the app, and this is
+the one case where the landing page was asked for deliberately.
+
+### All four cases, tested in a real browser
+
+```
+1. normal browser visit                    → landing page      PASS
+2. home-screen launch (iPhone)             → /app/             PASS
+3. home-screen launch (Android)            → /app/             PASS
+4. logo tapped from inside the app         → landing page      PASS
+```
+
+My first attempt at testing this reported a failure on case 2. That turned out
+to be my test harness not applying the emulated display mode rather than a bug
+in the page — worth saying because I'd rather tell you I chased a false alarm
+than quietly present four green ticks.
 
 ---
 
 ## 5. Checked
 
-Rendered in a real browser at 390px and 1280px, not eyeballed in source:
-
 ```
-desktop 1280x900   page 8317px   horizontal overflow: no   console errors: 0
-mobile   390x844   page 13538px  horizontal overflow: no   console errors: 0
+desktop 1280x900   page 8689px    horizontal overflow: no   console errors: 0
+mobile   390x844   page 14129px   horizontal overflow: no   console errors: 0
 
-JSON-LD          3 blocks, valid, 10 FAQs + 8 HowTo steps in order
-FAQ consistency  every structured-data question appears on the page
-anchors          all 4 nav links resolve and settle clear of the header
-title            52 / 60 chars
-description     154 / 160 chars
-first view       82KB, 3 requests, 0 bytes of JavaScript
+Dynamic Island    header clears a forced 59px inset
+apply button      href correct, target=_blank, rel=noopener, 231x49px
+JSON-LD           valid — 10 FAQs, 8 HowTo steps
+FAQ consistency   all 10 structured questions appear on the page
+title             52 / 60 chars
+description      154 / 160 chars
 ```
 
 ---
 
 ## 6. Still outstanding
 
-- **`sql/add-section-results.sql` from the last batch still needs running** in
-  Supabase. Without it the server overwrites a correctly-failed mock as passed.
-- **Update `sitemap.xml`'s `lastmod`** when you change the page's content — but
-  not on every deploy, or Google learns to ignore it.
-- **Submit the sitemap** in Google Search Console once it's live, and request
-  indexing on `/` to speed up the first crawl.
-- **`og:image` points at `/logo-hero.png`**, which is a transparent PNG. It'll
-  work, but a proper 1200×630 social card with the headline on it would look far
-  better when someone shares the link. Say the word.
-- **Mock 3** still needs 26 more questions.
+- **`sql/add-section-results.sql` still needs running** in Supabase. Without it
+  the server overwrites a correctly-failed mock as passed.
+- **Submit the sitemap** in Google Search Console once live.
+- **A proper 1200×630 social card** — `og:image` currently points at the
+  transparent logo, which works but looks plain when the link is shared.
+- **Mock 3** needs 26 more questions.

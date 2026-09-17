@@ -11,26 +11,41 @@ import React from "react";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 
 /* ------------------------------------------------------------------------- */
-/* The real logo, from public/logo.png.
+/* The brand lockup: the steering wheel as an image, the wordmark as live
+   text.
 
-   Most sizes are set by height so the logo keeps its aspect ratio whatever
-   the container width. "hero" is the exception — it fills the width it's
-   given, which is what the top of the home screen wants. */
+   The supplied logo has a dark navy wordmark, which measures about 1.5:1
+   against the app's slate-900 header — unreadable, since text needs roughly
+   4.5:1. Setting the words as text instead of an image means they can be
+   coloured for a dark background: white and green, both of which clear 4.5:1
+   here. It also keeps the header light, scales cleanly on any screen, and
+   stays sharp without shipping a second logo file.
+
+   The wheel is public/wheel.png, cropped from the full logo. */
 export function Logo({ size = "md", className = "" }) {
   const sizes = {
-    sm: "h-8 w-auto",
-    md: "h-12 w-auto",
-    lg: "h-20 w-auto",
-    xl: "h-24 w-auto",
-    hero: "w-full h-auto",
+    sm: { wheel: "h-7", text: "text-base" },
+    md: { wheel: "h-9", text: "text-lg" },
+    lg: { wheel: "h-11", text: "text-xl" },
+    xl: { wheel: "h-14", text: "text-2xl" },
   };
+  const s = sizes[size] || sizes.md;
+
   return (
-    <img
-      src="/logo.png"
-      alt="PassDrivingTest.ie — Learn. Practice. Pass."
-      className={`${sizes[size] || sizes.md} ${className}`}
-      draggable={false}
-    />
+    <div className={`inline-flex items-center gap-2 ${className}`}>
+      <img
+        src="/wheel.png"
+        alt=""
+        className={`${s.wheel} w-auto shrink-0`}
+        draggable={false}
+      />
+      <span className={`font-black tracking-tight leading-none ${s.text}`}>
+        <span className="text-white">Pass</span>
+        <span className="text-emerald-400">ADI</span>
+        <span className="text-white">test</span>
+        <span className="text-emerald-400">.ie</span>
+      </span>
+    </div>
   );
 }
 

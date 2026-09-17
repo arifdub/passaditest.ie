@@ -48,19 +48,54 @@ function hashId(text) {
    other sign names at a fixed stride, which always terminates and always
    gives the same options for the same sign.
    --------------------------------------------------------------------------- */
+/* Two sign names are "too close" when one is the other plus a qualifier, or
+   when they use the same words. Offering both in one question asks the learner
+   to pick between two nearly identical strings from a small image — that tests
+   reading, not sign recognition.
+
+   The pair that surfaced this: "Parking Prohibited" and "Parking Prohibited At
+   Times Displayed", both filed under Road Markings, so the generator put them
+   head to head. A learner looking at a yellow line has no way to choose.
+
+   Where such a distinction genuinely matters for the exam — single versus
+   double yellow line does — it belongs in a written question with an
+   explanation, not in a generated four-way guess. */
+const normName = s => s.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+
+function tooSimilar(a, b) {
+  const x = normName(a), y = normName(b);
+  if (x === y) return true;
+  if (x.startsWith(y + " ") || y.startsWith(x + " ")) return true;
+  const wx = new Set(x.split(" ")), wy = new Set(y.split(" "));
+  const shared = [...wx].filter(w => wy.has(w)).length;
+  return shared === Math.min(wx.size, wy.size);   // one is a subset of the other
+}
+
 function buildSignQuestions() {
   const byCategory = {};
   for (const sign of ROAD_SIGNS) {
     (byCategory[sign.c] = byCategory[sign.c] || []).push(sign);
   }
+  const allNames = [...new Set(ROAD_SIGNS.map(s => s.name))];
 
   const out = [];
   for (const [catId, signs] of Object.entries(byCategory)) {
     const names = [...new Set(signs.map(s => s.name))];
-    if (names.length < 4) continue;
 
     for (const sign of signs) {
-      const others = names.filter(n => n !== sign.name);
+      /* Same-category distractors are what make these questions hard — a
+         warning sign's alternatives should be other warning signs. Drop any
+         that are too close to the answer to tell apart. */
+      let others = names.filter(n => n !== sign.name && !tooSimilar(n, sign.name));
+
+      /* A small category can run out once the near-duplicates are removed.
+         Top up from the whole set rather than lose the question. */
+      if (others.length < 3) {
+        const extra = allNames.filter(
+          n => n !== sign.name && !others.includes(n) && !tooSimilar(n, sign.name)
+        );
+        others = others.concat(extra);
+      }
       if (others.length < 3) continue;
 
       const start = (sign.id * 7) % others.length;

@@ -1,6 +1,34 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+/*
+  Two pages, not one.
+
+    /       index.html      the landing page — plain HTML, no JavaScript,
+                            this is what Google indexes
+    /app    app/index.html  the React app
+
+  Vite builds one HTML entry by default. Listing both here produces
+  dist/index.html and dist/app/index.html, and Vercel serves /app from the
+  second without any rewrite rule — a directory index is a directory index.
+
+  The app has no client-side router (navigation is React state), so there are
+  no deep links under /app that need rewriting back to index.html. If you ever
+  add real URLs inside the app, that is the point at which you'd need a
+  vercel.json rewrite.
+
+  IF YOU ALREADY HAVE A vite.config.js: don't replace it with this one. Copy
+  the `build` block into yours and leave the rest of your config alone — you
+  may have plugins or aliases this file knows nothing about.
+*/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        landing: "index.html",
+        app: "app/index.html",
+      },
+    },
+  },
 });

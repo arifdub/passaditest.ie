@@ -1,27 +1,953 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>PassADITest.ie — ADI Stage 1 Theory Test Preparation</title>
-    <meta name="description" content="Prepare for the RSA ADI Stage 1 theory test. Practice questions, mock exams and flashcards across all five exam sections." />
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <!-- PWA: lets visitors "Add to Home Screen" for a full-screen, no-browser-bar app -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#0f172a" />
+<!-- ===========================================================================
+     PassADITest.ie — landing page
 
-    <!-- Browser tab icon -->
-    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+     This is the page search engines see. The app lives at /app and is marked
+     noindex, because a screen behind a login has nothing to rank and would only
+     compete with this page for the same searches.
 
-    <!-- iOS / Safari -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="PassADITest" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+     Written as one self-contained file with no build step, no framework and no
+     blocking JavaScript. Someone finding this from a Google result on 4G
+     should have it readable before they notice it loading, and a page that
+     needs 300KB of JavaScript to show a paragraph of text does not rank.
+     =========================================================================== -->
+
+<!-- Title and description are sized to fit Google's result snippet rather than
+     to say everything. A 91-character title is truncated mid-phrase, which
+     reads as sloppy and loses the words at the end — the ones that were added
+     precisely because they mattered. Keywords go at the front. -->
+<title>How to Become a Driving Instructor in Ireland (2026)</title>
+<meta name="description" content="Every step of the RSA ADI qualification: eligibility, Garda vetting, the three tests, fees and deadlines — plus free Stage 1 practice questions and mocks.">
+<link rel="canonical" href="https://passaditest.ie/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PassADITest.ie">
+<meta property="og:title" content="How to Become a Driving Instructor in Ireland — ADI Stages 1, 2 &amp; 3">
+<meta property="og:description" content="Every step of the RSA ADI qualification: eligibility, vetting, the three tests, fees and timings — plus free Stage 1 practice.">
+<meta property="og:url" content="https://passaditest.ie/">
+<meta property="og:image" content="https://passaditest.ie/logo-hero.png">
+<meta property="og:locale" content="en_IE">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f172a">
+
+<style>
+/* --------------------------------------------------------------------------
+   Everything inline. One request for the HTML, one for the logo, and the page
+   is up — no stylesheet round-trip, no font download blocking the first paint.
+   The system font stack is what the reader's own OS already has loaded.
+   -------------------------------------------------------------------------- */
+:root{
+  --ink:#0f172a; --ink-2:#1e293b; --body:#334155; --muted:#64748b;
+  --line:#e2e8f0; --bg:#ffffff; --bg-2:#f8fafc;
+  --green:#16a34a; --green-d:#15803d; --green-l:#dcfce7;
+  --amber:#b45309; --amber-l:#fef3c7;
+  --wrap:1060px; --read:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--body);
+  font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{color:var(--ink); line-height:1.2; margin:0 0 .5em; letter-spacing:-.02em}
+h1{font-size:clamp(2rem,5.2vw,3.1rem); font-weight:800; letter-spacing:-.03em}
+h2{font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:800; margin-top:0}
+h3{font-size:1.2rem; font-weight:700}
+h4{font-size:1rem; font-weight:700}
+p{margin:0 0 1.1em}
+a{color:var(--green-d)}
+ul,ol{margin:0 0 1.1em; padding-left:1.3em}
+li{margin-bottom:.5em}
+strong{color:var(--ink); font-weight:650}
+img{max-width:100%; height:auto}
+
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 20px}
+.read{max-width:var(--read)}
+section{padding:60px 0; border-top:1px solid var(--line)}
+section.alt{background:var(--bg-2)}
+/* The header is fixed and 62px tall, so an anchor jump lands with the heading
+   hidden underneath it. scroll-margin pushes the landing point down past it. */
+[id]{scroll-margin-top:78px}
+.lede{font-size:1.12rem; color:var(--body)}
+
+/* ---- header ---- */
+header{
+  position:sticky; top:0; z-index:50; background:rgba(15,23,42,.97);
+  backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid #1e293b;
+}
+.bar{display:flex; align-items:center; gap:14px; height:62px}
+/* The wheel alone, with the name set in live text beside it.
+   The full stacked logo is a wordmark under a wheel — shrink that to a 34px
+   header and the words become an unreadable smudge. Text stays crisp at any
+   size, on any screen, and weighs nothing. */
+.brand{display:flex; align-items:center; gap:9px; text-decoration:none; padding:8px 0}
+.brand img{height:30px; width:30px; display:block}
+.brand span{
+  color:#fff; font-weight:800; font-size:1.05rem; letter-spacing:-.02em; white-space:nowrap;
+}
+.brand span i{font-style:normal; color:#4ade80}
+nav.links{margin-left:auto; display:flex; align-items:center; gap:22px}
+nav.links a{color:#cbd5e1; text-decoration:none; font-size:.92rem; font-weight:600}
+nav.links a:hover{color:#fff}
+@media(max-width:860px){nav.links a.hide-sm{display:none}}
+
+.btn{
+  display:inline-block; background:var(--green); color:#fff; text-decoration:none;
+  font-weight:700; padding:11px 20px; border-radius:10px; border:1px solid var(--green);
+  font-size:.95rem; white-space:nowrap; transition:background .15s;
+}
+.btn:hover{background:var(--green-d); border-color:var(--green-d)}
+.btn.lg{padding:15px 30px; font-size:1.05rem; border-radius:12px}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn.ghost:hover{background:var(--bg-2); border-color:#cbd5e1}
+.btn.on-dark{background:#fff; color:var(--ink); border-color:#fff}
+.btn.on-dark:hover{background:#e2e8f0; border-color:#e2e8f0}
+
+/* ---- hero ---- */
+.hero{background:var(--ink); color:#cbd5e1; padding:52px 0 60px; border:0}
+.hero h1{color:#fff}
+.hero .lede{color:#cbd5e1; font-size:1.18rem; max-width:620px}
+/* Small, and it stays small on a phone.
+
+   At 300px it filled the entire first screen on a 390px-wide device and pushed
+   the H1 below the fold — so someone arriving from a Google result saw a logo
+   and had to scroll to find out whether they were in the right place. The
+   headline is what confirms that, so the headline goes first. */
+.hero img.logo{width:min(190px,42vw); margin-bottom:20px}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
+.hero small{display:block; margin-top:16px; color:#94a3b8; font-size:.88rem}
+.facts{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:#1e293b; border:1px solid #1e293b; border-radius:14px;
+  overflow:hidden; margin-top:36px;
+}
+.facts div{background:var(--ink-2); padding:16px 18px}
+.facts b{display:block; color:#fff; font-size:1.35rem; font-weight:800; letter-spacing:-.02em}
+.facts span{display:block; color:#94a3b8; font-size:.8rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em; margin-top:3px}
+
+/* ---- steps ---- */
+ol.steps{list-style:none; padding:0; margin:34px 0 0; counter-reset:s}
+ol.steps>li{
+  counter-increment:s; position:relative; padding:0 0 26px 58px;
+  border-left:2px solid var(--line); margin-left:17px;
+}
+ol.steps>li:last-child{border-left-color:transparent; padding-bottom:0}
+ol.steps>li::before{
+  content:counter(s); position:absolute; left:-18px; top:-2px;
+  width:35px; height:35px; border-radius:50%; background:var(--ink); color:#fff;
+  font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center;
+}
+ol.steps>li.key::before{background:var(--green)}
+ol.steps h3{margin-bottom:.35em}
+ol.steps p{margin-bottom:.5em}
+ol.steps .tag{
+  display:inline-block; background:var(--green-l); color:var(--green-d);
+  font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
+  padding:3px 9px; border-radius:20px; margin-left:8px; vertical-align:2px;
+}
+
+/* ---- cards ---- */
+.grid{display:grid; gap:18px; margin-top:30px}
+.grid.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid.c3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px}
+.card h3{margin-top:0}
+.card p:last-child,.card ul:last-child{margin-bottom:0}
+.card .num{
+  font-size:.75rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--green-d); margin-bottom:8px; display:block;
+}
+
+/* ---- table ---- */
+.tablewrap{overflow-x:auto; margin:28px 0 0; -webkit-overflow-scrolling:touch}
+table{width:100%; border-collapse:collapse; font-size:.96rem; min-width:440px}
+caption{text-align:left; color:var(--muted); font-size:.88rem; padding-bottom:10px}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line)}
+th{background:var(--bg-2); color:var(--ink); font-weight:700; font-size:.82rem;
+  text-transform:uppercase; letter-spacing:.04em}
+td.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:650; color:var(--ink)}
+tr.total td{border-top:2px solid var(--ink); border-bottom:0; font-weight:800; color:var(--ink)}
+
+/* ---- callout ---- */
+.note{
+  background:var(--amber-l); border:1px solid #fde68a; border-left:4px solid #f59e0b;
+  border-radius:10px; padding:18px 20px; margin:26px 0;
+}
+.note p:last-child{margin-bottom:0}
+.note strong{color:var(--amber)}
+
+/* ---- faq ---- */
+details{border-bottom:1px solid var(--line); padding:4px 0}
+details summary{
+  cursor:pointer; padding:16px 34px 16px 0; font-weight:650; color:var(--ink);
+  list-style:none; position:relative; font-size:1.02rem;
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{
+  content:"+"; position:absolute; right:6px; top:13px; font-size:1.5rem;
+  font-weight:400; color:var(--muted); line-height:1;
+}
+details[open] summary::after{content:"\2212"}
+details .a{padding:0 0 18px; color:var(--body)}
+details .a p:last-child{margin-bottom:0}
+
+/* ---- app promo ---- */
+.promo{background:var(--ink); color:#cbd5e1; border:0}
+.promo h2{color:#fff}
+.promo .lede{color:#cbd5e1}
+.promo ul{list-style:none; padding:0; margin:26px 0 0}
+.promo li{padding-left:30px; position:relative; margin-bottom:12px; color:#cbd5e1}
+.promo li::before{
+  content:"\2713"; position:absolute; left:0; top:-1px; color:#4ade80; font-weight:800; font-size:1.1rem;
+}
+
+/* ---- footer ---- */
+footer{background:var(--ink); color:#94a3b8; padding:44px 0 34px; font-size:.9rem; border:0}
+footer img{height:54px; width:auto; margin-bottom:16px}
+footer a{color:#cbd5e1; text-decoration:none}
+footer a:hover{color:#fff; text-decoration:underline}
+.fcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:30px; margin-bottom:34px}
+.fcols h4{color:#fff; font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:12px}
+.fcols ul{list-style:none; padding:0; margin:0}
+/* Footer links are a list of tap targets, not prose. At 16px tall with an 8px
+   gap they're smaller than a fingertip and sit close enough together to hit the
+   wrong one. Padding makes each row ~40px without changing how it looks. */
+.fcols li{margin-bottom:2px}
+.fcols li a{display:block; padding:9px 0}
+.fine{border-top:1px solid var(--ink-2); padding-top:22px; line-height:1.6; font-size:.84rem}
+
+/* ---- sticky mobile CTA ----
+   Hidden until the hero's own button has scrolled away. Two identical green
+   buttons an inch apart looks like a mistake, and the sticky bar's whole job
+   is to be there when the hero's isn't. Slides up rather than appearing. */
+.sticky{display:none}
+@media(max-width:700px){
+  .sticky{
+    display:block; position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(255,255,255,.97); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:10px 16px;
+    padding-bottom:calc(10px + env(safe-area-inset-bottom));
+    transform:translateY(110%); transition:transform .22s ease;
+  }
+  .sticky.show{transform:translateY(0)}
+  .sticky .btn{display:block; text-align:center}
+  body{padding-bottom:78px}
+}
+@media(prefers-reduced-motion:reduce){.sticky{transition:none}}
+@media print{header,.sticky,.hero .cta-row{display:none}}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a href="/" class="brand" aria-label="PassADITest.ie home">
+      <img src="/wheel-sm.png" alt="" width="72" height="72">
+      <span>Pass<i>ADI</i>Test<i>.ie</i></span>
+    </a>
+    <nav class="links">
+      <a href="#steps" class="hide-sm">The process</a>
+      <a href="#stages" class="hide-sm">The three tests</a>
+      <a href="#costs" class="hide-sm">Costs</a>
+      <a href="#faq" class="hide-sm">FAQ</a>
+      <a href="/app" class="btn">Go to the app</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="wrap">
+    <img src="/logo-hero.png" alt="PassADITest.ie" class="logo" width="440" height="346" fetchpriority="high">
+    <h1>How to become a driving instructor in Ireland</h1>
+    <p class="lede">
+      Becoming an RSA Approved Driving Instructor takes three tests, Garda vetting
+      and about €800 in official fees. This page walks through every stage in order
+      — what each one involves, what it costs, and the deadlines that catch people
+      out. Then you can practise Stage 1 free.
+    </p>
+
+    <div class="cta-row">
+      <a href="/app" class="btn lg">Start practising free</a>
+      <a href="#steps" class="btn lg on-dark">Read the full process</a>
+    </div>
+    <small>No card needed. Try a section without even making an account.</small>
+
+    <div class="facts">
+      <div><b>3</b><span>Tests to pass</span></div>
+      <div><b>2 years</b><span>To finish all three</span></div>
+      <div><b>€800</b><span>Official RSA fees</span></div>
+      <div><b>668</b><span>Practice questions</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WHAT IS AN ADI ======================= -->
+<section>
+  <div class="wrap read">
+    <h2>What an ADI is</h2>
+    <p>
+      An <strong>Approved Driving Instructor (ADI)</strong> is someone on the Road
+      Safety Authority's official register of driving instructors. In Ireland you
+      cannot legally charge for driving instruction unless you are on that
+      register, or hold a temporary trainee licence while you qualify.
+    </p>
+    <p>
+      The register exists per licence category. An ADI approved for category B
+      (cars) may not instruct on motorcycles or trucks without qualifying
+      separately for those categories — and you can only instruct in a category
+      you have personally held a full licence in for at least two years.
+    </p>
+    <p>
+      Qualifying is deliberately demanding. There are three separate tests, and
+      they test three different things: what you know, how you drive, and whether
+      you can teach. Plenty of excellent drivers fail Stage 3, because driving
+      well and explaining it to a nervous seventeen-year-old are not the same
+      skill.
+    </p>
+  </div>
+</section>
+
+<!-- ======================= ELIGIBILITY ======================= -->
+<section class="alt">
+  <div class="wrap">
+    <div class="read">
+      <h2>Can you apply? The eligibility rules</h2>
+      <p class="lede">
+        Check these before you spend anything. The two-year licence rule in
+        particular is not waivable, and it is the one that most often means
+        "not yet".
+      </p>
+    </div>
+
+    <div class="grid c2">
+      <div class="card">
+        <span class="num">Requirement 1</span>
+        <h3>A full licence, two years, in that category</h3>
+        <p>
+          You must hold a current, full, valid driving licence for
+          <strong>at least two years in every category you want to teach</strong>.
+          Not a learner permit, and not two years of driving — two years of
+          holding the full licence.
+        </p>
+      </div>
+      <div class="card">
+        <span class="num">Requirement 2</span>
+        <h3>Resident in Ireland, with a PPSN</h3>
+        <p>
+          You must be normally resident in Ireland and have a valid address and
+          PPS number. Both are checked on the application form.
+        </p>
+      </div>
+      <div class="card">
+        <span class="num">Requirement 3</span>
+        <h3>Tax compliant</h3>
+        <p>
+          You need a <strong>tax clearance access number</strong> from Revenue.
+          The application asks for it directly, so sort it before you start
+          rather than stalling the form halfway through.
+        </p>
+      </div>
+      <div class="card">
+        <span class="num">Requirement 4</span>
+        <h3>Medically fit to drive</h3>
+        <p>
+          The same standard that applies to holding your licence. Nothing
+          additional is required beyond being fit to drive in the categories
+          you're applying for.
+        </p>
+      </div>
+      <div class="card">
+        <span class="num">Requirement 5</span>
+        <h3>Of good repute — Garda vetting</h3>
+        <p>
+          You must satisfy the ADI Registrar of your good repute, assessed
+          through Garda vetting. A conviction does not automatically disqualify
+          you: the Registrar weighs its relevance and seriousness, how long ago
+          it was, any pattern, changed circumstances and evidence of
+          rehabilitation.
+        </p>
+      </div>
+      <div class="card">
+        <span class="num">Requirement 6</span>
+        <h3>A suitable vehicle</h3>
+        <p>
+          For Stages 2 and 3 you supply the car. It must be roadworthy, taxed,
+          insured, and NCT'd where applicable, and meet the minimum standard for
+          the category. <strong>From 9 March 2026</strong> you must also produce
+          a valid Certificate of Motor Insurance showing the examiner is covered
+          to drive it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= THE PROCESS ======================= -->
+<section id="steps">
+  <div class="wrap">
+    <div class="read">
+      <h2>The process, start to finish</h2>
+      <p class="lede">
+        Eight steps in a fixed order. You cannot sit Stage 2 before passing
+        Stage 1, and you cannot register before passing all three.
+      </p>
+    </div>
+
+    <div class="read">
+      <ol class="steps">
+        <li>
+          <h3>Prepare</h3>
+          <p>
+            Confirm you meet the eligibility rules above and decide which licence
+            categories you want to instruct in. That choice shapes everything
+            after it, including part of your Stage 1 paper.
+          </p>
+        </li>
+
+        <li>
+          <h3>Apply</h3>
+          <p>
+            Submit the ADI application form with your personal and contact
+            details, PPSN, tax clearance access number, driver number, the
+            categories you want, and your preferred test centres for Stages 2
+            and 3. There's a digital form on the RSA site.
+          </p>
+        </li>
+
+        <li>
+          <h3>Garda vetting</h3>
+          <p>
+            You complete the vetting form at an in-person validation appointment
+            with an RSA officer. The RSA works with the Garda National Vetting
+            Bureau on the disclosure. Build time into your plan for this — it
+            runs alongside your study rather than after it.
+          </p>
+        </li>
+
+        <li class="key">
+          <h3>Stage 1 — theory test <span class="tag">€150</span></h3>
+          <p>
+            100 multiple-choice questions in 90 minutes, across five sections.
+            <strong>Each section has its own pass mark and you must reach all
+            five</strong> — a strong overall score with one weak section is still
+            a fail. Full detail below.
+          </p>
+          <p><a href="#stage1">What's on the Stage 1 paper →</a></p>
+        </li>
+
+        <li class="key">
+          <h3>Stage 2 — driving test <span class="tag">€200</span></h3>
+          <p>
+            A longer, harder driving test than the learner one: 60 to 100
+            minutes depending on the categories you're applying for. It assesses
+            your own driving to instructor standard.
+          </p>
+        </li>
+
+        <li>
+          <h3>Trainee instructor licence <span class="tag">optional · €50</span></h3>
+          <p>
+            After passing Stage 2 you can apply for a six-month trainee licence
+            and start teaching for money while you prepare for Stage 3. It has
+            real conditions: an RSA-approved sponsor, at least 20% of your
+            lessons directly supervised, 20 hours of practical training with a
+            mentor before you apply, and no EDT or IBT delivery. One licence
+            only, and it can't be extended.
+          </p>
+        </li>
+
+        <li class="key">
+          <h3>Stage 3 — instruction ability test <span class="tag">€200</span></h3>
+          <p>
+            Two phases of 30 minutes each. The examiner plays a learner: first a
+            complete beginner, then a pupil at driving-test level. This is the
+            stage that tests teaching rather than driving, and it's where most
+            candidates come unstuck. Results within 10 working days.
+          </p>
+        </li>
+
+        <li>
+          <h3>Register as an ADI <span class="tag">€250</span></h3>
+          <p>
+            Pass all three and the RSA sends you the registration application.
+            Once registered you receive your ADI permit, which you must carry
+            with your licence whenever you're instructing.
+          </p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="read">
+      <div class="note">
+        <p>
+          <strong>The deadline that catches people out.</strong> Each stage must
+          be completed <strong>within six months of the previous one</strong>, and
+          all three parts must be finished <strong>within two years</strong>. Pass
+          Stage 1 and then drift for seven months and you are starting again — and
+          paying again. Plan Stage 2 before you sit Stage 1.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= THE THREE TESTS ======================= -->
+<section class="alt" id="stages">
+  <div class="wrap">
+    <div class="read">
+      <h2>The three tests in detail</h2>
+    </div>
+
+    <div class="grid c3">
+      <div class="card" id="stage1">
+        <span class="num">Stage 1 · €150</span>
+        <h3>Theory test</h3>
+        <p>
+          <strong>100 questions, 90 minutes</strong>, multiple choice with four
+          answers each, sat at a theory test centre. Book it through the driver
+          theory test service once the RSA has issued your eligibility number.
+        </p>
+        <p>The five sections:</p>
+        <ul>
+          <li>Driver testing procedures</li>
+          <li>Road safety knowledge</li>
+          <li>Teaching ability</li>
+          <li>Vehicle maintenance</li>
+          <li>Category-specific knowledge</li>
+        </ul>
+        <p>
+          Roughly 80 core questions across the first four, plus 20 on the
+          categories you applied to teach. Every section carries its own pass
+          mark and all five must be met.
+        </p>
+        <p><strong>Bring original photo ID</strong> — a copy is refused and you
+          lose the fee.</p>
+      </div>
+
+      <div class="card">
+        <span class="num">Stage 2 · €200</span>
+        <h3>Driving test</h3>
+        <p>
+          <strong>60 to 100 minutes</strong>, depending on how many categories
+          you're qualifying in. Substantially longer and more comprehensive than
+          the learner test.
+        </p>
+        <p>
+          It looks at your driving competence, road awareness, safety and
+          technical knowledge — to the standard someone teaching it should hold,
+          not merely a safe standard. The RSA publishes the assessment form and
+          marking guidelines; read them, because they tell you exactly what is
+          being watched.
+        </p>
+        <p>
+          You supply the vehicle. It must be roadworthy, taxed, insured and NCT'd
+          where applicable.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="num">Stage 3 · €200</span>
+        <h3>Instruction ability</h3>
+        <p>
+          <strong>Two phases, 30 minutes each.</strong> Your examiner takes the
+          role of a pupil and you teach them.
+        </p>
+        <p>
+          <strong>Phase 1 — a beginner.</strong> Cockpit drill, moving off and
+          stopping, approaching junctions, the emergency stop.
+        </p>
+        <p>
+          <strong>Phase 2 — a driving-test-level pupil.</strong> More advanced
+          work, with fault identification and correction as it happens.
+        </p>
+        <p>
+          You're marked on whether the instruction suits the pupil's actual level
+          — pitching a beginner's lesson at an experienced pupil fails as surely
+          as the reverse. Results within 10 working days.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= COSTS ======================= -->
+<section id="costs">
+  <div class="wrap">
+    <div class="read">
+      <h2>What it costs</h2>
+      <p class="lede">
+        These are the official RSA and theory-test fees only. Instructor training
+        from a private provider is separate and is usually the largest single
+        cost of qualifying.
+      </p>
+    </div>
+
+    <div class="tablewrap read">
+      <table>
+        <caption>Official fees, as published by the RSA and the driver theory test service.</caption>
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col">When</th><th scope="col" style="text-align:right">Fee</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stage 1 — ADI theory test</td><td>Per attempt</td><td class="n">€150</td></tr>
+          <tr><td>Stage 2 — ADI driving test</td><td>Per attempt</td><td class="n">€200</td></tr>
+          <tr><td>Stage 3 — instruction ability test</td><td>Per attempt</td><td class="n">€200</td></tr>
+          <tr><td>ADI registration</td><td>Once, after passing</td><td class="n">€250</td></tr>
+          <tr class="total"><td>Clean run, no retakes</td><td>—</td><td class="n">€800</td></tr>
+          <tr><td>Trainee instructor licence</td><td>Optional, 6 months</td><td class="n">€50</td></tr>
+          <tr><td>Permit renewal</td><td>Every 2 years</td><td class="n">€250</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="read">
+      <div class="note">
+        <p>
+          <strong>Every retake is a full fee.</strong> Failing Stage 1 twice costs
+          the same €300 as passing Stage 1 and Stage 2 together. That is the
+          entire argument for preparing properly rather than sitting it to see how
+          it goes — and why practice that actually marks you the way the exam does
+          is worth the time.
+        </p>
+      </div>
+      <p style="color:var(--muted);font-size:.92rem">
+        Fees can change. Check <a href="https://www.rsa.ie/services/professional-drivers/approved-driving-instructor-adi" rel="noopener">rsa.ie</a>
+        before you budget.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= APP PROMO ======================= -->
+<section class="promo">
+  <div class="wrap read">
+    <h2>Practise Stage 1 free</h2>
+    <p class="lede">
+      We built a Stage 1 trainer that marks you the way the real paper does —
+      section by section, against each section's own pass mark. That matters more
+      than it sounds: score 88% overall with one weak section and the real exam
+      fails you, while most practice apps would tell you you're ready.
+    </p>
+    <ul>
+      <li><strong>668 practice questions</strong> across all five exam sections</li>
+      <li><strong>Full mock papers</strong> — 100 questions, 90-minute countdown, graded per section</li>
+      <li><strong>455 flashcards</strong> covering rules of the road, every road sign, and ADI topics</li>
+      <li><strong>Progress tracking</strong> that shows which section will fail you, not just an average</li>
+      <li><strong>Works offline</strong> — install it to your home screen and study anywhere</li>
+    </ul>
+    <div class="cta-row">
+      <a href="/app" class="btn lg">Open the app</a>
+      <a href="/app" class="btn lg on-dark">Log in</a>
+    </div>
+    <small style="display:block;margin-top:16px;color:#94a3b8;font-size:.88rem">
+      Try Section 1 and all the flashcards without an account. Free to create one
+      when you want the rest.
+    </small>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section id="faq">
+  <div class="wrap read">
+    <h2>Common questions</h2>
+
+    <details>
+      <summary>How long does it take to become a driving instructor in Ireland?</summary>
+      <div class="a"><p>
+        There's no fixed duration, but there is a ceiling: all three stages must be
+        completed within two years, and each stage within six months of the one
+        before. Most people take somewhere between six months and a year and a
+        half, depending on how quickly they get test dates and how much training
+        they do before Stage 3.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>How much does it cost to become a driving instructor in Ireland?</summary>
+      <div class="a"><p>
+        The official fees come to <strong>€800</strong> for a clean run — €150 for
+        Stage 1, €200 each for Stages 2 and 3, and €250 to register. On top of
+        that, instructor training from a private provider is a separate and usually
+        much larger cost, and every retake is another full test fee.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>Do I need a full licence for two years before applying?</summary>
+      <div class="a"><p>
+        Yes, and in each category you want to teach. It's two years of holding the
+        full licence, not two years of driving on a learner permit. There is no
+        way around this one.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>What is the pass mark for the ADI theory test?</summary>
+      <div class="a">
+        <p>
+          The exam is marked section by section rather than as one score out of
+          100, and you must reach the pass mark in <em>every</em> section. A high
+          overall score with one section below its mark is a fail.
+        </p>
+        <p>
+          The RSA does not publish the individual percentages. Irish instructor
+          training providers quote figures in the region of 60% to 75% depending
+          on the section, with teaching ability the lowest and driver testing
+          procedures the highest. Treat those as a guide rather than gospel, and
+          prepare to clear every section comfortably.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Can I teach before I'm fully qualified?</summary>
+      <div class="a"><p>
+        Yes, with a trainee instructor licence. Once you've passed Stages 1 and 2
+        you can apply for one: €50, six months, non-renewable, and you only get
+        one ever. It lets you give paid instruction in your approved category, but
+        not EDT or IBT, and you need an RSA-approved sponsor supervising at least
+        20% of your lessons.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>How many times can I retake a stage?</summary>
+      <div class="a"><p>
+        The RSA doesn't publish an attempt limit, but the timing rules act as one:
+        six months between stages and two years overall. Retakes are charged at the
+        full fee each time, so repeated attempts get expensive quickly — and eat
+        into the two-year window.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>Does a criminal conviction stop me becoming an instructor?</summary>
+      <div class="a"><p>
+        Not automatically. Garda vetting is assessed by the ADI Registrar, who
+        considers how relevant and serious the offence is, how long ago it was,
+        whether there's a pattern, whether circumstances have changed, and evidence
+        of rehabilitation. The question being asked is what risk you'd pose to
+        pupils.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>How do I book the ADI theory test?</summary>
+      <div class="a"><p>
+        You register with the RSA first and receive a unique eligibility number,
+        then book through the driver theory test service at a test centre near you.
+        Bring one original photo ID on the day — a Public Services Card, passport,
+        passport card, EU/EEA national identity card, or Irish learner permit or
+        driving licence. Photocopies are refused and you lose the fee.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>Which is the hardest stage?</summary>
+      <div class="a"><p>
+        Stage 3, by a wide margin, and for a reason worth understanding: Stages 1
+        and 2 test things you've been doing for years — knowing the rules and
+        driving well. Stage 3 tests teaching, which most candidates have never
+        done. Being an excellent driver is close to no preparation for explaining
+        clutch control to someone who has never sat in a driver's seat.
+      </p></div>
+    </details>
+
+    <details>
+      <summary>What happens after I qualify?</summary>
+      <div class="a"><p>
+        You register, receive your ADI permit, and carry it with your licence
+        whenever you instruct. The permit runs for two years. To renew you need a
+        check test (bookable any time in the year before expiry), fresh Garda
+        vetting, and a €250 re-registration submitted one to three months before
+        your permit expires. Your first check test is informational rather than a
+        formal assessment; later ones are formal.
+      </p></div>
+    </details>
+  </div>
+</section>
+
+<!-- ======================= FINAL CTA ======================= -->
+<section class="alt">
+  <div class="wrap read" style="text-align:center">
+    <h2>Start with Stage 1</h2>
+    <p class="lede" style="margin-left:auto;margin-right:auto">
+      It's the first hurdle and the cheapest to get wrong twice. Practise it
+      properly and the €150 only leaves your account once.
+    </p>
+    <div class="cta-row" style="justify-content:center">
+      <a href="/app" class="btn lg">Go to the app</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    <img src="/logo-mark.png" alt="PassADITest.ie" width="180" height="141">
+
+    <div class="fcols">
+      <div>
+        <h4>The process</h4>
+        <ul>
+          <li><a href="#steps">All eight steps</a></li>
+          <li><a href="#stages">The three tests</a></li>
+          <li><a href="#costs">What it costs</a></li>
+          <li><a href="#faq">Common questions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Practise</h4>
+        <ul>
+          <li><a href="/app">Go to the app</a></li>
+          <li><a href="/app">Log in</a></li>
+          <li><a href="/app">Create an account</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Official sources</h4>
+        <ul>
+          <li><a href="https://www.rsa.ie/services/professional-drivers/approved-driving-instructor-adi" rel="noopener nofollow">RSA — ADI section</a></li>
+          <li><a href="https://theorytest.ie/book-your-theory-test/adi-approved-driving-instructor/" rel="noopener nofollow">Book the theory test</a></li>
+          <li><a href="https://www.revenue.ie" rel="noopener nofollow">Revenue — tax clearance</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fine">
+      <p>
+        <strong style="color:#cbd5e1">PassADITest.ie</strong> is an independent
+        study resource. It is not affiliated with, endorsed by or connected to the
+        Road Safety Authority.
+      </p>
+      <p>
+        Everything on this page is summarised from official RSA guidance and the
+        driver theory test service, and was accurate when last reviewed in
+        September 2026. Fees, rules and dates change — always confirm the current
+        position on <a href="https://www.rsa.ie/services/professional-drivers/approved-driving-instructor-adi" rel="noopener nofollow">rsa.ie</a>
+        before booking or budgeting.
+      </p>
+      <p style="margin-bottom:0">© 2026 PassADITest.ie</p>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky"><a href="/app" class="btn">Start practising free →</a></div>
+
+<script>
+/* The only script on the page, and it does one thing: show the sticky button
+   once the hero's button is off screen.
+
+   IntersectionObserver rather than a scroll listener — a scroll handler runs on
+   every frame of every scroll and is the usual reason a landing page feels
+   sticky on a cheap phone. This fires twice in a session.
+
+   If it doesn't run at all, the sticky bar simply stays hidden and every other
+   route into the app still works. Nothing on this page depends on JavaScript. */
+(function () {
+  var bar = document.getElementById("sticky");
+  var anchor = document.querySelector(".hero .cta-row");
+  if (!bar || !anchor || !("IntersectionObserver" in window)) return;
+
+  new IntersectionObserver(function (entries) {
+    bar.classList.toggle("show", !entries[0].isIntersecting);
+  }, { rootMargin: "0px 0px -20px 0px" }).observe(anchor);
+})();
+</script>
+
+<!-- ===========================================================================
+     STRUCTURED DATA
+
+     Three blocks. FAQPage is the one that earns expandable answers in Google's
+     results, which is the single biggest visibility win available to a page
+     like this. HowTo describes the qualification path. WebSite ties the two to
+     the domain.
+
+     Every answer below is a plain-text copy of what a human reads above.
+     Google penalises structured data that says something the page doesn't, so
+     if you edit a question up there, edit it here too.
+     =========================================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://passaditest.ie/#website",
+      "url": "https://passaditest.ie/",
+      "name": "PassADITest.ie",
+      "description": "ADI Stage 1 theory test preparation and a full guide to qualifying as a driving instructor in Ireland.",
+      "inLanguage": "en-IE"
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://passaditest.ie/#howto",
+      "name": "How to become an Approved Driving Instructor in Ireland",
+      "description": "The eight steps of the RSA ADI qualification process, from eligibility through to registration.",
+      "totalTime": "P2Y",
+      "estimatedCost": { "@type": "MonetaryAmount", "currency": "EUR", "value": "800" },
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Prepare",
+          "text": "Confirm you meet the eligibility rules and decide which licence categories you want to instruct in." },
+        { "@type": "HowToStep", "position": 2, "name": "Apply",
+          "text": "Submit the ADI application form with your PPSN, tax clearance access number, driver number, chosen categories and preferred test centres." },
+        { "@type": "HowToStep", "position": 3, "name": "Garda vetting",
+          "text": "Complete the Garda vetting form at an in-person validation appointment with an RSA officer." },
+        { "@type": "HowToStep", "position": 4, "name": "Stage 1: theory test",
+          "text": "Sit 100 multiple-choice questions in 90 minutes across five sections. Each section has its own pass mark and all five must be reached. Fee EUR 150.",
+          "url": "https://passaditest.ie/#stage1" },
+        { "@type": "HowToStep", "position": 5, "name": "Stage 2: driving test",
+          "text": "A 60 to 100 minute driving test to instructor standard, longer and more comprehensive than the learner test. Fee EUR 200." },
+        { "@type": "HowToStep", "position": 6, "name": "Trainee instructor licence (optional)",
+          "text": "Apply for a six-month trainee licence to give paid instruction while preparing for Stage 3. Fee EUR 50." },
+        { "@type": "HowToStep", "position": 7, "name": "Stage 3: instruction ability test",
+          "text": "Two 30-minute phases in which the examiner role-plays a beginner and then a driving-test-level pupil. Fee EUR 200." },
+        { "@type": "HowToStep", "position": 8, "name": "Register as an ADI",
+          "text": "Complete registration and receive your ADI permit, which must be carried while instructing. Fee EUR 250." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://passaditest.ie/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "How long does it take to become a driving instructor in Ireland?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no fixed duration, but all three stages must be completed within two years, and each stage within six months of the one before. Most people take between six months and a year and a half, depending on test availability and how much training they do before Stage 3." } },
+        { "@type": "Question", "name": "How much does it cost to become a driving instructor in Ireland?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Official fees come to 800 euro for a clean run: 150 for Stage 1, 200 each for Stages 2 and 3, and 250 to register. Instructor training from a private provider is a separate and usually larger cost, and every retake is another full test fee." } },
+        { "@type": "Question", "name": "Do I need a full licence for two years before applying?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, and in each category you want to teach. It is two years of holding the full licence, not two years of driving on a learner permit." } },
+        { "@type": "Question", "name": "What is the pass mark for the ADI theory test?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The exam is marked section by section rather than as one score out of 100, and you must reach the pass mark in every section. A high overall score with one section below its mark is a fail. The RSA does not publish the individual percentages; Irish training providers quote figures in the region of 60 to 75 percent depending on the section." } },
+        { "@type": "Question", "name": "Can I teach before I am fully qualified?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, with a trainee instructor licence. After passing Stages 1 and 2 you can apply for one: 50 euro, six months, non-renewable, and only one ever. It allows paid instruction in your approved category but not EDT or IBT, and requires an RSA-approved sponsor supervising at least 20 percent of lessons." } },
+        { "@type": "Question", "name": "How many times can I retake a stage?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The RSA does not publish an attempt limit, but the timing rules act as one: six months between stages and two years overall. Retakes are charged at the full fee each time." } },
+        { "@type": "Question", "name": "Does a criminal conviction stop me becoming an instructor?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not automatically. Garda vetting is assessed by the ADI Registrar, who considers the relevance and seriousness of the offence, how long ago it was, whether there is a pattern, changed circumstances and evidence of rehabilitation. The question is what risk you would pose to pupils." } },
+        { "@type": "Question", "name": "How do I book the ADI theory test?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Register with the RSA first and receive a unique eligibility number, then book through the driver theory test service at a test centre near you. Bring one original photo ID on the day; photocopies are refused and you lose the fee." } },
+        { "@type": "Question", "name": "Which ADI stage is the hardest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Stage 3. Stages 1 and 2 test knowing the rules and driving well, which candidates have done for years. Stage 3 tests teaching, which most have never done." } },
+        { "@type": "Question", "name": "What happens after I qualify as an ADI?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You register, receive your ADI permit, and carry it with your licence while instructing. The permit runs for two years. Renewal needs a check test bookable any time in the year before expiry, fresh Garda vetting, and 250 euro re-registration submitted one to three months before expiry." } }
+      ]
+    }
+  ]
+}
+</script>
+
+</body>
 </html>

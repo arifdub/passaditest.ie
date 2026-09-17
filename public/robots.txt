@@ -1,0 +1,19 @@
+# PassADITest.ie
+
+User-agent: *
+Allow: /
+
+Sitemap: https://passaditest.ie/sitemap.xml
+
+# A note on /app, because the obvious thing to do here is wrong.
+#
+# The app is behind a login and has nothing worth ranking, so it carries
+# <meta name="robots" content="noindex, follow"> in its own HTML.
+#
+# It is deliberately NOT disallowed here. Disallow and noindex cancel each
+# other out: a crawler that is blocked from fetching the page never sees the
+# noindex tag, and Google will still list a blocked URL if something links to
+# it — which the landing page does, several times. The result is the worst of
+# both, a bare URL in the results with no description under it.
+#
+# Allowing the crawl lets the noindex actually be read and obeyed.

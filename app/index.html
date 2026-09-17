@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- viewport-fit=cover is what makes env(safe-area-inset-*) available, which
+         is how the app clears the Dynamic Island and the home indicator. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1"
+    />
+
+    <title>PassADITest.ie — ADI Stage 1 practice</title>
+    <meta
+      name="description"
+      content="Practice questions, mock exams and flashcards for the RSA ADI Stage 1 theory test."
+    />
+
+    <!-- The app itself is behind a login and has nothing for a search engine to
+         index. The landing page at / is the page that should rank; without this
+         the two would compete for the same searches. -->
+    <meta name="robots" content="noindex, follow" />
+
+    <link rel="icon" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PassADITest" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- Absolute path, so it resolves the same whether the page is served as
+         /app or /app/ — a relative "./src/main.jsx" would break on one of them. -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      // Scoped to /app/ so the service worker governs the app only. Registering
+      // it at the root would let it intercept navigations to the landing page,
+      // which is a plain static page and wants nothing to do with it.
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("/sw.js", { scope: "/app/" })
+            .catch(function () {
+              /* Install-to-home-screen won't be offered. Nothing else breaks. */
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

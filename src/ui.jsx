@@ -100,7 +100,9 @@ export function ProgressRing({ pct, size = 96, stroke = 8, tone = "emerald", lab
 }
 
 /* ------------------------------------------------------------------------- */
-export function ScreenHeader({ title, subtitle, onBack, backLabel = "Back", right }) {
+export function ScreenHeader({
+  title, subtitle, onBack, backLabel = "Back", right, compact, below,
+}) {
   return (
     <div className="bg-slate-900 text-white">
       {/* env(safe-area-inset-top) is the height of the notch / Dynamic Island.
@@ -108,25 +110,53 @@ export function ScreenHeader({ title, subtitle, onBack, backLabel = "Back", righ
           everywhere else. index.html already sets viewport-fit=cover, which is
           what makes the inset available at all. */}
       <div
-        className="max-w-2xl mx-auto px-5 pb-7"
+        className={`max-w-2xl mx-auto px-5 ${compact ? "pb-4" : "pb-7"}`}
         style={{ paddingTop: "max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem))" }}
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+        {/* Compact puts the back button on the same row as the title instead
+            of stacking it above. On a screen that has to fit without scrolling
+            — the flashcard deck — that row is worth about 50px. */}
+        {compact ? (
+          <div className="flex items-center gap-2.5">
             {onBack && (
               <button
                 onClick={onBack}
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-xl pl-2 pr-3.5 py-2 mb-4 transition"
+                aria-label={backLabel}
+                className="shrink-0 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-xl p-2 transition"
               >
                 <ChevronLeft size={20} className="text-emerald-400" strokeWidth={2.5} />
-                <span className="text-sm font-bold text-white">{backLabel}</span>
               </button>
             )}
-            <h1 className="text-2xl font-black tracking-tight leading-tight">{title}</h1>
-            {subtitle && <p className="mt-1.5 text-sm text-slate-300">{subtitle}</p>}
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl font-black tracking-tight leading-tight truncate">{title}</h1>
+              {subtitle && (
+                <p className="text-xs text-slate-400 leading-tight truncate">{subtitle}</p>
+              )}
+            </div>
+            {right}
           </div>
-          {right}
-        </div>
+        ) : (
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-xl pl-2 pr-3.5 py-2 mb-4 transition"
+                >
+                  <ChevronLeft size={20} className="text-emerald-400" strokeWidth={2.5} />
+                  <span className="text-sm font-bold text-white">{backLabel}</span>
+                </button>
+              )}
+              <h1 className="text-2xl font-black tracking-tight leading-tight">{title}</h1>
+              {subtitle && <p className="mt-1.5 text-sm text-slate-300">{subtitle}</p>}
+            </div>
+            {right}
+          </div>
+        )}
+
+        {/* Anything the screen wants inside the dark header — a progress strip,
+            say — rather than as another card taking vertical space below. */}
+        {below}
       </div>
     </div>
   );
@@ -135,7 +165,7 @@ export function ScreenHeader({ title, subtitle, onBack, backLabel = "Back", righ
 /* ------------------------------------------------------------------------- */
 export function Screen({ children }) {
   return (
-    <div className="max-w-2xl mx-auto px-5 pt-5 pb-28">
+    <div className="max-w-2xl mx-auto px-5 pt-4 pb-28">
       {children}
     </div>
   );

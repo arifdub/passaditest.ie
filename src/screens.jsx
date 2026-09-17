@@ -43,6 +43,18 @@ export function HomeScreen({ go }) {
 
   const mock = getModule(MOCK.id);
 
+  /* Combined flashcard progress across every deck. Counted from the real
+     decks, so it cannot drift from what the deck screens show. */
+  const cardStats = DECKS.reduce((acc, d) => {
+    const content = getDeck(d.id);
+    const size = content ? content.cards.length : (d.count || 0);
+    const known = Math.min(getModule(d.id).completedIds.length, size);
+    return { total: acc.total + size, known: acc.known + known };
+  }, { total: 0, known: 0 });
+  const cardPct = cardStats.total
+    ? Math.round((cardStats.known / cardStats.total) * 100)
+    : 0;
+
   return (
     <>
       <div className="bg-slate-900 text-white">
@@ -229,12 +241,32 @@ export function HomeScreen({ go }) {
         </button>
 
         {/* Flashcards */}
-        <p className="mt-6 mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
-          Flashcards
-        </p>
-        <p className="mb-3 text-xs text-slate-400 leading-snug">
-          Study material. Useful for learning, but not a substitute for the sections above.
-        </p>
+        <div className="mt-6 mb-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              Flashcards
+            </p>
+            <span className="text-xs font-bold text-slate-400 tabular-nums">
+              {cardStats.known} / {cardStats.total} known
+            </span>
+          </div>
+
+          <div className="mt-1.5 flex items-center gap-2.5">
+            <div className="flex-1">
+              <ProgressBar
+                pct={cardPct}
+                tone={cardPct === 100 ? "emerald" : cardStats.known ? "amber" : "slate"}
+              />
+            </div>
+            <span className="text-[11px] font-bold text-slate-400 shrink-0 tabular-nums">
+              {cardPct}%
+            </span>
+          </div>
+
+          <p className="mt-1.5 text-xs text-slate-400 leading-snug">
+            Study material. Useful for learning, but not a substitute for the sections above.
+          </p>
+        </div>
 
         <div className="space-y-2.5">
           {DECKS.map(deck => {
@@ -354,6 +386,18 @@ export function HomeScreen({ go }) {
 export function ProgressScreen({ go }) {
   const { getSection, getModule, overall } = useProgress();
   const mock = getModule(MOCK.id);
+
+  /* Combined flashcard progress across every deck. Counted from the real
+     decks, so it cannot drift from what the deck screens show. */
+  const cardStats = DECKS.reduce((acc, d) => {
+    const content = getDeck(d.id);
+    const size = content ? content.cards.length : (d.count || 0);
+    const known = Math.min(getModule(d.id).completedIds.length, size);
+    return { total: acc.total + size, known: acc.known + known };
+  }, { total: 0, known: 0 });
+  const cardPct = cardStats.total
+    ? Math.round((cardStats.known / cardStats.total) * 100)
+    : 0;
 
   return (
     <>

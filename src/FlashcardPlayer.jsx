@@ -26,7 +26,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from "react"
 import {
   ChevronLeft, ChevronRight, Shuffle, Check, RotateCcw, ListFilter, X,
 } from "lucide-react";
-import { ScreenHeader, Screen, ProgressBar } from "./ui";
+import { ScreenHeader, Screen } from "./ui";
 import { useProgress } from "./progressStore";
 
 function shuffle(arr) {
@@ -285,50 +285,47 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
   return (
     <>
       <ScreenHeader
+        compact
         title={deck.title}
-        subtitle={deck.subtitle}
+        subtitle={`${deck.categories.length} topics`}
         onBack={onExit}
         backLabel={module.sectionLabel}
+        below={
+          /* Progress lives in the header rather than in a card below it. On a
+             phone that card cost about 110px, which was the difference between
+             this screen fitting and needing a scroll. */
+          <div className="mt-3">
+            <div className="flex items-baseline justify-between gap-3 mb-1.5">
+              <span className="text-sm font-bold text-white">
+                {deckKnown}
+                <span className="text-slate-400 font-semibold"> / {deckTotal} known</span>
+              </span>
+              <span className={`text-sm font-black ${
+                pct === 100 ? "text-emerald-400" : "text-slate-400"
+              }`}>
+                {pct}%
+              </span>
+            </div>
+            <div className="h-1.5 bg-white/15 rounded-full overflow-hidden">
+              <div
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  pct === 100 ? "bg-emerald-400" : deckKnown ? "bg-amber-400" : "bg-white/30"
+                }`}
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            {filtered && (
+              <p className="mt-1.5 text-[11px] text-slate-400">
+                Showing {knownInView}/{total} in this filter
+              </p>
+            )}
+          </div>
+        }
       />
 
       <Screen>
-        {/* Progress — always the whole deck, never just the filtered slice. */}
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4">
-          <div className="flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Cards you know
-              </p>
-              <p className="mt-0.5 text-2xl font-black text-slate-900 dark:text-white leading-none">
-                {deckKnown}
-                <span className="text-base font-bold text-slate-400"> / {deckTotal}</span>
-              </p>
-            </div>
-            <span className={`text-lg font-black shrink-0 ${
-              pct === 100
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-slate-400"
-            }`}>
-              {pct}%
-            </span>
-          </div>
-
-          <div className="mt-2.5">
-            <ProgressBar pct={pct} tone={pct === 100 ? "emerald" : deckKnown ? "amber" : "slate"} />
-          </div>
-
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            {deckKnown === 0
-              ? `${deckTotal} cards in this deck. Tap "I know this" as you go.`
-              : remaining === 0
-                ? "Every card marked as known. Reset any you want to revisit."
-                : `${remaining} still to learn`}
-            {filtered && ` · showing ${knownInView}/${total} in this filter`}
-          </p>
-        </div>
-
         {/* Controls */}
-        <div className="mt-4 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setShowFilters(v => !v)}
             className="flex items-center gap-1.5 text-sm font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200"
@@ -389,17 +386,17 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
                 elements. Trying to combine translateX and rotateY on one
                 element makes them fight each other — the flip axis moves with
                 the card. Outer handles the swipe, inner handles the flip. */}
-            <div className="mt-5 overflow-hidden -mx-1 px-1" style={{ perspective: "1400px" }}>
+            <div className="mt-3.5 overflow-hidden -mx-1 px-1" style={{ perspective: "1400px" }}>
               <div
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
                 onPointerCancel={onPointerUp}
                 style={cardStyle}
-                className="relative w-full min-h-[300px] cursor-grab active:cursor-grabbing select-none"
+                className="relative w-full min-h-[240px] cursor-grab active:cursor-grabbing select-none"
               >
                 <div
-                  className="relative w-full h-full min-h-[300px]"
+                  className="relative w-full h-full min-h-[240px]"
                   style={{
                     transformStyle: "preserve-3d",
                     transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -444,7 +441,7 @@ export default function FlashcardPlayer({ module, deck, onExit }) {
             </div>
 
             {/* Nav */}
-            <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="mt-3 flex items-center justify-between gap-3">
               <button
                 onClick={() => triggerChange(-1)}
                 className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300"

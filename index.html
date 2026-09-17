@@ -1,5 +1,14 @@
 <!doctype html>
-<html lang="en-IE">
+<!-- lang is en-GB rather than en-IE for one practical reason: browsers ship
+     hyphenation dictionaries per locale, and there is no en-IE dictionary. A
+     browser asked to hyphenate en-IE finds nothing and silently gives up
+     rather than falling back to generic English — which is why justified text
+     was opening large word gaps with no hyphens anywhere.
+
+     Irish English and British English share their orthography, so this is
+     accurate as well as useful, and it costs nothing in geo-targeting: the .ie
+     domain, og:locale=en_IE and the content itself carry that. -->
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -130,30 +139,49 @@ h4{font-size:1rem; font-weight:700}
 /* 0.9em rather than 1.1: paragraphs here are short, and a gap nearly the height
    of a line makes consecutive ones read as separate blocks rather than one
    argument. */
-/* Justified, with hyphenation switched on.
+/* ---------------------------------------------------------------------------
+   JUSTIFICATION — why it is off on phones and on above 640px
 
-   Justifying without hyphens is the classic mistake: the browser can only
-   stretch the spaces, so a narrow phone column opens white rivers running down
-   the paragraph. hyphens:auto lets it break long words instead, which keeps
-   the spacing even. text-wrap:pretty tidies the last line on top of that.
+   Justified text works by stretching the spaces between words until the line
+   reaches both margins. How ugly that looks depends entirely on how many
+   spaces there are to share the slack between.
 
-   Headings and buttons stay left-aligned — justifying a two-line heading
-   stretches it into something that reads as a mistake. */
-p{margin:0 0 .9em; text-align:justify; hyphens:auto; -webkit-hyphens:auto; text-wrap:pretty}
+     phone   ~350px column = about 42 characters = 6 or 7 words per line
+     tablet+  720px column = about 78 characters = 13 or 14 words per line
+
+   With 6 gaps to absorb a whole word's worth of slack, each gap can double.
+   That is the "too much space between the words" effect — not a browser bug
+   and not fixable with any CSS property, because there is no way to cap how
+   far a space may stretch. Typographers put the floor for justified text at
+   around 60 characters for exactly this reason.
+
+   So: left-aligned below 640px, justified above it. Both look deliberate.
+
+   Hyphenation is on regardless, which helps a great deal at the widths where
+   justification is used — and it only started working when the lang attribute
+   changed from en-IE to en-GB, because no en-IE dictionary exists.
+
+   TO FORCE IT ON PHONES ANYWAY: delete the @media line below so the justify
+   rules apply at every width.
+   --------------------------------------------------------------------------- */
+p{margin:0 0 .9em; hyphens:auto; -webkit-hyphens:auto; text-wrap:pretty}
 a{color:var(--green-d)}
 ul,ol{margin:0 0 .9em; padding-left:1.3em}
-li{margin-bottom:.4em; text-align:justify; hyphens:auto; -webkit-hyphens:auto}
+li{margin-bottom:.4em; hyphens:auto; -webkit-hyphens:auto}
+
+@media(min-width:640px){
+  p,li,.lede{text-align:justify}
+  /* Never break a word with fewer than 6 characters, and never leave fewer
+     than 3 on either side of the break. Without this the browser will happily
+     produce "a-nd" at a line end, which looks worse than the gap it fixed. */
+  p,li,.lede{hyphenate-limit-chars:6 3 3; -webkit-hyphenate-limit-chars:6 3 3}
+}
+
 /* Short strings have nothing to justify and come out looking gappy. */
 .hero small,caption,.fine p,figcaption,.facts span,td,th{text-align:left; hyphens:manual}
-
-/* The lede is justified like the body, and crucially keeps hyphens:auto.
-   Setting it to manual here was leaving the browser with nothing but the
-   spaces to stretch, which opened visible rivers down a phone-width column —
-   the exact thing hyphenation exists to prevent. */
-.lede{text-align:justify; hyphens:auto; -webkit-hyphens:auto}
 /* The hero lede sits over a dark background at a larger size, where justified
-   edges read as stiff rather than tidy. */
-.hero .lede{text-align:left; hyphens:manual}
+   edges read as stiff rather than tidy. Left at every width. */
+.hero .lede{text-align:left !important; hyphens:manual}
 strong{color:var(--ink); font-weight:650}
 img{max-width:100%; height:auto}
 

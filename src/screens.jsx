@@ -13,7 +13,7 @@ import React from "react";
 import {
   ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
-  Smartphone, Download, Share2, Check, Lock,
+  Smartphone, Download, Share2, Check, Lock, Play, AlertTriangle, Target,
 } from "lucide-react";
 import {
   ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
@@ -204,14 +204,19 @@ export function HomeScreen({ go }) {
           })}
         </div>
 
-        {/* Mock tests */}
+        {/* Mock tests — kept here as well as on their own tab. The tab is
+            where the readiness breakdown lives; this is the shortcut for
+            someone already on the home screen. */}
         <div className="mt-6 mb-3 flex items-baseline justify-between gap-3">
           <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
             Exam conditions
           </p>
-          <span className="text-xs font-bold text-slate-400 tabular-nums">
-            {MOCK_LENGTH} questions · {MOCK_MINUTES} min
-          </span>
+          <button
+            onClick={() => go({ screen: "mocks" })}
+            className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5"
+          >
+            See all <ChevronRight size={13} />
+          </button>
         </div>
 
         <div className="space-y-2.5">
@@ -408,6 +413,347 @@ export function HomeScreen({ go }) {
       )}
     </>
   );
+}
+
+/* ===========================================================================
+   MOCK TEST HUB  —  the tab
+
+   This replaced a "Learn" tab that rendered the home screen, so tapping it
+   changed nothing. Two Home buttons is worse than three tabs.
+
+   The danger in replacing it was building a second copy of the home screen's
+   mock cards — a tab that just repeats what you already scrolled past is the
+   same mistake in different clothes. So this screen answers a question the
+   home screen can't:
+
+     WHICH SECTION IS GOING TO FAIL YOU?
+
+   Stage 1 is marked section by section and the weakest one decides the
+   result, so "best score 84%" is not a revision plan. Pooling the section
+   breakdowns from every paper sat gives one: "Teaching Ability is averaging
+   45% across two papers against a 60% mark — that is where the work is."
+
+   Order on the screen is deliberate — the verdict first, then the thing to
+   do about it, then the papers. Someone opening this tab wants to know where
+   they stand before they pick a paper.
+   =========================================================================== */
+export function MockHubScreen({ go }) {
+  const { getModule, mockReadiness } = useProgress();
+  const { isGuest, exitGuest } = useAuth();
+
+  const r = mockReadiness;
+  const papers = MOCKS.map(p => ({ ...p, progress: getModule(p.id) }));
+  const anySat = papers.some(p => p.progress.attempts > 0);
+
+  /* A paper stopped part-way. Surfaced at the top because an unfinished 90
+     minutes is the most time-sensitive thing on this screen — resuming beats
+     starting something new. */
+  const resumable = papers.find(p => hasPausedAttempt(p.id));
+
+  /* Guests can't sit a mock. Rather than a screen of padlocks, explain what
+     the exam is and what an account gets them — this tab is the strongest
+     reason to sign up, so it should read like one. */
+  if (isGuest) {
+    return (
+      <>
+        <ScreenHeader
+          title="Mock Test"
+          subtitle="Full exam conditions"
+        />
+        <Screen>
+          <ExamConditionsCard />
+          <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-center">
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+              <Lock size={22} className="text-slate-400" />
+            </div>
+            <h2 className="mt-3 font-bold text-slate-900 dark:text-white">
+              Mock papers need an account
+            </h2>
+            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              A mock is {MOCK_LENGTH} questions over {MOCK_MINUTES} minutes, and it's only
+              worth sitting if the result is still there next week. An account keeps your
+              scores and section breakdown across every device.
+            </p>
+            <div className="mt-4">
+              <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>
+            </div>
+          </div>
+        </Screen>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <ScreenHeader
+        title="Mock Test"
+        subtitle={`${MOCK_LENGTH} questions · ${MOCK_MINUTES} minutes · five sections`}
+      />
+      <Screen>
+        {/* ---- 1. Where you stand ---- */}
+        {!r.hasData ? (
+          <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="flex items-center gap-2.5">
+              <Target size={18} className="text-emerald-400 shrink-0" />
+              <h2 className="font-bold text-white">Nothing measured yet</h2>
+            </div>
+            <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+              Sit a paper and this becomes a breakdown of every section against its
+              own pass mark — which is what tells you where to revise. Section
+              practice is good preparation, but only a full paper measures you the
+              way the exam does.
+            </p>
+          </div>
+        ) : r.readyForExam ? (
+          <div className="bg-emerald-600 rounded-2xl p-5">
+            <div className="flex items-center gap-2.5">
+              <Check size={18} className="text-white shrink-0" />
+              <h2 className="font-bold text-white">Every section at standard</h2>
+            </div>
+            <p className="mt-2 text-sm text-emerald-50 leading-relaxed">
+              Across the papers you've sat, all five sections are clearing their own
+              pass mark. Keep it warm with a re-sit closer to your exam date.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="flex items-center gap-2.5">
+              <AlertTriangle size={18} className="text-amber-400 shrink-0" />
+              <h2 className="font-bold text-white">
+                {r.short.length === 1
+                  ? "One section below its mark"
+                  : `${r.short.length} sections below their mark`}
+              </h2>
+            </div>
+            <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+              {r.weakest.examLabel} is your weakest — {r.weakest.pct}% against a{" "}
+              {r.weakest.passMark}% pass mark, across {r.weakest.total} questions.
+              One section under its mark fails the whole paper, so this is where the
+              work is.
+            </p>
+            <button
+              onClick={() => go({ screen: "section", sectionId: r.weakest.id })}
+              className="mt-4 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2"
+            >
+              Practise {r.weakest.label} <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+
+        {/* ---- 2. The five bars ---- */}
+        {r.hasData && (
+          <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+            <div className="flex items-baseline justify-between">
+              <h2 className="font-bold text-slate-900 dark:text-white">
+                Section readiness
+              </h2>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                {r.measured.length - r.short.length} / {r.measured.length} at standard
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Pooled across every paper you've sat. The line is that section's pass mark.
+            </p>
+
+            <div className="mt-4 space-y-3.5">
+              {r.sections.map(s => (
+                <button
+                  key={s.id}
+                  onClick={() => go({ screen: "section", sectionId: s.id })}
+                  className="w-full text-left"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
+                      {s.examLabel}
+                    </span>
+                    <span className={`text-sm font-black shrink-0 tabular-nums ${
+                      !s.seen ? "text-slate-300 dark:text-slate-600"
+                        : s.atStandard ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"
+                    }`}>
+                      {s.seen ? `${s.pct}%` : "—"}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 relative">
+                    <ProgressBar
+                      pct={s.seen ? s.pct : 0}
+                      tone={!s.seen ? "slate" : s.atStandard ? "emerald" : "red"}
+                      height="h-2"
+                    />
+                    <span
+                      className="absolute top-0 bottom-0 w-px bg-slate-900 dark:bg-white"
+                      style={{ left: `${s.passMark}%` }}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400">
+                    {s.seen
+                      ? `${s.correct}/${s.total} · needs ${s.passMark}%`
+                      : `Not covered yet · needs ${s.passMark}%`}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ---- 3. Resume ---- */}
+        {resumable && (
+          <button
+            onClick={() => go({ screen: "mock", mockId: resumable.id })}
+            className="mt-4 w-full text-left bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-2xl p-4 flex items-center gap-3"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
+              <Play size={18} className="text-slate-900" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-slate-900 dark:text-white text-sm">
+                {resumable.label} is paused
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Pick it up with the time you had left
+              </p>
+            </div>
+            <ChevronRight size={18} className="text-emerald-600 shrink-0" />
+          </button>
+        )}
+
+        {/* ---- 4. The papers ---- */}
+        <p className="mt-6 mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+          {MOCKS.length} papers
+        </p>
+
+        <div className="space-y-2.5">
+          {papers.map(p => (
+            <MockPaperCard
+              key={p.id}
+              paper={p}
+              onOpen={() => go({ screen: "mock", mockId: p.id })}
+            />
+          ))}
+        </div>
+
+        {/* ---- 5. What the exam is ---- */}
+        <div className="mt-4">
+          <ExamConditionsCard />
+        </div>
+
+        {!anySat && (
+          <p className="mt-4 text-center text-xs text-slate-400 leading-relaxed px-4">
+            Nothing here is graded against you — a mock is a measurement, and a bad
+            first one is more useful than no first one.
+          </p>
+        )}
+      </Screen>
+    </>
+  );
+}
+
+/* One paper. Carries its own history, since each is a fixed set of questions
+   and two attempts at the same paper are directly comparable. */
+function MockPaperCard({ paper, onOpen }) {
+  const m = paper.progress;
+  const sat = m.attempts > 0;
+
+  return (
+    <button
+      onClick={onOpen}
+      className="w-full text-left rounded-2xl p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition active:scale-[0.99]"
+    >
+      <div className="flex items-start gap-3.5">
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+          !sat ? "bg-slate-900 dark:bg-slate-700"
+            : m.passed ? "bg-emerald-500" : "bg-amber-500"
+        }`}>
+          {sat && m.passed
+            ? <Check size={20} className="text-white" strokeWidth={3} />
+            : <Timer size={20} className="text-white" />}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline justify-between gap-2">
+            <h3 className="font-black tracking-tight text-slate-900 dark:text-white">
+              {paper.label}
+            </h3>
+            {sat && (
+              <span className="text-sm font-black text-slate-900 dark:text-white shrink-0 tabular-nums">
+                {m.bestPct}%
+              </span>
+            )}
+          </div>
+
+          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-snug">
+            {paper.blurb}
+          </p>
+
+          {sat ? (
+            <>
+              <div className="mt-2.5">
+                <ProgressBar pct={m.bestPct} tone={m.passed ? "emerald" : "amber"} height="h-1.5" />
+              </div>
+              <p className={`mt-1.5 text-xs font-semibold ${
+                m.passed
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-amber-600 dark:text-amber-400"
+              }`}>
+                {m.passed ? "Passed every section" : "Not every section passed"}
+                <span className="font-normal text-slate-400">
+                  {" "}· {m.attempts} attempt{m.attempts === 1 ? "" : "s"}
+                </span>
+              </p>
+            </>
+          ) : (
+            <p className="mt-2 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              Not attempted
+            </p>
+          )}
+        </div>
+
+        <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0 mt-3" />
+      </div>
+    </button>
+  );
+}
+
+/* The exam's shape, stated once here rather than re-explained on every mock
+   intro screen. */
+function ExamConditionsCard() {
+  return (
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+      <h2 className="font-bold text-slate-900 dark:text-white">The real Stage 1 paper</h2>
+      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+        {MOCK_LENGTH} questions in {MOCK_MINUTES} minutes, 20 in each section. Every section
+        carries its own pass mark and you have to reach all five — a strong overall score
+        with one weak section is still a fail.
+      </p>
+      <div className="mt-4 space-y-1.5">
+        {ADI_SECTIONS.map(s => (
+          <div key={s.id} className="flex items-baseline justify-between gap-3 text-sm">
+            <span className="text-slate-600 dark:text-slate-300 truncate">
+              {s.examLabel || s.label}
+            </span>
+            <span className="font-bold text-slate-900 dark:text-white shrink-0 tabular-nums">
+              {s.passMark ?? PASS_MARK}%
+              <span className="ml-1.5 font-semibold text-slate-400">
+                {Math.ceil((s.passMark ?? PASS_MARK) / 5)}/20
+              </span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Whether a paper has a saved half-finished attempt. Reads the same key
+   QuizPlayer writes — kept to one line here rather than importing the player,
+   which would pull the whole quiz engine into the home bundle. */
+function hasPausedAttempt(moduleId) {
+  try {
+    return Boolean(localStorage.getItem(`pdt-paused-${moduleId}`));
+  } catch {
+    return false;
+  }
 }
 
 /* ===========================================================================

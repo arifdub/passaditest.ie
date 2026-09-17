@@ -47,6 +47,15 @@ const emptyEntry = () => ({
   gradedCount: 0,      // cumulative questions graded, for accuracy
   passed: false,
   completedIds: [],
+  /* Mocks only: the section breakdown of the most recent attempt, as
+     [{ id, c, t }] — correct and total per section. Five short rows.
+
+     Stored because a single percentage cannot answer the question a candidate
+     actually has: "which section keeps letting me down?". Without this the
+     Mock Test screen could only repeat what the home screen already shows.
+     Deliberately just the last attempt rather than a full history — enough to
+     be useful, small enough to sync in the same row. */
+  lastSections: [],
   updatedAt: null,
 });
 
@@ -61,6 +70,18 @@ function sanitise(entry) {
   if (!Number.isFinite(e.correctCount) || e.correctCount < 0) e.correctCount = 0;
   if (!Number.isFinite(e.gradedCount) || e.gradedCount < 0) e.gradedCount = 0;
   if (e.correctCount > e.gradedCount) e.correctCount = e.gradedCount;
+
+  /* Anything that isn't a well-formed breakdown is dropped rather than shown.
+     This comes back from storage and from the server, so it can be stale,
+     truncated, or from an older version of the app that never wrote it. */
+  e.lastSections = Array.isArray(e.lastSections)
+    ? e.lastSections
+        .filter(r => r && typeof r.id === "string"
+          && Number.isFinite(r.c) && Number.isFinite(r.t)
+          && r.t > 0 && r.c >= 0 && r.c <= r.t)
+        .slice(0, 10)
+    : [];
+
   return e;
 }
 
@@ -99,6 +120,19 @@ function mergeEntry(a, b) {
     gradedCount: Math.max(a.gradedCount || 0, b.gradedCount || 0),
     passed: Boolean(a.passed || b.passed),
     completedIds: Array.from(new Set([...(a.completedIds || []), ...(b.completedIds || [])])),
+    /* The newer side's breakdown wins outright. Merging two breakdowns would
+       invent an attempt that never happened — a section row from Monday's
+       paper sitting beside one from Friday's.
+
+       Every test here is on `.length`, not truthiness. An empty array is
+       truthy, so `a.lastSections || b.lastSections` always returns a's empty
+       array and the real breakdown is thrown away. That is exactly what
+       happens on every sign-in until the SQL is run: the server has no
+       column, so it sends nothing back with a newer timestamp, and the phone's
+       own breakdown would be wiped by its own reply. */
+    lastSections: newer.lastSections?.length ? newer.lastSections
+      : a.lastSections?.length ? a.lastSections
+      : (b.lastSections?.length ? b.lastSections : []),
     updatedAt: newer.updatedAt || null,
   };
 }
@@ -145,6 +179,10 @@ export function ProgressProvider({ children }) {
           gradedCount: row.graded_count || 0,
           passed: row.passed,
           completedIds: row.completed_ids || [],
+          /* Absent until sql/add-section-results.sql has been run — the
+             column simply isn't there, so this reads as undefined and the
+             sanitiser turns it into an empty list. */
+          lastSections: row.last_sections || [],
           updatedAt: row.updated_at,
         };
       }
@@ -183,6 +221,9 @@ export function ProgressProvider({ children }) {
             graded_count: entry.gradedCount || 0,
             passed: entry.passed,
             completed_ids: entry.completedIds,
+            ...(entry.lastSections?.length
+              ? { last_sections: entry.lastSections }
+              : null),
           },
           { onConflict: "user_id,module_id" }
         );
@@ -226,6 +267,9 @@ export function ProgressProvider({ children }) {
         correctCount: (before.correctCount || 0) + score,
         gradedCount: (before.gradedCount || 0) + total,
         passed: before.passed || didPass,
+        lastSections: Array.isArray(opts.sections) && opts.sections.length
+          ? opts.sections
+          : (before.lastSections || []),
         updatedAt: new Date().toISOString(),
       };
       const next = { ...prev, [moduleId]: updatedEntry };
@@ -239,8 +283,18 @@ export function ProgressProvider({ children }) {
         p_score: score,
         p_total: total,
         p_pass_mark: passMark,
+        /* The server cannot work out a mock's verdict — it doesn't know the
+           five section marks — so it's told. See sql/add-section-results.sql. */
+        p_passed: didPass,
+        p_sections: Array.isArray(opts.sections) ? opts.sections : null,
       });
-      if (error) console.warn("Progress not synced:", error.message);
+      if (error) {
+        /* Until that SQL is run the function has the old four-argument
+           signature and rejects these. The device keeps its own correct copy
+           either way, so this degrades to "works on this phone" rather than
+           losing the result. */
+        console.warn("Progress not synced:", error.message);
+      }
     }
 
     return { pct, passMark, verdict, entry: updatedEntry };
@@ -417,6 +471,78 @@ export function ProgressProvider({ children }) {
     };
   }, [entries]);
 
+  /* -----------------------------------------------------------------------
+     MOCK READINESS
+
+     Pools the section breakdowns from every mock paper sat, and reports each
+     section against its own exam pass mark.
+
+     This is the one thing the app can tell a candidate that they cannot work
+     out for themselves, and it is the reason the Mock Test screen exists as
+     something other than a second copy of the home screen. "You are averaging
+     84% but Teaching Ability has come in under its mark both times" is a
+     revision plan. "Best score 84%" is not.
+
+     Pooled rather than averaged across papers: 11/20 and 13/20 becomes 24/40,
+     which is the right way to combine them — averaging two percentages weights
+     a short paper the same as a long one.
+     ----------------------------------------------------------------------- */
+  const mockReadiness = useMemo(() => {
+    const tally = {};
+    let papersSat = 0, papersPassed = 0;
+
+    for (const m of MOCKS) {
+      const e = sanitise(entries[m.id]);
+      if (e.attempts > 0) papersSat++;
+      if (e.passed) papersPassed++;
+      for (const row of e.lastSections) {
+        const t = (tally[row.id] = tally[row.id] || { correct: 0, total: 0 });
+        t.correct += row.c;
+        t.total += row.t;
+      }
+    }
+
+    const sections = ADI_SECTIONS.map(s => {
+      const t = tally[s.id];
+      const passMark = s.passMark ?? PASS_MARK;
+      if (!t || !t.total) {
+        return {
+          id: s.id, label: s.short || s.label,
+          examLabel: s.examLabel || s.label,
+          passMark, seen: false, pct: 0, correct: 0, total: 0, atStandard: false,
+        };
+      }
+      const pct = Math.round((t.correct / t.total) * 100);
+      return {
+        id: s.id, label: s.short || s.label,
+        examLabel: s.examLabel || s.label,
+        passMark, seen: true, pct,
+        correct: t.correct, total: t.total,
+        atStandard: pct >= passMark,
+        /* How far off, in percentage points. Negative means clear of it. */
+        gap: passMark - pct,
+      };
+    });
+
+    const measured = sections.filter(s => s.seen);
+    const short = measured.filter(s => !s.atStandard).sort((a, b) => b.gap - a.gap);
+
+    return {
+      sections,
+      measured,
+      short,
+      /* The one to work on next — furthest below its own mark. */
+      weakest: short[0] || null,
+      papersSat,
+      papersPassed,
+      papersAvailable: MOCKS.length,
+      /* Only meaningful once at least one paper has been sat with a
+         breakdown recorded. */
+      hasData: measured.length > 0,
+      readyForExam: measured.length === ADI_SECTIONS.length && short.length === 0,
+    };
+  }, [entries]);
+
   /* The weakest sections that have actually been attempted. */
   const weakest = useMemo(() => {
     return ADI_SECTIONS
@@ -438,8 +564,10 @@ export function ProgressProvider({ children }) {
     getSection,
     overall,
     weakest,
+    mockReadiness,
   }), [entries, syncing, recordResult, recordAnswered, toggleCardKnown,
-       resetModule, resetAll, getModule, getSection, overall, weakest]);
+       resetModule, resetAll, getModule, getSection, overall, weakest,
+       mockReadiness]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }

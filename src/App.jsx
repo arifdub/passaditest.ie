@@ -13,11 +13,11 @@
 */
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Home as HomeIcon, BookOpen, TrendingUp, User, Loader2, Lock } from "lucide-react";
+import { Home as HomeIcon, BookOpen, Timer, TrendingUp, User, Loader2, Lock } from "lucide-react";
 import { AuthProvider, useAuth } from "./appAuth";
 import { ProgressProvider } from "./progressStore";
 import AuthScreen from "./AuthScreen";
-import { HomeScreen, ProgressScreen, ProfileScreen } from "./screens";
+import { HomeScreen, MockHubScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
@@ -25,11 +25,15 @@ import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appS
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
 
+/* The tab ids double as screen ids, so a tab's id must not collide with a
+   screen that means something else. "mocks" (the list) is deliberately not
+   "mock" (a paper being sat) — one tap of the tab would otherwise drop the
+   learner straight into a 90-minute timed exam. */
 const TABS = [
-  { id: "home", label: "Home", icon: HomeIcon },
-  { id: "learn", label: "Learn", icon: BookOpen },
+  { id: "home",     label: "Home",     icon: HomeIcon },
+  { id: "mocks",    label: "Mock Test", icon: Timer },
   { id: "progress", label: "Progress", icon: TrendingUp },
-  { id: "profile", label: "Profile", icon: User },
+  { id: "profile",  label: "Profile",  icon: User },
 ];
 
 /* ===========================================================================
@@ -66,12 +70,20 @@ function AppShell() {
   /* Tapping a tab resets that tab to its root — the expected app behaviour. */
   const selectTab = (id) => {
     setTab(id);
-    setStack([{ screen: id === "learn" ? "home" : id }]);
+    setStack([{ screen: id }]);
     window.scrollTo(0, 0);
   };
 
   const view = stack[stack.length - 1];
   const canGoBack = stack.length > 1;
+
+  /* Which tab lights up. Derived from what's actually on screen rather than
+     from the last tab tapped, because "See all" on the home screen pushes the
+     Mock Test screen without going through the tab bar — and a highlighted
+     Home tab above a Mock Test screen is the kind of small wrongness that
+     makes an app feel unfinished. Falls back to the tab state for screens
+     that aren't a tab root, such as a section or a deck. */
+  const activeTab = TABS.some(t => t.id === view.screen) ? view.screen : tab;
 
   /* ---------------------------------------------------------------------
      SWIPE BACK
@@ -112,7 +124,7 @@ function AppShell() {
       onPointerCancel={() => { swipe.current = null; }}
     >
       <CurrentScreen view={view} go={go} back={back} theme={theme} toggleTheme={toggleTheme} />
-      <TabBar tab={tab} onSelect={selectTab} hidden={isFullScreen(view)} />
+      <TabBar tab={activeTab} onSelect={selectTab} hidden={isFullScreen(view)} />
     </div>
   );
 }
@@ -145,6 +157,11 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
   switch (view.screen) {
     case "home":
       return <HomeScreen go={go} />;
+
+    /* The Mock Test tab — the list of papers and how ready you are. Note the
+       plural: "mock" below is a paper actually being sat. */
+    case "mocks":
+      return <MockHubScreen go={go} />;
 
     case "progress":
       return <ProgressScreen go={go} />;

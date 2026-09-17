@@ -231,6 +231,9 @@ export default function QuizPlayer({ module, quiz, onExit }) {
       const saved = await recordResult(module.id, grade.score, grade.total, {
         passMark: Math.max(...grade.rows.map(r => r.passMark), PASS_MARK),
         passed: grade.passed,
+        /* Kept so the Mock Test screen can say which sections keep falling
+           short. Short keys — this rides along in the same stored row. */
+        sections: grade.rows.map(r => ({ id: r.id, c: r.correct, t: r.total })),
       });
 
       clearPaused(module.id);

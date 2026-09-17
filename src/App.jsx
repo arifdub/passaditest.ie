@@ -164,11 +164,12 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
             label: section.label,
             sectionLabel: `Section ${section.number}`,
             kind: "mcq",
-            passMark: PASS_MARK,
+            /* This section's own exam mark — they differ. */
+            passMark: section.passMark ?? PASS_MARK,
           }}
           quiz={{
             title: section.label,
-            subtitle: `${section.total} questions · pass mark ${PASS_MARK}%`,
+            subtitle: `${section.total} questions · pass mark ${section.passMark ?? PASS_MARK}%`,
             categories: [{
               id: section.id,
               title: section.label,
@@ -193,10 +194,11 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
           module={{
             id: paper.id,
             label: paper.label,
-            sectionLabel: "Exam simulation",
+            sectionLabel: "Exam conditions",
             kind: "mock",
             questionCount: paper.questionCount,
-            passMark: paper.passMark,
+            /* No single pass mark — the five section marks decide it. */
+            minutes: paper.minutes,
           }}
           quiz={{
             title: paper.label,

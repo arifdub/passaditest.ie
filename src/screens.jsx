@@ -15,7 +15,9 @@ import {
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check, Lock,
 } from "lucide-react";
-import { ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, lockedForGuest } from "./appStructure";
+import {
+  ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
+} from "./appStructure";
 import { useAuth } from "./appAuth";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
@@ -152,6 +154,13 @@ export function HomeScreen({ go }) {
                       <span className="font-bold text-slate-900 dark:text-white leading-tight">
                         {section.label}
                       </span>
+                      {/* Each section's own exam pass mark. Visible here
+                          because they differ — Teaching Ability is 60%,
+                          Test Procedure is 75%, and a candidate planning
+                          revision should know that before they start. */}
+                      <span className="ml-auto shrink-0 text-[10px] font-black uppercase tracking-wider text-slate-400 tabular-nums">
+                        {section.passMark ?? PASS_MARK}%
+                      </span>
                     </div>
 
                     {locked ? (
@@ -181,7 +190,7 @@ export function HomeScreen({ go }) {
                           ? "text-emerald-600 dark:text-emerald-400"
                           : "text-amber-600 dark:text-amber-400"
                       }`}>
-                        {p.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}
+                        {p.passed ? "At pass standard" : `Keep practising — ${p.passMark}% needed`}
                       </p>
                     )}
                   </div>
@@ -196,9 +205,14 @@ export function HomeScreen({ go }) {
         </div>
 
         {/* Mock tests */}
-        <p className="mt-6 mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
-          Exam simulation
-        </p>
+        <div className="mt-6 mb-3 flex items-baseline justify-between gap-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+            Exam conditions
+          </p>
+          <span className="text-xs font-bold text-slate-400 tabular-nums">
+            {MOCK_LENGTH} questions · {MOCK_MINUTES} min
+          </span>
+        </div>
 
         <div className="space-y-2.5">
           {MOCKS.map(paper => {
@@ -235,7 +249,9 @@ export function HomeScreen({ go }) {
                       <div className="mt-2.5">
                         <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
                           <span>Best score</span>
-                          <span>{m.bestPct}%{m.passed ? " · passed" : ""}</span>
+                          {/* "passed" here means every section passed, not
+                              that the percentage cleared a bar. */}
+                          <span>{m.bestPct}%{m.passed ? " · all sections passed" : ""}</span>
                         </div>
                         <div className="h-2 bg-white/15 rounded-full overflow-hidden">
                           <div
@@ -509,7 +525,9 @@ export function ProgressScreen({ go }) {
                         }`}>
                           {m.attempts === 0
                             ? "Not attempted yet"
-                            : `${m.passed ? "At pass standard" : `Keep practising — ${PASS_MARK}% needed`}`}
+                            : m.passed
+                              ? "Passed every section"
+                              : "Not every section passed"}
                           {m.attempts > 0 && (
                             <span className="font-normal text-slate-400">
                               {" "}· {m.attempts} attempt{m.attempts === 1 ? "" : "s"}

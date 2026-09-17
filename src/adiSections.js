@@ -138,12 +138,49 @@ const pick = (bank, id) => bank.find(c => c.id === id)?.questions || [];
    Which source categories feed which official section. Keeping this as data
    means adding a new bank later is one line, not a code change.
    --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   SECTION PASS MARKS  —  read this before changing a number below
+
+   The real Stage 1 paper is not marked as one score out of 100. Each section
+   carries its own pass mark and every one of them must be reached. 90 out of
+   100 overall is still a fail if Teaching Ability came in under its mark. That
+   is the single most important thing this app has to model, because it changes
+   how a candidate should revise: the weakest section decides the result, not
+   the average.
+
+   Where the numbers come from, and how far to trust them:
+
+     · 100 questions in 90 minutes, five sections, every section must pass
+       — agreed by both Irish training providers below, and consistent with
+       the RSA's own description of the syllabus.
+
+     · The per-section percentages are NOT published by the RSA. They come
+       from two Irish ADI training providers who quote them:
+
+         Section                 Leinster   NUI      used here
+         Driver testing procs.      75%      70%        75%
+         Road safety knowledge      72%      72%        72%
+         Teaching ability           60%      60%        60%
+         Vehicle maintenance        70%      70%        70%
+         Category-specific          70%      70%        70%
+
+       Four of the five agree exactly. The one disagreement is taken at the
+       stricter figure — a candidate over-prepared for Section 1 loses nothing,
+       one under-prepared loses the exam.
+
+   If the RSA publishes official figures, change them here. Everything
+   downstream — the mock result screen, the section screens, the progress
+   page — reads these values rather than holding its own copy.
+   --------------------------------------------------------------------------- */
+
 const SECTION_DEFS = [
   {
     id: "adi.sec.procedure",
     number: 1,
     label: "Driving Test Procedure & Documentation",
     short: "Test Procedure",
+    examLabel: "Driver Testing Procedures",
+    passMark: 75,          // see SECTION PASS MARKS note above
     blurb: "The driving test, fault marking, forms, licensing and ADI regulation.",
     accent: "emerald",
     sources: [
@@ -159,6 +196,8 @@ const SECTION_DEFS = [
     number: 2,
     label: "Road Safety Precepts & Practices",
     short: "Road Safety",
+    examLabel: "Road Safety Knowledge",
+    passMark: 72,
     blurb: "Hazards, road procedure, positioning, signs, speed and vulnerable road users.",
     accent: "emerald",
     sources: [
@@ -179,6 +218,8 @@ const SECTION_DEFS = [
     number: 3,
     label: "Pedagogy",
     short: "Pedagogy",
+    examLabel: "Teaching Ability",
+    passMark: 60,
     blurb: "Teaching technique, communication, lesson structure, learning theory and fault correction.",
     accent: "emerald",
     sources: [
@@ -192,6 +233,8 @@ const SECTION_DEFS = [
     number: 4,
     label: "Basic Mechanics & Vehicle Maintenance",
     short: "Mechanics",
+    examLabel: "Vehicle Maintenance",
+    passMark: 70,
     blurb: "Engine, transmission, brakes, tyres, electrics and routine maintenance.",
     accent: "emerald",
     sources: [
@@ -205,6 +248,8 @@ const SECTION_DEFS = [
     number: 5,
     label: "Category B & BE Towing",
     short: "Category B & BE",
+    examLabel: "Category-Specific Knowledge",
+    passMark: 70,
     blurb: "Licence categories, weights, coupling, stability and towing rules.",
     accent: "emerald",
     sources: [
@@ -249,26 +294,33 @@ export const QUESTION_BY_QID = Object.fromEntries(ALL_QUESTIONS.map(q => [q.qid,
 /* ---------------------------------------------------------------------------
    MOCK TEST
 
-   100 questions, the length of the real Stage 1 paper.
+   100 questions in 90 minutes, the shape of the real Stage 1 paper.
 
-   The split below is deliberate rather than proportional. Drawing in
-   proportion to bank size gave Road Safety 54 questions out of 100, simply
-   because that bank absorbs all 240 road sign questions — which would train a
-   candidate for the wrong exam. These weights reflect the emphasis of the
-   syllabus instead.
+   Twenty per section. The real paper is described as 80 core questions across
+   four sections plus 20 category-specific ones, which is an even split, and an
+   even split is also what the per-section pass marks require to be meaningful:
+   with 10 questions in a section, 70% and 80% are the same thing, because
+   there is no score between 7 and 8 out of 10. At 20 questions each mark lands
+   on a real boundary — 72% of 20 is 14.4, so 15 right passes and 14 fails.
 
-   They are a considered estimate, not published RSA figures. The RSA does not
-   publish a per-section question count. Adjust here if you get better
-   information, and everything downstream follows.
+   This replaced an earlier 25/30/20/15/10 split of my own estimating. Drawing
+   in proportion to bank size was never an option: that gave Road Safety 54 of
+   the 100 simply because it absorbs all 240 road sign questions, which trains
+   a candidate for the wrong exam.
    --------------------------------------------------------------------------- */
 export const MOCK_LENGTH = 100;
 
-const MOCK_WEIGHTS = {
-  "adi.sec.procedure": 25,
-  "adi.sec.safety":    30,
+/* The real exam is 90 minutes. Prometric also allow a 15-minute familiarisation
+   period beforehand which is not part of the timed paper, so it isn't modelled
+   here — this clock is the 90 that counts. */
+export const MOCK_MINUTES = 90;
+
+export const MOCK_WEIGHTS = {
+  "adi.sec.procedure": 20,
+  "adi.sec.safety":    20,
   "adi.sec.pedagogy":  20,
-  "adi.sec.mechanics": 15,
-  "adi.sec.categoryb": 10,
+  "adi.sec.mechanics": 20,
+  "adi.sec.categoryb": 20,
 };
 
 function shuffle(arr, rand) {
@@ -348,19 +400,34 @@ function questionsForPaper(index) {
   return picked;
 }
 
-/* Public: the questions for a paper, in a fresh random order each attempt. */
+/* Public: the questions for a paper.
+
+   Sections run in order — all 20 Test Procedure questions, then all 20 Road
+   Safety, and so on — because the real paper is sectioned and a candidate
+   should feel that. Inside a section the order is reshuffled on every attempt,
+   so nobody learns an answer by its position.
+
+   Sitting the same paper twice is therefore the same 100 questions in a
+   different order, which is what makes two scores comparable. */
 export function buildMockTest(paperNumber = 1, length = MOCK_LENGTH) {
   const index = Math.max(0, (Number(paperNumber) || 1) - 1);
-  let picked = questionsForPaper(index);
+  const picked = questionsForPaper(index);
 
-  // Guard against a section being emptied by an edit.
-  if (picked.length < length) {
-    const used = new Set(picked.map(q => q.qid));
-    const spare = shuffle(ALL_QUESTIONS.filter(q => !used.has(q.qid)), Math.random);
-    picked = picked.concat(spare.slice(0, length - picked.length));
+  // Group by section, preserving the section order defined above.
+  const out = [];
+  for (const section of ADI_SECTIONS) {
+    const mine = picked.filter(q => q.sectionId === section.id);
+    if (mine.length) out.push(...shuffle(mine, Math.random));
   }
 
-  return shuffle(picked, Math.random).slice(0, length);
+  // Guard against a section being emptied by an edit to the banks.
+  if (out.length < length) {
+    const used = new Set(out.map(q => q.qid));
+    const spare = shuffle(ALL_QUESTIONS.filter(q => !used.has(q.qid)), Math.random);
+    out.push(...spare.slice(0, length - out.length));
+  }
+
+  return out.slice(0, length);
 }
 
 /* How much of a paper overlaps with another — used by the tests, and worth

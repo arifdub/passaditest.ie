@@ -31,7 +31,7 @@ import React, {
 } from "react";
 import { supabase, HAS_SUPABASE } from "./supabaseClient";
 import { useAuth } from "./appAuth";
-import { ADI_SECTIONS, MOCKS, PASS_MARK, verdictFor } from "./appStructure";
+import { ADI_SECTIONS, MOCKS, PASS_MARK, passMarkFor, verdictFor } from "./appStructure";
 
 const LOCAL_KEY = "pdt-progress-v1";
 
@@ -201,11 +201,16 @@ export function ProgressProvider({ children }) {
   }, [isSignedIn]);
 
   /* ---- record a finished quiz or mock test ---- */
-  const recordResult = useCallback(async (moduleId, score, total) => {
+  /* `opts` lets the caller supply a verdict this function can't work out for
+     itself. A mock passes only if all five sections pass, which is not a fact
+     about `score / total` — 88% can be a fail. Without this the store would
+     record a pass the result screen is calling a fail. */
+  const recordResult = useCallback(async (moduleId, score, total, opts = {}) => {
     if (!total || total <= 0) return null;
 
     const pct = Math.round((score / total) * 100);
-    const passMark = PASS_MARK;
+    const passMark = opts.passMark ?? passMarkFor(moduleId) ?? PASS_MARK;
+    const didPass = opts.passed !== undefined ? !!opts.passed : pct >= passMark;
     const verdict = verdictFor(pct, passMark);
 
     let updatedEntry;
@@ -220,7 +225,7 @@ export function ProgressProvider({ children }) {
         attempts: before.attempts + 1,
         correctCount: (before.correctCount || 0) + score,
         gradedCount: (before.gradedCount || 0) + total,
-        passed: before.passed || pct >= passMark,
+        passed: before.passed || didPass,
         updatedAt: new Date().toISOString(),
       };
       const next = { ...prev, [moduleId]: updatedEntry };
@@ -328,9 +333,12 @@ export function ProgressProvider({ children }) {
     const entry = sanitise(entries[moduleId]);
     return {
       ...entry,
-      passMark: PASS_MARK,
+      /* A mock has no single pass mark — it has five, and `passed` above is
+         the honest answer to "did this paper pass". Reported as null so
+         nothing downstream prints a number the exam doesn't use. */
+      passMark: null,
       started: entry.attempts > 0 || entry.completedIds.length > 0,
-      verdict: entry.attempts > 0 ? verdictFor(entry.bestPct, PASS_MARK) : null,
+      verdict: null,
     };
   }, [entries]);
 
@@ -356,8 +364,11 @@ export function ProgressProvider({ children }) {
       attempts: entry.attempts,
       passed: entry.passed,
       started: answered > 0 || entry.attempts > 0,
-      passMark: PASS_MARK,
-      verdict: entry.attempts > 0 ? verdictFor(entry.bestPct, PASS_MARK) : null,
+      /* This section's own exam mark, not a global one. */
+      passMark: section?.passMark ?? PASS_MARK,
+      verdict: entry.attempts > 0
+        ? verdictFor(entry.bestPct, section?.passMark ?? PASS_MARK)
+        : null,
     };
   }, [entries]);
 

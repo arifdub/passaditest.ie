@@ -41,6 +41,7 @@ export function ProgressBar({ pct, tone = "emerald", height = "h-2" }) {
     emerald: "bg-emerald-500",
     blue: "bg-blue-500",
     amber: "bg-amber-500",
+    red: "bg-red-500",
     slate: "bg-slate-400",
   };
   return (

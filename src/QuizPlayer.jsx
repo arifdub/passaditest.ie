@@ -21,14 +21,17 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   ChevronLeft, ChevronRight, Check, X, Clock, RotateCcw, Flag,
-  Pause, Play, Star, ChevronDown, ChevronUp,
+  Pause, Play, Star, ChevronDown, ChevronUp, AlertTriangle, Layers,
 } from "lucide-react";
 import {
   ScreenHeader, Screen, ProgressBar, ProgressRing,
   PrimaryButton, SecondaryButton,
 } from "./ui";
 import { useProgress } from "./progressStore";
-import { verdictFor, PASS_MARK } from "./appStructure";
+import {
+  verdictFor, PASS_MARK, passMarkFor, gradeMock, mockVerdict,
+  ADI_SECTIONS, MOCK_MINUTES,
+} from "./appStructure";
 import { QUESTION_BY_QID } from "./adiSections";
 
 /* ---------------------------------------------------------------------------
@@ -98,9 +101,19 @@ function shuffle(arr) {
 }
 
 function formatClock(seconds) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
+  const safe = Math.max(0, Math.floor(seconds));
+  const m = Math.floor(safe / 60);
+  const s = safe % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+/* "1 hour 30 minutes" rather than "90:00" — for prose, not the clock. */
+function formatDuration(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (!h) return `${m} minutes`;
+  if (!m) return `${h} hour${h === 1 ? "" : "s"}`;
+  return `${h} hour${h === 1 ? "" : "s"} ${m} minutes`;
 }
 
 function timeAgo(iso) {
@@ -119,7 +132,14 @@ function timeAgo(iso) {
    =========================================================================== */
 export default function QuizPlayer({ module, quiz, onExit }) {
   const isMock = module.kind === "mock";
-  const passMark = module.passMark || PASS_MARK;
+
+  /* A section practice has one pass mark — its own, from the exam. A mock has
+     five, so there is no single number to show and `passMark` stays null. */
+  const passMark = isMock ? null : (module.passMark || passMarkFor(module.id) || PASS_MARK);
+
+  /* Timed only for mocks. Section practice is study, not assessment, and a
+     clock on it would discourage the slow careful reading it wants. */
+  const limitSeconds = isMock ? (module.minutes || MOCK_MINUTES) * 60 : null;
 
   const [stage, setStage] = useState("intro");
   const [session, setSession] = useState(null);
@@ -145,7 +165,12 @@ export default function QuizPlayer({ module, quiz, onExit }) {
   };
 
   const resume = () => {
-    setSession(paused);
+    /* An attempt paused before the mock was timed carries an unbounded
+       count-up figure — anything over 90 minutes would auto-submit the
+       instant it resumed, ending a paper the candidate never sat. Those
+       start the clock again rather than being destroyed. */
+    const stale = limitSeconds && paused.elapsed >= limitSeconds;
+    setSession(stale ? { ...paused, elapsed: 0 } : paused);
     setStage("running");
   };
 
@@ -156,17 +181,22 @@ export default function QuizPlayer({ module, quiz, onExit }) {
     setSession(null);
   };
 
-  const finish = async ({ questions, answers, elapsed }) => {
-    const answered = [];
-    let score = 0;
+  const finish = async ({ questions, answers, elapsed, timedOut }) => {
     const log = [];
 
     questions.forEach((q, i) => {
-      const picked = answers[i];
-      if (picked === null || picked === undefined) return;
-      answered.push(q);
-      const isRight = picked === q.correct;
-      if (isRight) score++;
+      const raw = answers[i];
+      const skipped = raw === null || raw === undefined;
+
+      /* A section practice is marked on what you attempted — leaving five
+         questions and scoring 20/20 is a real 100% on those twenty.
+
+         A mock is marked on the whole paper. Blank is wrong in the exam, and
+         a mock that quietly drops unanswered questions would flatter a
+         candidate who ran out of time — which is exactly the candidate who
+         most needs to know. */
+      if (skipped && !isMock) return;
+
       log.push({
         qid: q.qid,
         sectionId: q.sectionId,
@@ -174,25 +204,55 @@ export default function QuizPlayer({ module, quiz, onExit }) {
         image: q.image,
         options: q.options,
         correct: q.correct,
-        picked,
+        picked: skipped ? null : raw,
         explain: q.explain,
         sectionLabel: q.sectionLabel,
-        isRight,
+        skipped,
+        isRight: !skipped && raw === q.correct,
       });
     });
 
-    // Credit every answered question to the section it belongs to.
+    // Credit answered questions to the section they belong to. Skipped ones
+    // were never seen, so they don't count toward coverage.
     const bySection = {};
     for (const item of log) {
-      if (!item.qid || !item.sectionId) continue;
+      if (!item.qid || !item.sectionId || item.skipped) continue;
       (bySection[item.sectionId] = bySection[item.sectionId] || []).push(item.qid);
     }
     for (const [sectionId, qids] of Object.entries(bySection)) {
       await recordAnswered(sectionId, qids);
     }
 
+    if (isMock) {
+      /* Five separate verdicts, and the paper passes only if all five do. */
+      const grade = gradeMock(log, { totalQuestions: questions.length });
+      const verdict = mockVerdict(grade);
+
+      const saved = await recordResult(module.id, grade.score, grade.total, {
+        passMark: Math.max(...grade.rows.map(r => r.passMark), PASS_MARK),
+        passed: grade.passed,
+      });
+
+      clearPaused(module.id);
+      setPaused(null);
+      setResult({
+        ...saved,
+        score: grade.score,
+        total: grade.total,
+        pct: grade.pct,
+        verdict,
+        grade,
+        log,
+        elapsed,
+        timedOut,
+      });
+      setStage("result");
+      return;
+    }
+
+    const score = log.filter(item => item.isRight).length;
     const total = log.length || 1;
-    const saved = await recordResult(module.id, score, total);
+    const saved = await recordResult(module.id, score, total, { passMark });
 
     clearPaused(module.id);
     setPaused(null);
@@ -287,32 +347,78 @@ export default function QuizPlayer({ module, quiz, onExit }) {
             <>
               <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
                 <h2 className="font-bold text-slate-900 dark:text-white">
-                  {isMock ? "Before you start" : "About this section"}
+                  {isMock ? "Exam conditions" : "About this section"}
                 </h2>
                 <ul className="mt-3 space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
                   <li className="flex gap-2.5">
                     <Check size={16} className="text-emerald-500 mt-0.5 shrink-0" />
                     {allQuestions.length} questions
-                    {isMock ? ", drawn across all five sections." : " in this section."}
+                    {isMock ? ", 20 in each of the five sections." : " in this section."}
                   </li>
+
+                  {isMock && (
+                    <li className="flex gap-2.5">
+                      <Clock size={16} className="text-emerald-500 mt-0.5 shrink-0" />
+                      {formatDuration(module.minutes || MOCK_MINUTES)} on the clock. It counts
+                      down and submits itself when it reaches zero.
+                    </li>
+                  )}
+
                   <li className="flex gap-2.5">
                     <Star size={16} className="text-emerald-500 mt-0.5 shrink-0" />
-                    Pass mark {passMark}%.
+                    {isMock
+                      ? "Every section has its own pass mark, and you have to reach all five."
+                      : `Pass mark ${passMark}%.`}
                   </li>
+
                   <li className="flex gap-2.5">
                     <Pause size={16} className="text-emerald-500 mt-0.5 shrink-0" />
-                    You can pause at any point and pick up where you left off.
+                    {isMock
+                      ? "Pausing stops the clock and keeps the time you have left — the real exam won't, so use it sparingly."
+                      : "You can pause at any point and pick up where you left off."}
                   </li>
+
                   <li className="flex gap-2.5">
                     {isMock
                       ? <Flag size={16} className="text-emerald-500 mt-0.5 shrink-0" />
                       : <ChevronLeft size={16} className="text-emerald-500 mt-0.5 shrink-0" />}
                     {isMock
-                      ? "Answers are shown at the end, as in the real exam."
+                      ? "Answers come at the end, as in the real exam. Anything left blank is marked wrong."
                       : "The answer is shown as you go, and you can move back and forward."}
                   </li>
                 </ul>
               </div>
+
+              {/* The five bars a candidate is actually being measured against.
+                  Worth seeing before starting, not only after — a mock read as
+                  one score out of 100 teaches the wrong revision strategy. */}
+              {isMock && (
+                <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+                  <h2 className="font-bold text-slate-900 dark:text-white">The five sections</h2>
+                  <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Each is 20 questions and carries its own mark. Miss one and the
+                    paper fails, however well the rest went.
+                  </p>
+                  <div className="mt-4 space-y-2">
+                    {ADI_SECTIONS.map(s => {
+                      const mark = s.passMark ?? PASS_MARK;
+                      return (
+                        <div key={s.id} className="flex items-baseline justify-between gap-3 text-sm">
+                          <span className="text-slate-700 dark:text-slate-200 truncate">
+                            {s.examLabel || s.label}
+                          </span>
+                          <span className="font-bold text-slate-900 dark:text-white shrink-0 tabular-nums">
+                            {mark}%
+                            <span className="ml-1.5 font-semibold text-slate-400">
+                              {Math.ceil(mark / 5)}/20
+                            </span>
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-4">
                 <PrimaryButton onClick={startFresh}>
@@ -333,6 +439,7 @@ export default function QuizPlayer({ module, quiz, onExit }) {
         session={session}
         module={module}
         instantFeedback={!isMock}
+        limitSeconds={limitSeconds}
         onFinish={finish}
         onPause={handlePause}
         onQuit={() => { setStage("intro"); setSession(null); }}
@@ -358,9 +465,10 @@ export default function QuizPlayer({ module, quiz, onExit }) {
 /* ===========================================================================
    RUNNING
    =========================================================================== */
-function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }) {
+function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onPause, onQuit }) {
   const { questions } = session;
   const total = questions.length;
+  const timed = Number.isFinite(limitSeconds) && limitSeconds > 0;
 
   const [answers, setAnswers] = useState(session.answers);
   const [index, setIndex] = useState(session.index);
@@ -372,19 +480,78 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
   const startedAt = useRef(Date.now() - session.elapsed * 1000);
   const finished = useRef(false);
 
+  const remaining = timed ? Math.max(0, limitSeconds - elapsed) : null;
+
+  /* Three states worth colouring differently. Ten minutes is enough to still
+     act on — change strategy, stop re-reading, answer the blanks. Two minutes
+     is not, so it goes red and starts pulsing. */
+  const warning = timed && remaining <= 600 && remaining > 120;
+  const critical = timed && remaining <= 120;
+
+  const handleFinish = useCallback((opts = {}) => {
+    if (finished.current) return;
+    finished.current = true;
+    /* The timer passes its own reading: `elapsed` in this closure is one tick
+       behind at the moment of auto-submit, which would report a 90-minute
+       paper as having taken 89:59. */
+    onFinish({
+      questions,
+      answers,
+      elapsed: Number.isFinite(opts.elapsed) ? opts.elapsed : elapsed,
+      timedOut: opts.timedOut === true,
+    });
+  }, [questions, answers, elapsed, onFinish]);
+
+  /* Keep the latest handler where the interval can reach it, so the timer
+     doesn't have to be torn down and rebuilt on every answer — which would
+     lose a fraction of a second each time and let a 90-minute paper drift. */
+  const finishRef = useRef(handleFinish);
+  useEffect(() => { finishRef.current = handleFinish; }, [handleFinish]);
+
   /* The clock runs while the quiz is on screen. Pausing unmounts this
-     component, which stops it — that's the point of the pause. */
+     component, which stops it — that's the point of the pause.
+
+     Time is read from the wall clock rather than counted in ticks, so a phone
+     that sleeps or a tab left in the background comes back with the right
+     time remaining rather than a clock that quietly stopped. */
   useEffect(() => {
-    const t = setInterval(() => {
-      setElapsed(Math.floor((Date.now() - startedAt.current) / 1000));
-    }, 1000);
+    const tick = () => {
+      const secs = Math.floor((Date.now() - startedAt.current) / 1000);
+      setElapsed(secs);
+      if (timed && secs >= limitSeconds) {
+        finishRef.current({ timedOut: true, elapsed: limitSeconds });
+      }
+    };
+    tick();
+    const t = setInterval(tick, 1000);
     return () => clearInterval(t);
-  }, []);
+  }, [timed, limitSeconds]);
 
   const q = questions[index];
   const picked = answers[index];
   const isLast = index === total - 1;
   const answeredCount = answers.filter(a => a !== null && a !== undefined).length;
+  const unansweredCount = total - answeredCount;
+
+  /* Where this question sits in its section — "3 of 20 in Teaching Ability".
+     Works off the paper itself rather than assuming 20 each, so it stays right
+     if the weighting is ever changed or a section runs short. */
+  const position = React.useMemo(() => {
+    if (!q?.sectionId) return null;
+    const section = ADI_SECTIONS.find(s => s.id === q.sectionId);
+    let at = 0, of = 0;
+    for (let i = 0; i < questions.length; i++) {
+      if (questions[i].sectionId !== q.sectionId) continue;
+      of++;
+      if (i <= index) at++;
+    }
+    return {
+      at,
+      of,
+      label: section?.examLabel || q.sectionLabel || "",
+      sectionNumber: section?.number ?? "",
+    };
+  }, [questions, index, q]);
 
   /* Going back to an already-answered question should show its answer again. */
   useEffect(() => {
@@ -405,12 +572,6 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
     if (i < 0 || i >= total) return;
     setIndex(i);
   }, [total]);
-
-  function handleFinish() {
-    if (finished.current) return;
-    finished.current = true;
-    onFinish({ questions, answers, elapsed });
-  }
 
   function handlePause() {
     onPause({ questions, answers, index, elapsed });
@@ -438,9 +599,16 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
             </span>
 
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 text-sm font-mono font-bold text-slate-300">
+              <span
+                className={`flex items-center gap-1.5 text-sm font-mono font-bold tabular-nums ${
+                  critical ? "text-red-400 animate-pulse"
+                    : warning ? "text-amber-400"
+                    : "text-slate-300"
+                }`}
+                title={timed ? "Time remaining" : "Time taken"}
+              >
                 <Clock size={14} />
-                {formatClock(elapsed)}
+                {formatClock(timed ? remaining : elapsed)}
               </span>
               <button
                 onClick={handlePause}
@@ -455,11 +623,36 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
         </div>
       </div>
 
+      {/* Under two minutes, say so in words. The clock alone is easy to miss
+          while reading a question, and this is the moment to stop reading and
+          start filling in blanks — unanswered is marked wrong. */}
+      {critical && (
+        <div className="bg-red-500 text-white">
+          <div className="max-w-2xl mx-auto px-5 py-2 flex items-center gap-2 text-sm font-bold">
+            <AlertTriangle size={15} className="shrink-0" />
+            <span>
+              {formatClock(remaining)} left
+              {unansweredCount > 0 && ` · ${unansweredCount} still blank`}
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto px-5 py-6 pb-36">
-        {q.sectionLabel && module.kind === "mock" && (
-          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">
-            {q.sectionLabel}
-          </p>
+        {/* Which section, and where you are inside it. The real paper is
+            sectioned and each section passes or fails on its own, so knowing
+            you are 3 questions into Teaching Ability is useful information —
+            "question 43 of 100" is not. */}
+        {position && module.kind === "mock" && (
+          <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+            <Layers size={13} className="shrink-0" />
+            <span className="truncate">
+              Section {position.sectionNumber} · {position.label}
+            </span>
+            <span className="ml-auto shrink-0 text-slate-400 tabular-nums">
+              {position.at}/{position.of}
+            </span>
+          </div>
         )}
 
         {/* Sign questions carry an image — the sign is the question. */}
@@ -536,7 +729,7 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
 
             {isLast ? (
               <button
-                onClick={handleFinish}
+                onClick={() => handleFinish()}
                 disabled={answeredCount === 0}
                 className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-900 font-bold py-3 rounded-xl transition"
               >
@@ -552,13 +745,16 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
             )}
           </div>
 
-          {/* Finish early, without walking to the last question. */}
+          {/* Finish early, without walking to the last question. In a mock the
+              blanks are named, because they will be marked wrong. */}
           {!isLast && answeredCount > 0 && (
             <button
-              onClick={handleFinish}
+              onClick={() => handleFinish()}
               className="w-full mt-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-emerald-600 py-1.5"
             >
-              Finish now · {answeredCount} answered
+              {timed && unansweredCount > 0
+                ? `Finish now · ${unansweredCount} blank count as wrong`
+                : `Finish now · ${answeredCount} answered`}
             </button>
           )}
         </div>
@@ -572,7 +768,9 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
    =========================================================================== */
 function QuizResult({ module, result, onRetry, onExit }) {
   const [reviewing, setReviewing] = useState(false);
+  const [filter, setFilter] = useState(null);   // section id, in a mock review
 
+  const grade = result.grade || null;
   const pct = result.pct ?? Math.round((result.score / result.total) * 100);
   const passMark = result.passMark ?? PASS_MARK;
   const verdict = result.verdict ?? verdictFor(pct, passMark);
@@ -580,17 +778,46 @@ function QuizResult({ module, result, onRetry, onExit }) {
     : verdict.status === "close" ? "amber" : "red";
 
   if (reviewing) {
+    const shown = filter ? result.log.filter(it => it.sectionId === filter) : result.log;
+    const wrong = shown.filter(it => !it.isRight).length;
+
     return (
       <>
         <ScreenHeader
           title="Review answers"
-          subtitle={`${result.score} of ${result.total} correct`}
+          subtitle={
+            filter
+              ? `${shown.length - wrong} of ${shown.length} correct in this section`
+              : `${result.score} of ${result.total} correct`
+          }
           onBack={() => setReviewing(false)}
           backLabel="Result"
         />
         <Screen>
+          {/* In a mock, jump straight to the section that let you down rather
+              than scrolling a hundred questions to find it. */}
+          {grade && grade.rows.length > 1 && (
+            <div className="-mx-5 px-5 mb-4 overflow-x-auto">
+              <div className="flex gap-2 w-max pb-1">
+                <FilterChip active={!filter} onClick={() => setFilter(null)}>
+                  All {result.total}
+                </FilterChip>
+                {grade.rows.map(row => (
+                  <FilterChip
+                    key={row.id}
+                    active={filter === row.id}
+                    tone={row.passed ? "pass" : "fail"}
+                    onClick={() => setFilter(row.id)}
+                  >
+                    {row.label} {row.correct}/{row.total}
+                  </FilterChip>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-3">
-            {result.log.map((item, i) => (
+            {shown.map((item, i) => (
               <div
                 key={i}
                 className={`rounded-2xl p-4 border ${
@@ -618,7 +845,11 @@ function QuizResult({ module, result, onRetry, onExit }) {
                 </div>
 
                 <div className="mt-3 pl-9 space-y-1 text-sm">
-                  {!item.isRight && (
+                  {item.skipped ? (
+                    <p className="text-amber-600 dark:text-amber-400 font-semibold">
+                      Left blank — marked wrong.
+                    </p>
+                  ) : !item.isRight && (
                     <p className="text-red-600 dark:text-red-400">
                       <span className="font-bold">You chose:</span> {item.options[item.picked]}
                     </p>
@@ -642,6 +873,20 @@ function QuizResult({ module, result, onRetry, onExit }) {
     <>
       <ScreenHeader title={module.label} subtitle={module.sectionLabel} />
       <Screen>
+        {/* Ran out of time. Said before the score, because it explains it. */}
+        {result.timedOut && (
+          <div className="mb-4 flex gap-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-2xl p-4">
+            <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-slate-900 dark:text-white text-sm">Time ran out</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                The paper submitted itself at zero, as it would in the exam. Anything
+                you hadn't answered is marked wrong.
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center">
           <h2 className={`text-xl font-black tracking-tight ${
             verdict.status === "pass" ? "text-emerald-600 dark:text-emerald-400"
@@ -652,22 +897,126 @@ function QuizResult({ module, result, onRetry, onExit }) {
           </h2>
 
           <div className="my-5">
-            <ProgressRing pct={pct} size={128} stroke={10} tone={tone} label="Your score" />
+            <ProgressRing
+              pct={pct}
+              size={128}
+              stroke={10}
+              /* In a mock the ring follows the verdict, not the number. 88%
+                 in emerald beside a failed section would say the opposite of
+                 what the result means. */
+              tone={grade ? (grade.passed ? "emerald" : tone) : tone}
+              label={grade ? "Overall" : "Your score"}
+            />
           </div>
 
-          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
+          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
             {verdict.message}
           </p>
 
           <div className="mt-6 grid grid-cols-3 gap-3 pt-5 border-t border-slate-100 dark:border-slate-700">
             <Stat label="Correct" value={`${result.score}/${result.total}`} />
-            <Stat label="Pass mark" value={`${passMark}%`} />
-            <Stat label="Time" value={formatClock(result.elapsed || 0)} />
+            {grade
+              ? <Stat
+                  label="Sections"
+                  value={`${grade.rows.length - grade.failing.length}/${grade.rows.length}`}
+                />
+              : <Stat label="Pass mark" value={`${passMark}%`} />}
+            <Stat
+              label={result.timedOut ? "Time used" : "Time"}
+              value={formatClock(result.elapsed || 0)}
+            />
           </div>
         </div>
 
+        {/* THE SECTION BREAKDOWN — the reason this screen was rebuilt.
+
+            One number out of 100 cannot tell a candidate what to revise, and
+            worse, it can tell them they are ready when they are not. These
+            five rows are the actual marking scheme. */}
+        {grade && (
+          <div className="mt-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+            <div className="flex items-baseline justify-between">
+              <h3 className="font-bold text-slate-900 dark:text-white">By section</h3>
+              <span className={`text-xs font-bold uppercase tracking-widest ${
+                grade.passed
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-red-500 dark:text-red-400"
+              }`}>
+                {grade.passed ? "All clear" : `${grade.failing.length} short`}
+              </span>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              {grade.rows.map(row => (
+                <div key={row.id}>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
+                      {row.examLabel}
+                    </span>
+                    <span className={`text-sm font-black shrink-0 tabular-nums ${
+                      row.passed
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"
+                    }`}>
+                      {row.correct}/{row.total}
+                    </span>
+                  </div>
+
+                  <div className="mt-1.5 relative">
+                    <ProgressBar pct={row.pct} tone={row.passed ? "emerald" : "red"} height="h-2" />
+                    {/* The pass mark, drawn on the bar. A percentage in text is
+                        abstract; a line you are visibly short of is not. */}
+                    <span
+                      className="absolute top-0 bottom-0 w-px bg-slate-900 dark:bg-white"
+                      style={{ left: `${row.passMark}%` }}
+                      aria-hidden="true"
+                    />
+                  </div>
+
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    {row.pct}% · needs {row.passMark}% ({row.needed}/{row.total})
+                    {!row.passed && (
+                      <span className="text-red-500 dark:text-red-400 font-semibold">
+                        {" "}· {row.needed - row.correct} more
+                      </span>
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Stage 1 is marked section by section — every one has to reach its own
+              mark, so the weakest decides the result. The line on each bar is that
+              section's pass mark.
+            </p>
+          </div>
+        )}
+
         <div className="mt-4 space-y-2.5">
-          <PrimaryButton onClick={() => setReviewing(true)}>Review answers</PrimaryButton>
+          {/* When one section is the problem, open the review already filtered
+              to it. Nobody reads a hundred explanations; they read the twenty
+              that cost them the paper. */}
+          {grade && grade.failing.length === 1 ? (
+            <PrimaryButton
+              onClick={() => { setFilter(grade.failing[0].id); setReviewing(true); }}
+            >
+              Review {grade.failing[0].label}
+            </PrimaryButton>
+          ) : (
+            <PrimaryButton onClick={() => { setFilter(null); setReviewing(true); }}>
+              Review answers
+            </PrimaryButton>
+          )}
+
+          {grade && grade.failing.length === 1 && (
+            <button
+              onClick={() => { setFilter(null); setReviewing(true); }}
+              className="w-full text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-emerald-600 py-1"
+            >
+              Review all {result.total} answers
+            </button>
+          )}
           <SecondaryButton onClick={onRetry}>
             <span className="inline-flex items-center gap-2">
               <RotateCcw size={16} /> Try again
@@ -735,6 +1084,26 @@ function Explanation({ text, inline }) {
       <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1">Why</p>
       {body}
     </div>
+  );
+}
+
+/* A section chip in the review header. Colour carries the pass/fail so the
+   failed section is findable without reading five labels. */
+function FilterChip({ active, tone, onClick, children }) {
+  const base = "shrink-0 rounded-full px-3 py-1.5 text-xs font-bold border transition whitespace-nowrap";
+
+  const cls = active
+    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white"
+    : tone === "fail"
+      ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900"
+      : tone === "pass"
+        ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900"
+        : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+
+  return (
+    <button type="button" onClick={onClick} className={`${base} ${cls}`}>
+      {children}
+    </button>
   );
 }
 

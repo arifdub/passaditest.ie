@@ -10,9 +10,12 @@
       network drops mid-test.
     - Also written to Supabase when the learner is signed in with the database
       connected, so progress follows them to another phone or laptop.
-    - On sign-in, anything studied before signing in is merged upward — best
-      score wins, attempts add together. Nobody loses work by making an
-      account late.
+    - On sign-in, anything studied before signing in is merged upward. Every
+      field merges idempotently — best score wins, ids union, counts take the
+      higher of the two. Merging the same data twice must not change it, which
+      is why attempts takes the max rather than the sum: local and remote hold
+      the same history, not two halves of it. Summing them doubled the count
+      on every sign-in until it reached six figures.
 
   Progress model:
     module   — best %, last %, attempts, passed
@@ -40,15 +43,34 @@ const emptyEntry = () => ({
   lastScore: 0,
   lastTotal: 0,
   attempts: 0,
+  correctCount: 0,     // cumulative correct answers, for accuracy
+  gradedCount: 0,      // cumulative questions graded, for accuracy
   passed: false,
   completedIds: [],
   updatedAt: null,
 });
 
+/* Attempts once compounded on every sign-in (see mergeEntry), so some devices
+   hold an absurd figure. Anything past this is treated as corrupt and reset
+   rather than shown — a six-figure "tests taken" is worse than none. */
+const MAX_SANE_ATTEMPTS = 5000;
+
+function sanitise(entry) {
+  const e = { ...emptyEntry(), ...(entry || {}) };
+  if (!Number.isFinite(e.attempts) || e.attempts < 0 || e.attempts > MAX_SANE_ATTEMPTS) e.attempts = 0;
+  if (!Number.isFinite(e.correctCount) || e.correctCount < 0) e.correctCount = 0;
+  if (!Number.isFinite(e.gradedCount) || e.gradedCount < 0) e.gradedCount = 0;
+  if (e.correctCount > e.gradedCount) e.correctCount = e.gradedCount;
+  return e;
+}
+
 /* ------------------------------------------------------------------------- */
 function readLocal() {
   try {
-    return JSON.parse(localStorage.getItem(LOCAL_KEY)) || {};
+    const raw = JSON.parse(localStorage.getItem(LOCAL_KEY)) || {};
+    const out = {};
+    for (const [k, v] of Object.entries(raw)) out[k] = sanitise(v);
+    return out;
   } catch {
     return {};
   }
@@ -72,7 +94,9 @@ function mergeEntry(a, b) {
     lastPct: newer.lastPct || 0,
     lastScore: newer.lastScore || 0,
     lastTotal: newer.lastTotal || 0,
-    attempts: (a.attempts || 0) + (b.attempts || 0),
+    attempts: Math.max(a.attempts || 0, b.attempts || 0),
+    correctCount: Math.max(a.correctCount || 0, b.correctCount || 0),
+    gradedCount: Math.max(a.gradedCount || 0, b.gradedCount || 0),
     passed: Boolean(a.passed || b.passed),
     completedIds: Array.from(new Set([...(a.completedIds || []), ...(b.completedIds || [])])),
     updatedAt: newer.updatedAt || null,
@@ -117,6 +141,8 @@ export function ProgressProvider({ children }) {
           lastScore: row.last_score,
           lastTotal: row.last_total,
           attempts: row.attempts,
+          correctCount: row.correct_count || 0,
+          gradedCount: row.graded_count || 0,
           passed: row.passed,
           completedIds: row.completed_ids || [],
           updatedAt: row.updated_at,
@@ -153,6 +179,8 @@ export function ProgressProvider({ children }) {
             last_score: entry.lastScore,
             last_total: entry.lastTotal,
             attempts: entry.attempts,
+            correct_count: entry.correctCount || 0,
+            graded_count: entry.gradedCount || 0,
             passed: entry.passed,
             completed_ids: entry.completedIds,
           },
@@ -190,6 +218,8 @@ export function ProgressProvider({ children }) {
         lastScore: score,
         lastTotal: total,
         attempts: before.attempts + 1,
+        correctCount: (before.correctCount || 0) + score,
+        gradedCount: (before.gradedCount || 0) + total,
         passed: before.passed || pct >= passMark,
         updatedAt: new Date().toISOString(),
       };
@@ -295,7 +325,7 @@ export function ProgressProvider({ children }) {
 
   /* ---- readers ---- */
   const getModule = useCallback((moduleId) => {
-    const entry = { ...emptyEntry(), ...(entries[moduleId] || {}) };
+    const entry = sanitise(entries[moduleId]);
     return {
       ...entry,
       passMark: PASS_MARK,
@@ -308,7 +338,7 @@ export function ProgressProvider({ children }) {
      well the last attempt went. */
   const getSection = useCallback((sectionId) => {
     const section = ADI_SECTIONS.find(s => s.id === sectionId);
-    const entry = { ...emptyEntry(), ...(entries[sectionId] || {}) };
+    const entry = sanitise(entries[sectionId]);
     const total = section?.total || 0;
     const answered = Math.min(entry.completedIds.length, total);
 
@@ -318,6 +348,11 @@ export function ProgressProvider({ children }) {
       remaining: Math.max(0, total - answered),
       coveragePct: total ? Math.round((answered / total) * 100) : 0,
       bestPct: entry.bestPct,
+      accuracyPct: entry.gradedCount
+        ? Math.round((entry.correctCount / entry.gradedCount) * 100)
+        : 0,
+      correctCount: entry.correctCount,
+      gradedCount: entry.gradedCount,
       attempts: entry.attempts,
       passed: entry.passed,
       started: answered > 0 || entry.attempts > 0,
@@ -329,26 +364,37 @@ export function ProgressProvider({ children }) {
   /* Headline numbers across all five sections. */
   const overall = useMemo(() => {
     let answered = 0, total = 0, attempts = 0;
+    let correct = 0, graded = 0;
     const scores = [];
     for (const s of ADI_SECTIONS) {
-      const e = entries[s.id];
+      const e = sanitise(entries[s.id]);
       total += s.total;
-      answered += Math.min(e?.completedIds?.length || 0, s.total);
-      attempts += e?.attempts || 0;
-      if (e?.attempts) scores.push(e.bestPct);
+      answered += Math.min(e.completedIds.length, s.total);
+      attempts += e.attempts;
+      correct += e.correctCount;
+      graded += e.gradedCount;
+      if (e.attempts) scores.push(e.bestPct);
     }
-    const mock = entries["adi.mock"];
+    const mock = sanitise(entries["adi.mock"]);
+    correct += mock.correctCount;
+    graded += mock.gradedCount;
+
     return {
       answered,
       total,
       coveragePct: total ? Math.round((answered / total) * 100) : 0,
+      /* Accuracy is correct answers over questions graded — "how well am I
+         doing", as distinct from coverage, which is "how much have I seen". */
+      accuracyPct: graded ? Math.round((correct / graded) * 100) : 0,
+      correctAnswers: correct,
+      gradedAnswers: graded,
       averagePct: scores.length
         ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
         : 0,
       bestPct: scores.length ? Math.max(...scores) : 0,
-      testsTaken: attempts + (mock?.attempts || 0),
-      mockBest: mock?.bestPct || 0,
-      mockAttempts: mock?.attempts || 0,
+      testsTaken: attempts + mock.attempts,
+      mockBest: mock.bestPct,
+      mockAttempts: mock.attempts,
       sectionsPassed: ADI_SECTIONS.filter(s => entries[s.id]?.passed).length,
       sectionCount: ADI_SECTIONS.length,
     };

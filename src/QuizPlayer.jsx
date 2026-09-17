@@ -21,7 +21,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   ChevronLeft, ChevronRight, Check, X, Clock, RotateCcw, Flag,
-  Pause, Play, Star,
+  Pause, Play, Star, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
   ScreenHeader, Screen, ProgressBar, ProgressRing,
@@ -515,12 +515,7 @@ function QuizRun({ session, module, instantFeedback, onFinish, onPause, onQuit }
         </div>
 
         {revealed && q.explain && (
-          <div className="mt-4 bg-slate-100 dark:bg-slate-800 rounded-2xl p-4">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1">Why</p>
-            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-              {q.explain}
-            </p>
-          </div>
+          <Explanation key={q.qid || index} text={q.explain} />
         )}
       </div>
 
@@ -632,9 +627,7 @@ function QuizResult({ module, result, onRetry, onExit }) {
                     <span className="font-bold">Answer:</span> {item.options[item.correct]}
                   </p>
                   {item.explain && (
-                    <p className="text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
-                      {item.explain}
-                    </p>
+                    <Explanation text={item.explain} inline />
                   )}
                 </div>
               </div>
@@ -689,6 +682,59 @@ function QuizResult({ module, result, onRetry, onExit }) {
         </div>
       </Screen>
     </>
+  );
+}
+
+/* An explanation that collapses when it runs long.
+
+   Most explanations are a sentence or two and show in full. The longer ones
+   are clipped to roughly the first three lines with a Read more control, so a
+   detailed answer doesn't push the next question off the screen — but the
+   detail is still one tap away rather than cut.
+
+   The threshold is on characters rather than a CSS line clamp because the
+   control should only appear when there is genuinely more to read; a clamp
+   renders the button even when nothing is hidden. */
+const EXPLANATION_CLIP = 180;
+
+function Explanation({ text, inline }) {
+  const [open, setOpen] = useState(false);
+  const long = text.length > EXPLANATION_CLIP;
+
+  // Cut at a word boundary, not mid-word.
+  const short = long
+    ? text.slice(0, text.lastIndexOf(" ", EXPLANATION_CLIP)).trimEnd() + "…"
+    : text;
+
+  const body = (
+    <>
+      <p className={`leading-relaxed ${
+        inline
+          ? "text-slate-500 dark:text-slate-400"
+          : "text-sm text-slate-700 dark:text-slate-200"
+      }`}>
+        {open || !long ? text : short}
+      </p>
+
+      {long && (
+        <button
+          type="button"
+          onClick={() => setOpen(v => !v)}
+          className="mt-2 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400"
+        >
+          {open ? <>Show less <ChevronUp size={14} /></> : <>Read more <ChevronDown size={14} /></>}
+        </button>
+      )}
+    </>
+  );
+
+  if (inline) return <div className="pt-1">{body}</div>;
+
+  return (
+    <div className="mt-4 bg-slate-100 dark:bg-slate-800 rounded-2xl p-4">
+      <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1">Why</p>
+      {body}
+    </div>
   );
 }
 

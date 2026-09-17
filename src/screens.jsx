@@ -64,7 +64,7 @@ export function HomeScreen({ go }) {
         {/* Overall coverage */}
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-center gap-4 -mt-10 shadow-lg">
           <ProgressRing pct={overall.coveragePct} size={72} stroke={6} label="covered" />
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
               Your progress
             </p>
@@ -76,6 +76,23 @@ export function HomeScreen({ go }) {
                     ? ` · ${overall.sectionsPassed} of ${overall.sectionCount} sections at pass standard.`
                     : ".")}
             </p>
+
+            {/* Coverage says how much has been seen; accuracy says how well
+                it went. Showing only the first flatters a weak score. */}
+            {overall.gradedAnswers > 0 && (
+              <div className="mt-2.5 flex items-baseline gap-2">
+                <span className={`text-lg font-black ${
+                  overall.accuracyPct >= PASS_MARK
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-amber-600 dark:text-amber-400"
+                }`}>
+                  {overall.accuracyPct}%
+                </span>
+                <span className="text-xs font-semibold text-slate-400">
+                  correct · {overall.correctAnswers} of {overall.gradedAnswers}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -133,7 +150,11 @@ export function HomeScreen({ go }) {
                       <div className="mt-2">
                         <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
                           <span>{p.answered} / {p.total} questions</span>
-                          <span>{p.attempts > 0 ? `Best ${p.bestPct}%` : "Not started"}</span>
+                          <span>
+                            {p.attempts > 0
+                              ? `${p.accuracyPct}% correct · best ${p.bestPct}%`
+                              : "Not started"}
+                          </span>
                         </div>
                         <ProgressBar
                           pct={p.coveragePct}
@@ -325,8 +346,14 @@ export function ProgressScreen({ go }) {
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex items-center gap-5">
           <ProgressRing pct={overall.coveragePct} size={84} stroke={7} label="covered" />
           <div className="flex-1 grid grid-cols-2 gap-3">
-            <Stat label="Answered" value={overall.answered} />
-            <Stat label="Of" value={overall.total} />
+            <Stat label="Answered" value={`${overall.answered} / ${overall.total}`} />
+            <Stat
+              label="Correct"
+              value={overall.gradedAnswers ? `${overall.accuracyPct}%` : "—"}
+              tone={overall.gradedAnswers
+                ? (overall.accuracyPct >= PASS_MARK ? "good" : "warn")
+                : undefined}
+            />
             <Stat label="Tests taken" value={overall.testsTaken} />
             <Stat label="Best score" value={overall.bestPct ? `${overall.bestPct}%` : "—"} />
           </div>
@@ -368,7 +395,7 @@ export function ProgressScreen({ go }) {
                     </div>
                     <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
                       {p.attempts > 0
-                        ? `Best ${p.bestPct}% · ${p.attempts} attempt${p.attempts === 1 ? "" : "s"}`
+                        ? `${p.accuracyPct}% correct (${p.correctCount}/${p.gradedCount}) · best ${p.bestPct}% · ${p.attempts} attempt${p.attempts === 1 ? "" : "s"}`
                         : "Not attempted yet"}
                     </p>
                   </button>
@@ -411,11 +438,14 @@ export function ProgressScreen({ go }) {
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, tone }) {
+  const colour = tone === "good" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "warn" ? "text-amber-600 dark:text-amber-400"
+    : "text-slate-900 dark:text-white";
   return (
     <div>
       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</p>
-      <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">{value}</p>
+      <p className={`mt-0.5 text-lg font-black ${colour}`}>{value}</p>
     </div>
   );
 }

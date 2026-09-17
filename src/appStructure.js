@@ -64,6 +64,46 @@ export const MOCKS = [
     questionCount: MOCK_LENGTH,
     minutes: MOCK_MINUTES,
   },
+  /* Papers 3 to 6 became possible when the bank passed 1,000 questions. Before
+     that, Pedagogy held 53 questions against 20 per paper, which capped the
+     whole app at two non-overlapping papers however large the other sections
+     were — the thinnest section always sets the ceiling.
+
+     Six papers is the honest limit today: Mechanics has 131 and Category B 126,
+     so both fill exactly six. Adding a seventh before those sections grow would
+     repeat questions from an earlier paper. */
+  {
+    id: "adi.mock.3",
+    paper: 3,
+    label: "Mock Test 3",
+    blurb: `A third ${MOCK_LENGTH} questions, sharing none with papers 1 or 2.`,
+    questionCount: MOCK_LENGTH,
+    minutes: MOCK_MINUTES,
+  },
+  {
+    id: "adi.mock.4",
+    paper: 4,
+    label: "Mock Test 4",
+    blurb: `${MOCK_LENGTH} more questions, again with no overlap.`,
+    questionCount: MOCK_LENGTH,
+    minutes: MOCK_MINUTES,
+  },
+  {
+    id: "adi.mock.5",
+    paper: 5,
+    label: "Mock Test 5",
+    blurb: `${MOCK_LENGTH} questions drawn from the parts of the bank the earlier papers left.`,
+    questionCount: MOCK_LENGTH,
+    minutes: MOCK_MINUTES,
+  },
+  {
+    id: "adi.mock.6",
+    paper: 6,
+    label: "Mock Test 6",
+    blurb: `The last full paper the bank supports — ${MOCK_LENGTH} fresh questions.`,
+    questionCount: MOCK_LENGTH,
+    minutes: MOCK_MINUTES,
+  },
 ];
 
 /* ---------------------------------------------------------------------------

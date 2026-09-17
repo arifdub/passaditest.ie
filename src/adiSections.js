@@ -27,6 +27,10 @@
 import ADI_STAGE_ONE from "./adiStageOneData";
 import ADI_EXPANSION from "./adiExpansionData";
 import ADI_PRACTICE from "./adiTheoryPracticeData";
+/* Bank 2 — the expansion that took the app past 1,000 questions and every
+   section past 100. See the headers in those files for what's in them. */
+import ADI_BANK_TEACHING from "./adiBankTeaching";
+import ADI_BANK_VEHICLE from "./adiBankVehicle";
 import RULES_QUESTIONS from "./rulesQuestions";
 import { ROAD_SIGNS, ROAD_SIGN_CAT } from "./roadSignsData";
 
@@ -189,6 +193,7 @@ const SECTION_DEFS = [
       ...pick(ADI_STAGE_ONE, "adi-s1-law"),
       ...pick(ADI_EXPANSION, "adi-exp-procedure"),
       ...pick(RULES_QUESTIONS, "documents"),
+      ...pick(ADI_BANK_TEACHING, "adi-b2-procedure"),
     ],
   },
   {
@@ -211,6 +216,7 @@ const SECTION_DEFS = [
       ...pick(RULES_QUESTIONS, "vulnerable"),
       ...pick(RULES_QUESTIONS, "responsible"),
       ...SIGN_QUESTIONS,
+      ...pick(ADI_BANK_VEHICLE, "adi-b2-safety"),
     ],
   },
   {
@@ -226,6 +232,7 @@ const SECTION_DEFS = [
       ...pick(ADI_PRACTICE, "pedagogy"),
       ...pick(ADI_STAGE_ONE, "adi-s1-pedagogy"),
       ...pick(ADI_EXPANSION, "adi-exp-pedagogy"),
+      ...pick(ADI_BANK_TEACHING, "adi-b2-pedagogy"),
     ],
   },
   {
@@ -241,6 +248,7 @@ const SECTION_DEFS = [
       ...pick(ADI_PRACTICE, "mechanics-maintenance"),
       ...pick(ADI_STAGE_ONE, "adi-s1-mechanics"),
       ...pick(ADI_EXPANSION, "adi-exp-mechanics"),
+      ...pick(ADI_BANK_VEHICLE, "adi-b2-mechanics"),
     ],
   },
   {
@@ -255,6 +263,7 @@ const SECTION_DEFS = [
     sources: [
       ...pick(ADI_PRACTICE, "category-b-be-towing"),
       ...pick(ADI_EXPANSION, "adi-exp-categoryb"),
+      ...pick(ADI_BANK_VEHICLE, "adi-b2-categoryb"),
     ],
   },
 ];

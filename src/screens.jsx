@@ -377,7 +377,7 @@ function InstallCard() {
           <h2 className="font-bold text-slate-900 dark:text-white">Install the app</h2>
         </div>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Add PassDrivingTest to your home screen for full-screen study with no
+          Add PassADITest to your home screen for full-screen study with no
           browser bar.
         </p>
         <div className="mt-4">
@@ -412,7 +412,7 @@ function InstallCard() {
         </ol>
         <p className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-400 leading-relaxed">
           This only works in Safari. If you're in another browser on iPhone,
-          open passdrivingtest.ie in Safari first.
+          open passaditest.ie in Safari first.
         </p>
       </div>
     );
@@ -424,7 +424,7 @@ function InstallCard() {
       <div>
         <p className="font-semibold text-slate-900 dark:text-white text-sm">Study on your phone</p>
         <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Open passdrivingtest.ie on your phone to add it to your home screen.
+          Open passaditest.ie on your phone to add it to your home screen.
         </p>
       </div>
     </div>

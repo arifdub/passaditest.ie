@@ -11,41 +11,28 @@ import React from "react";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 
 /* ------------------------------------------------------------------------- */
-/* The brand lockup: the steering wheel as an image, the wordmark as live
-   text.
+/* The brand lockup, from public/logo.png.
 
-   The supplied logo has a dark navy wordmark, which measures about 1.5:1
-   against the app's slate-900 header — unreadable, since text needs roughly
-   4.5:1. Setting the words as text instead of an image means they can be
-   coloured for a dark background: white and green, both of which clear 4.5:1
-   here. It also keeps the header light, scales cleanly on any screen, and
-   stays sharp without shipping a second logo file.
+   This version of the logo carries a white keyline around every letter, so
+   the dark navy wordmark still reads against the app's dark header — the
+   outline does the work that would otherwise need a light panel behind it.
+   Measured at 16.5:1 for the keyline against slate-900.
 
-   The wheel is public/wheel.png, cropped from the full logo. */
+   Sized by height so the aspect ratio holds at any width. */
 export function Logo({ size = "md", className = "" }) {
-  const sizes = {
-    sm: { wheel: "h-7", text: "text-base" },
-    md: { wheel: "h-9", text: "text-lg" },
-    lg: { wheel: "h-11", text: "text-xl" },
-    xl: { wheel: "h-14", text: "text-2xl" },
+  const heights = {
+    sm: "h-7",
+    md: "h-9",
+    lg: "h-12",
+    xl: "h-16",
   };
-  const s = sizes[size] || sizes.md;
-
   return (
-    <div className={`inline-flex items-center gap-2 ${className}`}>
-      <img
-        src="/wheel.png"
-        alt=""
-        className={`${s.wheel} w-auto shrink-0`}
-        draggable={false}
-      />
-      <span className={`font-black tracking-tight leading-none ${s.text}`}>
-        <span className="text-white">Pass</span>
-        <span className="text-emerald-400">ADI</span>
-        <span className="text-white">test</span>
-        <span className="text-emerald-400">.ie</span>
-      </span>
-    </div>
+    <img
+      src="/logo.png"
+      alt="PassADITest.ie"
+      className={`${heights[size] || heights.md} w-auto ${className}`}
+      draggable={false}
+    />
   );
 }
 

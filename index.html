@@ -84,8 +84,30 @@
 <meta property="og:locale" content="en_IE">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="/favicon.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- ---------------------------------------------------------------------------
+     SITE ICON
+
+     Google's rules for the favicon it shows beside a search result are stricter
+     than a browser's, and the old 64x64 icon broke one of them: the file has to
+     be a SQUARE whose side is a MULTIPLE OF 48. 64 is not, which is the likely
+     reason Search Console has been showing the generic globe rather than the
+     wheel. Every size below is 48, 96, 144 or 192.
+
+     favicon.ico is listed first and also sits at the site root, because that is
+     the path Google and older browsers try by convention whether or not a link
+     tag exists. Keeping both means neither route comes up empty.
+
+     The artwork is the wheel cropped tight to the disc. The wide version, speed
+     lines and all, had to be letterboxed into a square, which left the mark
+     filling barely half the height — about nine visible pixels at tab size.
+     --------------------------------------------------------------------------- -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<!-- Deliberately no manifest link on this page. The manifest's scope is /app/,
+     so linking it from / would do nothing for installs but would give Chrome a
+     second, conflicting icon source for this page. The app page links it. -->
 <meta name="theme-color" content="#0f172a">
 
 <style>

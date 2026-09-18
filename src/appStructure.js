@@ -64,14 +64,16 @@ export const MOCKS = [
     questionCount: MOCK_LENGTH,
     minutes: MOCK_MINUTES,
   },
-  /* Papers 3 to 6 became possible when the bank passed 1,000 questions. Before
-     that, Pedagogy held 53 questions against 20 per paper, which capped the
-     whole app at two non-overlapping papers however large the other sections
-     were — the thinnest section always sets the ceiling.
+  /* Papers 3 to 7 became possible as the bank grew. Before the expansion,
+     Pedagogy held 53 questions against 20 per paper, which capped the whole
+     app at two non-overlapping papers however large the other sections were —
+     the thinnest section always sets the ceiling.
 
-     Six papers is the honest limit today: Mechanics has 131 and Category B 126,
-     so both fill exactly six. Adding a seventh before those sections grow would
-     repeat questions from an earlier paper. */
+     Seven is the honest limit today: Mechanics has 143 and Category B 144, so
+     both fill exactly seven. An eighth needs 160 in each, which is 33 more
+     questions. Adding a paper before then would repeat questions from an
+     earlier one — the builder wraps around rather than handing back a short
+     paper, so nothing breaks, but the papers stop being independent. */
   {
     id: "adi.mock.3",
     paper: 3,
@@ -100,6 +102,14 @@ export const MOCKS = [
     id: "adi.mock.6",
     paper: 6,
     label: "Mock Test 6",
+    blurb: `${MOCK_LENGTH} more questions, again sharing none with any other paper.`,
+    questionCount: MOCK_LENGTH,
+    minutes: MOCK_MINUTES,
+  },
+  {
+    id: "adi.mock.7",
+    paper: 7,
+    label: "Mock Test 7",
     blurb: `The last full paper the bank supports — ${MOCK_LENGTH} fresh questions.`,
     questionCount: MOCK_LENGTH,
     minutes: MOCK_MINUTES,

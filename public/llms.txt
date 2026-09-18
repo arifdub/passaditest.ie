@@ -47,8 +47,8 @@ to the Road Safety Authority.
 
 ## What the app contains
 
-- 1,024 practice questions, over 100 in each of the five exam sections
-- Six full mock papers — 100 questions each, 90-minute countdown, no paper
+- 1,054 practice questions, over 140 in each of the five exam sections
+- Seven full mock papers — 100 questions each, 90-minute countdown, no paper
   shares a question with another
 - 455 flashcards: rules of the road, every official road sign, ADI topics
 - Progress tracking that identifies which section would fail you, rather than

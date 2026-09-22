@@ -3,31 +3,20 @@
 #   pip install pillow numpy
 #   python3 tools/make-icons.py
 #
-# wheel.png has "speed lines" on its left. They are cut away with an ellipse
-# around the wheel, then the logo is centred on a dark slate background
+# The full logo (wheel, tick and the speed lines on its left) is trimmed to
+# its visible edges and centred on a dark slate background
 # (theme_color #0f172a) so the installed icon matches the app.
 import os
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'public'))
 
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 src = Image.open('wheel.png').convert('RGBA')
-a = np.array(src).astype(np.float32)
-H, W = a.shape[:2]
-cx, cy, rx, ry = 180.5, 165.5, 106.5, 109
-yy, xx = np.mgrid[0:H, 0:W]
-# keep the wheel disc and anything right of its centre (the tick); drop the speed lines on the left
-# elliptical distance, scaled to pixels along x
-d = np.sqrt(((xx-cx)/rx)**2 + ((yy-cy)/ry)**2)
-keep = np.clip((1 - d)*rx + 0.5, 0, 1)
-keep[xx > cx] = 1
-a[..., 3] *= keep
-logo = Image.fromarray(a.astype(np.uint8))
-logo = logo.crop(logo.getbbox())
+logo = src.crop(src.getbbox())
 print('logo bbox size', logo.size)
 
 def bg(size):
-    # dark slate radial-ish gradient matching theme_color #0f172a
+    # dark slate vertical gradient matching theme_color #0f172a
     top = np.array([30, 41, 59], np.float32)     # slate-800
     bot = np.array([15, 23, 42], np.float32)     # slate-900
     t = np.linspace(0, 1, size)[:, None, None]
@@ -44,7 +33,7 @@ def make(size, frac):
     canvas.alpha_composite(lg, ((size-lg.width)//2, (size-lg.height)//2))
     return canvas.convert('RGB')
 
-make(180, 0.78).save('apple-touch-icon.png', optimize=True)
-make(192, 0.78).save('icon-192.png', optimize=True)
-make(512, 0.78).save('icon-512.png', optimize=True)
+make(180, 0.84).save('apple-touch-icon.png', optimize=True)
+make(192, 0.84).save('icon-192.png', optimize=True)
+make(512, 0.84).save('icon-512.png', optimize=True)
 make(512, 0.62).save('maskable-icon-512.png', optimize=True)  # stays inside the 80% safe zone

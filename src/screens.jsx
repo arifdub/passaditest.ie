@@ -14,7 +14,7 @@ import {
   ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check, Lock, Play, AlertTriangle, Target,
-  Sun, Moon, Type,
+  Sun, Moon, Type, Coffee, ExternalLink,
 } from "lucide-react";
 import {
   ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
@@ -1178,6 +1178,32 @@ export function ProfileScreen({ theme, toggleTheme }) {
                 120 km/h
               </p>
             </div>
+          </div>
+        </SettingsGroup>
+
+        {/* ---- Support ----
+            A plain link out to SumUp, opened in a new tab so the app stays
+            where it was. Nothing is charged or recorded inside the app. */}
+        <SettingsGroup title="Support">
+          <div className="px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Coffee size={18} className="text-amber-500 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-900 dark:text-white">Buy me a coffee</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  If you find the app helpful, a coffee keeps it going
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://pay.sumup.com/b2c/QUQIPQXY"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3.5 w-full inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition"
+            >
+              <Coffee size={16} /> Buy me a coffee
+              <ExternalLink size={14} className="opacity-80" />
+            </a>
           </div>
         </SettingsGroup>
 

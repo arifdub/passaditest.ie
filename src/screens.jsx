@@ -1189,9 +1189,9 @@ export function ProfileScreen({ theme, toggleTheme }) {
             <div className="flex items-center gap-3">
               <Coffee size={18} className="text-amber-500 shrink-0" />
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-slate-900 dark:text-white">Buy me a coffee</p>
+                <p className="font-semibold text-slate-900 dark:text-white">Find the app useful?</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  If you find the app helpful, a coffee keeps it going
+                  A small tip helps keep it going
                 </p>
               </div>
             </div>

@@ -409,6 +409,9 @@ export function ProgressProvider({ children }) {
       answered,
       remaining: Math.max(0, total - answered),
       coveragePct: total ? Math.round((answered / total) * 100) : 0,
+      /* The ids themselves, so a new practice round can put the questions
+         you haven't seen yet at the front. */
+      completedIds: entry.completedIds,
       bestPct: entry.bestPct,
       accuracyPct: entry.gradedCount
         ? Math.round((entry.correctCount / entry.gradedCount) * 100)

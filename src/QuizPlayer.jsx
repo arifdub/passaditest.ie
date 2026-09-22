@@ -11,6 +11,12 @@
     · Pause. Stops the clock and saves the whole attempt — which questions,
       what you picked, where you were, how long you'd spent. Coming back
       puts you on the same question with the same answers in place.
+    · The attempt also saves itself after every answer, on Exit, and when
+      the app is sent to the background — so closing the app or tapping
+      Exit never loses your place. Only Pause used to save, which left an
+      old paused attempt sitting at question 1.
+    · Next stays disabled until the question on screen has been answered.
+    · A correct answer in practice gets a short celebration.
     · The paused attempt is stored by question id, not by copying the
       questions, so it stays small and survives the bank being edited.
       Anything that has since disappeared from the bank is dropped on
@@ -152,7 +158,17 @@ export default function QuizPlayer({ module, quiz, onExit }) {
   const allQuestions = quiz.categories.flatMap(c => c.questions);
 
   const startFresh = () => {
-    const questions = isMock ? allQuestions : shuffle(allQuestions);
+    /* Practice puts the questions you have never answered first, so a new
+       round carries on through the section rather than repeating the ones
+       you've already covered. Both halves are still shuffled. */
+    let questions = allQuestions;
+    if (!isMock) {
+      const seen = new Set(progress.completedIds || []);
+      questions = [
+        ...shuffle(allQuestions.filter(q => !seen.has(q.qid))),
+        ...shuffle(allQuestions.filter(q => seen.has(q.qid))),
+      ];
+    }
     setSession({
       questions,
       answers: new Array(questions.length).fill(null),
@@ -176,6 +192,17 @@ export default function QuizPlayer({ module, quiz, onExit }) {
 
   const handlePause = (state) => {
     savePaused(module.id, state);
+    setPaused(loadPaused(module.id));
+    setStage("intro");
+    setSession(null);
+  };
+
+  /* Exit keeps your place too. An attempt that was never touched isn't
+     worth a "Paused attempt" card, so that one is simply left. */
+  const handleQuit = (state) => {
+    const touched = state.index > 0 ||
+      state.answers.some(a => a !== null && a !== undefined);
+    if (touched) savePaused(module.id, state);
     setPaused(loadPaused(module.id));
     setStage("intro");
     setSession(null);
@@ -445,7 +472,8 @@ export default function QuizPlayer({ module, quiz, onExit }) {
         limitSeconds={limitSeconds}
         onFinish={finish}
         onPause={handlePause}
-        onQuit={() => { setStage("intro"); setSession(null); }}
+        onQuit={handleQuit}
+        onAutosave={(state) => savePaused(module.id, state)}
       />
     );
   }
@@ -468,7 +496,7 @@ export default function QuizPlayer({ module, quiz, onExit }) {
 /* ===========================================================================
    RUNNING
    =========================================================================== */
-function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onPause, onQuit }) {
+function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onPause, onQuit, onAutosave }) {
   const { questions } = session;
   const total = questions.length;
   const timed = Number.isFinite(limitSeconds) && limitSeconds > 0;
@@ -482,6 +510,11 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
 
   const startedAt = useRef(Date.now() - session.elapsed * 1000);
   const finished = useRef(false);
+
+  /* Correct-answer celebration. The key restarts the animation each time;
+     the streak adds "3 in a row" once there's a run worth mentioning. */
+  const [cheer, setCheer] = useState(null);
+  const streak = useRef(0);
 
   const remaining = timed ? Math.max(0, limitSeconds - elapsed) : null;
 
@@ -532,6 +565,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
 
   const q = questions[index];
   const picked = answers[index];
+  const hasPicked = picked !== null && picked !== undefined;
   const isLast = index === total - 1;
   const answeredCount = answers.filter(a => a !== null && a !== undefined).length;
   const unansweredCount = total - answeredCount;
@@ -568,8 +602,43 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
       next[index] = optionIndex;
       return next;
     });
-    if (instantFeedback) setRevealed(true);
+    if (instantFeedback) {
+      setRevealed(true);
+      if (optionIndex === q.correct) {
+        streak.current += 1;
+        setCheer({ key: Date.now(), streak: streak.current });
+      } else {
+        streak.current = 0;
+        setCheer(null);
+      }
+    }
   }
+
+  /* ---- autosave ----
+     After every answer or move, and when the page is hidden (app switched
+     away, phone locked, tab closed). Nothing is saved until the attempt has
+     been touched, and nothing after it has been finished. */
+  const latest = useRef({ questions, answers, index, elapsed });
+  latest.current = { questions, answers, index, elapsed };
+
+  const autosave = useCallback(() => {
+    if (finished.current || !onAutosave) return;
+    const s = latest.current;
+    const touched = s.index > 0 || s.answers.some(a => a !== null && a !== undefined);
+    if (touched) onAutosave(s);
+  }, [onAutosave]);
+
+  useEffect(() => { autosave(); }, [answers, index, autosave]);
+
+  useEffect(() => {
+    const onHide = () => { if (document.visibilityState === "hidden") autosave(); };
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", autosave);
+    return () => {
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", autosave);
+    };
+  }, [autosave]);
 
   const goTo = useCallback((i) => {
     if (i < 0 || i >= total) return;
@@ -591,7 +660,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
         >
           <div className="flex items-center justify-between gap-3 mb-3">
             <button
-              onClick={onQuit}
+              onClick={() => onQuit({ questions, answers, index, elapsed })}
               className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-emerald-400 py-1"
             >
               <ChevronLeft size={16} /> Exit
@@ -717,6 +786,8 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
         )}
       </div>
 
+      {cheer && <Celebration key={cheer.key} streak={cheer.streak} onDone={() => setCheer(null)} />}
+
       {/* Previous / Next, plus Finish once anything has been answered. */}
       <div className="fixed bottom-0 inset-x-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-slate-200 dark:border-slate-800 px-5 pt-3">
         <div
@@ -735,15 +806,17 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
             {isLast ? (
               <button
                 onClick={() => handleFinish()}
-                disabled={answeredCount === 0}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-900 font-bold py-3 rounded-xl transition"
+                disabled={!hasPicked}
+                className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl transition disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500 disabled:cursor-not-allowed"
               >
                 <Flag size={16} /> Finish
               </button>
             ) : (
+              /* Greyed out until this question has an answer — no skipping. */
               <button
                 onClick={() => goTo(index + 1)}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl transition"
+                disabled={!hasPicked}
+                className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl transition disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500 disabled:cursor-not-allowed"
               >
                 Next <ChevronRight size={18} />
               </button>
@@ -761,6 +834,70 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
                 ? `Finish now · ${unansweredCount} blank count as wrong`
                 : `Finish now · ${answeredCount} answered`}
             </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===========================================================================
+   CELEBRATION
+   A burst of confetti and a "Correct!" badge for a right answer in practice.
+   It sits over the screen without taking taps, and clears itself. The
+   keyframes live in index.css; reduced-motion users get the badge alone.
+   =========================================================================== */
+const PRAISE = ["Correct!", "Nice one!", "Well done!", "Spot on!", "Great job!", "Brilliant!"];
+const CONFETTI_COLOURS = ["#10b981", "#34d399", "#f59e0b", "#fbbf24", "#3b82f6", "#ec4899"];
+
+function Celebration({ streak, onDone }) {
+  const [pieces] = useState(() =>
+    Array.from({ length: 18 }, (_, i) => {
+      const angle = (i / 18) * Math.PI * 2 + Math.random() * 0.3;
+      const dist = 90 + Math.random() * 70;
+      return {
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist - 40,
+        r: Math.round(Math.random() * 540 - 270),
+        c: CONFETTI_COLOURS[i % CONFETTI_COLOURS.length],
+        d: Math.round(Math.random() * 80),
+      };
+    })
+  );
+  const [word] = useState(() => PRAISE[Math.floor(Math.random() * PRAISE.length)]);
+
+  /* The clock re-renders the quiz every second with a new onDone, so the
+     timer reads it through a ref rather than restarting on each tick. */
+  const done = useRef(onDone);
+  done.current = onDone;
+  useEffect(() => {
+    const t = setTimeout(() => done.current(), 1400);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center" aria-live="polite">
+      <div className="relative">
+        {pieces.map((p, i) => (
+          <span
+            key={i}
+            className="confetti-piece"
+            style={{
+              background: p.c,
+              "--x": `${p.x}px`,
+              "--y": `${p.y}px`,
+              "--r": `${p.r}deg`,
+              animationDelay: `${p.d}ms`,
+            }}
+          />
+        ))}
+        <div className="cheer-badge flex items-center gap-2 bg-emerald-500 text-white font-black text-lg px-5 py-3 rounded-2xl shadow-xl shadow-emerald-900/30">
+          <Check size={22} strokeWidth={3} />
+          <span>{word}</span>
+          {streak >= 3 && (
+            <span className="ml-1 text-sm font-bold bg-white/20 rounded-lg px-2 py-0.5">
+              {streak} in a row
+            </span>
           )}
         </div>
       </div>

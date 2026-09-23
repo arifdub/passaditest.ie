@@ -141,6 +141,12 @@ function mergeEntry(a, b) {
 export function ProgressProvider({ children }) {
   const { user, isSignedIn } = useAuth();
   const [entries, setEntries] = useState(() => readLocal());
+  /* The latest entries, readable synchronously. recordAnswered needs the
+     merged list in hand before it talks to the server; reading it out of a
+     setState updater isn't safe, because React may not have run the updater
+     yet when the next line executes. */
+  const entriesRef = useRef(entries);
+  entriesRef.current = entries;
   const [syncing, setSyncing] = useState(false);
   const mergedFor = useRef(null);
 
@@ -361,17 +367,20 @@ export function ProgressProvider({ children }) {
   const recordAnswered = useCallback(async (sectionId, qids) => {
     if (!sectionId || !qids?.length) return;
 
-    let merged;
-    setEntries(prev => {
-      const before = prev[sectionId] || emptyEntry();
-      merged = Array.from(new Set([...(before.completedIds || []), ...qids]));
-      const next = {
-        ...prev,
-        [sectionId]: { ...before, completedIds: merged, updatedAt: new Date().toISOString() },
-      };
-      writeLocal(next);
-      return next;
-    });
+    /* Called after every answer in practice, so it has to be right when two
+       land close together: build from the ref, and update the ref at once
+       so the next call builds on this one. */
+    const prev = entriesRef.current;
+    const before = prev[sectionId] || emptyEntry();
+    const merged = Array.from(new Set([...(before.completedIds || []), ...qids]));
+    if (merged.length === (before.completedIds || []).length) return;   // nothing new
+    const next = {
+      ...prev,
+      [sectionId]: { ...before, completedIds: merged, updatedAt: new Date().toISOString() },
+    };
+    entriesRef.current = next;
+    writeLocal(next);
+    setEntries(next);
 
     if (isSignedIn && HAS_SUPABASE && user?.id) {
       const { error } = await supabase.from("progress").upsert(

@@ -15,6 +15,13 @@
       the app is sent to the background — so closing the app or tapping
       Exit never loses your place. Only Pause used to save, which left an
       old paused attempt sitting at question 1.
+    · Every answer in practice is recorded to the account straight away,
+      not only when a round is finished. A paused attempt lives on this
+      device, and an iPhone home-screen app loses its storage when the icon
+      is deleted — the account is what has to know where you're up to.
+    · Starting a section you're part-way through continues it: the round
+      holds only the questions you haven't answered, and the counter carries
+      on from your total ("30 / 169"), rather than restarting at 1.
     · Next stays disabled until the question on screen has been answered.
     · A correct answer in practice gets a short celebration.
     · The paused attempt is stored by question id, not by copying the
@@ -69,6 +76,7 @@ function loadPaused(moduleId) {
       answers,
       index: Math.min(saved.index || 0, questions.length - 1),
       elapsed: saved.elapsed || 0,
+      offset: Number.isFinite(saved.offset) && saved.offset > 0 ? saved.offset : 0,
       savedAt: saved.savedAt,
     };
   } catch {
@@ -76,13 +84,14 @@ function loadPaused(moduleId) {
   }
 }
 
-function savePaused(moduleId, { questions, answers, index, elapsed }) {
+function savePaused(moduleId, { questions, answers, index, elapsed, offset }) {
   try {
     localStorage.setItem(pauseKey(moduleId), JSON.stringify({
       qids: questions.map(q => q.qid),
       answers,
       index,
       elapsed,
+      offset: offset || 0,
       savedAt: new Date().toISOString(),
     }));
   } catch {
@@ -157,23 +166,34 @@ export default function QuizPlayer({ module, quiz, onExit }) {
 
   const allQuestions = quiz.categories.flatMap(c => c.questions);
 
-  const startFresh = () => {
-    /* Practice puts the questions you have never answered first, so a new
-       round carries on through the section rather than repeating the ones
-       you've already covered. Both halves are still shuffled. */
+  /* Practice questions you have and haven't answered, from the account. */
+  const seenIds = new Set(isMock ? [] : (progress.completedIds || []));
+  const unseen = isMock ? [] : allQuestions.filter(q => !seenIds.has(q.qid));
+  const canContinue = !isMock && unseen.length > 0 && unseen.length < allQuestions.length;
+
+  /* "continue" runs only the questions not yet answered, and numbers them
+     after the ones that are — 29 done means the first one shows as 30.
+     "all" is a full round, still with the unanswered ones first. */
+  const startFresh = (mode = "all") => {
     let questions = allQuestions;
+    let offset = 0;
     if (!isMock) {
-      const seen = new Set(progress.completedIds || []);
-      questions = [
-        ...shuffle(allQuestions.filter(q => !seen.has(q.qid))),
-        ...shuffle(allQuestions.filter(q => seen.has(q.qid))),
-      ];
+      if (mode === "continue" && canContinue) {
+        questions = shuffle(unseen);
+        offset = allQuestions.length - unseen.length;
+      } else {
+        questions = [
+          ...shuffle(allQuestions.filter(q => !seenIds.has(q.qid))),
+          ...shuffle(allQuestions.filter(q => seenIds.has(q.qid))),
+        ];
+      }
     }
     setSession({
       questions,
       answers: new Array(questions.length).fill(null),
       index: 0,
       elapsed: 0,
+      offset,
     });
     clearPaused(module.id);
     setPaused(null);
@@ -353,7 +373,7 @@ export default function QuizPlayer({ module, quiz, onExit }) {
                 <h2 className="font-bold text-slate-900 dark:text-white">Paused attempt</h2>
               </div>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                You stopped at question {paused.index + 1} of {paused.questions.length},
+                You stopped at question {(paused.offset || 0) + paused.index + 1} of {(paused.offset || 0) + paused.questions.length},
                 with {answeredCount} answered. Saved {timeAgo(paused.savedAt)}.
               </p>
               <div className="mt-4 space-y-2.5">
@@ -450,11 +470,31 @@ export default function QuizPlayer({ module, quiz, onExit }) {
                 </div>
               )}
 
-              <div className="mt-4">
-                <PrimaryButton onClick={startFresh}>
-                  {progress.attempts > 0 ? "Start again" : "Start"}
-                </PrimaryButton>
-              </div>
+              {canContinue ? (
+                <div className="mt-4 space-y-2.5">
+                  <PrimaryButton onClick={() => startFresh("continue")}>
+                    <span className="inline-flex items-center gap-2">
+                      <Play size={16} />
+                      Continue from question {allQuestions.length - unseen.length + 1}
+                    </span>
+                  </PrimaryButton>
+                  <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+                    {unseen.length} questions you haven't answered yet
+                  </p>
+                  <button
+                    onClick={() => startFresh("all")}
+                    className="w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2"
+                  >
+                    Practise all {allQuestions.length} questions instead
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-4">
+                  <PrimaryButton onClick={() => startFresh("all")}>
+                    {progress.attempts > 0 || progress.answered > 0 ? "Start again" : "Start"}
+                  </PrimaryButton>
+                </div>
+              )}
             </>
           )}
         </Screen>
@@ -474,6 +514,11 @@ export default function QuizPlayer({ module, quiz, onExit }) {
         onPause={handlePause}
         onQuit={handleQuit}
         onAutosave={(state) => savePaused(module.id, state)}
+        /* Practice only: each answer counts toward the account's coverage
+           as soon as it's given. A mock is a paper, credited when handed in. */
+        onAnswered={isMock ? null : (q) => {
+          if (q.sectionId && q.qid) recordAnswered(q.sectionId, [q.qid]);
+        }}
       />
     );
   }
@@ -484,7 +529,7 @@ export default function QuizPlayer({ module, quiz, onExit }) {
       <QuizResult
         module={module}
         result={result}
-        onRetry={startFresh}
+        onRetry={() => startFresh("all")}
         onExit={onExit}
       />
     );
@@ -496,9 +541,12 @@ export default function QuizPlayer({ module, quiz, onExit }) {
 /* ===========================================================================
    RUNNING
    =========================================================================== */
-function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onPause, onQuit, onAutosave }) {
+function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onPause, onQuit, onAutosave, onAnswered }) {
   const { questions } = session;
   const total = questions.length;
+  /* Questions already answered before this round, so the counter reads as
+     progress through the section rather than through this round. */
+  const offset = session.offset || 0;
   const timed = Number.isFinite(limitSeconds) && limitSeconds > 0;
 
   const [answers, setAnswers] = useState(session.answers);
@@ -602,6 +650,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
       next[index] = optionIndex;
       return next;
     });
+    if (onAnswered) onAnswered(q);
     if (instantFeedback) {
       setRevealed(true);
       if (optionIndex === q.correct) {
@@ -618,8 +667,8 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
      After every answer or move, and when the page is hidden (app switched
      away, phone locked, tab closed). Nothing is saved until the attempt has
      been touched, and nothing after it has been finished. */
-  const latest = useRef({ questions, answers, index, elapsed });
-  latest.current = { questions, answers, index, elapsed };
+  const latest = useRef({ questions, answers, index, elapsed, offset });
+  latest.current = { questions, answers, index, elapsed, offset };
 
   const autosave = useCallback(() => {
     if (finished.current || !onAutosave) return;
@@ -646,7 +695,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
   }, [total]);
 
   function handlePause() {
-    onPause({ questions, answers, index, elapsed });
+    onPause({ questions, answers, index, elapsed, offset });
   }
 
   return (
@@ -660,14 +709,14 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
         >
           <div className="flex items-center justify-between gap-3 mb-3">
             <button
-              onClick={() => onQuit({ questions, answers, index, elapsed })}
+              onClick={() => onQuit({ questions, answers, index, elapsed, offset })}
               className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-emerald-400 py-1"
             >
               <ChevronLeft size={16} /> Exit
             </button>
 
             <span className="text-sm font-bold">
-              {index + 1} <span className="text-slate-500">/ {total}</span>
+              {offset + index + 1} <span className="text-slate-500">/ {offset + total}</span>
             </span>
 
             <div className="flex items-center gap-3">
@@ -691,7 +740,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
             </div>
           </div>
 
-          <ProgressBar pct={(answeredCount / total) * 100} height="h-1.5" />
+          <ProgressBar pct={((offset + answeredCount) / (offset + total)) * 100} height="h-1.5" />
         </div>
       </div>
 

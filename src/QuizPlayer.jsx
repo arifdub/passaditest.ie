@@ -881,7 +881,9 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
             >
               {timed && unansweredCount > 0
                 ? `Finish now · ${unansweredCount} blank count as wrong`
-                : `Finish now · ${answeredCount} answered`}
+                /* Counted across the section, like the counter at the top,
+                   so the two numbers agree — 34 / 169 above, 33 answered here. */
+                : `Finish now · ${offset + answeredCount} of ${offset + total} answered`}
             </button>
           )}
         </div>

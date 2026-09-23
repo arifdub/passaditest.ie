@@ -7,7 +7,7 @@
   the button the visitor actually has to tap. That button is in a different
   place in every browser, so the arrow and the steps follow the browser:
 
-    iPhone Safari      Share, bottom centre; from Safari 26, ••• bottom right
+    iPhone Safari      Share, bottom centre (with a note for the ••• layout)
     iPad Safari        Share, top right
     iPhone Chrome      Share in the address bar, top right
     Other iPhone apps  can't add to home screen, so: open it in Safari
@@ -17,6 +17,9 @@
     Android Edge       ••• menu, bottom bar
     Samsung Internet   ☰ menu, bottom right
 
+  When the arrow points up at the address bar, the pop-up drops down from
+  the top instead, so it sits right under the button it describes.
+
   Not shown once installed, on desktop, or for 14 days after it's closed.
   The Settings screen keeps its Install card for anyone who closed it.
   ===========================================================================
@@ -24,7 +27,7 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  X, Share, PlusSquare, MoreVertical, MoreHorizontal, Menu, ArrowDown, ArrowUp,
+  X, Share, PlusSquare, MoreVertical, Menu, ArrowDown, ArrowUp,
   Download, Smartphone,
 } from "lucide-react";
 import usePwaInstall from "./usePwaInstall";
@@ -77,23 +80,17 @@ function guideFor({ state, browser, isIPad, safariMajor }) {
           ],
         };
       }
-      if (safariMajor >= 26) {
-        return {
-          arrow: "bottom-right",
-          title: "Add to your Home Screen",
-          steps: [
-            <>Tap <Key icon={MoreHorizontal}>•••</Key> at the bottom right.</>,
-            <>Tap <Key icon={Share}>Share</Key>, then <b>View More</b> if you need to.</>,
-            <>Choose <Key icon={PlusSquare}>Add to Home Screen</Key>, then <b>Add</b>.</>,
-          ],
-        };
-      }
+      /* Safari 26 can put Share in the middle of the bottom bar or behind
+         ••• at the bottom right, depending on the Tabs layout chosen in
+         Settings, and a web page can't tell which. The middle is the
+         classic spot and the one most people have, so the arrow goes
+         there and the ••• layout gets a note. */
       return {
         arrow: "bottom-center",
         title: "Add to your Home Screen",
         steps: [
-          <>Tap <Key icon={Share}>Share</Key> in the bar below.</>,
-          <>Scroll down and choose <Key icon={PlusSquare}>Add to Home Screen</Key>.</>,
+          <>Tap <Key icon={Share}>Share</Key> in the bar below.{safariMajor >= 26 && <> No Share button? Tap <Key>•••</Key> first.</>}</>,
+          <>Scroll down and choose <Key icon={PlusSquare}>Add to Home Screen</Key>{safariMajor >= 26 && <> (under <b>View More</b>)</>}.</>,
           <>Tap <b>Add</b>.</>,
         ],
       };
@@ -132,7 +129,7 @@ function guideFor({ state, browser, isIPad, safariMajor }) {
         arrow: "bottom-center",
         title: "Install the app",
         steps: [
-          <>Tap the <Key icon={MoreHorizontal}>•••</Key> menu below.</>,
+          <>Tap the <Key>•••</Key> menu below.</>,
           <>Choose <b>Add to phone</b> or <b>Add to Home screen</b>.</>,
           <>Tap <b>Install</b> or <b>Add</b>.</>,
         ],
@@ -183,6 +180,7 @@ export default function InstallPrompt() {
   };
 
   const arrowAtBottom = guide.arrow === "bottom-center" || guide.arrow === "bottom-right";
+  const arrowAtTop = guide.arrow === "top-right";
 
   return (
     <>
@@ -215,14 +213,19 @@ export default function InstallPrompt() {
       <div
         role="dialog"
         aria-labelledby="install-title"
-        className="fixed inset-x-0 z-[70] px-3 install-slide-up"
-        style={{
-          /* Leave room below for the arrow when it points down at the
-             browser's own toolbar. */
-          bottom: arrowAtBottom
-            ? "calc(max(4px, env(safe-area-inset-bottom)) + 56px)"
-            : "max(12px, env(safe-area-inset-bottom))",
-        }}
+        className={`fixed inset-x-0 z-[70] px-3 ${arrowAtTop ? "install-slide-down" : "install-slide-up"}`}
+        style={
+          arrowAtTop
+            /* Under the arrow, which points up at the address bar. */
+            ? { top: "calc(max(6px, env(safe-area-inset-top)) + 56px)" }
+            /* Leave room below for the arrow when it points down at the
+               browser's own toolbar. */
+            : {
+                bottom: arrowAtBottom
+                  ? "calc(max(4px, env(safe-area-inset-bottom)) + 56px)"
+                  : "max(12px, env(safe-area-inset-bottom))",
+              }
+        }
       >
         <div className="relative max-w-md mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl p-5">
           <button

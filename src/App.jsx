@@ -425,7 +425,9 @@ function Gate() {
     );
   }
 
-  if (!hasAccess) return <AuthScreen />;
+  /* The welcome screen is the first thing a new visitor sees in the app,
+     so the add-to-home-screen help shows there too. */
+  if (!hasAccess) return <><AuthScreen /><InstallPrompt /></>;
 
   return (
     <ProgressProvider>

@@ -38,3 +38,15 @@ html, body, #root {
   .cheer-badge { animation-name: cheer-fade; }
   @keyframes cheer-fade { 0%, 100% { opacity: 0; } 15%, 75% { opacity: 1; } }
 }
+
+/* ---- install pop-up (InstallPrompt.jsx) ---- */
+.install-slide-up { animation: install-slide-up .45s cubic-bezier(.2, .9, .3, 1) both; }
+.install-fade     { animation: install-fade .3s ease-out both; }
+@keyframes install-slide-up {
+  from { transform: translateY(110%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes install-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .install-slide-up, .install-fade { animation: none; }
+}

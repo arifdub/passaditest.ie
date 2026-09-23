@@ -23,6 +23,7 @@ import { TextSizeProvider } from "./textSize";
 import AuthScreen from "./AuthScreen";
 import { HomeScreen, MockHubScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
+import InstallPrompt from "./InstallPrompt";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
 import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
@@ -133,6 +134,9 @@ function AppShell() {
     >
       <CurrentScreen view={view} go={go} back={back} theme={theme} toggleTheme={toggleTheme} />
       <TabBar tab={activeTab} onSelect={selectTab} hidden={isFullScreen(view)} />
+      {/* "Add to Home Screen" help, on the home screen only — never over a
+          quiz or a deck. It decides for itself whether it's needed. */}
+      {view.screen === "home" && <InstallPrompt />}
     </div>
   );
 }

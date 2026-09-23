@@ -222,10 +222,10 @@ const SECTION_DEFS = [
   {
     id: "adi.sec.pedagogy",
     number: 3,
-    /* "Pedagogy" was the old label. Newcomers don't know the word, and the
+    /* Plain words first, because newcomers don't know "pedagogy", and the
        exam itself calls this section Teaching Ability. The id stays
        adi.sec.pedagogy so saved progress still matches. */
-    label: "Teaching Ability",
+    label: "Teaching Ability – Pedagogy",
     short: "Teaching Ability",
     examLabel: "Teaching Ability",
     passMark: 60,

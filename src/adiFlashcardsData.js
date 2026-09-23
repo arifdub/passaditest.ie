@@ -6,7 +6,7 @@
 const ADI_FLASHCARD_CATEGORIES = [
   { id: "procedure", label: "Test Procedure & Documents", swatch: "bg-red-600" },
   { id: "roadsafety", label: "Road Safety Precepts", swatch: "bg-amber-500", dark: true },
-  { id: "pedagogy", label: "Pedagogy", swatch: "bg-blue-600" },
+  { id: "pedagogy", label: "Teaching Ability", swatch: "bg-blue-600" },
   { id: "mechanics", label: "Mechanics & Maintenance", swatch: "bg-emerald-600" },
   { id: "categoryb", label: "Category B & BE Towing", swatch: "bg-purple-600" },
   { id: "crossings", label: "Pedestrian Crossings", swatch: "bg-lime-600", dark: true },

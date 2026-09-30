@@ -560,7 +560,7 @@ const walkthrough = {
    8. RETENTION CHECK — pages 33, answers page 88.
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept) => ({
-  id: `ret${n}`, type: "choice", label: `Retention test · Q${n}`, concept,
+  id: `ret${n}`, type: "choice", label: "Retention check", concept,
   prompt, options, answer, src: P(33, `Retention test Q${n}; answer p.88`),
 });
 
@@ -569,7 +569,7 @@ const retention = {
   kind: "items",
   mode: "retention",
   title: "Retention Check",
-  blurb: "The workbook's own retention test",
+  blurb: "Does it stick? Recall what you learned",
   xpPer: 10,
   items: [
     R(1, "The purpose of giving signals is", ["to give instructions to other road users", "only to warn other users of your intent to turn left or right", "to warn other road users of your intentions", "to warn following traffic of your intent to slow down or change direction"], 2, "purpose"),

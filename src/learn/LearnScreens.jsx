@@ -29,7 +29,7 @@ import { ItemView } from "./items";
 import HazardHunt from "./HazardHunt";
 
 const ACTIVITY_ICON = {
-  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", matching: "🧩", procedure: "🔁",
+  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", matching: "🧩", procedure: "🔁",
   scenarios: "🚗", walkthrough: "🧭", retention: "🧠", challenge: "🏁",
 };
 
@@ -57,16 +57,16 @@ export function LearnHome({ go, back }) {
     <>
       <ScreenHeader
         title="Interactive Learning"
-        subtitle="Workbook courses — learn it, practise it, remember it"
+        subtitle="Learn it, practise it, remember it"
         onBack={back}
         backLabel="Home"
         below={<LevelStrip xp={xp} lvl={lvl} />}
       />
       <Screen>
         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Separate from the question bank and mock tests: each book turns a
-          workbook into short lessons, scenarios and games. When a unit is
-          mastered, practise its topic in the question bank.
+          Separate from the question bank and mock tests: each book is a course
+          of short lessons, scenarios and games. When a unit is mastered,
+          practise its topic in the question bank.
         </p>
 
         <div className="mt-4 space-y-2.5">
@@ -237,7 +237,7 @@ function UnitRow({ unit, p, bookId, go }) {
           <span className="font-bold text-slate-900 dark:text-white leading-tight">{unit.title}</span>
         </div>
         {soon ? (
-          <p className="text-xs text-slate-400 mt-0.5">Coming soon · pages {unit.pages[0]}–{unit.pages[1]}</p>
+          <p className="text-xs text-slate-400 mt-0.5">Coming soon</p>
         ) : (
           <>
             <div className="mt-2">
@@ -273,7 +273,9 @@ export function UnitScreen({ bookId, unitId, go, back }) {
     <>
       <ScreenHeader
         title={c.title}
-        subtitle={`Unit ${c.number} · workbook pages ${c.pages[0]}–${c.pages[1]}`}
+        /* Which course this is, not where it sits in the source book —
+           page numbers mean nothing to a learner who hasn't got it. */
+        subtitle={`${book.title} · Unit ${c.number}`}
         onBack={back}
         backLabel={`Book ${book.number}`}
       />

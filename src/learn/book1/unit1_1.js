@@ -150,7 +150,7 @@ const learn = {
       kicker: "Definition",
       title: "What is a hazard?",
       ask: {
-        prompt: "Before you read on — which is the workbook's definition?",
+        prompt: "Before you read on — which is the correct definition?",
         options: [
           "Anything shown by a warning sign",
           "Any feature or situation which might cause you to change speed or direction",
@@ -175,7 +175,7 @@ const learn = {
         { label: "Moving", text: "Pedestrians, cyclists, drivers and animals" },
         { label: "Surface", text: "Weather conditions, surface contaminants and road surface type/conditions" },
       ],
-      body: ["Each of these is dealt with in more detail in the remaining units of workbook 1."],
+      body: ["Each of these is dealt with in more detail in the later units of this course."],
       concept: "hazard-types",
       src: P(25, "Summaries — Hazards, examples"),
     },
@@ -299,7 +299,7 @@ const learn = {
     },
     {
       icon: "🔎",
-      kicker: "From the model answers",
+      kicker: "Examples",
       title: "Hazards worth naming",
       sections: [
         { head: "Potential hazards", list: ["Road furniture such as traffic lights", "Misplaced road or direction signs", "An obstruction to a driver's view", "Children playing on the street", "Pedestrians at the kerbside", "Broken traffic lights", "Traffic lights green from the first time you see them", "In or around buses or ice-cream vans"] },
@@ -386,7 +386,7 @@ const recall = {
         "Wanting to drive faster",
       ],
       answer: 1,
-      explain: "People are usually motivated more strongly by self-preservation than altruism — the model answer is \"mostly a concern for their own safety\".",
+      explain: "People are usually motivated more strongly by self-preservation than altruism — \"mostly a concern for their own safety\".",
       src: P(27, "Post-test Q5; answer p.84; p.25"),
     },
     {
@@ -424,7 +424,7 @@ const hunt = {
       why: "Bends are permanent hazards — road features that may make you change speed or direction.",
       concept: "hazard-types", src: P(25, "Permanent hazards") },
     { id: "junction", label: "Side road junction", type: "Permanent", x: 22, y: 30,
-      why: "Junctions are permanent hazards. The workbook's retention test is clear: road junctions are hazards.",
+      why: "Junctions are permanent hazards — road junctions are always hazards.",
       concept: "hazard-types", src: P(25, "Permanent hazards; retention Q2") },
     { id: "roadworks", label: "Road works", type: "Semi-permanent", x: 62, y: 24,
       why: "Road works are semi-permanent hazards.",
@@ -615,7 +615,7 @@ const scenarios = {
     {
       id: "s6", type: "choice", label: "Scenario", concept: "medication",
       scene: "🤧 Your pupil has a heavy cold and took a cold remedy this morning. The box carries a warning about operating vehicles.",
-      prompt: "What does the workbook advise?",
+      prompt: "What's the right advice?",
       options: [
         "Cold remedies never affect driving",
         "Read the label or check with a doctor — often it's better to suffer the cold than the effects of the medicine",
@@ -719,7 +719,7 @@ const walkthrough = {
    top of this file.
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept) => ({
-  id: `ret${n}`, type: "choice", label: `Retention test · Q${n}`, concept,
+  id: `ret${n}`, type: "choice", label: "Retention check", concept,
   prompt, options, answer,
   src: P(n <= 10 ? 28 : 29, `Retention test Q${n}; answer p.88`),
 });
@@ -729,7 +729,7 @@ const retention = {
   kind: "items",
   mode: "retention",
   title: "Retention Check",
-  blurb: "The workbook's own retention test",
+  blurb: "Does it stick? Recall what you learned",
   xpPer: 10,
   excluded: [{ id: "ret9", reason: "Answer key (p.88: a) conflicts with p.26 text, which supports c. Awaiting review." }],
   items: [

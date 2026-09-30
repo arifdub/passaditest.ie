@@ -259,24 +259,28 @@ function Order({ item, onAnswer }) {
 const PAIR_TONES = ["bg-sky-100 border-sky-400 dark:bg-sky-950/50", "bg-violet-100 border-violet-400 dark:bg-violet-950/50", "bg-amber-100 border-amber-400 dark:bg-amber-950/50", "bg-pink-100 border-pink-400 dark:bg-pink-950/50", "bg-teal-100 border-teal-400 dark:bg-teal-950/50", "bg-lime-100 border-lime-400 dark:bg-lime-950/50"];
 
 function Match({ item, onAnswer }) {
+  /* Right-hand cards are tracked by their position in the shuffled list,
+     not by their text — two cards can say the same thing. A pairing is
+     marked on the text, so either of two identical answers counts. */
   const rights = useMemo(() => shuffle(item.pairs.map(p => p[1])), [item]);
   const [sel, setSel] = useState(null);           // left index selected
-  const [links, setLinks] = useState({});         // left index -> right text
+  const [links, setLinks] = useState({});         // left index -> right index
   const [checked, setChecked] = useState(false);
   const linkedRights = Object.values(links);
+  const textOf = (i) => (links[i] === undefined ? undefined : rights[links[i]]);
 
-  const pickRight = (r) => {
+  const pickRight = (ri) => {
     if (checked || sel === null) return;
     const next = { ...links };
-    for (const k of Object.keys(next)) if (next[k] === r) delete next[k];
-    next[sel] = r;
+    for (const k of Object.keys(next)) if (next[k] === ri) delete next[k];
+    next[sel] = ri;
     setLinks(next);
     setSel(null);
   };
 
   const check = () => {
     setChecked(true);
-    const right = item.pairs.filter((p, i) => links[i] === p[1]).length;
+    const right = item.pairs.filter((p, i) => textOf(i) === p[1]).length;
     onAnswer({ score: right / item.pairs.length, correct: right === item.pairs.length });
   };
 
@@ -292,7 +296,7 @@ function Match({ item, onAnswer }) {
         <div className="space-y-2">
           {item.pairs.map((p, i) => {
             const linked = links[i] !== undefined;
-            const ok = checked && links[i] === p[1];
+            const ok = checked && textOf(i) === p[1];
             return (
               <button key={i} disabled={checked} onClick={() => setSel(sel === i ? null : i)}
                 className={`w-full min-h-[56px] rounded-xl border-2 px-3 py-2 text-left font-bold text-sm text-slate-900 dark:text-white transition ${
@@ -306,10 +310,10 @@ function Match({ item, onAnswer }) {
           })}
         </div>
         <div className="space-y-2">
-          {rights.map(r => {
-            const owner = Object.keys(links).find(k => links[k] === r);
+          {rights.map((r, ri) => {
+            const owner = Object.keys(links).find(k => links[k] === ri);
             return (
-              <button key={r} disabled={checked} onClick={() => pickRight(r)}
+              <button key={ri} disabled={checked} onClick={() => pickRight(ri)}
                 className={`w-full min-h-[56px] rounded-xl border-2 px-3 py-2 text-left text-[13px] leading-snug text-slate-700 dark:text-slate-200 transition ${
                   owner !== undefined && !checked ? toneFor(Number(owner))
                     : sel !== null && !checked ? "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 animate-pulse"

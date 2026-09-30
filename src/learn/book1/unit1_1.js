@@ -127,6 +127,12 @@ const learn = {
   title: "Learn",
   blurb: "The unit in short cards",
   xp: 20,
+  /* Shown on the lesson's finish screen. */
+  remember: [
+    "A hazard: anything that might make you change speed or direction",
+    "Defensive driving puts safety above all else",
+    "Deal with every hazard using Mirrors–Signal–Position–Speed–Look",
+  ],
   cards: [
     {
       icon: "🚗",

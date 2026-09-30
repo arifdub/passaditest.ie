@@ -17,7 +17,8 @@ existing section named in the unit's `mcqLink`.
 | File | What it is |
 |---|---|
 | `books.js` | The library. Every book and unit, with titles and workbook page ranges. |
-| `book1/unit1_1.js` | Unit 1.1 content — the full, working example of a unit. |
+| `book1/unit1_1.js` | Unit 1.1 Dealing with Hazards (pp.25–29). |
+| `book1/unit1_2.js` | Unit 1.2 Signals & Signalling (pp.30–33). |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
 | `useLearn.js` | Hooks the engine to the account-synced progress store. |
 | `LearnScreens.jsx` | Library, book dashboard, unit screen, and the player that runs every activity. |
@@ -76,6 +77,11 @@ challenge ≥ 80%, retention check ≥ 70%.
   "The driver must decide whether signals, repositioning and speed changes
   are necessary for each hazard") supports **c**. Q9 is left out of the
   retention check until confirmed; recorded as `excluded` in `unit1_1.js`.
+- **Retention test 1.2** — the answer key (page 88) agrees with the unit
+  text for all ten questions; all are used.
+- **Unit 1.2's recognition game** is "Signal or Not?" (sorting situations)
+  rather than a street scene: the unit teaches when to signal, so the
+  recognition skill is telling a helpful signal from an unnecessary one.
 - **Unit 1.5** is headed "Dealing with Hills" on page 49 and in its post test,
   but its model answers on page 85 are headed "Overtaking on Gradients". The
   unit heading is used.

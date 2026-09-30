@@ -29,7 +29,7 @@ import { ItemView } from "./items";
 import HazardHunt from "./HazardHunt";
 
 const ACTIVITY_ICON = {
-  learn: "📖", recall: "⚡", hunt: "🔎", matching: "🧩", procedure: "🔁",
+  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", matching: "🧩", procedure: "🔁",
   scenarios: "🚗", walkthrough: "🧭", retention: "🧠", challenge: "🏁",
 };
 
@@ -560,7 +560,7 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
 
   if (done) {
     return <Finish unit={unit} activity={activity} pct={100} xp={activity.xp} go={go} back={back} bookId={bookId}
-      remember={["A hazard: anything that might make you change speed or direction", "Defensive driving puts safety above all else", "Deal with every hazard using Mirrors–Signal–Position–Speed–Look"]} />;
+      remember={activity.remember} />;
   }
 
   return (

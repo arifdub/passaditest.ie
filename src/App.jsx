@@ -29,6 +29,7 @@ import { SECTION_BY_ID, buildMockTest } from "./adiSections";
 import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
+import { LearnHome, BookScreen, UnitScreen, LearnPlayer } from "./learn/LearnScreens";
 
 /* The tab ids double as screen ids, so a tab's id must not collide with a
    screen that means something else. "mocks" (the list) is deliberately not
@@ -66,8 +67,11 @@ function AppShell() {
 
   const toggleTheme = () => setTheme(t => (t === "dark" ? "light" : "dark"));
 
-  const go = useCallback((view) => {
-    setStack(s => [...s, view]);
+  /* { replace: true } swaps the top screen instead of stacking another —
+     used when one learning activity leads straight into the next, so Back
+     returns to the unit rather than stepping through every activity. */
+  const go = useCallback((view, opts) => {
+    setStack(s => (opts?.replace && s.length > 1 ? [...s.slice(0, -1), view] : [...s, view]));
     window.scrollTo(0, 0);
   }, []);
 
@@ -144,7 +148,8 @@ function AppShell() {
 /* Quiz runs and flashcard decks take over the screen — the tab bar would only
    be a way to lose your place mid-test. */
 function isFullScreen(view) {
-  return view.screen === "section" || view.screen === "mock" || view.screen === "deck";
+  return view.screen === "section" || view.screen === "mock" || view.screen === "deck"
+    || view.screen === "learnPlay";
 }
 
 /* ===========================================================================
@@ -251,6 +256,23 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
         />
       );
     }
+
+    /* Interactive Learning — the workbook courses (src/learn). Separate
+       from the question bank; the unit screen links across to it. */
+    case "learn":
+      return <LearnHome go={go} back={back} />;
+    case "learnBook":
+      return <BookScreen bookId={view.bookId} go={go} back={back} />;
+    case "learnUnit":
+      return <UnitScreen bookId={view.bookId} unitId={view.unitId} go={go} back={back} />;
+    case "learnPlay":
+      return (
+        <LearnPlayer
+          key={`${view.bookId}-${view.unitId}-${view.activityId}-${view.mode}`}
+          bookId={view.bookId} unitId={view.unitId} activityId={view.activityId}
+          mode={view.mode} go={go} back={back}
+        />
+      );
 
     default:
       return <HomeScreen go={go} />;

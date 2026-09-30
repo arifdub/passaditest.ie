@@ -55,3 +55,17 @@ html, body, #root {
 @media (prefers-reduced-motion: reduce) {
   .install-slide-up, .install-slide-down, .install-fade { animation: none; }
 }
+
+/* ---- interactive learning (src/learn) ---- */
+.learn-fade { animation: learn-fade .35s ease-out both; }
+.learn-pop  { animation: learn-pop .35s cubic-bezier(.2, .9, .3, 1.3) both; }
+.learn-shake { animation: learn-shake .35s ease-in-out; }
+.hunt-ping  { animation: hunt-ping .6s ease-out forwards; }
+.hunt-found { animation: learn-pop .3s ease-out both; transform-box: fill-box; transform-origin: center; }
+@keyframes learn-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes learn-pop  { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes learn-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes hunt-ping { from { opacity: .9; r: 1; } to { opacity: 0; r: 7; } }
+@media (prefers-reduced-motion: reduce) {
+  .learn-fade, .learn-pop, .learn-shake, .hunt-ping, .hunt-found { animation: none; }
+}

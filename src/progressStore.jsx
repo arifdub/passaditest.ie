@@ -201,10 +201,14 @@ export function ProgressProvider({ children }) {
         const combined = mergeEntry(remote[moduleId], localEntry);
         merged[moduleId] = combined;
         // Local knew something the database didn't — push it up.
+        /* completedIds too: answered questions, known flashcards and the
+           interactive-learning record grow without any score changing, and
+           checking only scores left that work on the phone forever. */
         if (
           !remote[moduleId] ||
           combined.bestPct > (remote[moduleId].bestPct || 0) ||
-          combined.attempts > (remote[moduleId].attempts || 0)
+          combined.attempts > (remote[moduleId].attempts || 0) ||
+          combined.completedIds.length > (remote[moduleId].completedIds || []).length
         ) {
           needsPush.push([moduleId, combined]);
         }
@@ -391,6 +395,47 @@ export function ProgressProvider({ children }) {
     }
   }, [isSignedIn, user?.id]);
 
+  /* -----------------------------------------------------------------------
+     REPLACE A MODULE'S ID LIST
+
+     For the interactive-learning books (src/learn), which keep their whole
+     record — activities done, best scores, XP, weak concepts — as a list of
+     short string ids in one module's completedIds. That rides the existing
+     jsonb column and sync with no schema change. Unlike recordAnswered this
+     can also remove ids, so the record can be kept tidy.
+
+     Server writes are chained so two quick saves can't land out of order and
+     leave the older list on the server.
+     ----------------------------------------------------------------------- */
+  const syncChain = useRef(Promise.resolve());
+  const replaceIds = useCallback((moduleId, idsOrUpdate) => {
+    const prev = entriesRef.current;
+    const before = prev[moduleId] || emptyEntry();
+    /* An updater gets the latest stored list, so saves made in quick
+       succession each build on the one before rather than on a stale copy. */
+    const ids = typeof idsOrUpdate === "function"
+      ? idsOrUpdate(before.completedIds || [])
+      : idsOrUpdate;
+    const next = {
+      ...prev,
+      [moduleId]: { ...before, completedIds: ids, updatedAt: new Date().toISOString() },
+    };
+    entriesRef.current = next;
+    writeLocal(next);
+    setEntries(next);
+
+    if (isSignedIn && HAS_SUPABASE && user?.id) {
+      const userId = user.id;
+      syncChain.current = syncChain.current.then(async () => {
+        const { error } = await supabase.from("progress").upsert(
+          { user_id: userId, module_id: moduleId, completed_ids: ids },
+          { onConflict: "user_id,module_id" }
+        );
+        if (error) console.warn("Learning progress not synced:", error.message);
+      }).catch(() => {});
+    }
+  }, [isSignedIn, user?.id]);
+
   /* ---- readers ---- */
   const getModule = useCallback((moduleId) => {
     const entry = sanitise(entries[moduleId]);
@@ -569,6 +614,7 @@ export function ProgressProvider({ children }) {
     syncing,
     recordResult,
     recordAnswered,
+    replaceIds,
     toggleCardKnown,
     resetModule,
     resetAll,
@@ -577,7 +623,7 @@ export function ProgressProvider({ children }) {
     overall,
     weakest,
     mockReadiness,
-  }), [entries, syncing, recordResult, recordAnswered, toggleCardKnown,
+  }), [entries, syncing, recordResult, recordAnswered, replaceIds, toggleCardKnown,
        resetModule, resetAll, getModule, getSection, overall, weakest,
        mockReadiness]);
 

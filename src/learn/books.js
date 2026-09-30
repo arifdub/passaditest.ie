@@ -19,6 +19,7 @@
 import UNIT_1_1 from "./book1/unit1_1";
 import UNIT_1_2 from "./book1/unit1_2";
 import UNIT_1_3 from "./book1/unit1_3";
+import UNIT_1_4 from "./book1/unit1_4";
 import GLOSSARY_1 from "./book1/glossary";
 
 export const BOOKS = [
@@ -36,7 +37,7 @@ export const BOOKS = [
       { id: "1.1",  title: "Dealing with Hazards",               pages: [25, 29], badge: "Hazard Spotter", content: UNIT_1_1 },
       { id: "1.2",  title: "Signals & Signalling",               pages: [30, 33], badge: "Signalling Specialist", content: UNIT_1_2 },
       { id: "1.3",  title: "Road Positioning",                   pages: [34, 39], badge: "Road Positioning Master", content: UNIT_1_3 },
-      { id: "1.4",  title: "Junctions & Bends",                  pages: [40, 48], badge: "Junction Specialist" },
+      { id: "1.4",  title: "Junctions & Bends",                  pages: [40, 48], badge: "Junction Specialist", content: UNIT_1_4 },
       { id: "1.5",  title: "Dealing with Hills",                 pages: [49, 52], badge: "Hill Handler" },
       { id: "1.6",  title: "Overtaking",                         pages: [53, 58], badge: "Overtaking Challenge" },
       { id: "1.7",  title: "Level Crossings & Tramways",         pages: [59, 63], badge: "Crossings Specialist" },

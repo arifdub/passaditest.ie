@@ -20,6 +20,9 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_1.js` | Unit 1.1 Dealing with Hazards (pp.25–29). |
 | `book1/unit1_2.js` | Unit 1.2 Signals & Signalling (pp.30–33). |
 | `book1/unit1_3.js` | Unit 1.3 Road Positioning (pp.34–39). |
+| `book1/unit1_4.js` | Unit 1.4 Junctions & Bends (pp.40–48). |
+| `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
+| `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
 | `useLearn.js` | Hooks the engine to the account-synced progress store. |
 | `LearnScreens.jsx` | Library, book dashboard, unit screen, and the player that runs every activity. |
@@ -86,6 +89,13 @@ challenge ≥ 80%, retention check ≥ 70%.
   recognition skill is telling a helpful signal from an unnecessary one.
 - **Retention test 1.3** — the answer key agrees with the unit text for all
   fifteen questions; all are used. Its recognition game is "Pick the Lane".
+- **Retention test 1.4, Q10** (page 47). The answer page (88) gives **b**
+  ("keep his eyes constantly on the road ahead"), but the unit's text
+  (page 42: "Beware of vehicles approaching your vehicle from side roads …
+  intending to follow the road ahead") supports **d**. Left out pending
+  review; recorded as `excluded` in `unit1_4.js`. Q1–Q3 (load and tyre
+  pressures) come from the book's own test though the unit text doesn't
+  cover them; they are kept as the book sets them.
 - **Unit 1.5** is headed "Dealing with Hills" on page 49 and in its post test,
   but its model answers on page 85 are headed "Overtaking on Gradients". The
   unit heading is used.

@@ -204,4 +204,84 @@ export default [
     example: "Ghost islands between opposing traffic.",
     src: P("1.3", 36, "Merging and Diverging (Hatched) Markings"),
   },
+
+  /* ---------------- Unit 1.4 — Junctions & Bends ---------------- */
+  {
+    id: "bend-left", unit: "1.4", term: "Left-hand bend", visual: "bend-left",
+    meaning: "A bend curving to your left.",
+    key: "Keep to the centre of your lane.",
+    src: P("1.4", 41, "On approach"),
+  },
+  {
+    id: "bend-right", unit: "1.4", term: "Right-hand bend", visual: "bend-right",
+    meaning: "A bend curving to your right.",
+    key: "Keep to the left — it gives the best view round it.",
+    src: P("1.4", 41, "On approach; p.85 answer 4"),
+  },
+  {
+    id: "under-acceleration", unit: "1.4", term: "Under acceleration", visual: "bend-speed",
+    meaning: "Just enough accelerator for the engine to carry the car round the corner.",
+    key: "It keeps the tyres gripping. It doesn't mean speeding up — and never coast.",
+    src: P("1.4", 85, "Post-test answers 1, 2"),
+  },
+  {
+    id: "t-junction", unit: "1.4", term: "T-junction", visual: "junction-t",
+    meaning: "A road that ends where it meets another, making a T.",
+    key: "Traffic already on the road you're joining has priority.",
+    src: P("1.4", 40, "Summaries"),
+  },
+  {
+    id: "y-junction", unit: "1.4", term: "Y-junction", visual: "junction-y",
+    meaning: "A road joining another at an angle, making a Y.",
+    key: "Sharp angles can restrict your view — position for the best view, then peep and creep.",
+    src: P("1.4", 41, "Junction categories; p.43"),
+  },
+  {
+    id: "crossroads", unit: "1.4", term: "Crossroads", visual: "junction-cross",
+    meaning: "Two roads crossing each other.",
+    key: "Particularly hazardous — a driver on the minor road may not realise who has priority.",
+    src: P("1.4", 44, "Crossroads"),
+  },
+  {
+    id: "staggered", unit: "1.4", term: "Staggered junction", visual: "junction-staggered",
+    meaning: "Side roads that join from each side, offset rather than opposite.",
+    key: "Treat it as two junctions close together.",
+    src: P("1.4", 41, "Junction categories"),
+  },
+  {
+    id: "roundabout", unit: "1.4", term: "Roundabout", visual: "roundabout",
+    meaning: "A junction where traffic circulates, letting it cross or merge without necessarily stopping.",
+    key: "Traffic from the immediate right usually has priority.",
+    src: P("1.4", 45, "Roundabouts"),
+  },
+  {
+    id: "roundabout-lanes", unit: "1.4", term: "Roundabout lanes", visual: "roundabout-lanes",
+    meaning: "Which lane to take on approach.",
+    key: "Left lane to turn left, right lane to turn right, left or middle lane for ahead.",
+    src: P("1.4", 45, "On approach"),
+  },
+  {
+    id: "stop-line", unit: "1.4", term: "Stop line / yield line", visual: "stop-yield",
+    meaning: "A solid line where you must stop; a broken line where you give way.",
+    key: "ALWAYS stop at a stop sign. Be PREPARED to stop at a yield sign.",
+    src: P("1.4", 41, "You must always stop…"),
+  },
+  {
+    id: "building-line", unit: "1.4", term: "Building line", visual: "building-line",
+    meaning: "Where a building conceals your view into a junction.",
+    key: "Edge forward — \"peep and creep\" — until your eyes are level with the obstruction.",
+    src: P("1.4", 41, "Assess; p.43; p.85 answer 11"),
+  },
+  {
+    id: "emerging", unit: "1.4", term: "Emerging", visual: "junction-t",
+    meaning: "Leaving one road to join, cross or turn into another.",
+    key: "Never make another vehicle slow down or change direction.",
+    src: P("1.4", 42, "Emerging"),
+  },
+  {
+    id: "wide-reserve", unit: "1.4", term: "Wide central reserve", visual: "wide-reserve",
+    meaning: "A central reservation wide enough to wait in.",
+    key: "Treat each half as a separate road: cross, wait in the reserve, then join.",
+    src: P("1.4", 45, "Emerging right — wide central reserve"),
+  },
 ];

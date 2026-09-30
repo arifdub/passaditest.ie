@@ -521,6 +521,202 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- bends (Unit 1.4) ---------------- */
+  "bend-left": () => (
+    <Frame title="Left-hand bend: centre of your lane">
+      <path d="M80 100 L80 58 Q80 24 44 24 L0 24" fill="none" stroke={C.road} strokeWidth="38" />
+      <path d="M80 100 L80 58 Q80 24 44 24 L0 24" fill="none" stroke={C.line} strokeWidth="0.9" strokeDasharray="6 5" />
+      <Car x="70.5" y="84" color={C.good} />
+      <Arrow d="M70.5 74 L70.5 58 Q70.5 33 44 33 L10 33" />
+      <Tag x="126" y="50" size="4.4">LEFT-HAND BEND</Tag>
+      <Tag x="126" y="56" size="3.6" weight={600}>keep to the centre</Tag>
+      <Tag x="126" y="61" size="3.6" weight={600}>of your lane</Tag>
+    </Frame>
+  ),
+
+  "bend-right": () => (
+    <Frame title="Right-hand bend: keep to the left">
+      <path d="M80 100 L80 58 Q80 24 116 24 L160 24" fill="none" stroke={C.road} strokeWidth="38" />
+      <path d="M80 100 L80 58 Q80 24 116 24 L160 24" fill="none" stroke={C.line} strokeWidth="0.9" strokeDasharray="6 5" />
+      <Car x="66" y="84" color={C.good} />
+      <Arrow d="M66 74 L66 58 Q66 10 116 10 L154 10" />
+      <Tag x="30" y="50" size="4.4">RIGHT-HAND</Tag>
+      <Tag x="30" y="56" size="4.4">BEND</Tag>
+      <Tag x="30" y="63" size="3.6" weight={600}>keep to the left —</Tag>
+      <Tag x="30" y="68" size="3.6" weight={600}>best view round it</Tag>
+    </Frame>
+  ),
+
+  "bend-speed": () => (
+    <Frame title="Speed through a bend">
+      <path d="M20 100 L20 70 Q20 30 60 30 L160 30" fill="none" stroke={C.road} strokeWidth="30" />
+      <path d="M20 100 L20 70 Q20 30 60 30 L160 30" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <circle cx="14" cy="88" r="3" fill={C.amber} />
+      <circle cx="18" cy="52" r="3" fill={C.bad} />
+      <circle cx="46" cy="36" r="3" fill={C.good} />
+      <circle cx="110" cy="36" r="3" fill={C.good} />
+      <Tag x="58" y="84" size="3.6" anchor="start">① slow down in good time</Tag>
+      <Tag x="30" y="62" size="3.6" anchor="start">② lowest speed as you enter</Tag>
+      <Tag x="52" y="50" size="3.6" anchor="start">③ drive round "under acceleration"</Tag>
+      <Tag x="92" y="18" size="3.6" anchor="start">④ mirrors, make progress</Tag>
+    </Frame>
+  ),
+
+  /* ---------------- junctions (Unit 1.4) ---------------- */
+  "junction-t": () => (
+    <Frame title="T-junction">
+      <rect x="0" y="24" width="160" height="30" fill={C.road} />
+      <line x1="0" y1="39" x2="160" y2="39" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <rect x="65" y="54" width="30" height="46" fill={C.road} />
+      <line x1="80" y1="62" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <line x1="65" y1="56" x2="80" y2="56" stroke={C.line} strokeWidth="1" strokeDasharray="2 1.5" />
+      <Car x="72" y="72" color={C.good} />
+      <Arrow d="M72 62 Q72 46 56 46 L20 46" dash="2 1.5" />
+      <Arrow d="M72 62 Q74 34 100 32 L140 32" color={C.amber} dash="2 1.5" />
+      <Tag x="80" y="16" size="4.8">T-JUNCTION</Tag>
+      <Tag x="130" y="76" size="3.4" weight={600}>emerging from the</Tag>
+      <Tag x="130" y="81" size="3.4" weight={600}>minor road</Tag>
+    </Frame>
+  ),
+
+  "junction-y": () => (
+    <Frame title="Y-junction">
+      <rect x="0" y="22" width="160" height="30" fill={C.road} />
+      <line x1="0" y1="37" x2="160" y2="37" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <path d="M120 100 L84 52" stroke={C.road} strokeWidth="26" />
+      <path d="M120 100 L90 60" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <Tag x="40" y="12" size="4.8">Y-JUNCTION</Tag>
+      <Tag x="44" y="76" size="3.4" weight={600}>a road joining at an angle</Tag>
+    </Frame>
+  ),
+
+  "junction-cross": () => (
+    <Frame title="Crossroads">
+      <rect x="0" y="35" width="160" height="30" fill={C.road} />
+      <rect x="65" y="0" width="30" height="100" fill={C.road} />
+      <line x1="0" y1="50" x2="65" y2="50" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="95" y1="50" x2="160" y2="50" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="80" y1="0" x2="80" y2="35" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <line x1="80" y1="65" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <Tag x="32" y="20" size="4.8">CROSSROADS</Tag>
+      <Tag x="126" y="84" size="3.4" weight={600}>four ways — watch</Tag>
+      <Tag x="126" y="89" size="3.4" weight={600}>for emerging traffic</Tag>
+    </Frame>
+  ),
+
+  "junction-staggered": () => (
+    <Frame title="Staggered junction">
+      <rect x="65" y="0" width="30" height="100" fill={C.road} />
+      <line x1="80" y1="0" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <rect x="0" y="62" width="65" height="22" fill={C.road} />
+      <rect x="95" y="16" width="65" height="22" fill={C.road} />
+      <Tag x="130" y="60" size="4.4">STAGGERED</Tag>
+      <Tag x="130" y="66" size="4.4">JUNCTION</Tag>
+      <Tag x="32" y="96" size="3.3" weight={600}>side roads offset,</Tag>
+      <Tag x="130" y="76" size="3.3" weight={600}>not opposite each other</Tag>
+    </Frame>
+  ),
+
+  "roundabout": () => (
+    <Frame title="Roundabout">
+      <rect x="68" y="0" width="24" height="100" fill={C.road} />
+      <rect x="0" y="38" width="160" height="24" fill={C.road} />
+      <circle cx="80" cy="50" r="30" fill={C.road} />
+      <circle cx="80" cy="50" r="13" fill="#7aa35a" stroke={C.line} strokeWidth="0.8" />
+      {/* clockwise flow */}
+      <Arrow d="M80 27 A23 23 0 0 1 103 50" w={1.4} />
+      <Arrow d="M103 50 A23 23 0 0 1 80 73" w={1.4} />
+      <Arrow d="M80 73 A23 23 0 0 1 57 50" w={1.4} />
+      <Arrow d="M57 50 A23 23 0 0 1 80 27" w={1.4} />
+      <line x1="68" y1="80.5" x2="80" y2="80.5" stroke={C.line} strokeWidth="1" strokeDasharray="2 1.5" />
+      <Car x="74" y="92" color={C.amber} />
+      <Tag x="130" y="16" size="4.6">ROUNDABOUT</Tag>
+      <Tag x="130" y="82" size="3.4" weight={600}>give way to traffic</Tag>
+      <Tag x="130" y="87" size="3.4" weight={600}>from the right</Tag>
+      <Tag x="30" y="16" size="3.2" weight={600}>clockwise flow</Tag>
+    </Frame>
+  ),
+
+  "roundabout-lanes": () => (
+    <Frame title="Lanes on approach to a roundabout">
+      <rect x="50" y="46" width="60" height="54" fill={C.road} />
+      <circle cx="80" cy="18" r="30" fill={C.road} />
+      <circle cx="80" cy="18" r="12" fill="#7aa35a" />
+      <line x1="70" y1="54" x2="70" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <line x1="90" y1="54" x2="90" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <LaneArrow x={60} y={78} kind="left" s={1.6} />
+      <LaneArrow x={80} y={78} kind="ahead" s={1.6} />
+      <LaneArrow x={100} y={78} kind="right" s={1.6} />
+      <Tag x="26" y="72" size="3.5" weight={700}>LEFT lane:</Tag>
+      <Tag x="26" y="77" size="3.3" weight={600}>turn left</Tag>
+      <Tag x="26" y="86" size="3.3" weight={600}>(left or middle</Tag>
+      <Tag x="26" y="91" size="3.3" weight={600}>for ahead)</Tag>
+      <Tag x="134" y="72" size="3.5" weight={700}>RIGHT lane:</Tag>
+      <Tag x="134" y="77" size="3.3" weight={600}>turn right</Tag>
+    </Frame>
+  ),
+
+  "stop-yield": () => (
+    <Frame title="Stop line and yield line">
+      <rect x="0" y="0" width="160" height="30" fill={C.road} />
+      <rect x="10" y="30" width="60" height="70" fill={C.road} />
+      <rect x="90" y="30" width="60" height="70" fill={C.road} />
+      <rect x="10" y="32" width="30" height="3" fill={C.line} />
+      <text x="25" y="52" fontSize="8" fontWeight="900" fill={C.line} textAnchor="middle" fontFamily="system-ui">STOP</text>
+      <line x1="90" y1="33" x2="120" y2="33" stroke={C.line} strokeWidth="1.2" strokeDasharray="3 2" />
+      <line x1="90" y1="36" x2="120" y2="36" stroke={C.line} strokeWidth="1.2" strokeDasharray="3 2" />
+      <path d="M98 44 L112 44 L105 56 Z" fill="none" stroke={C.line} strokeWidth="1.3" />
+      <Tag x="40" y="74" size="4">STOP LINE</Tag>
+      <Tag x="40" y="80" size="3.3" weight={600}>you must ALWAYS stop</Tag>
+      <Tag x="120" y="74" size="4">YIELD LINE</Tag>
+      <Tag x="120" y="80" size="3.3" weight={600}>be PREPARED to stop —</Tag>
+      <Tag x="120" y="85" size="3.3" weight={600}>give way to traffic</Tag>
+    </Frame>
+  ),
+
+  "building-line": () => (
+    <Frame title="Building line restricting the view at a junction">
+      <rect x="0" y="16" width="160" height="30" fill={C.road} />
+      <line x1="0" y1="31" x2="160" y2="31" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <rect x="65" y="46" width="30" height="54" fill={C.road} />
+      <rect x="20" y="50" width="42" height="50" fill="#cbd5e1" stroke="#64748b" strokeWidth="0.6" />
+      <rect x="98" y="50" width="42" height="50" fill="#cbd5e1" stroke="#64748b" strokeWidth="0.6" />
+      <Tag x="41" y="78" size="3.4" color="#334155">building</Tag>
+      {/* Set back from the junction, the buildings cut the view to a
+          narrow slice of the main road. */}
+      <Car x="72" y="84" color={C.good} />
+      <path d="M72 76 L58 26" stroke={C.amber} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <path d="M72 76 L118 26" stroke={C.amber} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <Car x="14" y="38" rot={90} color={C.bad} ghost />
+      <Tag x="120" y="10" size="4">BUILDING LINE</Tag>
+      <Tag x="126" y="80" size="3.3" weight={600}>view into the</Tag>
+      <Tag x="126" y="85" size="3.3" weight={600}>junction is hidden —</Tag>
+      <Tag x="126" y="90" size="3.3" weight={600}>"peep and creep"</Tag>
+    </Frame>
+  ),
+
+  "wide-reserve": () => (
+    <Frame title="Emerging right across a wide central reserve">
+      <rect x="0" y="6" width="160" height="22" fill={C.road} />
+      <line x1="0" y1="17" x2="160" y2="17" stroke={C.line} strokeWidth="0.7" strokeDasharray="6 5" />
+      <rect x="0" y="28" width="160" height="22" fill="#7aa35a" />
+      <rect x="58" y="28" width="30" height="22" fill={C.road} />
+      <rect x="0" y="50" width="160" height="22" fill={C.road} />
+      <line x1="0" y1="61" x2="160" y2="61" stroke={C.line} strokeWidth="0.7" strokeDasharray="6 5" />
+      <rect x="58" y="72" width="30" height="28" fill={C.road} />
+      <Car x="66" y="88" color={C.good} />
+      <Arrow d="M66 78 L66 42" />
+      <Car x="66" y="38" color={C.good} ghost />
+      <Arrow d="M70 32 Q72 12 100 11 L150 11" color="#059669" />
+      <Arrow d="M150 55 L118 55" color={C.grey} w={1} />
+      <Tag x="120" y="44" size="3.4" weight={700} color="#14532d">② wait in the reserve,</Tag>
+      <Tag x="120" y="48.5" size="3.4" weight={700} color="#14532d">look left</Tag>
+      <Tag x="120" y="84" size="3.4" weight={700}>① cross when clear</Tag>
+      <Tag x="120" y="89" size="3.4" weight={700}>from your right</Tag>
+      <Tag x="30" y="4.5" size="3.2" weight={700}>③ into the left-hand lane</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

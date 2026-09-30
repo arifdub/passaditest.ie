@@ -149,6 +149,7 @@ const learn = {
       icon: "⚠️",
       kicker: "Definition",
       title: "What is a hazard?",
+      visual: "hazard-types",
       ask: {
         prompt: "Before you read on — which is the correct definition?",
         options: [
@@ -183,6 +184,7 @@ const learn = {
       icon: "🧭",
       kicker: "Always have a plan",
       title: "Why you look for hazards",
+      visual: "restricted-view",
       body: [
         "You should always be looking for hazards — and don't forget why: they may turn into emergencies very quickly.",
         "You look for any hazards to have time to plan a way out of any emergency. When you see a hazard, think about the emergencies that could develop and figure out what you would do.",
@@ -231,6 +233,7 @@ const learn = {
       icon: "🔁",
       kicker: "The Hazard Routine",
       title: "MSPSL",
+      visual: "mspsl",
       ask: {
         prompt: "The basic rule is MSM — Mirrors, Signal, Manoeuvre. The manoeuvre is broken into three stages. Which?",
         options: ["Look, Assess, Position", "Position, Speed, Look", "Assess, Decide, Act"],
@@ -270,6 +273,7 @@ const learn = {
       icon: "👁️",
       kicker: "MSPSL · L",
       title: "Look — assess, decide, act",
+      visual: "zone-of-vision",
       list: ["Look well ahead and behind", "Assess the situation", "Decide on any action necessary", "Act sensibly on what you see"],
       body: [
         "All hazards must be dealt with using the above routine.",
@@ -550,6 +554,7 @@ const scenarios = {
     {
       id: "s1", type: "choice", label: "Scenario", concept: "mirrors",
       scene: "🚐 A van is parked on your side of the road ahead. You'll need to move out to pass it.",
+      visual: "kerb-clearance",
       prompt: "What is the very first thing you should do?",
       options: ["Slow down with the footbrake", "Ease off the accelerator", "Check the mirrors", "Select a suitable gear"],
       answer: 2,
@@ -650,7 +655,7 @@ const walkthrough = {
       src: P(25, "Semi-permanent hazards; p.84 answer 10"),
     },
     {
-      id: "w2", type: "choice", step: "What is the risk?", concept: "hazard-def",
+      id: "w2", type: "choice", step: "What is the risk?", concept: "hazard-def", visual: "manoeuvre",
       prompt: "Why does it count as a hazard?",
       options: [
         "Because there is a warning sign",

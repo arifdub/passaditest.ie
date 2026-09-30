@@ -19,6 +19,7 @@
 import UNIT_1_1 from "./book1/unit1_1";
 import UNIT_1_2 from "./book1/unit1_2";
 import UNIT_1_3 from "./book1/unit1_3";
+import GLOSSARY_1 from "./book1/glossary";
 
 export const BOOKS = [
   {
@@ -29,6 +30,8 @@ export const BOOKS = [
     source: "Resource Workbook, Book 1 — Driver Education Supplies",
     /* Where this book's record is stored — one progress module per book. */
     moduleId: "learn.b1",
+    /* The visual glossary: every technical term the built units use. */
+    glossary: GLOSSARY_1,
     units: [
       { id: "1.1",  title: "Dealing with Hazards",               pages: [25, 29], badge: "Hazard Spotter", content: UNIT_1_1 },
       { id: "1.2",  title: "Signals & Signalling",               pages: [30, 33], badge: "Signalling Specialist", content: UNIT_1_2 },

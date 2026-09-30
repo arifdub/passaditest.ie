@@ -27,6 +27,7 @@ import useLearn, { bumpStreak, getStreak } from "./useLearn";
 import { useProgress } from "../progressStore";
 import { ItemView } from "./items";
 import HazardHunt from "./HazardHunt";
+import { Visual } from "./visuals";
 
 const ACTIVITY_ICON = {
   learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", matching: "🧩", procedure: "🔁",
@@ -186,6 +187,8 @@ export function BookScreen({ bookId, go, back }) {
             <ArrowRight size={18} className="shrink-0" />
           </button>
         )}
+
+        {book.glossary?.length > 0 && <GlossaryEntry count={book.glossary.length} onOpen={() => go({ screen: "learnGlossary", bookId })} />}
 
         <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-400">Units</p>
         <div className="space-y-2">
@@ -386,6 +389,13 @@ export function UnitScreen({ bookId, unitId, go, back }) {
 
         {/* Onward */}
         <div className="mt-6 space-y-2.5">
+          {book.glossary?.some(g => g.unit === unitId) && (
+            <GlossaryEntry
+              count={book.glossary.filter(g => g.unit === unitId).length}
+              label="Visual glossary for this unit"
+              onOpen={() => go({ screen: "learnGlossary", bookId, unitId })}
+            />
+          )}
           {p.rows.find(r => r.activity.id === "challenge")?.done && (
             <button onClick={() => go({ screen: "learnPlay", bookId, unitId, activityId: "challenge" })}
               className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold py-3 rounded-xl inline-flex items-center justify-center gap-2">
@@ -411,6 +421,99 @@ export function UnitScreen({ bookId, unitId, go, back }) {
               Next unit: {nextUnit.id} {nextUnit.title}{nextUnit.content ? "" : " · coming soon"}
             </button>
           )}
+        </div>
+      </Screen>
+    </>
+  );
+}
+
+/* ===========================================================================
+   VISUAL DRIVING GLOSSARY
+   Every technical term the course has taught, as a card: the drawing
+   (largest), the term, one sentence, the key point, and a real-road example
+   where useful. Filterable by unit; opened from the book or a unit.
+   =========================================================================== */
+function GlossaryEntry({ count, label = "Visual Driving Glossary", onOpen }) {
+  return (
+    <button
+      onClick={onOpen}
+      className="w-full text-left rounded-2xl p-4 mb-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 flex items-center gap-3.5 active:scale-[0.99] transition"
+    >
+      <span className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-2xl shrink-0" aria-hidden="true">👀</span>
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-slate-900 dark:text-white">{label}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
+          See it, then name it — {count} road term{count === 1 ? "" : "s"}, each drawn
+        </p>
+      </div>
+      <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0" />
+    </button>
+  );
+}
+
+export function GlossaryScreen({ bookId, unitId, back }) {
+  const book = BOOK_BY_ID[bookId];
+  const all = book?.glossary || [];
+  const units = book.units.filter(u => all.some(g => g.unit === u.id));
+  const [filter, setFilter] = useState(unitId || "all");
+  const [q, setQ] = useState("");
+
+  const shown = all.filter(g =>
+    (filter === "all" || g.unit === filter) &&
+    (!q || `${g.term} ${g.meaning}`.toLowerCase().includes(q.toLowerCase()))
+  );
+
+  return (
+    <>
+      <ScreenHeader
+        title="Visual Driving Glossary"
+        subtitle={`${book.title} · see it, then name it`}
+        onBack={back}
+        backLabel="Back"
+      />
+      <Screen>
+        <input
+          type="search"
+          value={q}
+          onChange={e => setQ(e.target.value)}
+          placeholder="Find a term — e.g. hatched, lane, box"
+          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400"
+        />
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+          {[{ id: "all", label: "All" }, ...units.map(u => ({ id: u.id, label: `${u.id} ${u.title}` }))].map(f => (
+            <button key={f.id} onClick={() => setFilter(f.id)}
+              className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-bold border transition ${
+                filter === f.id
+                  ? "bg-slate-900 text-white border-slate-900 dark:bg-emerald-500 dark:text-slate-900 dark:border-emerald-500"
+                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+              }`}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 space-y-4">
+          {shown.map(g => (
+            <article key={g.id} className="rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 shadow-sm">
+              <Visual id={g.visual} />
+              <div className="px-1.5 pt-3 pb-1">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{g.term}</h2>
+                  <span className="text-[10px] font-black text-slate-400 shrink-0 tabular-nums">UNIT {g.unit}</span>
+                </div>
+                <p className="mt-1 rd-option text-slate-700 dark:text-slate-200 leading-relaxed">{g.meaning}</p>
+                <p className="mt-2.5 flex gap-2 text-sm text-slate-800 dark:text-slate-100 leading-snug">
+                  <span className="shrink-0 font-black text-emerald-600 dark:text-emerald-400">KEY</span>{g.key}
+                </p>
+                {g.example && (
+                  <p className="mt-1.5 flex gap-2 text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                    <span className="shrink-0 font-black">ON THE ROAD</span>{g.example}
+                  </p>
+                )}
+              </div>
+            </article>
+          ))}
+          {!shown.length && <p className="text-center text-sm text-slate-400 py-10">No terms match.</p>}
         </div>
       </Screen>
     </>
@@ -569,6 +672,11 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
     <div>
       <Dots n={cards.length} at={i} />
       <div key={i} className="mt-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-sm learn-fade">
+        {/* SEE IT → NAME IT → DEFINE IT. The drawing comes first, so the
+            learner sees what the term means before reading about it — except
+            on a card that asks them to predict first, where it would give
+            the answer away; there it opens the reveal instead. */}
+        {card.visual && !card.ask && <Visual id={card.visual} className="-mx-1 mb-4" />}
         <div className="flex items-center gap-2.5">
           <span className="text-3xl" aria-hidden="true">{card.icon}</span>
           <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{card.kicker}</p>
@@ -594,6 +702,7 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
 
         {!gated && (
           <div className={card.ask ? "mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 learn-fade" : ""}>
+            {card.visual && card.ask && <Visual id={card.visual} className="-mx-1 mb-1" />}
             {card.body?.map((b, k) => (
               <p key={k} className="mt-3 rd-option text-slate-700 dark:text-slate-200 leading-relaxed">{b}</p>
             ))}
@@ -900,6 +1009,9 @@ function Feedback({ item, answer, first, concept, canRetry, onRetry, onNext, las
           </ul>
         )}
       </div>
+
+      {/* See it in context — beside the explanation, once answered. */}
+      {item.visual && <Visual id={item.visual} className="mt-3" />}
 
       {!answer.correct && concept && <ConceptBox concept={concept} />}
 

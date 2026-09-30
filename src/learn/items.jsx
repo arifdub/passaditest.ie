@@ -113,6 +113,8 @@ function Choice({ item, onAnswer }) {
   return (
     <div>
       {item.label && <Label>{item.label}</Label>}
+      {/* An item's drawing is shown with the explanation, once answered
+          (see Feedback in LearnScreens) — before, it would give it away. */}
       {item.scene && (
         <div className="mb-4 rounded-2xl bg-slate-900 text-white p-4 text-[15px] leading-relaxed">
           {item.scene}

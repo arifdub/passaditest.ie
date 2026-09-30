@@ -155,6 +155,7 @@ const learn = {
       icon: "⏱️",
       kicker: "When to signal",
       title: "Timing matters",
+      visual: "side-roads",
       body: [
         "Give signals in good time before your manoeuvre and for long enough to convey your meaning — but not too soon, or another road user could be confused.",
         "You should normally follow the MSPSL routine, but sometimes the signal needs to be delayed: where there are several side roads close together, take particular care when intending to stop on the left beyond a side road on the left. Signalling too soon may lead an emerging driver to assume you are turning left.",
@@ -181,6 +182,7 @@ const learn = {
       icon: "🔆",
       kicker: "Mechanical signals",
       title: "Indicators and stop lights",
+      visual: "rear-lights:indicator",
       sections: [
         { head: "Indicators", list: ["Turning left or right, changing lane, overtaking, stopping at the side of the road", "Warn traffic ahead and behind — if their view of your vehicle is not obscured"] },
         { head: "Stop lights", list: ["Come on when you apply a little pressure to the footbrake", "Warn following traffic you intend to slow down or stop", "Early, progressive braking gives following drivers time to react"] },
@@ -192,6 +194,7 @@ const learn = {
       icon: "✋",
       kicker: "Arm signals",
       title: "When the arm helps",
+      visual: "zebra",
       body: [
         "Arm signals can be given when mechanical signals are not used or have failed, and when necessary to reinforce the indicator and stop lights.",
         "You should not routinely give both — but it can be useful, for example when you are the lead vehicle approaching a zebra crossing. There are five arm signals in the Rules of the Road; at zebra crossings the signal warns oncoming as well as following traffic.",
@@ -238,6 +241,7 @@ const learn = {
       icon: "💡",
       kicker: "Presence, not intention",
       title: "Flashing headlights and the horn",
+      visual: "flashing-headlights",
       ask: {
         prompt: "Another driver flashes their headlights at you. What does it mean?",
         options: ["\"Go ahead\"", "\"Be aware of my presence\"", "\"Stop\""],
@@ -254,6 +258,7 @@ const learn = {
       icon: "🟧",
       kicker: "Other lights",
       title: "Hazard and reversing lights",
+      visual: "rear-lights:hazard",
       sections: [
         { head: "Hazard warning lights", list: ["Only to inform others you are temporarily blocking the free flow of traffic", "Not while moving — except briefly on fast roads such as motorways, if you must slow down suddenly for an accident or queue ahead"] },
         { head: "Reversing lights", list: ["Warn others of your intention to reverse", "Especially important when parking in reverse on busy roads", "Select reverse promptly to help others anticipate"] },
@@ -463,12 +468,14 @@ const scenarios = {
   items: [
     { id: "s1", type: "choice", label: "Scenario", concept: "timing",
       scene: "🛣️ You plan to stop on the left just past a side road on the left. Several side roads are close together.",
+      visual: "side-roads",
       prompt: "When do you signal?",
       options: ["Well before the first side road", "Delay the signal until you've passed the side road, so an emerging driver doesn't think you're turning in", "Don't signal at all", "Use the hazard lights instead"], answer: 1,
       explain: "There are occasions when the signal must be delayed. Signalling too soon may lead an emerging driver to assume you are actually turning left.",
       src: P(30, "When to Signal") },
     { id: "s2", type: "choice", label: "Scenario", concept: "presence",
       scene: "🚙 You're waiting to emerge. A driver on the main road flashes their headlights at you.",
+      visual: "flashing-headlights",
       prompt: "What do you do?",
       options: ["Pull out — they've let you go", "Treat it as a warning of presence: decide for yourself if it's safe and be sure of their intentions", "Flash back and wait", "Sound the horn to thank them"], answer: 1,
       explain: "Flashing headlamps should not be taken as an invitation to proceed. You must decide whether it is safe and be sure of the other driver's intentions.",
@@ -493,6 +500,7 @@ const scenarios = {
       src: P(31, "Signal by Audible Tone") },
     { id: "s6", type: "choice", label: "Scenario", concept: "hazard-lights",
       scene: "🛣️ On the motorway, traffic ahead suddenly stops because of an accident. You have to slow down quickly.",
+      visual: "rear-lights:hazard",
       prompt: "What about the hazard warning lights?",
       options: ["Never while moving", "Briefly, to warn traffic behind that you are slowing suddenly", "Leave them on until you're home", "Only once fully stopped on the hard shoulder"], answer: 1,
       explain: "Hazard lights are not used when moving — except briefly on fast roads such as motorways if you have to slow down suddenly for an accident or traffic queue ahead.",

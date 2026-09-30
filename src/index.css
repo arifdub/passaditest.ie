@@ -57,6 +57,9 @@ html, body, #root {
 }
 
 /* ---- interactive learning (src/learn) ---- */
+/* Indicators and hazard lights in the drawings flash, as they do on a car. */
+.vis-blink { animation: vis-blink 1s steps(1, end) infinite; }
+@keyframes vis-blink { 50% { opacity: .15; } }
 .learn-fade { animation: learn-fade .35s ease-out both; }
 .learn-pop  { animation: learn-pop .35s cubic-bezier(.2, .9, .3, 1.3) both; }
 .learn-shake { animation: learn-shake .35s ease-in-out; }

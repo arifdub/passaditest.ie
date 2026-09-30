@@ -128,6 +128,7 @@ const learn = {
       icon: "📏",
       kicker: "Normal driving",
       title: "Keep well to the left",
+      visual: "normal-position",
       ask: {
         prompt: "Before you read on — in normal driving, roughly how far from the kerb?",
         options: ["Right against the kerb", "About a metre", "Just left of the centre line"],
@@ -148,6 +149,7 @@ const learn = {
       icon: "⚖️",
       kicker: "Not too far either way",
       title: "Too close to the left — or the middle",
+      visual: "position-zones",
       sections: [
         { head: "Too close to the left could", list: ["Endanger or frighten pedestrians, or splash them in wet weather", "Reduce your control — the surface may be uneven", "Make you strike the kerb or damage your tyres", "Mislead others into thinking you're turning left or stopping"] },
         { head: "Too close to the middle could", list: ["Endanger you and approaching traffic", "Mislead others into thinking you intend to turn right", "Hinder the free flow of traffic and vehicles that wish to overtake"] },
@@ -170,6 +172,7 @@ const learn = {
       icon: "↕️",
       kicker: "Travelling distance",
       title: "Space in front — and the driver behind",
+      visual: "following-distance",
       body: [
         "You need space in front in case the vehicle ahead stops suddenly. The most frequent cause of rear-end collisions is following too closely — and the faster you travel, the greater the gap should be.",
         "You can't stop others following you too closely, but you can make it safer: maintain your progress and stay to the left so they can overtake. Never increase your speed beyond the legal limit.",
@@ -181,6 +184,7 @@ const learn = {
       icon: "🛤️",
       kicker: "Lane discipline",
       title: "Use lanes — and stay in them",
+      visual: "straddling",
       body: [
         "Lanes are marked to guide the flow of traffic and make best use of the road space. Don't move from one lane to another without good cause, or without giving way to traffic when necessary.",
         "Where lanes are provided, use them and stay in them. To change lanes, check in good time that the way ahead and behind is clear with your mirrors, and signal appropriately.",
@@ -196,6 +200,7 @@ const learn = {
       icon: "⬆️",
       kicker: "Lanes at junctions",
       title: "Pick your lane in good time",
+      visual: "lanes-at-junction",
       ask: {
         prompt: "Two lanes approaching a junction, no markings. You're going straight ahead. Which lane?",
         options: ["The left-hand lane", "The right-hand lane", "Either — straddle them"],
@@ -213,6 +218,7 @@ const learn = {
       icon: "🏎️",
       kicker: "Slip lanes",
       title: "Acceleration and deceleration lanes",
+      visual: "decel-lane",
       list: [
         "Use them for their intended purpose",
         "They let you join or leave a road without hindering the through traffic",
@@ -225,6 +231,7 @@ const learn = {
       icon: "➡️",
       kicker: "One-way streets",
       title: "Early position matters",
+      visual: "one-way",
       body: [
         "Get into position in good time. Traffic flows quickly in one-way streets, and it's permitted to overtake on the left or right unless signs and markings say otherwise.",
       ],
@@ -239,6 +246,7 @@ const learn = {
       icon: "🛣️",
       kicker: "Bigger roads",
       title: "Multi-lane roads and dual carriageways",
+      visual: "dual-carriageway",
       sections: [
         { head: "Three or more lanes", list: ["Drive in the left-hand lane", "Middle and outside lanes for overtaking and passing only", "Return to the left-hand lane as soon as possible"] },
         { head: "Dual carriageways", list: ["Drive in the left-hand lane normally", "Right-hand lane for overtaking or turning right", "Three lanes: you may stay in the middle while slower vehicles are in the left lane — then return left"] },
@@ -250,6 +258,7 @@ const learn = {
       icon: "🚧",
       kicker: "Special roads and markings",
       title: "2 + 1 roads, turning boxes, hatching",
+      visual: "hatched",
       sections: [
         { head: "2 + 1 roads", list: ["Two lanes one way, one the other — often with a barrier or ghost islands", "No overtaking on the one-lane section", "The two-lane section may give a safe overtaking zone (often alternating about every 2 km)", "Right turns generally controlled, with protected junction boxes"] },
         { head: "Turning box", list: ["A white arrow in a white-edged box, often at signal-controlled junctions", "Turning right? Position over the box while you wait"] },
@@ -452,6 +461,7 @@ const scenarios = {
   items: [
     { id: "s1", type: "choice", label: "Scenario", concept: "normal",
       scene: "🚗🚗🚗 A long line of cars is parked on your side, with gaps between them.",
+      visual: "no-weaving",
       prompt: "How do you pass them?",
       options: ["Pull in to the left in each gap", "Keep a steady line with about a metre's clearance — don't weave", "Drive on the centre line", "Speed up to get past quickly"], answer: 1,
       explain: "Give parked vehicles the same clearance as the kerb in case a door opens, a pedestrian steps out or a vehicle moves off — and don't weave in and out.",
@@ -476,18 +486,21 @@ const scenarios = {
       src: P(38, "Retention Q4 (answer a, p.88); p.34") },
     { id: "s5", type: "choice", label: "Scenario", concept: "markings",
       scene: "🚦 You're waiting to turn right at traffic lights. There's a white arrow in a white-edged box ahead.",
+      visual: "turning-box",
       prompt: "Where do you wait?",
       options: ["Behind the box", "Positioned over the box", "To the left of it", "In the oncoming lane"], answer: 1,
       explain: "Turning boxes guide right-turning vehicles: position over the box while waiting to make the turn.",
       src: P(36, "Turning Box") },
     { id: "s6", type: "choice", label: "Scenario", concept: "markings",
       scene: "🦓 Traffic is queuing. There's an area of diagonal hatched markings beside you, and your turn is just past it.",
+      visual: "hatched",
       prompt: "Can you drive across the hatching to reach your turn?",
       options: ["Yes, if the traffic is slow", "No — vehicles are prohibited from entering hatched areas", "Yes, with a signal", "Only at night"], answer: 1,
       explain: "Where hatched markings are provided in an area of roadway, vehicles are prohibited from entering it.",
       src: P(36, "Merging and Diverging Markings") },
     { id: "s7", type: "choice", label: "Scenario", concept: "accel",
       scene: "🛣️ There's a deceleration lane for a left turn some distance ahead.",
+      visual: "decel-lane",
       prompt: "How do you use it?",
       options: ["Use it to overtake the queue", "Only if you need to brake hard", "Slow down well before it", "Get into the left lane in good time, then use it to slow down"], answer: 3,
       explain: "Get into position early and use these lanes to slow down when leaving a road — for their intended purpose, not for overtaking.",
@@ -522,7 +535,7 @@ const walkthrough = {
       options: ["Just go — you're turning soon", "Check in good time that the way ahead and behind is clear, with the mirrors, and signal", "Sound the horn", "Slow down first"], answer: 1,
       explain: "Check in good time that the way ahead and behind is clear by proper use of your mirrors, and use appropriate signals.",
       src: P(35, "Traffic & Lane Discipline") },
-    { id: "w4", type: "choice", step: "Your position", concept: "too-middle",
+    { id: "w4", type: "choice", step: "Your position", concept: "too-middle", visual: "right-turn-position",
       prompt: "Normally, the correct position for a right turn on a single carriageway is…",
       options: ["Just left of the centre line", "As far right as you can go", "As close to the middle as possible", "Just over the centre line"], answer: 0,
       explain: "Just left of the centre line — close enough to show your intention, without endangering approaching traffic.",

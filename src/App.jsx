@@ -29,7 +29,7 @@ import { SECTION_BY_ID, buildMockTest } from "./adiSections";
 import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
-import { LearnHome, BookScreen, UnitScreen, LearnPlayer } from "./learn/LearnScreens";
+import { LearnHome, BookScreen, UnitScreen, LearnPlayer, GlossaryScreen } from "./learn/LearnScreens";
 
 /* The tab ids double as screen ids, so a tab's id must not collide with a
    screen that means something else. "mocks" (the list) is deliberately not
@@ -265,6 +265,8 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
       return <BookScreen bookId={view.bookId} go={go} back={back} />;
     case "learnUnit":
       return <UnitScreen bookId={view.bookId} unitId={view.unitId} go={go} back={back} />;
+    case "learnGlossary":
+      return <GlossaryScreen bookId={view.bookId} unitId={view.unitId} back={back} />;
     case "learnPlay":
       return (
         <LearnPlayer

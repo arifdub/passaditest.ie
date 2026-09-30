@@ -27,7 +27,7 @@ import useLearn, { bumpStreak, getStreak } from "./useLearn";
 import { useProgress } from "../progressStore";
 import { ItemView } from "./items";
 import HazardHunt from "./HazardHunt";
-import { Visual } from "./visuals";
+import { Visual, Visuals } from "./visuals";
 
 const ACTIVITY_ICON = {
   learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", matching: "🧩", procedure: "🔁",
@@ -676,7 +676,7 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
             learner sees what the term means before reading about it — except
             on a card that asks them to predict first, where it would give
             the answer away; there it opens the reveal instead. */}
-        {card.visual && !card.ask && <Visual id={card.visual} className="-mx-1 mb-4" />}
+        {(card.visual || card.visuals) && !card.ask && <Visuals ids={card.visuals || card.visual} className="-mx-1 mb-4" />}
         <div className="flex items-center gap-2.5">
           <span className="text-3xl" aria-hidden="true">{card.icon}</span>
           <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{card.kicker}</p>
@@ -702,7 +702,7 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
 
         {!gated && (
           <div className={card.ask ? "mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 learn-fade" : ""}>
-            {card.visual && card.ask && <Visual id={card.visual} className="-mx-1 mb-1" />}
+            {(card.visual || card.visuals) && card.ask && <Visuals ids={card.visuals || card.visual} className="-mx-1 mb-1" />}
             {card.body?.map((b, k) => (
               <p key={k} className="mt-3 rd-option text-slate-700 dark:text-slate-200 leading-relaxed">{b}</p>
             ))}
@@ -1011,7 +1011,7 @@ function Feedback({ item, answer, first, concept, canRetry, onRetry, onNext, las
       </div>
 
       {/* See it in context — beside the explanation, once answered. */}
-      {item.visual && <Visual id={item.visual} className="mt-3" />}
+      {(item.visual || item.visuals) && <Visuals ids={item.visuals || item.visual} className="mt-3" />}
 
       {!answer.correct && concept && <ConceptBox concept={concept} />}
 

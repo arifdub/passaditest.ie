@@ -328,7 +328,7 @@ const recall = {
   xpPer: 10,
   items: [
     {
-      id: "r1", type: "flash", concept: "hazard-def",
+      id: "r1", visual: "hazard-types", type: "flash", concept: "hazard-def",
       front: "What is the definition of a hazard?",
       back: "Any feature or situation which might cause you to change speed or direction — any situation which may present actual or potential danger to you, or any other road user.",
       src: P(27, "Post-test Q1; answer p.84 and p.25"),
@@ -341,27 +341,27 @@ const recall = {
       src: P(28, "Retention Q1 (answer b, p.88)"),
     },
     {
-      id: "r3", type: "fill", concept: "mspsl",
+      id: "r3", visual: "mspsl", type: "fill", concept: "mspsl",
       before: "The Hazard Routine is Mirrors – Signal –", after: "– Speed – Look.",
       options: ["Position", "Pause", "Proceed", "Prepare"], answer: "Position",
       explain: "MSPSL: Mirrors–Signal–Position–Speed–Look.",
       src: P(26, "MSPSL"),
     },
     {
-      id: "r4", type: "truefalse", concept: "hazard-types",
+      id: "r4", visual: "hazard-types", type: "truefalse", concept: "hazard-types",
       statement: "Road junctions are hazards.",
       answer: true,
       explain: "Junctions are permanent hazards — road features, like bends and gradients.",
       src: P(28, "Retention Q2 (answer c, p.88); p.25 permanent hazards"),
     },
     {
-      id: "r5", type: "flash", concept: "manoeuvre-def",
+      id: "r5", visual: "manoeuvre", type: "flash", concept: "manoeuvre-def",
       front: "What is the definition of a manoeuvre?",
       back: "The act of changing your course or speed.",
       src: P(27, "Post-test Q2; answer p.84"),
     },
     {
-      id: "r6", type: "fill", concept: "mirrors",
+      id: "r6", visual: "zone-of-vision", type: "fill", concept: "mirrors",
       before: "When you check your mirrors, just looking is not", after: ".",
       options: ["enough", "needed", "safe", "required"], answer: "enough",
       explain: "Take effective observation — just looking is not enough.",
@@ -466,7 +466,7 @@ const matching = {
   xp: 20,
   items: [
     {
-      id: "m1", type: "sort", concept: "hazard-types",
+      id: "m1", visual: "hazard-types", type: "sort", concept: "hazard-types",
       prompt: "Sort each example into its type of hazard.",
       categories: [
         { id: "perm", label: "Permanent" },
@@ -490,7 +490,7 @@ const matching = {
       src: P(25, "Summaries — Hazards, examples"),
     },
     {
-      id: "m2", type: "match", concept: "mspsl",
+      id: "m2", visual: "mspsl", type: "match", concept: "mspsl",
       prompt: "Match each stage of the Hazard Routine to what it involves.",
       pairs: [
         ["Mirrors", "Check the position and speed of following traffic in good time"],
@@ -517,7 +517,7 @@ const procedure = {
   xp: 30,
   items: [
     {
-      id: "p1", type: "order", concept: "mspsl",
+      id: "p1", visual: "mspsl", type: "order", concept: "mspsl",
       prompt: "Put the Hazard Routine in the correct order.",
       steps: ["Mirrors", "Signal", "Position", "Speed", "Look"],
       explain: "Mirrors–Signal–Position–Speed–Look. The basic rule is Mirrors–Signal–Manoeuvre; the manoeuvre breaks down into Position, Speed and Look.",
@@ -531,7 +531,7 @@ const procedure = {
       src: P(26, "MSPSL"),
     },
     {
-      id: "p2", type: "order", concept: "look",
+      id: "p2", visual: "zone-of-vision", type: "order", concept: "look",
       prompt: "The \"Look\" stage. Put it in order.",
       steps: ["Look well ahead and behind", "Assess the situation", "Decide on any action necessary", "Act sensibly on what you see"],
       explain: "Look, assess, decide, act — and deal with every hazard using the routine.",
@@ -647,7 +647,7 @@ const walkthrough = {
   situation: "🚙 A broken-down car is stopped on your side of the road ahead. Traffic is following you.",
   items: [
     {
-      id: "w1", type: "choice", step: "What do you notice?", concept: "hazard-types",
+      id: "w1", visual: "hazard-types", type: "choice", step: "What do you notice?", concept: "hazard-types",
       prompt: "What kind of hazard is a broken-down vehicle?",
       options: ["Permanent", "Semi-permanent", "Surface", "Not a hazard"],
       answer: 1,
@@ -668,7 +668,7 @@ const walkthrough = {
       src: P(25, "Summaries — Hazards"),
     },
     {
-      id: "w3", type: "choice", step: "What applies?", concept: "mspsl",
+      id: "w3", visual: "mspsl", type: "choice", step: "What applies?", concept: "mspsl",
       prompt: "Which routine do you apply?",
       options: ["Look–Assess–Decide", "The Hazard Routine: Mirrors–Signal–Position–Speed–Look", "Signal–Position–Mirrors", "None; just steer round it"],
       answer: 1,
@@ -708,7 +708,7 @@ const walkthrough = {
       src: P(26, "MSPSL — Speed"),
     },
     {
-      id: "w8", type: "choice", step: "Look", concept: "look",
+      id: "w8", visual: "zone-of-vision", type: "choice", step: "Look", concept: "look",
       prompt: "Last stage — what does Look involve?",
       options: ["A quick glance ahead", "Look well ahead and behind; assess, decide, act sensibly on what you see", "Looking at the broken-down car only", "Waiting for the driver to wave you on"],
       answer: 1,
@@ -767,7 +767,7 @@ const challenge = {
   xpPer: 10,
   xpBonus: 50,
   items: [
-    { id: "c1", skill: "knowledge", type: "choice", label: "Quick recall", concept: "manoeuvre-def",
+    { id: "c1", visual: "manoeuvre", skill: "knowledge", type: "choice", label: "Quick recall", concept: "manoeuvre-def",
       prompt: "A manoeuvre is best defined as…", options: ["Any change of speed", "The act of making a change in speed or direction", "Controlling the car at very slow speeds", "Any change of course"], answer: 1,
       explain: "A manoeuvre is the act of changing your course or speed.", src: P(28, "Retention Q3; p.84 answer 2") },
     { id: "c2", skill: "application", type: "choice", label: "Scenario", concept: "position",
@@ -777,31 +777,43 @@ const challenge = {
     { id: "c3", skill: "knowledge", type: "truefalse", concept: "defensive",
       statement: "Defensive driving involves keeping control of your own feelings and patience towards others.", answer: true,
       explain: "Defensive driving is more than control of the car — it includes responsibility, consideration, and control of your own feelings.", src: P(25, "Defensive Driving") },
-    { id: "c4", skill: "recognition", type: "choice", label: "Hazard identification", concept: "hazard-types",
+    { id: "c4", visual: "hazard-types", skill: "recognition", type: "choice", label: "Hazard identification", concept: "hazard-types",
       prompt: "Which of these is a surface hazard?", options: ["Road works", "Surface contaminants", "A junction", "A cyclist"], answer: 1,
       explain: "Surface hazards: weather conditions, surface contaminants and road surface type/conditions.", src: P(25, "Surface hazards") },
     { id: "c5", skill: "recognition", type: "match", label: "Matching", concept: "hazard-types",
       prompt: "Match each hazard type to an example.",
       pairs: [["Permanent", "Gradients"], ["Semi-permanent", "Road works"], ["Moving", "Animals"], ["Surface", "Weather conditions"]],
       explain: "Permanent: bends, junctions, gradients. Semi-permanent: stationary vehicles, road works. Moving: pedestrians, cyclists, drivers, animals. Surface: weather, contaminants, surface type.", src: P(25, "Summaries — Hazards") },
-    { id: "c6", skill: "knowledge", type: "order", label: "Procedure", concept: "mspsl",
+    { id: "c6", visual: "mspsl", skill: "knowledge", type: "order", label: "Procedure", concept: "mspsl",
       prompt: "Order the Hazard Routine.", steps: ["Mirrors", "Signal", "Position", "Speed", "Look"],
       explain: "Mirrors–Signal–Position–Speed–Look.", src: P(26, "MSPSL") },
     { id: "c7", skill: "application", type: "choice", label: "Scenario decision", concept: "mspsl",
       scene: "🐕 A dog is loose on the footpath ahead. It isn't an emergency yet.",
       prompt: "What should you initially do?", options: ["Stop dead", "Apply the MSPSL routine", "Change direction before any change of speed", "Brake before checking the mirrors"], answer: 1,
       explain: "Other than in an emergency, where there is a potential risk you should initially apply the MSPSL routine.", src: P(29, "Retention Q14; p.25 moving hazards") },
-    { id: "c8", skill: "retention", type: "choice", label: "Recall", concept: "look",
+    { id: "c8", visual: "zone-of-vision", skill: "retention", type: "choice", label: "Recall", concept: "look",
       prompt: "A driver's zone of vision is…", options: ["His view into another road at a junction", "What can be seen from the vehicle", "Anything visible at the front of the car", "What he can see outside his peripheral vision"], answer: 1,
       explain: "Zone of vision: what can be seen from the vehicle.", src: P(29, "Retention Q12 (answer b, p.88)") },
     { id: "c9", skill: "application", type: "choice", label: "Application", concept: "mirrors",
       prompt: "Checking your mirrors, just looking is not enough. You must also…", options: ["Be in the correct position and speed before looking", "Act safely upon what you see", "Keep looking in the mirrors as you approach", "Keep looking all around"], answer: 1,
       explain: "Look, assess, decide — and act sensibly on what you see.", src: P(29, "Retention Q11 (answer b, p.88); p.26") },
-    { id: "c10", skill: "retention", type: "choice", label: "Final challenge", concept: "look",
+    { id: "c10", visual: "zone-of-vision", skill: "retention", type: "choice", label: "Final challenge", concept: "look",
       prompt: "The good driver will constantly…", options: ["Keep his eyes on the road ahead", "Look out for hazards in his rear-view mirror", "Keep one eye on the mirrors", "Regularly scan the road ahead and behind"], answer: 3,
       explain: "Look well ahead and behind — regularly scan the road ahead and behind.", src: P(29, "Retention Q13 (answer d, p.88); p.26 Look") },
   ],
 };
+
+/* ---- visuals on the retention questions, and Spot-it picture questions ---- */
+const RET_VISUALS = { 1: "hazard-types", 2: "hazard-types", 3: "manoeuvre", 5: "mspsl", 12: "zone-of-vision", 13: "zone-of-vision", 14: "mspsl" };
+retention.items.forEach(it => { const v = RET_VISUALS[Number(it.id.slice(3))]; if (v) it.visual = v; });
+recall.items.push(
+  { id: "sp1", type: "picture", label: "Spot it", concept: "potential",
+    prompt: "Which picture shows a restricted view?", options: ["restricted-view", "zone-of-vision", "hazard-types", "manoeuvre"], answer: 0, names: ["Restricted view", "Zone of vision", "Hazards", "A manoeuvre"],
+    explain: "A bend with a hedge hides what’s around it — anything obstructing a driver’s view is a potential hazard.", src: P(84, "Post-test answers 9, 10") },
+  { id: "sp2", type: "picture", label: "Spot it", concept: "manoeuvre-def",
+    prompt: "Which picture shows a manoeuvre — a change of course?", options: ["zone-of-vision", "manoeuvre", "following-distance", "mspsl"], answer: 1, names: ["Zone of vision", "A manoeuvre", "Following distance", "The Hazard Routine"],
+    explain: "A manoeuvre is the act of changing your course or speed — like moving out round a parked car.", src: P(84, "Post-test answer 2") },
+);
 
 /* ---------------------------------------------------------------------------
    THE UNIT

@@ -20,7 +20,11 @@
   ===========================================================================
 */
 
-import React, { useId } from "react";
+import React, { useId, useContext, createContext } from "react";
+
+/* "Bare" drawings hide their text labels — used by the Spot-it picture
+   questions, where a label would give the answer away. */
+const BareContext = createContext(false);
 
 /* ---- palette ---- */
 const C = {
@@ -54,6 +58,8 @@ function Car({ x, y, rot = 0, color = C.blue, ghost, door }) {
 
 /* A text label with a light halo so it reads over road or grass. */
 function Tag({ x, y, children, size = 5, color = C.ink, anchor = "middle", weight = 800 }) {
+  const bare = useContext(BareContext);
+  if (bare) return null;
   return (
     <text x={x} y={y} fontSize={size} fontWeight={weight} fill={color} textAnchor={anchor}
       stroke="#ffffff" strokeWidth={size * 0.32} strokeLinejoin="round" paintOrder="stroke"
@@ -209,6 +215,21 @@ const DRAW = {
       <Tag x="28" y="55" size="4" color={C.bad}>✗ WEAVING</Tag>
       <Arrow d="M67 98 L67 4" />
       <Tag x="136" y="55" size="4" color="#047857">✓ STEADY LINE</Tag>
+    </Frame>
+  ),
+
+  "cyclist-room": () => (
+    <Frame title="Room for cyclists">
+      <VRoad />
+      <text x="50" y="44" fontSize="8" textAnchor="middle">🚴</text>
+      <Car x="68" y="80" color={C.good} />
+      <Arrow d="M68 70 L68 58 Q68 48 72 42 L72 26 Q72 16 62 10 L62 2" />
+      <line x1="54" y1="38" x2="66" y2="38" stroke={C.good} strokeWidth="0.7" />
+      <Tag x="126" y="30" size="4">ENOUGH ROOM</Tag>
+      <Tag x="126" y="36" size="3.4" weight={600}>for cyclists and other</Tag>
+      <Tag x="126" y="41" size="3.4" weight={600}>vulnerable road users</Tag>
+      <Tag x="126" y="62" size="3.3" weight={600}>check oncoming and following</Tag>
+      <Tag x="126" y="67" size="3.3" weight={600}>traffic, signal in good time</Tag>
     </Frame>
   ),
 
@@ -579,15 +600,27 @@ const DRAW = {
 /* The list, for the glossary and for checking content refers to real ids. */
 export const VISUAL_IDS = Object.keys(DRAW);
 
-/* `id` may carry a variant after a colon: "rear-lights:stop". */
-export function Visual({ id, className = "" }) {
+/* `id` may carry a variant after a colon: "rear-lights:stop".
+   `bare` hides the labels. */
+export function Visual({ id, className = "", bare = false }) {
   if (!id) return null;
   const [name, variant] = String(id).split(":");
   const draw = DRAW[name];
   if (!draw) return null;
   return (
     <div className={`rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 ${className}`}>
-      {draw({ variant })}
+      <BareContext.Provider value={bare}>{draw({ variant })}</BareContext.Provider>
+    </div>
+  );
+}
+
+/* One drawing or several (`visuals: [...]`), stacked. */
+export function Visuals({ ids, className = "", gap = "space-y-2" }) {
+  const list = (Array.isArray(ids) ? ids : [ids]).filter(Boolean);
+  if (!list.length) return null;
+  return (
+    <div className={`${gap} ${className}`}>
+      {list.map(id => <Visual key={id} id={id} />)}
     </div>
   );
 }

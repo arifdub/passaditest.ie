@@ -19,6 +19,7 @@
 import React, { useState, useMemo } from "react";
 import { Check, X, RotateCcw } from "lucide-react";
 import { shuffle } from "./engine";
+import { Visual } from "./visuals";
 
 const btnBase = "w-full text-left border rounded-2xl px-4 py-3.5 transition active:scale-[0.99]";
 const idle = "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-emerald-400";
@@ -35,8 +36,55 @@ export function ItemView({ item, attempt, onAnswer }) {
     case "order": return <Order key={k} item={item} onAnswer={onAnswer} />;
     case "match": return <Match key={k} item={item} onAnswer={onAnswer} />;
     case "sort": return <Sort key={k} item={item} onAnswer={onAnswer} />;
+    case "picture": return <Picture key={k} item={item} onAnswer={onAnswer} />;
     default: return <Choice key={k} item={item} onAnswer={onAnswer} />;
   }
+}
+
+/* -------------------------------------------------------------- picture
+   "Spot it": the options are drawings, labels hidden, and the learner taps
+   the one that matches. Recognition by sight, not by reading.
+   item: { prompt, options: [visualId, ...], answer, names?: [...] }
+   `names` label each drawing once answered. */
+function Picture({ item, onAnswer }) {
+  const order = useMemo(() => shuffle(item.options.map((_, i) => i)), [item]);
+  const [picked, setPicked] = useState(null);
+  const choose = (i) => {
+    if (picked !== null) return;
+    setPicked(i);
+    onAnswer({ score: i === item.answer ? 1 : 0, correct: i === item.answer });
+  };
+  return (
+    <div>
+      <Label>{item.label || "Spot it"}</Label>
+      <p className="rd-lead font-bold text-slate-900 dark:text-white">{item.prompt}</p>
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        {order.map(i => {
+          const revealed = picked !== null;
+          const isAns = i === item.answer;
+          return (
+            <button key={i} onClick={() => choose(i)} disabled={revealed}
+              className={`relative rounded-2xl p-1 border-2 transition active:scale-[0.98] ${
+                !revealed ? "border-transparent hover:border-emerald-400"
+                  : isAns ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40"
+                  : picked === i ? "border-red-400 bg-red-50 dark:bg-red-950/40"
+                  : "border-transparent opacity-50"
+              }`}>
+              <Visual id={item.options[i]} bare />
+              {revealed && (isAns || picked === i) && (
+                <span className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-white ${isAns ? "bg-emerald-500" : "bg-red-500"}`}>
+                  {isAns ? <Check size={14} /> : <X size={14} />}
+                </span>
+              )}
+              {revealed && item.names && (
+                <span className="block mt-1 text-[11px] font-bold text-slate-600 dark:text-slate-300 leading-tight">{item.names[i]}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 /* ---------------------------------------------------------------- flash */

@@ -301,11 +301,11 @@ const recall = {
       options: ["warning instrument", "audible signal", "sound device", "alert tone"], answer: "warning instrument",
       explain: "The horn is the \"warning instrument\" and should be used only to warn other road users of your presence.",
       src: P(32, "Post-test Q9; answer p.84; p.31") },
-    { id: "r4", type: "flash", concept: "stop-lights",
+    { id: "r4", visual: "rear-lights:stop", type: "flash", concept: "stop-lights",
       front: "When do stop light signals begin operating?",
       back: "When the brake pedal is pressed down a little.",
       src: P(32, "Post-test Q5; answer p.84; p.30") },
-    { id: "r5", type: "choice", label: "Tap the correct statement", concept: "presence",
+    { id: "r5", visual: "flashing-headlights", type: "choice", label: "Tap the correct statement", concept: "presence",
       prompt: "Flashing headlights tell another road user…",
       options: ["You may proceed", "I am giving way", "Be aware of my presence", "I am turning"], answer: 2,
       explain: "Flashing headlights warn of your presence. They give no instructions and no information about your intentions.",
@@ -319,7 +319,7 @@ const recall = {
       options: ["five", "three", "four", "seven"], answer: "five",
       explain: "There are five arm signals shown in the Rules of the Road.",
       src: P(31, "Use of Signals") },
-    { id: "r8", type: "flash", concept: "stop-lights",
+    { id: "r8", visual: "rear-lights:stop", type: "flash", concept: "stop-lights",
       front: "Why is early braking important to following drivers?",
       back: "Your brake lights come on earlier, giving more warning to the driver behind.",
       src: P(32, "Post-test Q6; answer p.84; p.30") },
@@ -347,7 +347,7 @@ const spot = {
   xp: 25,
   items: [
     {
-      id: "sp1", type: "sort", concept: "unnecessary",
+      id: "sp1", visual: "side-roads", type: "sort", concept: "unnecessary",
       prompt: "Would a signal help another road user here, or is it unnecessary?",
       categories: [
         { id: "yes", label: "Signal would help" },
@@ -400,7 +400,7 @@ const matching = {
   xp: 20,
   items: [
     {
-      id: "m1", type: "match", concept: "indicator",
+      id: "m1", visuals: ["rear-lights:indicator", "rear-lights:hazard"], type: "match", concept: "indicator",
       prompt: "Match each signal to what it tells other road users.",
       pairs: [
         ["Indicator", "I intend to turn, change lane, overtake or stop at the side"],
@@ -413,7 +413,7 @@ const matching = {
       src: P(30, "Indicator; Stop lights. p.31 Horn; Hazard; Reversing"),
     },
     {
-      id: "m2", type: "match", concept: "arm",
+      id: "m2", visual: "zebra", type: "match", concept: "arm",
       prompt: "Match each signal to when it is used.",
       pairs: [
         ["Arm signal", "When mechanical signals aren't used or have failed, or to reinforce them"],
@@ -486,7 +486,7 @@ const scenarios = {
       options: ["Wave them across", "Flash your headlights at them", "Don't wave them across — never wave a pedestrian across a road", "Sound the horn to hurry them"], answer: 2,
       explain: "You should never wave a pedestrian across a road — you cannot know what other traffic is doing.",
       src: P(31, "You should not signal carelessly…") },
-    { id: "s4", type: "choice", label: "Scenario", concept: "unnecessary",
+    { id: "s4", visual: "rear-lights:stop", type: "choice", label: "Scenario", concept: "unnecessary",
       scene: "🚗🚗🚗 You're stopped in a queue. Your handbrake is on and the car behind has stopped. It's a clear day.",
       prompt: "What about your brake lights?",
       options: ["Keep your foot on the footbrake so they stay lit", "Release the footbrake — brake lights now are unnecessary", "Put on the hazard lights", "Pump the brakes to keep warning"], answer: 1,
@@ -505,7 +505,7 @@ const scenarios = {
       options: ["Never while moving", "Briefly, to warn traffic behind that you are slowing suddenly", "Leave them on until you're home", "Only once fully stopped on the hard shoulder"], answer: 1,
       explain: "Hazard lights are not used when moving — except briefly on fast roads such as motorways if you have to slow down suddenly for an accident or traffic queue ahead.",
       src: P(31, "Hazard Warning Lights") },
-    { id: "s7", type: "choice", label: "Scenario", concept: "indicator",
+    { id: "s7", visual: "cyclist-room", type: "choice", label: "Scenario", concept: "indicator",
       scene: "🚴 A cyclist is ahead of you on a busy road, with traffic following you.",
       prompt: "Should you indicate to go around the cyclist?",
       options: ["Never for a cyclist", "Always — to warn drivers behind that you're passing a moving vehicle they may not see", "Only if the cyclist looks back", "Only at night"], answer: 1,
@@ -541,17 +541,17 @@ const walkthrough = {
       options: ["No — the driver behind can guess", "Yes — it would help another road user", "Only an arm signal", "Only the horn"], answer: 1,
       explain: "Signal when it would help another road user. Indicators warn traffic ahead and behind that you intend to turn.",
       src: P(84, "Post-test answer 2; p.30 Indicators") },
-    { id: "w4", type: "choice", step: "When", concept: "timing",
+    { id: "w4", visual: "side-roads", type: "choice", step: "When", concept: "timing",
       prompt: "When do you give it?",
       options: ["At the last moment", "In good time and long enough to convey your meaning — not so early it confuses", "Only once you're turning", "As early as possible, whatever the side roads"], answer: 1,
       explain: "In good time before your manoeuvre and for long enough to convey your meaning — but not too soon.",
       src: P(30, "When to Signal") },
-    { id: "w5", type: "choice", step: "Slowing", concept: "stop-lights",
+    { id: "w5", visual: "rear-lights:stop", type: "choice", step: "Slowing", concept: "stop-lights",
       prompt: "You brake to slow for the turn. How should you brake?",
       options: ["Late and firmly", "Early and progressively, so your stop lights warn the driver behind in time", "Only with the gears", "Pump the brakes"], answer: 1,
       explain: "Stop lights come on with a little pressure on the footbrake. Early and progressive braking gives following drivers time to react.",
       src: P(30, "Stop light Signals") },
-    { id: "w6", type: "choice", step: "During the turn", concept: "turn-rules",
+    { id: "w6", visual: "rear-lights:indicator", type: "choice", step: "During the turn", concept: "turn-rules",
       prompt: "During the turn, the signal should be…",
       options: ["Cancelled so both hands are free", "Left on — never cancel until the turn is complete", "Switched to hazard lights", "Replaced with an arm signal"], answer: 1,
       explain: "Signal continuously — you need both hands on the wheel, and you never cancel a signal until the turn is complete.",
@@ -608,17 +608,17 @@ const challenge = {
     { id: "c1", skill: "knowledge", type: "choice", label: "Quick recall", concept: "purpose",
       prompt: "Are signals instructions to other road users?", options: ["Yes, other drivers must obey them", "No — they warn other road users of your intentions", "Only arm signals are", "Only at junctions"], answer: 1,
       explain: "Signals are not instructions; they warn other road users of your intentions.", src: P(84, "Post-test answer 8") },
-    { id: "c2", skill: "application", type: "choice", label: "Scenario", concept: "presence",
+    { id: "c2", visual: "flashing-headlights", skill: "application", type: "choice", label: "Scenario", concept: "presence",
       scene: "💡 A lorry driver flashes their headlights as you wait to turn right across their lane.",
       prompt: "What do you do?", options: ["Turn straight away", "Decide for yourself whether it's safe and be sure of their intentions", "Flash back", "Wave them on"], answer: 1,
       explain: "Flashing headlamps should not be taken as an invitation to proceed.", src: P(31, "Warning Others of Your Presence") },
     { id: "c3", skill: "knowledge", type: "truefalse", concept: "right-of-way",
       statement: "A signal, mechanical or otherwise, does not confer right of way.", answer: true,
       explain: "Signals give advance information; they do not give you the right to make the manoeuvre.", src: P(31, "Remember") },
-    { id: "c4", skill: "recognition", type: "choice", label: "Recognise the signal", concept: "stop-lights",
+    { id: "c4", visual: "rear-lights:stop", skill: "recognition", type: "choice", label: "Recognise the signal", concept: "stop-lights",
       prompt: "Which signal comes on when you press the footbrake a little?", options: ["Hazard lights", "Stop lights", "Reversing lights", "Indicators"], answer: 1,
       explain: "Stop lights illuminate when you apply a little pressure to the footbrake.", src: P(30, "Stop light Signals") },
-    { id: "c5", skill: "recognition", type: "match", label: "Matching", concept: "indicator",
+    { id: "c5", visuals: ["rear-lights:indicator", "rear-lights:reversing"], skill: "recognition", type: "match", label: "Matching", concept: "indicator",
       prompt: "Match each signal to its message.",
       pairs: [["Indicator", "I intend to turn or change lane"], ["Horn", "Be aware of my presence"], ["Hazard lights", "I'm temporarily blocking traffic"], ["Reversing lights", "I intend to reverse"]],
       explain: "Intentions: indicators, stop lights, reversing lights. Presence: horn, flashing headlights. Hazard lights: temporarily blocking the flow.", src: P(30, "p.30–31") },
@@ -640,6 +640,21 @@ const challenge = {
       explain: "In good time, so other road users have time to react safely.", src: P(33, "Retention Q3 (answer d, p.88)") },
   ],
 };
+
+/* ---- visuals on the retention questions, and Spot-it picture questions ---- */
+const RET_VISUALS = { 2: "rear-lights:indicator", 5: "flashing-headlights", 6: "flashing-headlights", 9: "zebra" };
+retention.items.forEach(it => { const v = RET_VISUALS[Number(it.id.slice(3))]; if (v) it.visual = v; });
+spot.items.push(
+  { id: "pic1", type: "picture", label: "Spot it", concept: "hazard-lights",
+    prompt: "Which car is showing hazard warning lights?", options: ["rear-lights:indicator", "rear-lights:stop", "rear-lights:hazard", "rear-lights:reversing"], answer: 2, names: ["Indicator", "Stop lights", "Hazard warning lights", "Reversing lights"],
+    explain: "Hazard warning lights flash all indicators together — to show you are temporarily blocking the flow of traffic.", src: P(31, "Hazard Warning Lights") },
+  { id: "pic2", type: "picture", label: "Spot it", concept: "stop-lights",
+    prompt: "Which car is braking?", options: ["rear-lights:reversing", "rear-lights:hazard", "rear-lights:indicator", "rear-lights:stop"], answer: 3, names: ["Reversing lights", "Hazard warning lights", "Indicator", "Stop lights"],
+    explain: "Stop lights come on red when you press the footbrake — warning following traffic you’re slowing or stopping.", src: P(30, "Stop light Signals") },
+  { id: "pic3", type: "picture", label: "Spot it", concept: "reversing",
+    prompt: "Which car is about to reverse?", options: ["rear-lights:stop", "rear-lights:reversing", "rear-lights:indicator", "rear-lights:hazard"], answer: 1, names: ["Stop lights", "Reversing lights", "Indicator", "Hazard warning lights"],
+    explain: "White reversing lights warn others you intend to reverse — select reverse promptly when parking on a busy road.", src: P(31, "Reversing Lights") },
+);
 
 /* ---------------------------------------------------------------------------
    THE UNIT

@@ -51,11 +51,19 @@ so each piece can be checked against the workbook page it came from. It is
 never shown to learners — nor are page numbers or the word "workbook"
 anywhere on screen. Learners see the course name and unit number only.
 
-## Adding Unit 1.2 (or any unit)
+## Adding a unit
 
-1. Create `book1/unit1_2.js` in the same shape as `unit1_1.js`, from the
-   workbook pages listed in `books.js`.
-2. In `books.js`, import it and set `content: UNIT_1_2` on unit `1.2`.
+1. Create `book1/unit1_N.js` in the same shape as the existing units, from
+   the workbook pages listed in `books.js`.
+2. In `books.js`, import it and set `content` on that unit.
+3. Add its terms to `book1/glossary.js`, drawing any new ones in `visuals.jsx`.
+
+## Deploying
+
+Push to `main` on its own. If the same commit is pushed to a feature branch
+at the same moment, Vercel may build it only as a Preview and skip the
+Production deploy — the site then stays on the previous version. Push
+`main` first and the branch afterwards.
 
 No screen or engine changes are needed. Units without `content` show as
 "Coming soon".

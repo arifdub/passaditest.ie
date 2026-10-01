@@ -313,7 +313,7 @@ const learn = {
       icon: "✚",
       kicker: "Crossroads",
       title: "The most hazardous junction",
-      visual: "junction-cross",
+      visuals: ["junction-cross", "right-turns-offside"],
       body: [
         "Look for signs showing priority, and be prepared to give way where nothing guides you. A driver on the minor road may not realise which road has priority.",
       ],
@@ -625,7 +625,7 @@ const scenarios = {
       options: ["Go quickly before anything comes", "Peep and creep: edge forward until your eyes are level with the obstruction and you can see the whole situation", "Stop well back and wait for a gap you can hear", "Sound the horn and pull out"], answer: 1,
       explain: "Only when your eyes are level with any obstruction can you see the whole situation and make a safe decision.",
       src: P(43, "Acute Angle Turning; p.85 answer 11") },
-    { id: "s6", type: "choice", label: "Scenario", concept: "crossroads", visual: "junction-cross",
+    { id: "s6", type: "choice", label: "Scenario", concept: "crossroads", visual: "right-turns-offside",
       scene: "✚ At a crossroads, you and an oncoming car are both turning right.",
       prompt: "Which is the safest method?",
       options: ["Right side to right side — turn behind each other", "Left side to left side — turn in front of each other", "Whoever arrived first goes, the other waits", "Both wait for a Garda"], answer: 0,

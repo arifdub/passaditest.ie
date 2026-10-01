@@ -243,6 +243,12 @@ export default [
     src: P("1.4", 44, "Crossroads"),
   },
   {
+    id: "right-side-right-side", unit: "1.4", term: "Turning right: right side to right side", visual: "right-turns-offside",
+    meaning: "Two cars turning right from opposite directions pass each other, then each turns behind the other.",
+    key: "The safest method — both drivers get a clear view of approaching traffic.",
+    src: P("1.4", 44, "Turning right at crossroads"),
+  },
+  {
     id: "staggered", unit: "1.4", term: "Staggered junction", visual: "junction-staggered",
     meaning: "Side roads that join from each side, offset rather than opposite.",
     key: "Treat it as two junctions close together.",

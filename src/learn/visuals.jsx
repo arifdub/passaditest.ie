@@ -604,6 +604,32 @@ const DRAW = {
     </Frame>
   ),
 
+  /* Both turning right at a crossroads, right side to right side: each
+     drives past the other, then turns behind it. Driving on the left, so
+     northbound traffic is on the left half, eastbound on the upper half. */
+  "right-turns-offside": () => (
+    <Frame title="Both turning right: right side to right side">
+      <rect x="0" y="30" width="160" height="40" fill={C.road} />
+      <rect x="60" y="0" width="40" height="100" fill={C.road} />
+      <line x1="0" y1="50" x2="60" y2="50" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="100" y1="50" x2="160" y2="50" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="80" y1="0" x2="80" y2="30" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <line x1="80" y1="70" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      {/* where they came from */}
+      <path d="M72 98 L72 60" stroke={C.good} strokeWidth="0.9" strokeDasharray="1.5 1.5" />
+      <path d="M88 2 L88 40" stroke={C.amber} strokeWidth="0.9" strokeDasharray="1.5 1.5" />
+      <Car x="72" y="51" color={C.good} />
+      <Car x="88" y="49" rot={180} color={C.amber} />
+      {/* each turns behind the other */}
+      <Arrow d="M72 43 Q72 38 80 38 L152 38" />
+      <Arrow d="M88 57 Q88 62 80 62 L8 62" color={C.amber} />
+      <Tag x="128" y="14" size="4.2">RIGHT SIDE TO RIGHT SIDE</Tag>
+      <Tag x="128" y="20" size="3.4" weight={600}>pass each other, turn behind</Tag>
+      <Tag x="34" y="86" size="3.4" weight={600}>both get a clear view</Tag>
+      <Tag x="34" y="91" size="3.4" weight={600}>of approaching traffic</Tag>
+    </Frame>
+  ),
+
   "junction-staggered": () => (
     <Frame title="Staggered junction">
       <rect x="65" y="0" width="30" height="100" fill={C.road} />

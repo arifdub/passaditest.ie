@@ -21,6 +21,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_2.js` | Unit 1.2 Signals & Signalling (pp.30–33). |
 | `book1/unit1_3.js` | Unit 1.3 Road Positioning (pp.34–39). |
 | `book1/unit1_4.js` | Unit 1.4 Junctions & Bends (pp.40–48). |
+| `book1/unit1_5.js` | Unit 1.5 Dealing with Hills (pp.49–52). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -96,6 +97,8 @@ challenge ≥ 80%, retention check ≥ 70%.
   review; recorded as `excluded` in `unit1_4.js`. Q1–Q3 (load and tyre
   pressures) come from the book's own test though the unit text doesn't
   cover them; they are kept as the book sets them.
+- **Retention test 1.5** — the answer key agrees with the unit text for all
+  ten questions; all are used. Hill drawings are side views.
 - **Unit 1.5** is headed "Dealing with Hills" on page 49 and in its post test,
   but its model answers on page 85 are headed "Overtaking on Gradients". The
   unit heading is used.

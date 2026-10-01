@@ -56,6 +56,41 @@ function Car({ x, y, rot = 0, color = C.blue, ghost, door }) {
   );
 }
 
+/* A car seen from the side, wheels on the ground at (x, y), tilted `rot`
+   degrees (negative = nose up), facing right unless `flip`. */
+function SideCar({ x, y, rot = 0, color = C.blue, ghost, flip }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${flip ? -1 : 1} 1)`} opacity={ghost ? 0.45 : 1}>
+      <path d="M-11 -3 L-11 -7 Q-10 -9 -7 -9 L-4 -13 Q-3 -14 -1 -14 L5 -14 Q7 -14 8 -12 L10 -9 Q12 -9 12 -7 L12 -3 Z"
+        fill={color} stroke="#0f172a" strokeWidth="0.4" />
+      <path d="M-3 -9.5 L-1 -12.6 L4 -12.6 L6.5 -9.5 Z" fill="#e0f2fe" />
+      <circle cx="-6.5" cy="-2.6" r="2.6" fill="#111827" />
+      <circle cx="7" cy="-2.6" r="2.6" fill="#111827" />
+    </g>
+  );
+}
+
+/* A top-down car with its front wheels turned `steer` degrees
+   (negative = left), for the hill-parking drawings. */
+function WheelCar({ x, y, steer = 0, color = C.good }) {
+  /* Wheels drawn on top and outside the body, front pair turned and
+     highlighted, so the direction reads at a glance. */
+  const wheel = (wx, wy, a, front) => (
+    <rect x={wx - 1.5} y={wy - 3.2} width="3" height="6.4" rx="0.8"
+      fill={front ? "#f59e0b" : "#111827"} stroke="#0f172a" strokeWidth="0.4"
+      transform={`rotate(${a} ${wx} ${wy})`} />
+  );
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x="-4.6" y="-10" width="9.2" height="20" rx="2.6" fill={color} stroke="#0f172a" strokeWidth="0.35" />
+      <rect x="-3.4" y="-6.6" width="6.8" height="3.6" rx="0.8" fill="#e0f2fe" />
+      <rect x="-3.4" y="3.6" width="6.8" height="2.8" rx="0.8" fill="#e0f2fe" />
+      {wheel(-5.6, -6.5, steer, true)}{wheel(5.6, -6.5, steer, true)}
+      {wheel(-5.6, 6.5, 0)}{wheel(5.6, 6.5, 0)}
+    </g>
+  );
+}
+
 /* A text label with a light halo so it reads over road or grass. */
 function Tag({ x, y, children, size = 5, color = C.ink, anchor = "middle", weight = 800 }) {
   const bare = useContext(BareContext);
@@ -742,6 +777,121 @@ const DRAW = {
       <Tag x="30" y="4.5" size="3.2" weight={700}>③ into the left-hand lane</Tag>
     </Frame>
   ),
+
+  /* ---------------- hills (Unit 1.5) — side views ---------------- */
+  "hill-up": () => (
+    <Frame title="Going uphill">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 92 L160 30 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 92 L160 30" stroke={C.road} strokeWidth="3" />
+      <SideCar x="70" y="63.5" rot={-21} color={C.good} />
+      <circle cx="56" cy="44" r="6" fill="#ffffff" stroke={C.good} strokeWidth="1" />
+      <text x="56" y="47.4" fontSize="9" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">2</text>
+      <Tag x="40" y="14" size="4.6">GOING UPHILL</Tag>
+      <Tag x="40" y="21" size="3.4" weight={600}>lower gear before the climb</Tag>
+      <Tag x="40" y="26" size="3.4" weight={600}>harder to gain or keep speed</Tag>
+      <Tag x="128" y="76" size="3.4" weight={600} color="#14532d">brakes slow you sooner —</Tag>
+      <Tag x="128" y="81" size="3.4" weight={600} color="#14532d">you can brake later</Tag>
+      <SideCar x="132" y="38" rot={-21} color={C.grey} flip />
+      <Tag x="132" y="18" size="3.2" weight={700} color={C.bad}>oncoming: faster,</Tag>
+      <Tag x="132" y="22.5" size="3.2" weight={700} color={C.bad}>less able to stop</Tag>
+    </Frame>
+  ),
+
+  "hill-down": () => (
+    <Frame title="Going downhill">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 30 L160 92 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 30 L160 92" stroke={C.road} strokeWidth="3" />
+      <SideCar x="70" y="56.5" rot={21} color={C.good} />
+      <circle cx="58" cy="34" r="6" fill="#ffffff" stroke={C.good} strokeWidth="1" />
+      <text x="58" y="37.4" fontSize="9" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">2</text>
+      <Tag x="118" y="14" size="4.6">GOING DOWNHILL</Tag>
+      <Tag x="118" y="21" size="3.4" weight={600}>low gear as you approach —</Tag>
+      <Tag x="118" y="26" size="3.4" weight={600}>engine braking helps control speed</Tag>
+      <Tag x="40" y="82" size="3.4" weight={600} color={C.bad}>brakes take longer —</Tag>
+      <Tag x="40" y="87" size="3.4" weight={600} color={C.bad}>brake sooner</Tag>
+      <Tag x="40" y="94" size="3.2" weight={600}>clutch down = car speeds up</Tag>
+    </Frame>
+  ),
+
+  "brake-fade": () => (
+    <Frame title="Brake fade">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 26 L160 88 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 26 L160 88" stroke={C.road} strokeWidth="3" />
+      <SideCar x="82" y="57.8" rot={21} color={C.good} />
+      {[0, 1, 2].map(i => (
+        <path key={i} d={`M${86 + i * 4} ${50 - i} q2 -4 0 -8`} fill="none" stroke={C.bad} strokeWidth="0.9" opacity={0.8 - i * 0.2} />
+      ))}
+      <Tag x="44" y="14" size="4.6" color={C.bad}>BRAKE FADE</Tag>
+      <Tag x="44" y="21" size="3.4" weight={600}>brakes used all the way down</Tag>
+      <Tag x="44" y="26" size="3.4" weight={600}>overheat and stop less well</Tag>
+      <Tag x="126" y="86" size="3.4" weight={700} color="#047857">use the correct combination</Tag>
+      <Tag x="126" y="91" size="3.4" weight={700} color="#047857">of lower gears and braking</Tag>
+    </Frame>
+  ),
+
+  "dead-ground": () => (
+    <Frame title="Dead ground">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 70 Q30 40 56 44 Q80 48 98 74 Q112 88 128 78 Q146 64 160 52 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 70 Q30 40 56 44 Q80 48 98 74 Q112 88 128 78 Q146 64 160 52" fill="none" stroke={C.road} strokeWidth="3" />
+      <SideCar x="36" y="48.5" rot={-12} color={C.good} />
+      <path d="M44 38 L150 44" stroke={C.amber} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <SideCar x="114" y="82" rot={-12} color={C.bad} flip ghost />
+      <Tag x="114" y="66" size="3.4" weight={700} color={C.bad}>hidden in the dip</Tag>
+      <Tag x="40" y="14" size="4.6">DEAD GROUND</Tag>
+      <Tag x="40" y="21" size="3.4" weight={600}>a dip that hides oncoming traffic</Tag>
+      <Tag x="40" y="94" size="3.6" weight={800} color={C.bad}>Don't overtake on approach</Tag>
+      <Tag x="128" y="30" size="3.2" weight={600}>your line of sight</Tag>
+    </Frame>
+  ),
+
+  "brow": () => (
+    <Frame title="The brow of a hill">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 88 Q70 20 160 88 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 88 Q70 20 160 88" fill="none" stroke={C.road} strokeWidth="3" />
+      <SideCar x="42" y="60" rot={-24} color={C.good} />
+      <path d="M50 46 L120 30" stroke={C.amber} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <SideCar x="118" y="66" rot={26} color={C.grey} flip ghost />
+      <Tag x="80" y="12" size="4.6">BROW OF A HILL</Tag>
+      <Tag x="80" y="19" size="3.4" weight={600}>view of the road ahead is restricted</Tag>
+      <Tag x="40" y="82" size="3.3" weight={600}>keep well left, ease off the gas</Tag>
+      <Tag x="128" y="90" size="3.3" weight={600}>never park here</Tag>
+    </Frame>
+  ),
+
+  /* Parking on a hill, top-down. variant: up-kerb | up-nokerb | down-kerb | down-nokerb.
+     The car faces up the page; "uphill" means up the page is uphill. */
+  "hill-park": ({ variant = "up-kerb" }) => {
+    const up = variant.startsWith("up");
+    const kerb = variant.endsWith("-kerb");
+    const steer = up && kerb ? 30 : -30;
+    const gear = up ? "first gear" : "reverse gear";
+    const slope = up ? C.good : C.amber;
+    return (
+      <Frame title="Parking on a hill">
+        {kerb && <rect x="44" y="0" width="6" height="100" fill={C.kerb} stroke="#a8a29e" strokeWidth="0.5" />}
+        <rect x="50" y="0" width="60" height="100" fill={C.road} />
+        <line x1="80" y1="0" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+        {/* the slope: the car faces up the page */}
+        {[22, 50, 78].map(y => (
+          <path key={y} d={`M130 ${y + 8} L130 ${y - 8} M126 ${y - 4} L130 ${y - 8} L134 ${y - 4}`} stroke={slope} strokeWidth="1.4" fill="none" />
+        ))}
+        <Tag x="138" y="96" size="3.4" weight={800} color={up ? "#047857" : "#b45309"}>{up ? "road CLIMBS ahead" : "road DROPS ahead"}</Tag>
+        <WheelCar x="58" y="50" steer={steer} />
+        <Arrow d={steer > 0 ? "M62 36 L72 27" : "M54 36 L44 27"} color="#f59e0b" w={1.3} />
+        <Tag x="24" y="10" size="4.2">{up ? "FACING UPHILL" : "FACING DOWNHILL"}</Tag>
+        <Tag x="24" y="16" size="3.6" weight={700} color={kerb ? C.ink : "#64748b"}>{kerb ? "with a kerb" : "no kerb"}</Tag>
+        <Tag x={steer > 0 ? 96 : 24} y={steer > 0 ? 30 : 40} size="3.8" weight={800} color="#b45309">{steer > 0 ? "wheels RIGHT" : "wheels LEFT"}</Tag>
+        <Tag x="24" y="78" size="3.4" weight={600}>handbrake on</Tag>
+        <Tag x="24" y="84" size="3.4" weight={600}>{gear}</Tag>
+        <Tag x="24" y="90" size="3" weight={600} color="#64748b">(automatic: park)</Tag>
+      </Frame>
+    );
+  },
 
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {

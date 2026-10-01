@@ -290,4 +290,54 @@ export default [
     key: "Treat each half as a separate road: cross, wait in the reserve, then join.",
     src: P("1.4", 45, "Emerging right — wide central reserve"),
   },
+
+  /* ---------------- Unit 1.5 — Dealing with Hills ---------------- */
+  {
+    id: "uphill", unit: "1.5", term: "Going uphill", visual: "hill-up",
+    meaning: "Gravity slows you: harder to gain speed, and the brakes stop you sooner.",
+    key: "Get into the most appropriate gear before the climb.",
+    src: P("1.5", 49, "Going Uphill"),
+  },
+  {
+    id: "downhill", unit: "1.5", term: "Going downhill", visual: "hill-down",
+    meaning: "Gravity speeds you up: brakes take longer, and pressing the clutch makes the car run faster.",
+    key: "Select a low gear as you approach — the steeper the hill, the lower the gear.",
+    src: P("1.5", 50, "Going Downhill"),
+  },
+  {
+    id: "brake-fade", unit: "1.5", term: "Brake fade", visual: "brake-fade",
+    meaning: "Brakes that overheat with continued use and become less effective.",
+    key: "Downhill, use the correct combination of lower gears and braking — don't rely on the brakes.",
+    src: P("1.5", 85, "Post-test answers 6, 8"),
+  },
+  {
+    id: "brow", unit: "1.5", term: "Brow of a hill", visual: "brow",
+    meaning: "The top of a hill, where your view of the road ahead is restricted.",
+    key: "Keep well left, ease off the gas — and never park or overtake there.",
+    src: P("1.5", 50, "Hazards on Hills; p.49"),
+  },
+  {
+    id: "dead-ground", unit: "1.5", term: "Dead ground", visual: "dead-ground",
+    meaning: "A dip or hollow in the road that hides oncoming traffic from your view.",
+    key: "You must not overtake on approach to dead ground.",
+    src: P("1.5", 50, "Hazards on Hills"),
+  },
+  {
+    id: "park-uphill-kerb", unit: "1.5", term: "Parking uphill, with a kerb", visual: "hill-park:up-kerb",
+    meaning: "Facing uphill beside a kerb.",
+    key: "Front wheels to the RIGHT, handbrake on, first gear.",
+    src: P("1.5", 50, "Facing Uphill"),
+  },
+  {
+    id: "park-uphill-nokerb", unit: "1.5", term: "Parking uphill, no kerb", visual: "hill-park:up-nokerb",
+    meaning: "Facing uphill where there's no kerb.",
+    key: "Front wheels to the LEFT, handbrake on, first gear.",
+    src: P("1.5", 50, "Facing Uphill"),
+  },
+  {
+    id: "park-downhill", unit: "1.5", term: "Parking downhill", visual: "hill-park:down-kerb",
+    meaning: "Facing downhill, with or without a kerb.",
+    key: "Front wheels to the LEFT, handbrake on, reverse gear.",
+    src: P("1.5", 50, "Facing Downhill"),
+  },
 ];

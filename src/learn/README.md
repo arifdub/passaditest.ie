@@ -25,6 +25,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_6.js` | Unit 1.6 Overtaking (pp.53–58). |
 | `book1/unit1_7.js` | Unit 1.7 Level Crossings & Tramways (pp.59–63). |
 | `book1/unit1_8.js` | Unit 1.8 Motorway Driving (pp.64–71). |
+| `book1/unit1_9.js` | Unit 1.9 Night Driving (pp.72–75). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -130,6 +131,16 @@ challenge ≥ 80%, retention check ≥ 70%.
   text or the book's own test and are used; Q3, Q6, Q11, Q12, Q14, Q16 and
   Q18 cover points the unit text doesn't state and are kept as the book
   sets them. Its recognition game is "Read the Motorway".
+- **Retention test 1.9, Q5** — omitted: it asks a seat-belt statistic the
+  unit doesn't cover, so its answer can't be checked against the text. Q9
+  isn't stated in the unit but agrees with its dazzle rules and is kept.
+  Its recognition game is "Lights On?".
+- **Unit 1.9's definition of night** — page 72 gives "half an hour after
+  sunset to one and a half hours before sunrise", which looks misprinted.
+  The unit teaches the post-test answer ("between dusk and dawn") and page
+  73's "you MUST use your lights between sunset and sunrise". Post-test
+  answer 5 ("both, at all times during darkness") conflicts with page 73
+  ("unless the road is well lit") and isn't used.
 - **Unit 1.10** is headed "Weather, Driver Vision & It's Effects" (page 76);
   the answer pages call it "Weather & Vision". The page 76 heading is used
   (spelling corrected to "Its").

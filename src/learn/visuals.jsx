@@ -282,6 +282,32 @@ function MotorwaySymbol({ x, y, s = 1 }) {
   );
 }
 
+/* A headlight beam from a car facing up the page at (x, y).
+   kind: "dipped" (short, aimed down and to the left) or "main" (long). */
+function Beam({ x, y, kind = "dipped", reach }) {
+  const id = useId().replace(/:/g, "");
+  const r = reach ?? (kind === "main" ? 84 : 34);
+  const pts = kind === "main"
+    ? `${x - 3},${y - 7} ${x + 3},${y - 7} ${x + 13},${y - r} ${x - 13},${y - r}`
+    : `${x - 3},${y - 7} ${x + 3},${y - 7} ${x + 3},${y - r} ${x - 13},${y - r + 3}`;
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`bm${id}`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#fde68a" stopOpacity="0.85" />
+          <stop offset="1" stopColor="#fde68a" stopOpacity="0.05" />
+        </linearGradient>
+      </defs>
+      <polygon points={pts} fill={`url(#bm${id})`} />
+    </g>
+  );
+}
+
+/* A night-time ground for the drawings: dark verges. */
+function Night() {
+  return <rect x="0" y="0" width="160" height="100" fill="#1e293b" />;
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -1850,6 +1876,214 @@ const DRAW = {
       <Tag x="80" y="94" size="3.1" weight={600} color={C.bad}>there too soon → a record goes to the Gardaí</Tag>
     </Frame>
   ),
+
+  /* ---------------- night driving (Unit 1.9) ---------------- */
+  "dipped-main": () => (
+    <Frame title="Dipped and main beam">
+      <Night />
+      {[[8, 72], [88, 152]].map(([l, r]) => (
+        <g key={l}>
+          <rect x={l} y="0" width={r - l} height="100" fill={C.road} />
+          <line x1={(l + r) / 2} y1="0" x2={(l + r) / 2} y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+        </g>
+      ))}
+      <Beam x={26} y={88} kind="dipped" />
+      <Car x="26" y="88" color={C.good} />
+      <Beam x={106} y={88} kind="main" reach={86} />
+      <Car x="106" y="88" color={C.good} />
+      <Tag x="40" y="34" size="3.8" color="#047857">DIPPED</Tag>
+      <Tag x="40" y="40" size="3" weight={700}>short, aimed</Tag>
+      <Tag x="40" y="44.5" size="3" weight={700}>down and left</Tag>
+      <Tag x="134" y="50" size="3.8" color="#1d4ed8">MAIN BEAM</Tag>
+      <Tag x="134" y="56" size="3" weight={700}>long — dip it</Tag>
+      <Tag x="134" y="60.5" size="3" weight={700}>for others</Tag>
+    </Frame>
+  ),
+
+  "stop-in-lights": () => (
+    <Frame title="Stopping within the distance you can see">
+      <Night />
+      <VRoad />
+      <Beam x={62} y={92} kind="dipped" reach={60} />
+      <Car x="62" y="92" color={C.good} />
+      <line x1="74" y1="85" x2="74" y2="40" stroke={C.good} strokeWidth="1" />
+      <line x1="71" y1="85" x2="77" y2="85" stroke={C.good} strokeWidth="1" />
+      <line x1="71" y1="40" x2="77" y2="40" stroke={C.good} strokeWidth="1" />
+      <Tag x="96" y="64" size="3.2" weight={800} color="#047857">stopping</Tag>
+      <Tag x="96" y="68.5" size="3.2" weight={800} color="#047857">distance</Tag>
+      <text x="56" y="16" fontSize="7" textAnchor="middle" opacity="0.5">🚶</text>
+      <Tag x="138" y="20" size="3.2" weight={800}>beyond your lights:</Tag>
+      <Tag x="138" y="25" size="3.2" weight={800}>unseen</Tag>
+      <Tag x="22" y="50" size="3.2" weight={800}>stop within</Tag>
+      <Tag x="22" y="55" size="3.2" weight={800}>the distance</Tag>
+      <Tag x="22" y="60" size="3.2" weight={800}>your lights show</Tag>
+    </Frame>
+  ),
+
+  "dazzle": () => (
+    <Frame title="Dazzled by an oncoming vehicle">
+      <Night />
+      <VRoad />
+      <g transform="rotate(180 97 22)"><Beam x={97} y={22} kind="main" reach={70} /></g>
+      <Car x="97" y="22" rot={180} color={C.grey} />
+      <Car x="62" y="80" color={C.good} />
+      <path d="M60 72 L48 50" stroke="#22c55e" strokeWidth="1" strokeDasharray="2 1.5" />
+      <text x="50" y="40" fontSize="6" textAnchor="middle">🚲</text>
+      <Tag x="22" y="70" size="3.2" weight={800} color="#047857">look to the</Tag>
+      <Tag x="22" y="75" size="3.2" weight={800} color="#047857">left verge</Tag>
+      <Tag x="22" y="30" size="3" weight={700}>watch for cyclists</Tag>
+      <Tag x="22" y="34.5" size="3" weight={700}>and pedestrians</Tag>
+      <Tag x="138" y="68" size="3.2" weight={800}>slow down —</Tag>
+      <Tag x="138" y="73" size="3.2" weight={800}>stop if necessary</Tag>
+      <Tag x="138" y="86" size="3" weight={700} color={C.bad}>don't look into</Tag>
+      <Tag x="138" y="90.5" size="3" weight={700} color={C.bad}>the lights</Tag>
+    </Frame>
+  ),
+
+  "dip-left-bend": () => (
+    <Frame title="Dip earlier on a left-hand bend">
+      <Night />
+      <path d="M48 100 L48 60 Q48 20 8 18 L0 18 L0 40 L8 40 Q26 42 26 62 L26 100 Z" fill={C.road} transform="translate(30 0)" />
+      <path d="M67 100 L67 62 Q67 32 38 29 L30 29" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <polygon points="60,80 64,80 82,14 50,16" fill="#fde68a" opacity="0.35" />
+      <Car x="62" y="88" color={C.good} />
+      <Car x="40" y="23" rot={90} color={C.grey} />
+      <Tag x="122" y="50" size="3.6" color="#047857">LEFT-HAND BEND:</Tag>
+      <Tag x="122" y="56" size="3.6" color="#047857">DIP EARLIER</Tag>
+      <Tag x="122" y="63" size="3" weight={700}>than for a right-hand bend —</Tag>
+      <Tag x="122" y="67.5" size="3" weight={700}>your lights are focused</Tag>
+      <Tag x="122" y="72" size="3" weight={700}>more towards the left</Tag>
+    </Frame>
+  ),
+
+  "follow-night": () => (
+    <Frame title="Following another vehicle at night">
+      <Night />
+      <VRoad />
+      <Car x="62" y="24" color={C.grey} />
+      <rect x="57.8" y="30" width="2.2" height="1.4" fill="#ef4444" />
+      <rect x="64" y="30" width="2.2" height="1.4" fill="#ef4444" />
+      <Beam x={62} y={84} kind="dipped" reach={30} />
+      <Car x="62" y="84" color={C.good} />
+      <Tag x="138" y="30" size="3.3" weight={800}>keep well back,</Tag>
+      <Tag x="138" y="35" size="3.3" weight={800}>dipped beam</Tag>
+      <Tag x="22" y="20" size="3" weight={700} color={C.bad}>don't "drive on</Tag>
+      <Tag x="22" y="24.5" size="3" weight={700} color={C.bad}>its tail lights" —</Tag>
+      <Tag x="22" y="29" size="3" weight={700} color={C.bad}>a false sense</Tag>
+      <Tag x="22" y="33.5" size="3" weight={700} color={C.bad}>of security</Tag>
+    </Frame>
+  ),
+
+  "brake-dazzle": () => (
+    <Frame title="Brake lights dazzling the driver behind">
+      <Night />
+      <VRoad />
+      <rect x="45" y="6" width="35" height="3" fill={C.line} />
+      <Car x="62" y="24" color={C.good} />
+      <ellipse cx="62" cy="40" rx="10" ry="8" fill="#ef4444" opacity="0.35" />
+      <rect x="57.8" y="30" width="2.2" height="1.4" fill="#ef4444" />
+      <rect x="64" y="30" width="2.2" height="1.4" fill="#ef4444" />
+      <Car x="62" y="62" color={C.grey} />
+      <Tag x="22" y="20" size="3.2" weight={800} color="#047857">waiting at</Tag>
+      <Tag x="22" y="25" size="3.2" weight={800} color="#047857">a junction:</Tag>
+      <Tag x="22" y="30" size="3.2" weight={800} color="#047857">handbrake on,</Tag>
+      <Tag x="22" y="35" size="3.2" weight={800} color="#047857">foot off the brake</Tag>
+      <Tag x="138" y="40" size="3" weight={700} color={C.bad}>brake lights dazzle</Tag>
+      <Tag x="138" y="44.5" size="3" weight={700} color={C.bad}>the driver behind</Tag>
+      <Tag x="138" y="62" size="3" weight={700}>in fog: keep your</Tag>
+      <Tag x="138" y="66.5" size="3" weight={700}>foot on the brake</Tag>
+      <Tag x="138" y="71" size="3" weight={700}>to help following drivers</Tag>
+    </Frame>
+  ),
+
+  "night-parking": () => (
+    <Frame title="Parking at night">
+      <Night />
+      <VRoad />
+      <Car x="51" y="56" color={C.good} />
+      <rect x="47.3" y="62.6" width="2" height="1.4" fill="#ef4444" />
+      <rect x="52.7" y="62.6" width="2" height="1.4" fill="#ef4444" />
+      <circle cx="47.6" cy="49" r="0.9" fill="#fef9c3" />
+      <circle cx="54.4" cy="49" r="0.9" fill="#fef9c3" />
+      <Car x="109" y="40" color={C.bad} ghost />
+      <Tag x="109" y="58" size="6" color={C.bad}>✗</Tag>
+      <Car x="62" y="94" color={C.grey} />
+      <Tag x="22" y="70" size="3" weight={800} color="#047857">on the left,</Tag>
+      <Tag x="22" y="74.5" size="3" weight={800} color="#047857">reflectors facing</Tag>
+      <Tag x="22" y="79" size="3" weight={800} color="#047857">following traffic</Tag>
+      <Tag x="22" y="30" size="3" weight={700}>unlit road:</Tag>
+      <Tag x="22" y="34.5" size="3" weight={700}>sidelights on</Tag>
+      <Tag x="22" y="44" size="3" weight={700} color={C.bad}>headlights OFF</Tag>
+      <Tag x="138" y="70" size="3" weight={800} color={C.bad}>not on the right —</Tag>
+      <Tag x="138" y="74.5" size="3" weight={700}>except in a</Tag>
+      <Tag x="138" y="79" size="3" weight={700}>one-way street</Tag>
+    </Frame>
+  ),
+
+  "dark-car-dusk": () => (
+    <Frame title="Dark-coloured cars at dusk">
+      <defs>
+        <linearGradient id="duskSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#334155" />
+          <stop offset="1" stopColor="#a16207" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="160" height="70" fill="url(#duskSky)" />
+      <rect x="0" y="70" width="160" height="30" fill="#4b5563" />
+      <SideCar x="44" y="72" color="#1f2937" />
+      <path d="M56 64 L76 58 L76 70 Z" fill="#fde68a" opacity="0.6" />
+      <SideCar x="116" y="72" color="#e2e8f0" />
+      <Tag x="44" y="84" size="3.3" weight={800}>dark car: lights on</Tag>
+      <Tag x="44" y="89" size="3.3" weight={800}>sooner, off later</Tag>
+      <Tag x="116" y="84" size="3.3" weight={800}>light-coloured car:</Tag>
+      <Tag x="116" y="89" size="3.3" weight={800}>easier to see</Tag>
+      <Tag x="80" y="14" size="3.6">DUSK</Tag>
+      <Tag x="80" y="20" size="3" weight={700}>lights on before lighting-up time — to be seen</Tag>
+    </Frame>
+  ),
+
+  /* Dashboard light symbols. variant: side | dipped | main | front-fog | rear-fog */
+  "light-symbol": ({ variant = "dipped" }) => {
+    const v = {
+      side: ["#22c55e", "SIDELIGHTS", "to be seen — not to see by"],
+      dipped: ["#22c55e", "DIPPED HEADLIGHTS", "short, aimed down and left"],
+      main: ["#2563eb", "MAIN BEAM", "long — dip for others"],
+      "front-fog": ["#22c55e", "FRONT FOG LIGHTS", "dense fog and falling snow only"],
+      "rear-fog": ["#f59e0b", "REAR FOG LIGHTS", "visibility under 100 m"],
+    }[variant];
+    const [col, name, note] = v;
+    const lamp = (cx, flip) => (
+      <path d={flip ? `M${cx} 22 Q${cx + 16} 22 ${cx + 16} 37 Q${cx + 16} 52 ${cx} 52 Z` : `M${cx} 22 Q${cx - 16} 22 ${cx - 16} 37 Q${cx - 16} 52 ${cx} 52 Z`} fill="none" stroke={col} strokeWidth="3" strokeLinejoin="round" />
+    );
+    return (
+      <Frame title={name}>
+        <rect x="0" y="0" width="160" height="100" fill="#0f172a" />
+        {variant === "side" ? (
+          <g>
+            <path d="M70 26 Q60 26 60 37 Q60 48 70 48 Z" fill="none" stroke={col} strokeWidth="2.6" />
+            <path d="M90 26 Q100 26 100 37 Q100 48 90 48 Z" fill="none" stroke={col} strokeWidth="2.6" />
+            {[30, 37, 44].map(y => <g key={y}><line x1="57" y1={y} x2="49" y2={y} stroke={col} strokeWidth="2.4" /><line x1="103" y1={y} x2="111" y2={y} stroke={col} strokeWidth="2.4" /></g>)}
+          </g>
+        ) : variant === "rear-fog" ? (
+          <g>
+            {lamp(70, true)}
+            {[28, 37, 46].map(y => <line key={y} x1="90" y1={y} x2="104" y2={y} stroke={col} strokeWidth="2.6" />)}
+            <path d="M97 22 Q93 30 97 37 Q101 44 97 52" fill="none" stroke={col} strokeWidth="2.2" />
+          </g>
+        ) : (
+          <g>
+            {lamp(92, false)}
+            {[28, 37, 46].map(y => (
+              <line key={y} x1="72" y1={y} x2="56" y2={variant === "dipped" ? y + 7 : y} stroke={col} strokeWidth="2.6" />
+            ))}
+            {variant === "front-fog" && <path d="M64 22 Q68 30 64 37 Q60 44 64 52" fill="none" stroke={col} strokeWidth="2.2" />}
+          </g>
+        )}
+        <Tag x="80" y="74" size="4.6">{name}</Tag>
+        <Tag x="80" y="82" size="3.4" weight={600}>{note}</Tag>
+      </Frame>
+    );
+  },
 
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {

@@ -598,4 +598,78 @@ export default [
     key: "Pedestrians, cyclists, animals, under 50 cc, learners, slow and oversized vehicles; no reversing or U-turns.",
     src: P("1.8", 65, "Motorway Restrictions"),
   },
+
+  /* ---------------- Unit 1.9 — Night Driving ---------------- */
+  {
+    id: "dipped-headlights", unit: "1.9", term: "Dipped headlights", visual: "light-symbol:dipped",
+    meaning: "Headlights aimed low and to the left, so they don't dazzle others.",
+    key: "Meeting or following traffic, lit streets, fog, snow, heavy rain, fading daylight.",
+    src: P("1.9", 73, "Use dipped headlights"),
+  },
+  {
+    id: "main-beam", unit: "1.9", term: "Main beam", visual: "light-symbol:main",
+    meaning: "Full headlights, lighting the road far ahead.",
+    key: "Only where you won't dazzle anyone — dip in good time.",
+    src: P("1.9", 73, "Use main beam headlights; Dazzle"),
+  },
+  {
+    id: "sidelights", unit: "1.9", term: "Sidelights", visual: "light-symbol:side",
+    meaning: "Small front and rear lights for being seen.",
+    key: "Leave them on when parked on an unlit road; dipped headlights are better than sidelights alone in lit areas.",
+    src: P("1.9", 86, "Post-test answer 8; p.73"),
+  },
+  {
+    id: "front-fog", unit: "1.9", term: "Front fog lights", visual: "light-symbol:front-fog",
+    meaning: "Extra front lights for fog.",
+    key: "Only in dense fog and falling snow — off at all other times.",
+    src: P("1.9", 73, "Use main beam headlights"),
+  },
+  {
+    id: "rear-fog", unit: "1.9", term: "Rear fog lights", visual: "light-symbol:rear-fog",
+    meaning: "Bright rear lights for fog.",
+    key: "Use them when visibility drops below 100 metres; off when it clears.",
+    src: P("1.9", 68, "Poor daylight conditions; p.73"),
+  },
+  {
+    id: "stop-in-lights", unit: "1.9", term: "Stopping within your lights", visual: "stop-in-lights",
+    meaning: "Driving at a speed that lets you stop within the distance your lights show.",
+    key: "What's beyond your lights, you can't see.",
+    src: P("1.9", 72, "Introduction"),
+  },
+  {
+    id: "dazzle", unit: "1.9", term: "Dazzle", visual: "dazzle",
+    meaning: "Being blinded by another vehicle's lights — or blinding someone with yours.",
+    key: "Dazzling others is an offence. Dazzled? Slow down, look to the left verge, stop if necessary.",
+    src: P("1.9", 73, "Dazzle; What to do if dazzled"),
+  },
+  {
+    id: "dip-left-bend", unit: "1.9", term: "Dipping for a left-hand bend", visual: "dip-left-bend",
+    meaning: "Dipping your headlights earlier for a left bend than a right one.",
+    key: "Your lights are focused more towards the left.",
+    src: P("1.9", 73, "Dazzle"),
+  },
+  {
+    id: "tail-lights", unit: "1.9", term: "Driving on tail lights", visual: "follow-night",
+    meaning: "Following the tail lights of the car ahead instead of reading the road.",
+    key: "A false sense of security — it lures you too close or too fast.",
+    src: P("1.9", 73, "Driving carefully behind other vehicles"),
+  },
+  {
+    id: "brake-light-dazzle", unit: "1.9", term: "Brake-light dazzle", visual: "brake-dazzle",
+    meaning: "Your brake lights glaring into the eyes of the driver behind while you wait.",
+    key: "Use the handbrake, not the footbrake — except in fog.",
+    src: P("1.9", 73, "Lighting up; p.86 answer 7"),
+  },
+  {
+    id: "night-parking", unit: "1.9", term: "Parking at night", visual: "night-parking",
+    meaning: "Leaving the car parked after dark.",
+    key: "Headlights off; on the left (except one-way streets); reflectors facing following traffic.",
+    src: P("1.9", 73, "Parking and waiting; p.86"),
+  },
+  {
+    id: "dark-car", unit: "1.9", term: "Dark-coloured cars", visual: "dark-car-dusk",
+    meaning: "Cars that are harder to see as daylight fades.",
+    key: "Switch lights on sooner and off later than lighter-coloured cars.",
+    src: P("1.9", 72, "Lights at Night; p.86 answer 2"),
+  },
 ];

@@ -30,7 +30,7 @@ import HazardHunt from "./HazardHunt";
 import { Visual, Visuals } from "./visuals";
 
 const ACTIVITY_ICON = {
-  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", matching: "🧩", procedure: "🔁",
+  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", matching: "🧩", procedure: "🔁",
   scenarios: "🚗", walkthrough: "🧭", retention: "🧠", challenge: "🏁",
 };
 

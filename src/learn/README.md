@@ -22,6 +22,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_3.js` | Unit 1.3 Road Positioning (pp.34–39). |
 | `book1/unit1_4.js` | Unit 1.4 Junctions & Bends (pp.40–48). |
 | `book1/unit1_5.js` | Unit 1.5 Dealing with Hills (pp.49–52). |
+| `book1/unit1_6.js` | Unit 1.6 Overtaking (pp.53–58). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -110,6 +111,15 @@ challenge ≥ 80%, retention check ≥ 70%.
 - **Unit 1.5** is headed "Dealing with Hills" on page 49 and in its post test,
   but its model answers on page 85 are headed "Overtaking on Gradients". The
   unit heading is used.
+- **Retention test 1.6** — the answer key agrees with the unit text for all
+  ten questions; all are used. Its recognition game is "Overtake or Not?".
+- **Post test 1.6** — the model answers (page 85) stop at Q9 of eleven, and
+  the "golden rule" (Q5) appears as the last line of answer 4: "If in doubt,
+  don't overtake". Answers 5 and 6 both read as what to do when a driver
+  cuts in after overtaking you. Q10 and Q11 are taught from the unit text
+  (page 55 "Always signal"; page 56 overtaking on the left). Page 56's
+  "your own speed PLUS the speed of the target vehicle" is an unfinished
+  sentence; the unit says only to be aware of both speeds.
 - **Unit 1.10** is headed "Weather, Driver Vision & It's Effects" (page 76);
   the answer pages call it "Weather & Vision". The page 76 heading is used
   (spelling corrected to "Its").

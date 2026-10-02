@@ -133,6 +133,30 @@ function LaneArrow({ x, y, kind = "ahead", s = 1 }) {
   );
 }
 
+/* A lorry seen from above, centred on (x, y), facing up the page:
+   cab at the front, a "LONG VEHICLE" plate at the back if `long`. */
+function Lorry({ x, y, len = 28, color = "#64748b", long }) {
+  const t = -len / 2;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x="-5.2" y={t + 6} width="10.4" height={len - 6} rx="1" fill={color} stroke="#0f172a" strokeWidth="0.35" />
+      <rect x="-4.8" y={t} width="9.6" height="5.4" rx="1.6" fill="#334155" stroke="#0f172a" strokeWidth="0.35" />
+      <rect x="-3.8" y={t + 0.8} width="7.6" height="1.8" rx="0.5" fill="#e0f2fe" />
+      {long && <rect x="-4.4" y={-t - 2.6} width="8.8" height="2.2" fill="#facc15" stroke="#dc2626" strokeWidth="0.5" />}
+    </g>
+  );
+}
+
+/* Blinking right-hand indicators on a top-down car facing up at (x, y). */
+function RightIndicator({ x, y }) {
+  return (
+    <g className="vis-blink">
+      <rect x={x + 3} y={y - 7.8} width="2" height="1.8" rx="0.4" fill={C.amber} />
+      <rect x={x + 3} y={y + 6} width="2" height="1.8" rx="0.4" fill={C.amber} />
+    </g>
+  );
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -889,6 +913,257 @@ const DRAW = {
         <Tag x="24" y="78" size="3.4" weight={600}>handbrake on</Tag>
         <Tag x="24" y="84" size="3.4" weight={600}>{gear}</Tag>
         <Tag x="24" y="90" size="3" weight={600} color="#64748b">(automatic: park)</Tag>
+      </Frame>
+    );
+  },
+
+  /* ---------------- overtaking (Unit 1.6) ---------------- */
+  "overtake-path": () => (
+    <Frame title="Overtaking a moving vehicle">
+      <VRoad />
+      <Lorry x={62} y={46} />
+      <Car x="62" y="88" color={C.good} ghost />
+      <Arrow d="M62 79 Q62 70 80 66 Q97 62 97 54 L97 34 Q97 24 80 21 Q62 18 62 6" />
+      <Car x="97" y="46" color={C.good} />
+      <line x1="68" y1="50" x2="92" y2="50" stroke={C.ink} strokeWidth="0.5" strokeDasharray="1.2 1" />
+      <Tag x="22" y="84" size="3.4" weight={800}>① hold back:</Tag>
+      <Tag x="22" y="89" size="3.2" weight={600}>near enough, not</Tag>
+      <Tag x="22" y="93.5" size="3.2" weight={600}>too close — look, decide</Tag>
+      <Tag x="138" y="70" size="3.4" weight={800}>② out smoothly</Tag>
+      <Tag x="138" y="46" size="3.4" weight={800}>③ promptly, with</Tag>
+      <Tag x="138" y="51" size="3.4" weight={800}>adequate clearance</Tag>
+      <Tag x="22" y="12" size="3.4" weight={800}>④ back in when</Tag>
+      <Tag x="22" y="17" size="3.2" weight={600}>it's in your mirror —</Tag>
+      <Tag x="22" y="21.5" size="3.2" weight={600} color={C.bad}>don't cut in</Tag>
+    </Frame>
+  ),
+
+  "overtake-view": () => (
+    <Frame title="Holding back to see past">
+      {[[8, 72], [88, 152]].map(([l, r]) => (
+        <g key={l}>
+          <rect x={l} y="0" width={r - l} height="100" fill={C.road} />
+          <line x1={(l + r) / 2} y1="0" x2={(l + r) / 2} y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+        </g>
+      ))}
+      {/* too close: the lorry fills the view */}
+      <Lorry x={24} y={28} />
+      <Car x="24" y="51" color={C.bad} />
+      <path d="M24 45 L19 42.5 M24 45 L29 42.5" stroke={C.amber} strokeWidth="0.9" strokeDasharray="1.5 1" />
+      <Car x="56" y="12" rot={180} color={C.grey} ghost />
+      <Tag x="56" y="26" size="3.2" weight={700} color={C.bad}>unseen</Tag>
+      {/* held back: a clear view past it */}
+      <Lorry x={104} y={28} />
+      <Car x="108" y="80" color={C.good} />
+      <path d="M109 73 L126 4" stroke={C.amber} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <Car x="136" y="12" rot={180} color={C.grey} />
+      <Tag x="138" y="26" size="3.2" weight={700} color="#047857">seen</Tag>
+      <Tag x="40" y="70" size="4" color={C.bad}>✗ TOO CLOSE</Tag>
+      <Tag x="40" y="76" size="3.3" weight={600}>can't see past it</Tag>
+      <Tag x="120" y="93" size="4" color="#047857">✓ HELD BACK</Tag>
+      <Tag x="120" y="98.5" size="3.3" weight={600}>a clear view ahead</Tag>
+    </Frame>
+  ),
+
+  "pass-stationary": () => (
+    <Frame title="Passing a stationary vehicle on your side">
+      <VRoad />
+      <Car x="54" y="38" color={C.grey} />
+      <Car x="97" y="26" rot={180} color={C.amber} />
+      <Arrow d="M97 36 L97 60" color={C.amber} w={1.2} />
+      <Car x="62" y="86" color={C.good} />
+      <path d="M62 78 Q63 62 76 52 L76 22 Q76 12 64 6" fill="none" stroke={C.good} strokeWidth="1.2" strokeDasharray="2 1.6" />
+      <line x1="58.5" y1="38" x2="71.5" y2="38" stroke={C.ink} strokeWidth="0.5" strokeDasharray="1.2 1" />
+      <Tag x="22" y="34" size="3.4" weight={800}>obstruction</Tag>
+      <Tag x="22" y="39" size="3.4" weight={800}>on YOUR side</Tag>
+      <Tag x="138" y="20" size="3.4" weight={800} color="#b45309">oncoming traffic</Tag>
+      <Tag x="138" y="25" size="3.4" weight={800} color="#b45309">has priority</Tag>
+      <Tag x="22" y="80" size="3.3" weight={700}>wait well back —</Tag>
+      <Tag x="22" y="85" size="3.1" weight={600}>clear view, without</Tag>
+      <Tag x="22" y="89.5" size="3.1" weight={600}>blocking oncoming</Tag>
+      <Tag x="138" y="70" size="3.3" weight={700} color="#047857">then move out early:</Tag>
+      <Tag x="138" y="75" size="3.3" weight={700} color="#047857">a gradual change</Tag>
+      <Tag x="138" y="80" size="3.3" weight={700} color="#047857">of course</Tag>
+    </Frame>
+  ),
+
+  "obstructions-both": () => (
+    <Frame title="Obstructions on both sides">
+      <VRoad />
+      <Car x="51" y="44" color={C.grey} />
+      <Car x="109" y="50" rot={180} color={C.grey} />
+      <Car x="94" y="14" rot={180} color={C.amber} />
+      <Car x="64" y="86" color={C.good} />
+      <Tag x="80" y="66" size="3.6" weight={800}>only room for one</Tag>
+      <Tag x="22" y="30" size="3.4" weight={800}>be prepared</Tag>
+      <Tag x="22" y="35" size="3.4" weight={800}>to give way</Tag>
+      <Tag x="138" y="80" size="3.3" weight={700} color={C.bad}>don't rely on</Tag>
+      <Tag x="138" y="85" size="3.3" weight={700} color={C.bad}>oncoming traffic</Tag>
+      <Tag x="138" y="90" size="3.3" weight={700} color={C.bad}>to give you priority</Tag>
+    </Frame>
+  ),
+
+  "double-white": () => (
+    <Frame title="Double white lines">
+      {[[8, 72, false], [88, 152, true]].map(([l, r, broken]) => {
+        const m = (l + r) / 2;
+        return (
+          <g key={l}>
+            <rect x={l} y="0" width={r - l} height="100" fill={C.road} />
+            <line x1={m - 1.4} y1="0" x2={m - 1.4} y2="100" stroke={C.line} strokeWidth="1" />
+            <line x1={m + 1.4} y1="0" x2={m + 1.4} y2="100" stroke={C.line} strokeWidth="1" strokeDasharray={broken ? "6 5" : undefined} />
+            <Car x={l + 16} y="64" color={C.good} />
+            <path d={`M${l + 16} 55 Q${l + 16} 46 ${m + 10} 36`} fill="none" stroke={C.bad} strokeWidth="1.2" strokeDasharray="2 1.6" />
+            <Tag x={m + 10} y="30" size="6" color={C.bad}>✗</Tag>
+          </g>
+        );
+      })}
+      <Tag x="40" y="84" size="3.8">BOTH LINES SOLID</Tag>
+      <Tag x="40" y="90" size="3.2" weight={600}>don't cross or straddle</Tag>
+      <Tag x="120" y="84" size="3.8">SOLID LINE</Tag>
+      <Tag x="120" y="89" size="3.8">NEAREST YOU</Tag>
+      <Tag x="120" y="95" size="3.2" weight={600}>don't cross it to overtake</Tag>
+    </Frame>
+  ),
+
+  "crawler-lane": () => (
+    <Frame title="Crawler lane">
+      <rect x="25" y="0" width="5" height="100" fill={C.kerb} />
+      <rect x="30" y="0" width="96" height="100" fill={C.road} />
+      <rect x="126" y="0" width="5" height="100" fill={C.kerb} />
+      <line x1="62" y1="0" x2="62" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="92.6" y1="0" x2="92.6" y2="100" stroke={C.line} strokeWidth="1" />
+      <line x1="95.4" y1="0" x2="95.4" y2="100" stroke={C.line} strokeWidth="1" />
+      <Lorry x={46} y={36} />
+      <Car x="78" y="56" color={C.good} />
+      <Arrow d="M78 46 L78 14" />
+      <Car x="111" y="30" rot={180} color={C.grey} />
+      <Arrow d="M111 40 L111 60" color={C.grey} w={1.2} />
+      <Tag x="46" y="66" size="3.4" weight={800}>CRAWLER</Tag>
+      <Tag x="46" y="71" size="3.4" weight={800}>LANE</Tag>
+      <Tag x="62" y="88" size="3.6">UPHILL: 2 lanes</Tag>
+      <Tag x="111" y="88" size="3.6">DOWN: 1</Tag>
+      <Tag x="144" y="50" size="3.2" weight={700} anchor="middle">double</Tag>
+      <Tag x="144" y="54.5" size="3.2" weight={700} anchor="middle">white</Tag>
+      <Tag x="144" y="59" size="3.2" weight={700} anchor="middle">lines</Tag>
+      <Tag x="12" y="12" size="3.6" weight={800} color="#047857">↑</Tag>
+      <Tag x="12" y="18" size="3" weight={700} color="#047857">hill</Tag>
+    </Frame>
+  ),
+
+  "overtake-left": () => (
+    <Frame title="Passing on the left of a vehicle turning right">
+      <VRoad />
+      <rect x="115" y="22" width="45" height="22" fill={C.road} />
+      <rect x="0" y="22" width="45" height="22" fill={C.road} />
+      <line x1="115" y1="33" x2="160" y2="33" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <line x1="0" y1="33" x2="45" y2="33" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <Car x="74" y="56" color={C.amber} />
+      <RightIndicator x={74} y={56} />
+      <Car x="56" y="86" color={C.good} />
+      <Arrow d="M56 78 L56 4" />
+      <Car x="96" y="12" rot={180} color={C.bad} ghost />
+      <path d="M94 20 Q90 30 70 30 L20 30" fill="none" stroke={C.bad} strokeWidth="1.1" strokeDasharray="2 1.6" />
+      <Tag x="134" y="64" size="3.4" weight={800} color="#b45309">positioned and</Tag>
+      <Tag x="134" y="69" size="3.4" weight={800} color="#b45309">signalling right</Tag>
+      <Tag x="24" y="62" size="3.4" weight={800} color="#047857">you may pass</Tag>
+      <Tag x="24" y="67" size="3.4" weight={800} color="#047857">on the left</Tag>
+      <Tag x="22" y="8" size="3.1" weight={700} color={C.bad}>may cross your path —</Tag>
+      <Tag x="22" y="12.5" size="3.1" weight={700} color={C.bad}>hidden by the turning car</Tag>
+      <Tag x="120" y="92" size="3.8">OVERTAKING</Tag>
+      <Tag x="120" y="97" size="3.8">ON THE LEFT</Tag>
+    </Frame>
+  ),
+
+  "queue-left": () => (
+    <Frame title="Left lane moving more quickly than a queue on the right">
+      <VRoad />
+      {[18, 38, 58].map(y => <Car key={y} x="97" y={y} color={C.grey} />)}
+      <Car x="62" y="82" color={C.good} />
+      <Arrow d="M62 72 L62 6" />
+      <Tag x="80" y="98" size="3.4" weight={700}>both lanes ↑ one direction</Tag>
+      <Tag x="22" y="40" size="3.4" weight={800} color="#047857">left lane moving</Tag>
+      <Tag x="22" y="45" size="3.4" weight={800} color="#047857">more quickly</Tag>
+      <Tag x="138" y="34" size="3.4" weight={800}>slow queue</Tag>
+      <Tag x="138" y="39" size="3.4" weight={800}>on your right</Tag>
+      <Tag x="138" y="74" size="3.1" weight={700} color={C.bad}>don't move into a lane</Tag>
+      <Tag x="138" y="78.5" size="3.1" weight={700} color={C.bad}>on your left just</Tag>
+      <Tag x="138" y="83" size="3.1" weight={700} color={C.bad}>to overtake</Tag>
+    </Frame>
+  ),
+
+  "being-overtaken": () => (
+    <Frame title="Being overtaken">
+      <VRoad />
+      <Car x="58" y="56" color={C.good} />
+      <Car x="97" y="60" color={C.amber} />
+      <Arrow d="M97 50 L97 30 Q97 22 80 20 Q66 18 64 10" color={C.amber} w={1.2} dash="2 1.6" />
+      <Tag x="22" y="48" size="3.4" weight={800}>keep left</Tag>
+      <Tag x="22" y="56" size="3.4" weight={800}>don't accelerate</Tag>
+      <Tag x="22" y="64" size="3.2" weight={600}>ease off if it's</Tag>
+      <Tag x="22" y="68.5" size="3.2" weight={600}>not making ground</Tag>
+      <Tag x="138" y="20" size="3.3" weight={800} color={C.bad}>be alert: it may</Tag>
+      <Tag x="138" y="25" size="3.3" weight={800} color={C.bad}>pull in suddenly</Tag>
+      <Tag x="80" y="92" size="4">BEING OVERTAKEN</Tag>
+    </Frame>
+  ),
+
+  "overtake-large": () => (
+    <Frame title="Overtaking a long vehicle">
+      <VRoad />
+      <Lorry x={62} y={34} len={40} long />
+      <Car x="62" y="88" color={C.good} />
+      <line x1="70" y1="55" x2="70" y2="79" stroke={C.good} strokeWidth="0.8" />
+      <line x1="67" y1="55" x2="73" y2="55" stroke={C.good} strokeWidth="0.8" />
+      <line x1="67" y1="79" x2="73" y2="79" stroke={C.good} strokeWidth="0.8" />
+      <Arrow d="M98 80 L98 6" color={C.amber} w={1.2} dash="2 1.6" />
+      <Tag x="138" y="30" size="3.6" weight={800}>LONG VEHICLE</Tag>
+      <Tag x="138" y="35.5" size="3.2" weight={600}>at least 13 m long</Tag>
+      <Tag x="138" y="48" size="3.2" weight={700} color="#b45309">extra road length</Tag>
+      <Tag x="138" y="52.5" size="3.2" weight={700} color="#b45309">to pass and return</Tag>
+      <Tag x="22" y="62" size="3.3" weight={800} color="#047857">a greater gap:</Tag>
+      <Tag x="22" y="67" size="3.2" weight={600}>a clear view</Tag>
+      <Tag x="22" y="71.5" size="3.2" weight={600}>ahead</Tag>
+    </Frame>
+  ),
+
+  "horse-rider": () => (
+    <Frame title="Passing a horse and rider">
+      <VRoad />
+      <text x="0" y="0" fontSize="11" textAnchor="middle" dominantBaseline="central" transform="translate(52 40) rotate(90)">🏇</text>
+      <Car x="62" y="88" color={C.good} />
+      <Arrow d="M62 79 Q62 68 86 60 L86 22 Q86 14 64 8" dash="2 1.6" />
+      <line x1="58" y1="40" x2="81" y2="40" stroke={C.ink} strokeWidth="0.5" strokeDasharray="1.2 1" />
+      <Tag x="22" y="18" size="3.4" weight={800}>animals are</Tag>
+      <Tag x="22" y="23" size="3.4" weight={800}>frightened by noise</Tag>
+      <Tag x="138" y="34" size="3.4" weight={800} color="#047857">allow</Tag>
+      <Tag x="138" y="39" size="3.4" weight={800} color="#047857">enough room</Tag>
+      <Tag x="138" y="62" size="3.4" weight={800} color={C.bad}>🔇 don't sound</Tag>
+      <Tag x="138" y="67" size="3.4" weight={800} color={C.bad}>the horn</Tag>
+      <Tag x="22" y="70" size="3.1" weight={600}>watch the rider's</Tag>
+      <Tag x="22" y="74.5" size="3.1" weight={600}>signals</Tag>
+    </Frame>
+  ),
+
+  "no-overtake-places": () => {
+    const cells = [
+      ["🚸", "pedestrian crossing"], ["🔀", "junction"], ["↩️", "corner or bend"],
+      ["⛰️", "brow of a hill"], ["🌉", "hump-back bridge"], ["🚂", "level crossing"],
+      ["⚠️", "road narrows"], ["▧", "chevrons / hatching"], ["🚫", "No Overtaking sign"],
+    ];
+    return (
+      <Frame title="Places you must not overtake">
+        {cells.map(([icon, label], i) => {
+          const x = 27 + (i % 3) * 53;
+          const y = 15 + Math.floor(i / 3) * 31;
+          return (
+            <g key={label}>
+              <circle cx={x} cy={y} r="9" fill="#ffffff" stroke={C.bad} strokeWidth="1.2" />
+              <text x={x} y={y + 3.4} fontSize="9.5" textAnchor="middle" fill={C.ink}>{icon}</text>
+              <Tag x={x} y={y + 15} size="3.4" weight={700}>{label}</Tag>
+            </g>
+          );
+        })}
       </Frame>
     );
   },

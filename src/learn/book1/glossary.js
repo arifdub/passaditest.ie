@@ -340,4 +340,84 @@ export default [
     key: "Front wheels to the LEFT, handbrake on, reverse gear.",
     src: P("1.5", 50, "Facing Downhill"),
   },
+
+  /* ---------------- Unit 1.6 — Overtaking ---------------- */
+  {
+    id: "overtaking", unit: "1.6", term: "Overtaking", visual: "overtake-path",
+    meaning: "Passing a moving or parked vehicle or an obstruction — a manoeuvre that can put you on a collision course with approaching traffic.",
+    key: "Mirrors first, then Position, Speed, Look; Mirrors, Signal, Manoeuvre. If in doubt, don't.",
+    src: P("1.6", 53, "Unit introduction; p.55"),
+  },
+  {
+    id: "overtake-position", unit: "1.6", term: "Holding back", visual: "overtake-view",
+    meaning: "Waiting behind the vehicle you want to pass, near enough to pull out smoothly but not so close you can't see past it.",
+    key: "Keeping back lets you see more clearly — never closer than your braking distance.",
+    src: P("1.6", 85, "Post-test answers 1, 8; p.55"),
+  },
+  {
+    id: "stationary-obstruction", unit: "1.6", term: "Obstruction on your side", visual: "pass-stationary",
+    meaning: "A parked vehicle or obstruction in your half of the road.",
+    key: "Oncoming traffic has priority. Wait well back, then move out early — a gradual change of course.",
+    src: P("1.6", 54, "Passing stationary vehicles"),
+  },
+  {
+    id: "obstructions-both", unit: "1.6", term: "Obstructions on both sides", visual: "obstructions-both",
+    meaning: "Parked vehicles on both sides leave room for only one line of traffic.",
+    key: "Be prepared to give way — never rely on approaching traffic to give you priority.",
+    src: P("1.6", 54, "Passing stationary vehicles"),
+  },
+  {
+    id: "gradual-change", unit: "1.6", term: "Gradual change of course", visual: "pass-stationary",
+    meaning: "Moving out early and smoothly to pass an obstruction, instead of swerving round it late.",
+    key: "Gives adequate clearance — for a door opening, a pedestrian stepping out, or the vehicle moving off.",
+    src: P("1.6", 54, "Use the MSPSL routine; Adequate clearance"),
+  },
+  {
+    id: "double-white-lines", unit: "1.6", term: "Double white lines", visual: "double-white",
+    meaning: "Two white lines along the centre of the road.",
+    key: "Don't overtake if you'd cross or straddle double solid lines, or where the line nearest you is continuous.",
+    src: P("1.6", 54, "Do not overtake"),
+  },
+  {
+    id: "crawler-lane", unit: "1.6", term: "Crawler lane", visual: "crawler-lane",
+    meaning: "An extra uphill lane: double white lines with two lanes going uphill and one going down.",
+    key: "Expect them on national routes, dual carriageways, on a hill.",
+    src: P("1.6", 85, "Post-test answer 7"),
+  },
+  {
+    id: "overtake-left", unit: "1.6", term: "Overtaking on the left", visual: "overtake-left",
+    meaning: "Passing a vehicle on its left-hand side.",
+    key: "Only in the exceptions: a vehicle positioned and signalling right; you're turning left; a one-way street; a slower queue on your right.",
+    src: P("1.6", 56, "Overtaking on the Left"),
+  },
+  {
+    id: "queue-left", unit: "1.6", term: "Faster lane on the left", visual: "queue-left",
+    meaning: "In traffic, your left-hand lane moving more quickly than a queue on your right.",
+    key: "You may pass on the left — but never move into a lane on your left just to overtake.",
+    src: P("1.6", 56, "Overtaking on the Left; p.54"),
+  },
+  {
+    id: "being-overtaken", unit: "1.6", term: "Being overtaken", visual: "being-overtaken",
+    meaning: "Another vehicle passing you.",
+    key: "Don't accelerate, keep left, be alert for it pulling in — ease off if it isn't making ground.",
+    src: P("1.6", 54, "Procedure when being overtaken"),
+  },
+  {
+    id: "long-vehicle", unit: "1.6", term: "LONG VEHICLE sign", visual: "overtake-large",
+    meaning: "A sign on the back of a vehicle at least thirteen metres long.",
+    key: "Leave a greater gap for a clear view; you need extra road length to pass and return.",
+    src: P("1.6", 53, "Decision to Overtake; p.56"),
+  },
+  {
+    id: "no-overtaking-places", unit: "1.6", term: "No-overtaking places", visual: "no-overtake-places",
+    meaning: "Places where overtaking is unsafe or forbidden.",
+    key: "Crossings, junctions, bends, the brow of a hill, hump-back bridges, level crossings, where the road narrows, chevrons and hatching, a No Overtaking sign.",
+    src: P("1.6", 54, "You must not overtake; p.55"),
+  },
+  {
+    id: "horse-rider", unit: "1.6", term: "Passing horses and riders", visual: "horse-rider",
+    meaning: "Overtaking a horse, a rider, or someone in charge of animals.",
+    key: "Animals are frightened by noise: allow enough room, don't sound the horn, watch for the person's signals.",
+    src: P("1.6", 56, "Passing horses and riders"),
+  },
 ];

@@ -24,6 +24,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_5.js` | Unit 1.5 Dealing with Hills (pp.49–52). |
 | `book1/unit1_6.js` | Unit 1.6 Overtaking (pp.53–58). |
 | `book1/unit1_7.js` | Unit 1.7 Level Crossings & Tramways (pp.59–63). |
+| `book1/unit1_8.js` | Unit 1.8 Motorway Driving (pp.64–71). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -123,6 +124,12 @@ challenge ≥ 80%, retention check ≥ 70%.
   page 61 says "Do not enter a lane or road reserved for trams". Both are
   taught as written — the first about the blue tram-lane sign, the second
   about tram-only lanes.
+- **Retention test 1.8, Q4** — omitted: the unit text bans both learner
+  drivers and cyclists (b) and oversized vehicles without permission (d),
+  so the question has two right answers. The other eighteen agree with the
+  text or the book's own test and are used; Q3, Q6, Q11, Q12, Q14, Q16 and
+  Q18 cover points the unit text doesn't state and are kept as the book
+  sets them. Its recognition game is "Read the Motorway".
 - **Unit 1.10** is headed "Weather, Driver Vision & It's Effects" (page 76);
   the answer pages call it "Weather & Vision". The page 76 heading is used
   (spelling corrected to "Its").

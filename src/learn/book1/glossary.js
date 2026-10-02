@@ -506,4 +506,96 @@ export default [
     key: "Obey the lights and keep yellow boxes completely clear.",
     src: P("1.7", 59, "Regulatory signs for tram lanes"),
   },
+
+  /* ---------------- Unit 1.8 — Motorway Driving ---------------- */
+  {
+    id: "motorway", unit: "1.8", term: "Motorway", visual: "motorway-lanes",
+    meaning: "An expressway in a single direction: no right-hand turns, roundabouts or traffic lights, blue signs, a 120 km/h maximum.",
+    key: "Keep left unless overtaking. Learners may not use it.",
+    src: P("1.8", 64, "Introduction; Summaries"),
+  },
+  {
+    id: "hard-shoulder", unit: "1.8", term: "Hard shoulder", visual: "hard-shoulder-stop",
+    meaning: "The strip to the left of lane one, for emergencies.",
+    key: "Don't drive or stop on it unless it's an emergency or signs or Gardaí direct you.",
+    src: P("1.8", 65, "Motorway Regulations; p.68"),
+  },
+  {
+    id: "central-reservation", unit: "1.8", term: "Central reservation", visual: "motorway-lanes",
+    meaning: "The divide between the two carriageways of a motorway.",
+    key: "Never cross it, stop on it or walk on it.",
+    src: P("1.8", 65, "Motorway Regulations"),
+  },
+  {
+    id: "motorway-join", unit: "1.8", term: "Joining a motorway", visual: "motorway-join",
+    meaning: "Using the slip road and acceleration lane to match the speed of the traffic.",
+    key: "Build up speed to match a gap; yield to motorway traffic; always signal.",
+    src: P("1.8", 67, "Joining the Motorway"),
+  },
+  {
+    id: "motorway-leave", unit: "1.8", term: "Leaving a motorway", visual: "motorway-leave",
+    meaning: "Moving to lane one early and slowing in the deceleration lane.",
+    key: "One lane at a time; signal by the first countdown marker; missed it? Carry on to the next.",
+    src: P("1.8", 68, "Leaving the Motorway"),
+  },
+  {
+    id: "exit-countdown", unit: "1.8", term: "Exit countdown markers", visual: "motorway-leave",
+    meaning: "Boards with three, two and one bars, 300, 200 and 100 m before an exit.",
+    key: "Signal at the first one at the latest.",
+    src: P("1.8", 66, "On the Motorway; p.68"),
+  },
+  {
+    id: "interchange", unit: "1.8", term: "Motorway interchange", visual: "motorway-lanes",
+    meaning: "Where motorways join or separate.",
+    key: "Slip roads and links may have sharp bends and lower limits.",
+    src: P("1.8", 86, "Post-test answers 7, 11"),
+  },
+  {
+    id: "cats-eyes", unit: "1.8", term: "Reflective studs (cat's eyes)", visual: "cats-eyes",
+    meaning: "Studs marking lanes and edges at night.",
+    key: "White between lanes, yellow/red left edge, amber right edge, green where you may cross.",
+    src: P("1.8", 67, "Reflective Studs"),
+  },
+  {
+    id: "gantry-signals", unit: "1.8", term: "Gantry signals", visual: "gantry-signals",
+    meaning: "Illuminated signs above the motorway: limits, lane arrows, warnings.",
+    key: "Red lights above your lane: go no further in it. Red-ringed limits are mandatory.",
+    src: P("1.8", 67, "Illuminated Motorway Signals; p.66"),
+  },
+  {
+    id: "variable-limit", unit: "1.8", term: "Variable speed limit", visual: "gantry-signals",
+    meaning: "A limit for the motorway, or one lane, changed for incidents, traffic or weather.",
+    key: "It applies until a sign shows a different limit or the signs switch off.",
+    src: P("1.8", 67, "Variable speed limit"),
+  },
+  {
+    id: "average-speed", unit: "1.8", term: "Average speed cameras", visual: "average-speed",
+    meaning: "Two cameras that time you between them.",
+    key: "Arrive too soon and a record goes to the Gardaí.",
+    src: P("1.8", 66, "Average speed camera"),
+  },
+  {
+    id: "lri", unit: "1.8", term: "Location Reference Indicator", visual: "lri-sign",
+    meaning: "A verge sign every 500 m: the road, the direction, and the distance from the route's start.",
+    key: "Blue on motorways, green on dual carriageways — read it out to the emergency services.",
+    src: P("1.8", 66, "Location Reference Indicators"),
+  },
+  {
+    id: "motorway-signs", unit: "1.8", term: "Motorway start and end signs", visual: "motorway-signs",
+    meaning: "The blue motorway symbol — with a red slash when the motorway ends.",
+    key: "Motorway rules apply from the start sign until the end sign.",
+    src: P("1.8", 66, "On Approach; retention Q6"),
+  },
+  {
+    id: "two-second-rule", unit: "1.8", term: "Two-second rule", visual: "two-second-rule",
+    meaning: "Leaving at least two seconds between you and the vehicle ahead.",
+    key: "Or at least one metre per km/h of speed.",
+    src: P("1.8", 67, "On the Motorway"),
+  },
+  {
+    id: "motorway-banned", unit: "1.8", term: "Not allowed on motorways", visual: "motorway-banned",
+    meaning: "Road users and vehicles prohibited from motorways and slip roads.",
+    key: "Pedestrians, cyclists, animals, under 50 cc, learners, slow and oversized vehicles; no reversing or U-turns.",
+    src: P("1.8", 65, "Motorway Restrictions"),
+  },
 ];

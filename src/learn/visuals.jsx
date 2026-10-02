@@ -236,6 +236,52 @@ function Barrier({ x1, x2, y }) {
   );
 }
 
+/* A motorway seen from above, traffic going up the page on the left-hand
+   carriageway: hard shoulder (x 24–36), three lanes (36–96), central
+   reservation (96–104), and the opposite carriageway faded on the right. */
+function Motorway({ h = 100, studs = false, other = true }) {
+  const dots = (x, color) => Array.from({ length: Math.ceil(h / 10) }, (_, i) => (
+    <circle key={x + "-" + i} cx={x} cy={5 + i * 10} r="0.9" fill={color} />
+  ));
+  return (
+    <g>
+      <rect x="24" y="0" width="12" height={h} fill="#6b7280" />
+      <rect x="36" y="0" width="60" height={h} fill={C.road} />
+      <line x1="36" y1="0" x2="36" y2={h} stroke="#facc15" strokeWidth="0.9" />
+      <line x1="96" y1="0" x2="96" y2={h} stroke="#facc15" strokeWidth="0.9" />
+      {[56, 76].map(x => <line key={x} x1={x} y1="0" x2={x} y2={h} stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />)}
+      <rect x="96.5" y="0" width="7" height={h} fill="#7aa35a" />
+      <line x1="100" y1="0" x2="100" y2={h} stroke="#cbd5e1" strokeWidth="1.4" />
+      {other && <rect x="104" y="0" width="56" height={h} fill={C.road} opacity="0.45" />}
+      {studs && <g>{dots(56, "#ffffff")}{dots(76, "#ffffff")}{dots(37.5, "#ef4444")}{dots(94.5, "#f59e0b")}</g>}
+    </g>
+  );
+}
+
+/* A blue motorway countdown board with `n` white bars. */
+function ExitMarker({ x, y, n }) {
+  return (
+    <g>
+      <rect x={x - 4} y={y - 8} width="8" height="16" rx="0.8" fill="#1d4ed8" stroke="#ffffff" strokeWidth="0.5" />
+      {Array.from({ length: n }, (_, i) => (
+        <line key={i} x1={x - 2.4} y1={y + 5 - i * 4.6} x2={x + 2.4} y2={y + 1.8 - i * 4.6} stroke="#ffffff" strokeWidth="1.3" />
+      ))}
+    </g>
+  );
+}
+
+/* The motorway symbol (white, on a blue square) centred at (x, y). */
+function MotorwaySymbol({ x, y, s = 1 }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M-9 10 L-3 -6 L-1 -6 L-5 10 Z M9 10 L3 -6 L1 -6 L5 10 Z" fill="#ffffff" />
+      <rect x="-10" y="-9" width="20" height="3" fill="#ffffff" />
+      <rect x="-0.6" y="0" width="1.2" height="3" fill="#ffffff" />
+      <rect x="-0.6" y="5" width="1.2" height="3" fill="#ffffff" />
+    </g>
+  );
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -1553,6 +1599,255 @@ const DRAW = {
       <Tag x="28" y="76" size="3.2" weight={700} color="#b45309">allow for the</Tag>
       <Tag x="28" y="80.5" size="3.2" weight={700} color="#b45309">tram's sweep on</Tag>
       <Tag x="28" y="85" size="3.2" weight={700} color="#b45309">bends and corners</Tag>
+    </Frame>
+  ),
+
+  /* ---------------- motorway driving (Unit 1.8) ---------------- */
+  "motorway-lanes": () => (
+    <Frame title="Motorway lanes">
+      <Motorway />
+      <Car x="46" y="70" color={C.good} />
+      <Car x="66" y="40" color={C.amber} />
+      <Arrow d="M66 30 Q66 20 50 12 L46 4" color={C.amber} w={1.1} dash="2 1.6" />
+      <Tag x="46" y="88" size="3.2" weight={800}>LANE 1</Tag>
+      <Tag x="46" y="93" size="2.8" weight={700}>normal</Tag>
+      <Tag x="76" y="56" size="3.2" weight={800}>LANES 2 & 3</Tag>
+      <Tag x="76" y="61" size="2.8" weight={700}>overtaking</Tag>
+      <Tag x="132" y="88" size="3" weight={700}>overtake, then</Tag>
+      <Tag x="132" y="92.5" size="3" weight={700}>back to lane 1</Tag>
+      <Tag x="12" y="30" size="3" weight={800} color={C.bad}>HARD</Tag>
+      <Tag x="12" y="34.5" size="3" weight={800} color={C.bad}>SHOULDER</Tag>
+      <Tag x="12" y="40" size="2.7" weight={700}>emergencies</Tag>
+      <Tag x="12" y="44" size="2.7" weight={700}>only</Tag>
+      <Tag x="132" y="40" size="3.2" weight={800}>central</Tag>
+      <Tag x="132" y="44.5" size="3.2" weight={800}>reservation</Tag>
+      <Tag x="132" y="49" size="2.8" weight={700}>never cross it</Tag>
+      <Tag x="132" y="70" size="3" weight={700} color="#475569">opposite direction</Tag>
+    </Frame>
+  ),
+
+  "motorway-join": () => (
+    <Frame title="Joining a motorway">
+      <Motorway other={false} />
+      <rect x="6" y="40" width="18" height="60" fill={C.road} />
+      <path d="M6 40 L24 20 L24 40 Z" fill={C.road} />
+      <rect x="24" y="20" width="12" height="80" fill={C.road} />
+      <line x1="36" y1="20" x2="36" y2="100" stroke={C.line} strokeWidth="0.9" strokeDasharray="2 2" />
+      <Car x="26" y="74" color={C.good} />
+      <g className="vis-blink"><rect x="29.4" y="66" width="1.8" height="1.6" fill={C.amber} /></g>
+      <Arrow d="M27 64 Q28 46 44 34 L46 24" />
+      <Car x="46" y="90" color={C.grey} />
+      <Car x="46" y="12" color={C.grey} />
+      <Car x="66" y="56" color={C.grey} />
+      <Tag x="132" y="16" size="3.4" weight={800}>ACCELERATION LANE</Tag>
+      <Tag x="132" y="26" size="3.1" weight={700} color="#047857">build up speed to</Tag>
+      <Tag x="132" y="30.5" size="3.1" weight={700} color="#047857">match a gap in lane 1</Tag>
+      <Tag x="132" y="40" size="3.1" weight={700}>MSPSL — always signal</Tag>
+      <Tag x="132" y="50" size="3.1" weight={800} color={C.bad}>YIELD to traffic</Tag>
+      <Tag x="132" y="54.5" size="3.1" weight={800} color={C.bad}>on the motorway</Tag>
+      <Tag x="132" y="66" size="3" weight={600}>try not to stop —</Tag>
+      <Tag x="132" y="70.5" size="3" weight={600}>but be ready to</Tag>
+      <Tag x="132" y="82" size="3" weight={700}>then keep left until</Tag>
+      <Tag x="132" y="86.5" size="3" weight={700}>you've adjusted</Tag>
+    </Frame>
+  ),
+
+  "motorway-leave": () => (
+    <Frame title="Leaving a motorway">
+      <Motorway other={false} />
+      <path d="M24 0 L24 30 L36 36 L36 0 Z" fill={C.road} />
+      <rect x="4" y="0" width="20" height="30" fill={C.road} />
+      <line x1="36" y1="0" x2="36" y2="34" stroke={C.line} strokeWidth="0.9" strokeDasharray="2 2" />
+      <ExitMarker x={14} y={88} n={3} />
+      <ExitMarker x={14} y={66} n={2} />
+      <ExitMarker x={14} y={44} n={1} />
+      <Car x="46" y="80" color={C.good} />
+      <g className="vis-blink"><rect x="40.8" y="72" width="1.8" height="1.6" fill={C.amber} /></g>
+      <Arrow d="M46 70 L46 46 Q46 34 32 26 L18 6" />
+      <Tag x="132" y="10" size="3.4" weight={800}>DECELERATION LANE</Tag>
+      <Tag x="132" y="15" size="3" weight={700}>slow down here</Tag>
+      <Tag x="132" y="30" size="3.1" weight={700}>countdown markers:</Tag>
+      <Tag x="132" y="35" size="3.1" weight={700}>300 · 200 · 100 m</Tag>
+      <Tag x="132" y="50" size="3.1" weight={700} color="#047857">mirrors + signal at the</Tag>
+      <Tag x="132" y="54.5" size="3.1" weight={700} color="#047857">first marker at least</Tag>
+      <Tag x="132" y="68" size="3" weight={700}>in lane 1 from the first</Tag>
+      <Tag x="132" y="72.5" size="3" weight={700}>route sign for your exit</Tag>
+      <Tag x="132" y="86" size="3" weight={800} color={C.bad}>one lane at a time —</Tag>
+      <Tag x="132" y="90.5" size="3" weight={800} color={C.bad}>never cut across</Tag>
+    </Frame>
+  ),
+
+  "cats-eyes": () => (
+    <Frame title="Reflective studs on a motorway">
+      <Motorway studs other={false} />
+      <rect x="4" y="56" width="20" height="44" fill={C.road} />
+      <path d="M24 56 L24 40 L36 40 L36 56 Z" fill="#6b7280" />
+      {[60, 66, 72, 78, 84, 90, 96].map(y => <circle key={y} cx="30" cy={y} r="1" fill="#22c55e" />)}
+      <Tag x="132" y="16" size="3.3" weight={800}>WHITE</Tag>
+      <Tag x="132" y="20.5" size="2.9" weight={600}>between lanes</Tag>
+      <Tag x="132" y="34" size="3.3" weight={800} color="#b91c1c">RED (yellow/red)</Tag>
+      <Tag x="132" y="38.5" size="2.9" weight={600}>left edge — the hard shoulder</Tag>
+      <Tag x="132" y="52" size="3.3" weight={800} color="#b45309">AMBER</Tag>
+      <Tag x="132" y="56.5" size="2.9" weight={600}>right edge — central reserve:</Tag>
+      <Tag x="132" y="61" size="2.9" weight={600}>do not cross</Tag>
+      <Tag x="132" y="75" size="3.3" weight={800} color="#15803d">GREEN</Tag>
+      <Tag x="132" y="79.5" size="2.9" weight={600}>across slip roads and lay-bys:</Tag>
+      <Tag x="132" y="84" size="2.9" weight={600}>safe to cross the edge line</Tag>
+      <Tag x="132" y="95" size="2.8" weight={600} color="#475569">green/yellow: roadworks layout</Tag>
+    </Frame>
+  ),
+
+  "gantry-signals": () => (
+    <Frame title="Overhead motorway signals">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="62" width="160" height="38" fill={C.road} />
+      {[53, 107].map(x => <line key={x} x1={x} y1="62" x2={x} y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />)}
+      <rect x="6" y="10" width="148" height="7" fill="#64748b" />
+      <rect x="4" y="10" width="4" height="54" fill="#64748b" />
+      <rect x="152" y="10" width="4" height="54" fill="#64748b" />
+      {[26, 80, 134].map(x => <rect key={x} x={x - 17} y="17" width="34" height="32" rx="2" fill="#111827" />)}
+      <circle cx="26" cy="33" r="11" fill="#ffffff" stroke="#dc2626" strokeWidth="2.6" />
+      <text x="26" y="37" fontSize="11" fontWeight="900" textAnchor="middle" fill="#111827" fontFamily="system-ui">80</text>
+      <path d="M80 23 L80 40 M74 34 L80 41 L86 34" stroke="#ffffff" strokeWidth="2.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {[[126, 24], [142, 24], [126, 42], [142, 42]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3.4" fill="#ef4444" className={i % 2 ? "" : "vis-blink"} />
+      ))}
+      <Tag x="26" y="58" size="3" weight={800}>mandatory limit</Tag>
+      <Tag x="80" y="58" size="3" weight={800}>lane open</Tag>
+      <Tag x="134" y="58" size="3" weight={800} color={C.bad}>red: don't go on</Tag>
+      <Tag x="134" y="80" size="3" weight={700} color={C.bad}>no further</Tag>
+      <Tag x="134" y="84.5" size="3" weight={700} color={C.bad}>in this lane</Tag>
+      <Tag x="26" y="80" size="3" weight={700}>until a new limit</Tag>
+      <Tag x="26" y="84.5" size="3" weight={700}>or signs switch off</Tag>
+      <Tag x="80" y="80" size="3" weight={700}>arrows guide you</Tag>
+      <Tag x="80" y="84.5" size="3" weight={700}>when lanes reduce</Tag>
+    </Frame>
+  ),
+
+  "lri-sign": () => (
+    <Frame title="Location Reference Indicator signs">
+      {[[44, "#1d4ed8", "M7", "motorway: blue"], [116, "#15803d", "N11", "dual carriageway: green"]].map(([x, col, road, lbl]) => (
+        <g key={x}>
+          <rect x={x - 1.5} y="58" width="3" height="26" fill="#475569" />
+          <rect x={x - 16} y="10" width="32" height="50" rx="2" fill={col} stroke="#ffffff" strokeWidth="1" />
+          {[road, "N", "23.4"].map((t, i) => (
+            <text key={i} x={x} y={25 + i * 14} fontSize="9" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{t}</text>
+          ))}
+          <Tag x={x} y="91" size="3.3" weight={800}>{lbl}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="24" size="2.8" weight={700} anchor="middle">① road</Tag>
+      <Tag x="80" y="38" size="2.8" weight={700} anchor="middle">② direction</Tag>
+      <Tag x="80" y="52" size="2.8" weight={700} anchor="middle">③ distance</Tag>
+      <Tag x="80" y="98" size="3" weight={600}>tell the emergency services exactly where you are</Tag>
+    </Frame>
+  ),
+
+  "hard-shoulder-stop": () => (
+    <Frame title="An emergency stop on the hard shoulder">
+      <rect x="0" y="0" width="14" height="100" fill="#7aa35a" />
+      <line x1="16" y1="0" x2="16" y2="100" stroke="#cbd5e1" strokeWidth="1.4" />
+      <rect x="17" y="0" width="7" height="100" fill={C.ground} />
+      <Motorway other={false} />
+      <Car x="30" y="40" color={C.good} />
+      <g className="vis-blink">
+        {[[25.6, 32], [32.6, 32], [25.6, 46.4], [32.6, 46.4]].map(([x, y], i) => <rect key={i} x={x} y={y} width="1.8" height="1.6" fill={C.amber} />)}
+      </g>
+      <path d="M30 78 L27 84 L33 84 Z" fill="none" stroke="#dc2626" strokeWidth="1" />
+      <text x="7" y="34" fontSize="6" textAnchor="middle">🧍</text>
+      <text x="7" y="42" fontSize="6" textAnchor="middle">🧍</text>
+      <Arrow d="M25 38 L12 38" color={C.good} w={1} />
+      <rect x="18" y="8" width="5" height="9" fill="#ffffff" stroke="#334155" strokeWidth="0.4" />
+      <text x="20.5" y="14.5" fontSize="4.5" textAnchor="middle">☎</text>
+      <Car x="66" y="70" color={C.grey} />
+      <Tag x="132" y="16" size="3.3" weight={800}>far left, hazards on,</Tag>
+      <Tag x="132" y="20.5" size="3.1" weight={700}>sidelights if needed</Tag>
+      <Tag x="132" y="34" size="3.1" weight={800} color="#047857">everyone out by the</Tag>
+      <Tag x="132" y="38.5" size="3.1" weight={800} color="#047857">LEFT-hand doors —</Tag>
+      <Tag x="132" y="43" size="3.1" weight={800} color="#047857">behind the barrier</Tag>
+      <Tag x="132" y="56" size="3" weight={700}>animals stay in the car</Tag>
+      <Tag x="132" y="70" size="3" weight={700} color="#b91c1c">warning triangle well</Tag>
+      <Tag x="132" y="74.5" size="3" weight={700} color="#b91c1c">back on the hard shoulder</Tag>
+      <Tag x="132" y="88" size="3" weight={700}>SOS phone: about every</Tag>
+      <Tag x="132" y="92.5" size="3" weight={700}>1.6 km — follow the arrow</Tag>
+    </Frame>
+  ),
+
+  "two-second-rule": () => (
+    <Frame title="The two-second rule">
+      <rect x="0" y="34" width="160" height="34" fill={C.road} />
+      <line x1="0" y1="51" x2="160" y2="51" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <rect x="94" y="28" width="3" height="6" fill="#475569" />
+      <rect x="92" y="22" width="7" height="6" fill="#ffffff" stroke="#334155" strokeWidth="0.4" />
+      <Car x="112" y="42" rot={90} color={C.grey} />
+      <Car x="30" y="42" rot={90} color={C.good} />
+      <line x1="38" y1="74" x2="104" y2="74" stroke={C.good} strokeWidth="0.8" />
+      <line x1="38" y1="71" x2="38" y2="77" stroke={C.good} strokeWidth="0.8" />
+      <line x1="104" y1="71" x2="104" y2="77" stroke={C.good} strokeWidth="0.8" />
+      <Tag x="71" y="83" size="3.6" color="#047857">a two-second gap</Tag>
+      <Tag x="80" y="12" size="4.2">KEEP YOUR DISTANCE</Tag>
+      <Tag x="80" y="18" size="3.2" weight={600}>at least 1 m per km/h — or a two-second gap</Tag>
+      <Tag x="95.5" y="40" size="2.8" weight={700}>marker</Tag>
+          </Frame>
+  ),
+
+  "motorway-signs": () => (
+    <Frame title="Start and end of motorway signs">
+      {[[44, false, "MOTORWAY STARTS", "regulations apply"], [116, true, "MOTORWAY ENDS", "regulations no longer apply"]].map(([x, end, a, b]) => (
+        <g key={x}>
+          <rect x={x - 22} y="12" width="44" height="44" rx="4" fill="#1d4ed8" stroke="#ffffff" strokeWidth="1.2" />
+          <MotorwaySymbol x={x} y={34} s={1.5} />
+          {end && <line x1={x - 18} y1="52" x2={x + 18} y2="16" stroke="#dc2626" strokeWidth="4" />}
+          <Tag x={x} y="70" size="3.6">{a}</Tag>
+          <Tag x={x} y="76" size="3" weight={600}>{b}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="92" size="3.2" weight={700}>motorway signs are blue</Tag>
+    </Frame>
+  ),
+
+  "motorway-banned": () => {
+    const cells = [
+      ["🚶", "pedestrians"], ["🚲", "pedal cyclists"], ["🐄", "animals"],
+      ["🛵", "under 50 cc"], ["L", "learner drivers"], ["🦽", "invalid carriages"],
+      ["🚜", "can't do 50 km/h"], ["🚛", "oversized, no permit"], ["↩️", "reversing, U-turns"],
+    ];
+    return (
+      <Frame title="Not allowed on a motorway">
+        {cells.map(([icon, label], i) => {
+          const x = 27 + (i % 3) * 53;
+          const y = 15 + Math.floor(i / 3) * 31;
+          return (
+            <g key={label}>
+              <circle cx={x} cy={y} r="9" fill="#ffffff" stroke={C.bad} strokeWidth="1.2" />
+              {icon === "L"
+                ? <g><rect x={x - 5} y={y - 5} width="10" height="10" fill="#ffffff" stroke="#dc2626" strokeWidth="0.6" /><text x={x} y={y + 3.4} fontSize="9" fontWeight="900" textAnchor="middle" fill="#dc2626" fontFamily="system-ui">L</text></g>
+                : <text x={x} y={y + 3.4} fontSize="9.5" textAnchor="middle">{icon}</text>}
+              <Tag x={x} y={y + 15} size="3.4" weight={700}>{label}</Tag>
+            </g>
+          );
+        })}
+      </Frame>
+    );
+  },
+
+  "average-speed": () => (
+    <Frame title="Average speed cameras">
+      <rect x="0" y="40" width="160" height="30" fill={C.road} />
+      <line x1="0" y1="55" x2="160" y2="55" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      {[20, 140].map((x, i) => (
+        <g key={x}>
+          <rect x={x - 1} y="22" width="2" height="18" fill="#475569" />
+          <rect x={x - 5} y="16" width="10" height="7" rx="1" fill="#facc15" stroke="#111827" strokeWidth="0.5" />
+          <text x={x} y="21.6" fontSize="5" textAnchor="middle">📷</text>
+          <Tag x={x} y="11" size="3.6">{i ? "B" : "A"}</Tag>
+        </g>
+      ))}
+      <Car x="56" y="47" rot={90} color={C.good} />
+      <Arrow d="M66 47 L96 47" />
+      <line x1="20" y1="80" x2="140" y2="80" stroke={C.ink} strokeWidth="0.6" />
+      <Tag x="80" y="88" size="3.4" weight={700}>time from A to B = your average speed</Tag>
+      <Tag x="80" y="94" size="3.1" weight={600} color={C.bad}>there too soon → a record goes to the Gardaí</Tag>
     </Frame>
   ),
 

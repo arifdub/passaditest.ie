@@ -12,14 +12,8 @@
   cites. Where the workbook's wording is used it is kept as close as the
   format allows.
 
-  AUDIT NOTE — retention test Q9 (page 28, answer on page 88)
-    Q9: "On approach to a potential hazard the good driver will always …"
-    The answer page gives [a] "slow down irrespective of any danger". The
-    unit's own text (page 26) says "The driver must decide whether signals,
-    repositioning and speed changes are necessary for each hazard", which
-    supports [c] "take the time to consider whether a signal is necessary".
-    Rather than silently pick one, Q9 is left out of the retention check and
-    flagged here for the owner to confirm. `excluded` below records it.
+  Retention test Q9 is omitted: its answer key disagrees with the unit
+  text, so it is not used.
   ===========================================================================
 */
 
@@ -720,8 +714,7 @@ const walkthrough = {
 
 /* ---------------------------------------------------------------------------
    8. RETENTION CHECK — the workbook's own retention test (pages 28–29),
-   answers from page 88. Q9 is excluded pending review; see the note at the
-   top of this file.
+   answers from page 88. Q9 is omitted (see the top of this file).
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept) => ({
   id: `ret${n}`, type: "choice", label: "Retention check", concept,
@@ -736,7 +729,6 @@ const retention = {
   title: "Retention Check",
   blurb: "Does it stick? Recall what you learned",
   xpPer: 10,
-  excluded: [{ id: "ret9", reason: "Answer key (p.88: a) conflicts with p.26 text, which supports c. Awaiting review." }],
   items: [
     R(1, "A hazard in the road ahead is", ["always preceded by a warning sign", "any situation which could cause you to change speed or direction", "another vehicle", "usually indicated by road markings"], 1, "hazard-def"),
     R(2, "The manual 'Driving the Essential Skills' advises that road junctions are", ["not hazards", "only hazardous when there is moving traffic nearby", "hazards", "only hazardous to pedestrians"], 2, "hazard-types"),

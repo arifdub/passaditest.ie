@@ -88,11 +88,8 @@ challenge ≥ 80%, retention check ≥ 70%.
 
 ## Audit notes — Book 1
 
-- **Retention test 1.1, Q9** (page 28). The answer page (88) gives **a**
-  ("slow down irrespective of any danger"), but the unit's text (page 26:
-  "The driver must decide whether signals, repositioning and speed changes
-  are necessary for each hazard") supports **c**. Q9 is left out of the
-  retention check until confirmed; recorded as `excluded` in `unit1_1.js`.
+- **Retention test 1.1, Q9** — omitted: its answer key (page 88) disagrees
+  with the unit text (page 26).
 - **Retention test 1.2** — the answer key (page 88) agrees with the unit
   text for all ten questions; all are used.
 - **Unit 1.2's recognition game** is "Signal or Not?" (sorting situations)
@@ -100,13 +97,10 @@ challenge ≥ 80%, retention check ≥ 70%.
   recognition skill is telling a helpful signal from an unnecessary one.
 - **Retention test 1.3** — the answer key agrees with the unit text for all
   fifteen questions; all are used. Its recognition game is "Pick the Lane".
-- **Retention test 1.4, Q10** (page 47). The answer page (88) gives **b**
-  ("keep his eyes constantly on the road ahead"), but the unit's text
-  (page 42: "Beware of vehicles approaching your vehicle from side roads …
-  intending to follow the road ahead") supports **d**. Left out pending
-  review; recorded as `excluded` in `unit1_4.js`. Q1–Q3 (load and tyre
-  pressures) come from the book's own test though the unit text doesn't
-  cover them; they are kept as the book sets them.
+- **Retention test 1.4, Q10** — omitted: its answer key (page 88) disagrees
+  with the unit text (page 42). Q1–Q3 (load and tyre pressures) come from
+  the book's own test though the unit text doesn't cover them; they are kept
+  as the book sets them.
 - **Retention test 1.5** — the answer key agrees with the unit text for all
   ten questions; all are used. Hill drawings are side views.
 - **Unit 1.5** is headed "Dealing with Hills" on page 49 and in its post test,

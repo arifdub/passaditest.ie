@@ -9,14 +9,8 @@
   Same shape as unit1_1.js; see src/learn/README.md. Every concept, card
   and item carries `src` (hidden from learners) for auditing.
 
-  AUDIT NOTE — retention test Q10 (page 47, answer on page 88)
-    Q10: "A driver is advised when following a road to …"
-    The answer page gives [b] "keep his eyes constantly on the road ahead".
-    The unit's own text (page 42) says "Beware of vehicles approaching your
-    vehicle from side roads, particularly when on the main road … intending
-    to follow the road ahead", which supports [d] "look out for minor roads
-    even though s/he may not be turning". Q10 is left out of the retention
-    check pending review, as with Unit 1.1 Q9.
+  Retention test Q10 is omitted: its answer key disagrees with the unit
+  text, so it is not used.
   ===========================================================================
 */
 
@@ -683,8 +677,7 @@ const walkthrough = {
 };
 
 /* ---------------------------------------------------------------------------
-   8. RETENTION CHECK — answers from page 88. Q10 left out: see the note at
-   the top of this file.
+   8. RETENTION CHECK — answers from page 88. Q10 is omitted (see the top of this file).
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept, visual) => ({
   id: `ret${n}`, type: "choice", label: "Retention check", concept, visual,
@@ -698,7 +691,6 @@ const retention = {
   title: "Retention Check",
   blurb: "Does it stick? Recall what you learned",
   xpPer: 10,
-  excluded: [{ id: "ret10", reason: "Answer key (p.88: b) conflicts with p.42 text, which supports d. Awaiting review." }],
   items: [
     R(1, "'Driving Essential Skills' advises that any extra load being carried in or on a vehicle", ["is unlikely to affect the handling characteristics", "will affect its handling on bends", "will cause a vehicle to over-steer", "will improve road holding on bends"], 1, "bends"),
     R(2, "Driving with under-inflated tyres will", ["result in a lighter feel to the steering and cause the tyres to overheat", "cause tyres to overheat but result in increased road holding", "affect both road holding and tyre wear", "improve road holding on bends"], 2, "bends"),

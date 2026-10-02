@@ -8,11 +8,10 @@
   (1d 2b 3c 4c 5b 6d 7b 8b 9c 10b).
 
   The answer key agrees with the unit text throughout, so all ten
-  retention questions are used. The page 85 answers stop at Q9 of the
-  eleven post-test questions, and the "golden rule" (Q5) appears as the
-  last line of answer 4: "If in doubt, don't overtake". Q10 and Q11 are
-  answered from the unit text (p.55 "Always signal"; p.56 overtaking on
-  the left).
+  retention questions are used. The page 85–86 model answers are numbered
+  so that the "golden rule" (Q5) appears as the last line of answer 4:
+  "If in doubt, don't overtake"; answers 5 and 6 both describe what to do
+  when a driver cuts in after overtaking you.
   ===========================================================================
 */
 

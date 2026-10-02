@@ -420,4 +420,90 @@ export default [
     key: "Animals are frightened by noise: allow enough room, don't sound the horn, watch for the person's signals.",
     src: P("1.6", 56, "Passing horses and riders"),
   },
+
+  /* ---------------- Unit 1.7 — Level Crossings & Tramways ---------------- */
+  {
+    id: "crossing-lights", unit: "1.7", term: "Level crossing lights", visual: "crossing-lights",
+    meaning: "A steady amber light with an audible alarm, then twin flashing red lights, warning of a train.",
+    key: "Red: stop. Already on the crossing when they start? Keep going.",
+    src: P("1.7", 61, "Traffic light control; p.86 answers 5, 6"),
+  },
+  {
+    id: "half-barrier", unit: "1.7", term: "Half-barrier crossing", visual: "crossing-half",
+    meaning: "An automatic crossing whose barriers close only the approach side of the road, operated by the train.",
+    key: "Never zigzag around half barriers.",
+    src: P("1.7", 86, "Post-test answer 3; p.60"),
+  },
+  {
+    id: "open-crossing", unit: "1.7", term: "Open level crossing", visual: "crossing-open",
+    meaning: "A level crossing with no gates or barriers, controlled by lights.",
+    key: "No attendant — the red lights are your only warning. Stop when they show.",
+    src: P("1.7", 86, "Post-test answer 7; p.60"),
+  },
+  {
+    id: "user-operated-crossing", unit: "1.7", term: "User-operated gates", visual: "crossing-gates",
+    meaning: "An unattended crossing with gates or barriers across the full road, and no lights — you open them.",
+    key: "Stop, look and listen, open BOTH gates, drive all the way over, close BOTH gates.",
+    src: P("1.7", 60, "Unattended road user operated crossings"),
+  },
+  {
+    id: "countdown-markers", unit: "1.7", term: "Countdown markers", visual: "countdown-markers",
+    meaning: "Red and white marker boards counting down to a level crossing.",
+    key: "They may come before a concealed level crossing — approach carefully.",
+    src: P("1.7", 60, "On approach"),
+  },
+  {
+    id: "crossing-yellow-box", unit: "1.7", term: "Keeping a crossing clear", visual: "crossing-clear",
+    meaning: "A yellow box marking can keep a busy crossing clear of queuing traffic.",
+    key: "Never drive on unless the road is clear beyond. Never nose to tail, never stop on or just after it.",
+    src: P("1.7", 86, "Post-test answers 4, 10; p.60"),
+  },
+  {
+    id: "railway-telephone", unit: "1.7", term: "Railway telephone", visual: "crossing-breakdown",
+    meaning: "A telephone at a crossing to reach the signalman.",
+    key: "Use it after a breakdown or accident, to check it's safe, or for permission with large or slow vehicles, low clearance or animals.",
+    src: P("1.7", 61, "Railway telephones"),
+  },
+  {
+    id: "swept-path", unit: "1.7", term: "Tram swept path", visual: "tram-swept-path",
+    meaning: "The tram's pathway — about 7 metres wide, for two tracks plus safety clearance.",
+    key: "Tracks are flush with the road, so you can cross them at junctions. Mind the overhead wires.",
+    src: P("1.7", 60, "Tram pathway or swept path"),
+  },
+  {
+    id: "tram-kerb", unit: "1.7", term: "Tram and the left kerb", visual: "tram-kerb",
+    meaning: "The space between a tram and the left-hand kerb.",
+    key: "You must not drive into it — and don't park where you'd obstruct a tram.",
+    src: P("1.7", 60, "Side note"),
+  },
+  {
+    id: "tram-lane", unit: "1.7", term: "Tram lane", visual: "tram-lane",
+    meaning: "A lane for trams, marked by a white line, yellow dots, or a different road surface.",
+    key: "Don't enter a lane reserved for trams. Trams have priority.",
+    src: P("1.7", 61, "Tramways; p.59"),
+  },
+  {
+    id: "lana-tram", unit: "1.7", term: "LÁNA TRAM", visual: "lana-tram",
+    meaning: "A road marking showing a section of road used by trams and vehicles.",
+    key: "Take extra care — you may have to share the road space with trams.",
+    src: P("1.7", 59, "Introduction"),
+  },
+  {
+    id: "no-entry-trams", unit: "1.7", term: "No Entry — Except Trams", visual: "no-entry-trams",
+    meaning: "\"Except Trams\": trams only. \"Except Trams and Access\": also drivers or cyclists going to or from a building.",
+    key: "Without a reason to reach a building there, you may not enter.",
+    src: P("1.7", 59, "Regulatory signs for tram lanes"),
+  },
+  {
+    id: "tram-crossing-sign", unit: "1.7", term: "LOOK BOTH WAYS sign", visual: "tram-crossing-sign",
+    meaning: "A tram symbol with LOOK BOTH WAYS (or LOOK RIGHT, LOOK LEFT): a tramway crossing point.",
+    key: "Cross the tracks only here — stop, look both ways, listen for horns and chimes.",
+    src: P("1.7", 59, "Warning signs for tram lanes"),
+  },
+  {
+    id: "tram-sweep", unit: "1.7", term: "Tram sweep at junctions", visual: "tram-junction",
+    meaning: "The extra space a turning tram covers on bends and corners.",
+    key: "Obey the lights and keep yellow boxes completely clear.",
+    src: P("1.7", 59, "Regulatory signs for tram lanes"),
+  },
 ];

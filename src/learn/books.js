@@ -22,6 +22,7 @@ import UNIT_1_3 from "./book1/unit1_3";
 import UNIT_1_4 from "./book1/unit1_4";
 import UNIT_1_5 from "./book1/unit1_5";
 import UNIT_1_6 from "./book1/unit1_6";
+import UNIT_1_7 from "./book1/unit1_7";
 import GLOSSARY_1 from "./book1/glossary";
 
 export const BOOKS = [
@@ -42,7 +43,7 @@ export const BOOKS = [
       { id: "1.4",  title: "Junctions & Bends",                  pages: [40, 48], badge: "Junction Specialist", content: UNIT_1_4 },
       { id: "1.5",  title: "Dealing with Hills",                 pages: [49, 52], badge: "Hill Handler", content: UNIT_1_5 },
       { id: "1.6",  title: "Overtaking",                         pages: [53, 58], badge: "Overtaking Challenge", content: UNIT_1_6 },
-      { id: "1.7",  title: "Level Crossings & Tramways",         pages: [59, 63], badge: "Crossings Specialist" },
+      { id: "1.7",  title: "Level Crossings & Tramways",         pages: [59, 63], badge: "Crossings Specialist", content: UNIT_1_7 },
       { id: "1.8",  title: "Motorway Driving",                   pages: [64, 71], badge: "Motorway Specialist" },
       { id: "1.9",  title: "Night Driving",                      pages: [72, 75], badge: "Night Driving Specialist" },
       { id: "1.10", title: "Weather, Driver Vision & Its Effects", pages: [76, 81], badge: "All-Weather Driver" },

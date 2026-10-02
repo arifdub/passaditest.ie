@@ -157,6 +157,85 @@ function RightIndicator({ x, y }) {
   );
 }
 
+/* Railway tracks across the picture at height y; sleepers show off the road
+   (between `from` and `to` the rails cross a road surface). */
+function Rails({ y, from = 40, to = 120 }) {
+  const sleepers = [];
+  for (let x = 1; x < 160; x += 5) if (x < from || x > to) sleepers.push(<rect key={x} x={x} y={y - 6} width="2" height="12" fill="#8b6b4a" />);
+  return (
+    <g>
+      <rect x="0" y={y - 7} width={from} height="14" fill="#b8b2a7" />
+      <rect x={to} y={y - 7} width={160 - to} height="14" fill="#b8b2a7" />
+      {sleepers}
+      <line x1="0" y1={y - 3} x2="160" y2={y - 3} stroke="#1f2937" strokeWidth="1" />
+      <line x1="0" y1={y + 3} x2="160" y2={y + 3} stroke="#1f2937" strokeWidth="1" />
+    </g>
+  );
+}
+
+/* A train on horizontal rails, nose at x, heading right (or left if `left`). */
+function Train({ x, y, left, len = 34 }) {
+  const x0 = left ? x : x - len;
+  return (
+    <g>
+      <rect x={x0} y={y - 5} width={len} height="10" rx="2" fill="#15803d" stroke="#0f172a" strokeWidth="0.4" />
+      <rect x={left ? x0 : x0 + len - 4} y={y - 5} width="4" height="10" rx="1.5" fill="#facc15" stroke="#0f172a" strokeWidth="0.4" />
+    </g>
+  );
+}
+
+/* A tram seen from above, centred on (x, y), facing `rot` (0 = up). */
+function Tram({ x, y, rot = 0, len = 46 }) {
+  const t = -len / 2;
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rot})`}>
+      <rect x="-5.5" y={t} width="11" height={len} rx="3" fill="#cbd5e1" stroke="#0f172a" strokeWidth="0.4" />
+      <rect x="-5.5" y={t} width="11" height="4" rx="2" fill="#facc15" />
+      <rect x="-5.5" y={-t - 4} width="11" height="4" rx="2" fill="#facc15" />
+      {[0.3, 0.6].map(f => <line key={f} x1="-5.5" y1={t + len * f} x2="5.5" y2={t + len * f} stroke="#64748b" strokeWidth="0.5" />)}
+    </g>
+  );
+}
+
+/* A yellow box: crosshatched yellow lines in a rectangle. */
+function YellowBox({ x, y, w, h }) {
+  const id = useId().replace(/:/g, "");
+  const lines = [];
+  for (let i = -h; i < w + h; i += 6) {
+    lines.push(<line key={"a" + i} x1={x + i} y1={y} x2={x + i + h} y2={y + h} stroke="#facc15" strokeWidth="0.8" />);
+    lines.push(<line key={"b" + i} x1={x + i + h} y1={y} x2={x + i} y2={y + h} stroke="#facc15" strokeWidth="0.8" />);
+  }
+  return (
+    <g>
+      <defs><clipPath id={`yb${id}`}><rect x={x} y={y} width={w} height={h} /></clipPath></defs>
+      <rect x={x} y={y} width={w} height={h} fill="none" stroke="#facc15" strokeWidth="1.1" />
+      <g clipPath={`url(#yb${id})`}>{lines}</g>
+    </g>
+  );
+}
+
+/* A level-crossing light post seen from above, with twin red lights. */
+function CrossingLights({ x, y, on = true }) {
+  return (
+    <g>
+      <rect x={x - 4} y={y - 2.5} width="8" height="5" rx="1.5" fill="#111827" />
+      <circle cx={x - 2} cy={y} r="1.5" fill="#ef4444" className={on ? "vis-blink" : ""} />
+      <circle cx={x + 2} cy={y} r="1.5" fill="#ef4444" className={on ? "vis-blink" : ""} />
+    </g>
+  );
+}
+
+/* A red-and-white barrier from (x1, y) to (x2, y). */
+function Barrier({ x1, x2, y }) {
+  return (
+    <g>
+      <line x1={x1} y1={y} x2={x2} y2={y} stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1={x1} y1={y} x2={x2} y2={y} stroke="#dc2626" strokeWidth="2.2" strokeDasharray="3 3" />
+      <circle cx={x1} cy={y} r="2" fill="#334155" />
+    </g>
+  );
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -1167,6 +1246,315 @@ const DRAW = {
       </Frame>
     );
   },
+
+  /* ---------------- level crossings & tramways (Unit 1.7) ---------------- */
+  "crossing-lights": () => (
+    <Frame title="Level crossing light sequence">
+      {[[38, "amber"], [122, "red"]].map(([x, stage]) => (
+        <g key={x}>
+          <rect x={x - 3} y="56" width="6" height="30" fill="#475569" />
+          <rect x={x - 20} y="14" width="40" height="44" rx="6" fill="#111827" />
+          <circle cx={x} cy="25" r="6" fill={stage === "amber" ? "#f59e0b" : "#3f3f46"} />
+          {stage === "amber" && <circle cx={x} cy="25" r="10" fill="#f59e0b" opacity="0.25" />}
+          {[-10, 10].map(dx => (
+            <g key={dx}>
+              <circle cx={x + dx} cy="45" r="6" fill={stage === "red" ? "#ef4444" : "#3f1d1d"} className={stage === "red" ? "vis-blink" : ""} />
+              {stage === "red" && <circle cx={x + dx} cy="45" r="10" fill="#ef4444" opacity="0.25" className="vis-blink" />}
+            </g>
+          ))}
+          <text x={x + 26} y="20" fontSize="8" textAnchor="middle">🔔</text>
+        </g>
+      ))}
+      <Arrow d="M64 36 L94 36" color={C.ink} w={1.2} />
+      <Tag x="79" y="31" size="3.4" weight={700}>then</Tag>
+      <Tag x="38" y="91" size="3.8">① STEADY AMBER</Tag>
+      <Tag x="38" y="96.5" size="3.2" weight={600}>+ the audible alarm</Tag>
+      <Tag x="122" y="91" size="3.8" color={C.bad}>② TWIN FLASHING RED</Tag>
+      <Tag x="122" y="96.5" size="3.2" weight={600}>STOP — don't drive on</Tag>
+    </Frame>
+  ),
+
+  "crossing-half": () => (
+    <Frame title="Automatic half-barrier level crossing">
+      <VRoad />
+      <Rails y={50} />
+      <Barrier x1={45} x2={79} y={62} />
+      <Barrier x1={115} x2={81} y={38} />
+      <line x1="45" y1="68" x2="80" y2="68" stroke={C.line} strokeWidth="1.2" />
+      <CrossingLights x={38} y={66} />
+      <CrossingLights x={122} y={34} />
+      <Car x="62" y="82" color={C.good} />
+      <path d="M66 74 Q92 70 92 56 Q92 44 70 36" fill="none" stroke={C.bad} strokeWidth="1.1" strokeDasharray="2 1.6" />
+      <Tag x="96" y="64" size="6" color={C.bad}>✗</Tag>
+      <Train x={34} y={50} />
+      <Arrow d="M36 50 L44 50" color="#15803d" w={1.2} />
+      <Tag x="80" y="9" size="4.2">HALF BARRIERS</Tag>
+      <Tag x="80" y="15" size="3.3" weight={600}>operated automatically by the train</Tag>
+      <Tag x="22" y="84" size="3.3" weight={700}>wait at the</Tag>
+      <Tag x="22" y="88.5" size="3.3" weight={700}>white line</Tag>
+      <Tag x="138" y="80" size="3.2" weight={800} color={C.bad}>never zigzag</Tag>
+      <Tag x="138" y="84.5" size="3.2" weight={800} color={C.bad}>round them</Tag>
+    </Frame>
+  ),
+
+  "crossing-open": () => (
+    <Frame title="Open level crossing">
+      <VRoad />
+      <Rails y={46} />
+      <line x1="45" y1="62" x2="80" y2="62" stroke={C.line} strokeWidth="1.2" />
+      <line x1="80" y1="30" x2="115" y2="30" stroke={C.line} strokeWidth="1.2" />
+      <CrossingLights x={38} y={62} />
+      <CrossingLights x={122} y={30} />
+      <Car x="62" y="76" color={C.good} />
+      <Train x={160} y={46} left />
+      <Tag x="80" y="9" size="4.2">OPEN CROSSING</Tag>
+      <Tag x="80" y="15" size="3.3" weight={600}>no gates or barriers — controlled by lights</Tag>
+      <Tag x="136" y="76" size="3.4" weight={800} color={C.bad}>red lights:</Tag>
+      <Tag x="136" y="81" size="3.4" weight={800} color={C.bad}>STOP</Tag>
+      <Tag x="22" y="84" size="3.1" weight={600}>no attendant,</Tag>
+      <Tag x="22" y="88.5" size="3.1" weight={600}>no gates, no barriers</Tag>
+    </Frame>
+  ),
+
+  "crossing-gates": () => (
+    <Frame title="Unattended crossing with gates you open yourself">
+      <VRoad />
+      <Rails y={50} />
+      {/* gates swung open onto the verges */}
+      {[[45, 38, -1], [115, 38, 1], [45, 62, -1], [115, 62, 1]].map(([x, y, d], i) => (
+        <g key={i}>
+          <line x1={x} y1={y} x2={x + d * 14} y2={y + (y < 50 ? -10 : 10)} stroke="#ffffff" strokeWidth="2" />
+          <line x1={x} y1={y} x2={x + d * 14} y2={y + (y < 50 ? -10 : 10)} stroke="#dc2626" strokeWidth="2" strokeDasharray="2.5 2.5" />
+          <circle cx={x} cy={y} r="1.6" fill="#334155" />
+        </g>
+      ))}
+      <Car x="62" y="84" color={C.good} />
+      <text x="34" y="66" fontSize="7" textAnchor="middle">🧍</text>
+      <text x="128" y="28" fontSize="7" textAnchor="middle">☎️</text>
+      <Tag x="128" y="18" size="3" weight={700}>railway phone</Tag>
+      <Tag x="22" y="12" size="3.1" weight={800}>① stop short</Tag>
+      <Tag x="22" y="17" size="3.1" weight={800}>② get out, look</Tag>
+      <Tag x="22" y="21.5" size="3.1" weight={800}>both ways, listen</Tag>
+      <Tag x="138" y="72" size="3.1" weight={800}>③ open BOTH gates</Tag>
+      <Tag x="138" y="77" size="3.1" weight={800}>④ if safe, drive</Tag>
+      <Tag x="138" y="81.5" size="3.1" weight={800}>all the way across</Tag>
+      <Tag x="138" y="86.5" size="3.1" weight={800}>⑤ close BOTH gates</Tag>
+    </Frame>
+  ),
+
+  "crossing-clear": () => (
+    <Frame title="Keep the crossing clear">
+      <VRoad />
+      <Rails y={40} />
+      <YellowBox x={45} y={30} w={70} h={20} />
+      <Car x="62" y="18" color={C.grey} />
+      <Car x="62" y="0" color={C.grey} />
+      <Car x="62" y="72" color={C.good} />
+      <Car x="62" y="92" color={C.grey} />
+      <Tag x="22" y="12" size="3.2" weight={700}>queue on the</Tag>
+      <Tag x="22" y="16.5" size="3.2" weight={700}>far side</Tag>
+      <Tag x="138" y="36" size="3.4" weight={800} color="#a16207">yellow box:</Tag>
+      <Tag x="138" y="41" size="3.2" weight={700}>keep it clear</Tag>
+      <Tag x="22" y="66" size="3.2" weight={800} color="#047857">wait until the road</Tag>
+      <Tag x="22" y="70.5" size="3.2" weight={800} color="#047857">beyond is clear</Tag>
+      <Tag x="138" y="74" size="3.2" weight={800} color={C.bad}>✗ not nose to tail</Tag>
+      <Tag x="138" y="79" size="3.2" weight={800} color={C.bad}>✗ never stop on it</Tag>
+    </Frame>
+  ),
+
+  "crossing-breakdown": () => (
+    <Frame title="Breakdown on a level crossing">
+      <VRoad />
+      <Rails y={46} />
+      <Car x="62" y="47" color={C.good} />
+      <g className="vis-blink">
+        <rect x="57.6" y="39" width="1.8" height="1.6" fill={C.amber} />
+        <rect x="64.6" y="39" width="1.8" height="1.6" fill={C.amber} />
+      </g>
+      <text x="26" y="76" fontSize="7" textAnchor="middle">🚶</text>
+      <text x="34" y="80" fontSize="7" textAnchor="middle">🚶</text>
+      <Arrow d="M54 56 Q44 66 38 70" color={C.good} w={1.2} />
+      <text x="130" y="68" fontSize="7" textAnchor="middle">☎️</text>
+      <Train x={160} y={46} left len={30} />
+      <Tag x="80" y="9" size="3.6" weight={800}>① everyone out — clear of the crossing</Tag>
+      <Tag x="80" y="15" size="3.3" weight={700}>② railway telephone: inform the signalman</Tag>
+      <Tag x="80" y="21" size="3.3" weight={700}>③ move the car only if told it's safe</Tag>
+      <Tag x="80" y="94" size="3.8" color={C.bad}>train or alarm? GET CLEAR — it can't stop</Tag>
+    </Frame>
+  ),
+
+  "countdown-markers": () => (
+    <Frame title="Countdown markers before a concealed level crossing">
+      <VRoad />
+      <Rails y={10} />
+      <rect x="0" y="16" width="44" height="14" fill="#4d7c0f" />
+      <rect x="116" y="16" width="44" height="14" fill="#4d7c0f" />
+      {[[3, 86], [2, 64], [1, 42]].map(([n, y]) => (
+        <g key={n}>
+          <rect x="30" y={y - 9} width="8" height="18" fill="#ffffff" stroke="#334155" strokeWidth="0.4" />
+          {Array.from({ length: n }, (_, i) => (
+            <line key={i} x1="30.6" y1={y + 6 - i * 5.5} x2="37.4" y2={y + 2 - i * 5.5} stroke="#dc2626" strokeWidth="1.6" />
+          ))}
+        </g>
+      ))}
+      <Car x="62" y="90" color={C.good} />
+      <Arrow d="M62 80 L62 66" />
+      <Tag x="138" y="52" size="3.8">COUNTDOWN</Tag>
+      <Tag x="138" y="57.5" size="3.8">MARKERS</Tag>
+      <Tag x="138" y="64" size="3.1" weight={600}>red and white —</Tag>
+      <Tag x="138" y="68.5" size="3.1" weight={600}>a concealed level</Tag>
+      <Tag x="138" y="73" size="3.1" weight={600}>crossing ahead</Tag>
+    </Frame>
+  ),
+
+  "tram-swept-path": () => (
+    <Frame title="The tram's swept path">
+      <rect x="15" y="0" width="5" height="100" fill={C.kerb} />
+      <rect x="20" y="0" width="120" height="100" fill={C.road} />
+      <rect x="140" y="0" width="5" height="100" fill={C.kerb} />
+      <rect x="54" y="0" width="52" height="100" fill={C.amber} opacity="0.25" />
+      <line x1="54" y1="0" x2="54" y2="100" stroke={C.amber} strokeWidth="0.8" strokeDasharray="2 1.5" />
+      <line x1="106" y1="0" x2="106" y2="100" stroke={C.amber} strokeWidth="0.8" strokeDasharray="2 1.5" />
+      {[64, 70, 90, 96].map(x => <line key={x} x1={x} y1="0" x2={x} y2="100" stroke="#cbd5e1" strokeWidth="0.9" />)}
+      <Tram x={67} y={40} />
+      <Tram x={93} y={70} rot={180} />
+      {/* overhead wires */}
+      <line x1="67" y1="0" x2="67" y2="100" stroke="#0f172a" strokeWidth="0.35" strokeDasharray="4 2" />
+      <line x1="93" y1="0" x2="93" y2="100" stroke="#0f172a" strokeWidth="0.35" strokeDasharray="4 2" />
+      <line x1="10" y1="88" x2="150" y2="88" stroke="#0f172a" strokeWidth="0.35" />
+      <circle cx="10" cy="88" r="1.6" fill="#334155" />
+      <circle cx="150" cy="88" r="1.6" fill="#334155" />
+      <line x1="56" y1="8" x2="104" y2="8" stroke={C.ink} strokeWidth="0.6" />
+      <Tag x="80" y="5" size="3.6">≈ 7 m swept path</Tag>
+      <Car x="36" y="60" color={C.good} />
+      <Tag x="36" y="78" size="3" weight={700}>traffic</Tag>
+      <Tag x="80" y="96" size="3.2" weight={700}>overhead wires — care with high loads</Tag>
+      <Tag x="124" y="30" size="3" weight={700}>two tracks:</Tag>
+      <Tag x="124" y="34.5" size="3" weight={700}>trams pass</Tag>
+      <Tag x="124" y="39" size="3" weight={700}>each way</Tag>
+    </Frame>
+  ),
+
+  "tram-kerb": () => (
+    <Frame title="Never between a tram and the left kerb">
+      <VRoad />
+      {[60, 66].map(x => <line key={x} x1={x} y1="0" x2={x} y2="100" stroke="#cbd5e1" strokeWidth="0.9" />)}
+      <Tram x={63} y={40} />
+      <Car x="51" y="72" color={C.bad} ghost />
+      <path d="M51 64 L51 52" stroke={C.bad} strokeWidth="1.1" strokeDasharray="2 1.6" />
+      <Tag x="51" y="88" size="6" color={C.bad}>✗</Tag>
+      <Car x="97" y="56" rot={180} color={C.grey} />
+      <Tag x="22" y="36" size="3.3" weight={800} color={C.bad}>don't drive between</Tag>
+      <Tag x="22" y="41" size="3.3" weight={800} color={C.bad}>a tram and the</Tag>
+      <Tag x="22" y="46" size="3.3" weight={800} color={C.bad}>left kerb</Tag>
+      <Tag x="138" y="80" size="3.2" weight={700}>don't park where</Tag>
+      <Tag x="138" y="84.5" size="3.2" weight={700}>you'd obstruct a tram</Tag>
+      <Tag x="138" y="20" size="3.4" weight={800}>trams have</Tag>
+      <Tag x="138" y="25" size="3.4" weight={800}>priority</Tag>
+    </Frame>
+  ),
+
+  "tram-lane": () => (
+    <Frame title="Tram lane">
+      <rect x="25" y="0" width="5" height="100" fill={C.kerb} />
+      <rect x="30" y="0" width="34" height="100" fill="#7c5a50" />
+      <rect x="64" y="0" width="66" height="100" fill={C.road} />
+      <rect x="130" y="0" width="5" height="100" fill={C.kerb} />
+      <line x1="64" y1="0" x2="64" y2="100" stroke={C.line} strokeWidth="1.2" />
+      {Array.from({ length: 13 }, (_, i) => <circle key={i} cx="61" cy={4 + i * 8} r="0.9" fill="#facc15" />)}
+      <line x1="97" y1="0" x2="97" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      {[44, 50].map(x => <line key={x} x1={x} y1="0" x2={x} y2="100" stroke="#cbd5e1" strokeWidth="0.9" />)}
+      <Tram x={47} y={36} />
+      <Car x="80" y="70" color={C.good} />
+      <rect x="4" y="60" width="18" height="22" rx="1.5" fill="#1d4ed8" stroke="#ffffff" strokeWidth="0.6" />
+      <rect x="7" y="64" width="5" height="10" rx="1" fill="#ffffff" />
+      <path d="M17 76 L17 65 M15 67 L17 64.5 L19 67" stroke="#ffffff" strokeWidth="0.9" fill="none" />
+      <Tag x="47" y="72" size="3.4" weight={800}>TRAM</Tag>
+      <Tag x="47" y="77" size="3.4" weight={800}>LANE</Tag>
+      <Tag x="13" y="90" size="2.8" weight={700}>blue sign</Tag>
+      <Tag x="146" y="40" size="3" weight={800} color={C.bad}>don't</Tag>
+      <Tag x="146" y="44.5" size="3" weight={800} color={C.bad}>enter a</Tag>
+      <Tag x="146" y="49" size="3" weight={800} color={C.bad}>tram-only</Tag>
+      <Tag x="146" y="53.5" size="3" weight={800} color={C.bad}>lane</Tag>
+      <Tag x="97" y="96" size="3" weight={700}>white line, yellow dots, different surface</Tag>
+    </Frame>
+  ),
+
+  "lana-tram": () => (
+    <Frame title="LÁNA TRAM road marking">
+      <VRoad />
+      {[59, 65].map(x => <line key={x} x1={x} y1="0" x2={x} y2="46" stroke="#cbd5e1" strokeWidth="0.9" />)}
+      <text x="62" y="62" fontSize="7" fontWeight="900" fill={C.line} textAnchor="middle" fontFamily="system-ui">TRAM</text>
+      <text x="62" y="54" fontSize="7" fontWeight="900" fill={C.line} textAnchor="middle" fontFamily="system-ui">LÁNA</text>
+      <Tram x={62} y={18} len={34} />
+      <Car x="62" y="84" color={C.good} />
+      <Tag x="22" y="44" size="3.3" weight={800}>tram tracks</Tag>
+      <Tag x="22" y="49" size="3.3" weight={800}>ahead</Tag>
+      <Tag x="138" y="44" size="3.2" weight={700}>road used by</Tag>
+      <Tag x="138" y="48.5" size="3.2" weight={700}>trams AND vehicles —</Tag>
+      <Tag x="138" y="53" size="3.2" weight={700} color="#b45309">share it, extra care</Tag>
+    </Frame>
+  ),
+
+  "tram-crossing-sign": () => (
+    <Frame title="Tram crossing warning sign">
+      <rect x="38" y="66" width="3" height="30" fill="#475569" />
+      <path d="M40 6 L66 32 L40 58 L14 32 Z" fill="#facc15" stroke="#111827" strokeWidth="1.4" />
+      <rect x="30" y="26" width="20" height="10" rx="2" fill="#111827" />
+      <line x1="40" y1="26" x2="40" y2="19" stroke="#111827" strokeWidth="1" />
+      <line x1="34" y1="19" x2="46" y2="19" stroke="#111827" strokeWidth="1" />
+      <rect x="12" y="60" width="56" height="9" rx="1" fill="#ffffff" stroke="#111827" strokeWidth="0.7" />
+      <text x="40" y="66.6" fontSize="4.4" fontWeight="900" textAnchor="middle" fill="#111827" fontFamily="system-ui">LOOK BOTH WAYS</text>
+      <Tag x="116" y="22" size="4">TRAM CROSSING POINT</Tag>
+      <Tag x="116" y="34" size="3.4" weight={700}>cross the tracks only</Tag>
+      <Tag x="116" y="39" size="3.4" weight={700}>where you see this sign</Tag>
+      <Tag x="116" y="52" size="3.4" weight={700} color="#047857">stop · look both ways · listen</Tag>
+      <Tag x="116" y="57" size="3.4" weight={700} color="#047857">for horns and tram chimes</Tag>
+      <Tag x="116" y="72" size="3" weight={600}>may read instead:</Tag>
+      <Tag x="116" y="77" size="3" weight={600}>LOOK RIGHT · LOOK LEFT</Tag>
+    </Frame>
+  ),
+
+  "no-entry-trams": () => (
+    <Frame title="No entry except trams">
+      {[[40, ["EXCEPT TRAMS"], "trams only — no other traffic"], [120, ["EXCEPT TRAMS", "AND ACCESS"], "only to enter or leave a building"]].map(([x, plate, means]) => (
+        <g key={x}>
+          <circle cx={x} cy="30" r="20" fill="#dc2626" stroke="#ffffff" strokeWidth="1.5" />
+          <rect x={x - 13} y="26.5" width="26" height="7" fill="#ffffff" />
+          <rect x={x - 22} y="54" width="44" height={plate.length * 7 + 3} rx="1" fill="#ffffff" stroke="#111827" strokeWidth="0.7" />
+          {plate.map((l, i) => (
+            <text key={l} x={x} y={60 + i * 7} fontSize="4.8" fontWeight="900" textAnchor="middle" fill="#111827" fontFamily="system-ui">{l}</text>
+          ))}
+          <Tag x={x} y="85" size="3.3" weight={700}>{means}</Tag>
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "tram-junction": () => (
+    <Frame title="Tram turning at a junction">
+      <rect x="0" y="28" width="160" height="34" fill={C.road} />
+      <rect x="60" y="62" width="40" height="38" fill={C.road} />
+      <line x1="0" y1="45" x2="60" y2="45" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="104" y1="45" x2="160" y2="45" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <YellowBox x={60} y={28} w={40} h={34} />
+      <path d="M70 100 L70 62 Q70 42 50 40 L0 40" fill="none" stroke={C.amber} strokeWidth="16" opacity="0.28" />
+      {[67, 73].map(x => (
+        <path key={x} d={`M${x} 100 L${x} 62 Q${x} ${x === 67 ? 44 : 38} ${x === 67 ? 50 : 52} ${x === 67 ? 43 : 37} L0 ${x === 67 ? 43 : 37}`} fill="none" stroke="#cbd5e1" strokeWidth="0.9" />
+      ))}
+      <Tram x={70} y={84} len={30} />
+      <Arrow d="M70 66 Q70 46 50 40 L20 40" color={C.amber} w={1.2} dash="2 1.6" />
+      <line x1="104" y1="45" x2="104" y2="62" stroke={C.line} strokeWidth="1.2" />
+      <Car x="116" y="53" rot={-90} color={C.good} />
+      <circle cx="108" cy="68" r="2.6" fill="#111827" />
+      <circle cx="108" cy="68" r="1.5" fill="#ef4444" />
+      <Tag x="130" y="20" size="3.4" weight={800} color="#a16207">keep the yellow box clear</Tag>
+      <Tag x="130" y="76" size="3.2" weight={700}>obey the traffic lights</Tag>
+      <Tag x="28" y="76" size="3.2" weight={700} color="#b45309">allow for the</Tag>
+      <Tag x="28" y="80.5" size="3.2" weight={700} color="#b45309">tram's sweep on</Tag>
+      <Tag x="28" y="85" size="3.2" weight={700} color="#b45309">bends and corners</Tag>
+    </Frame>
+  ),
 
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {

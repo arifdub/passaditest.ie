@@ -23,6 +23,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_4.js` | Unit 1.4 Junctions & Bends (pp.40–48). |
 | `book1/unit1_5.js` | Unit 1.5 Dealing with Hills (pp.49–52). |
 | `book1/unit1_6.js` | Unit 1.6 Overtaking (pp.53–58). |
+| `book1/unit1_7.js` | Unit 1.7 Level Crossings & Tramways (pp.59–63). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -113,13 +114,21 @@ challenge ≥ 80%, retention check ≥ 70%.
   unit heading is used.
 - **Retention test 1.6** — the answer key agrees with the unit text for all
   ten questions; all are used. Its recognition game is "Overtake or Not?".
-- **Post test 1.6** — the model answers (page 85) stop at Q9 of eleven, and
-  the "golden rule" (Q5) appears as the last line of answer 4: "If in doubt,
-  don't overtake". Answers 5 and 6 both read as what to do when a driver
-  cuts in after overtaking you. Q10 and Q11 are taught from the unit text
-  (page 55 "Always signal"; page 56 overtaking on the left). Page 56's
-  "your own speed PLUS the speed of the target vehicle" is an unfinished
-  sentence; the unit says only to be aware of both speeds.
+- **Post test 1.6** — in the model answers (pages 85–86) the "golden rule"
+  (Q5) appears as the last line of answer 4: "If in doubt, don't overtake";
+  answers 5 and 6 both describe what to do when a driver cuts in after
+  overtaking you. Page 56's "your own speed PLUS the speed of the target
+  vehicle" is an unfinished sentence; the unit says only to be aware of
+  both speeds.
+- **Retention test 1.7** — the answer key (page 89) agrees with the unit
+  text for all ten questions; all are used. Q6 cites the Rules of the Road
+  (open crossings protected by twin red flashing lights), consistent with
+  the unit. Its recognition game is "Name That Crossing".
+- **Unit 1.7's tram-lane signs** (page 59): the blue sign text says a driver
+  "can only enter a tram lane to overtake another vehicle when safe", while
+  page 61 says "Do not enter a lane or road reserved for trams". Both are
+  taught as written — the first about the blue tram-lane sign, the second
+  about tram-only lanes.
 - **Unit 1.10** is headed "Weather, Driver Vision & It's Effects" (page 76);
   the answer pages call it "Weather & Vision". The page 76 heading is used
   (spelling corrected to "Its").

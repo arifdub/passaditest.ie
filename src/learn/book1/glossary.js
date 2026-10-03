@@ -740,4 +740,60 @@ export default [
     key: "De-icer and scraper, torch, warm clothes, boots, first aid, jump leads, shovel, warm drink, food.",
     src: P("1.10", 76, "Icy and snowy weather"),
   },
+
+  /* ---------------- Unit 1.11 — Driving in Tunnels ---------------- */
+  {
+    id: "tunnel-sign", unit: "1.11", term: "Tunnel ahead sign", visual: "tunnel-sign",
+    meaning: "A yellow diamond warning sign showing a tunnel mouth.",
+    key: "Prepare: fuel, sunglasses off, dipped headlights, FM radio.",
+    src: P("1.11", 82, "Introduction; Summary"),
+  },
+  {
+    id: "tunnel-approach", unit: "1.11", term: "Entering a tunnel", visual: "tunnel-approach",
+    meaning: "What to do before you drive in.",
+    key: "Check fuel, sunglasses off in good time, dipped headlights, tune to the FM frequency shown; never enter unwell or unroadworthy.",
+    src: P("1.11", 82, "Summary"),
+  },
+  {
+    id: "tunnel-distance", unit: "1.11", term: "Tunnel distances", visual: "tunnel-distance",
+    meaning: "The gap to keep in a tunnel.",
+    key: "At least 50 m for cars, 100 m for lorries; stay in lane; never reverse or U-turn.",
+    src: P("1.11", 82, "Restrictions"),
+  },
+  {
+    id: "tunnel-fire-ahead", unit: "1.11", term: "Fire ahead in a tunnel", visual: "tunnel-fire:ahead",
+    meaning: "Smoke or fire in front of you.",
+    key: "Stop early, engine off, everyone out by the nearest pedestrian exit.",
+    src: P("1.11", 83, "Driver Obligations; p.87 answer 7"),
+  },
+  {
+    id: "tunnel-fire-behind", unit: "1.11", term: "Fire behind in a tunnel", visual: "tunnel-fire:behind",
+    meaning: "Smoke or fire behind you.",
+    key: "Drive on, out of the tunnel.",
+    src: P("1.11", 83, "Driver Obligations; p.87 answer 6"),
+  },
+  {
+    id: "tunnel-safety", unit: "1.11", term: "Tunnel safety features", visual: "tunnel-safety",
+    meaning: "Lay-bys, phones, firefighting niches, CCTV, loudspeakers and message signs.",
+    key: "Lay-bys ~1 km; phones on the left to the operator; hydrants 125 m; hose reels 60 m.",
+    src: P("1.11", 83, "Lay-Bys; Fire Fighting; p.87 answer 10"),
+  },
+  {
+    id: "tunnel-operator", unit: "1.11", term: "Tunnel operator", visual: "tunnel-safety",
+    meaning: "The person in charge of the tunnel, watching by CCTV and speaking by loudspeaker and radio.",
+    key: "Full authority — always obey, even if you can't see why.",
+    src: P("1.11", 83, "Tunnel Operator; The Operator"),
+  },
+  {
+    id: "fm-break-in", unit: "1.11", term: "FM radio break-in", visual: "tunnel-approach",
+    meaning: "A facility for the tunnel operators to contact drivers in the tunnel.",
+    key: "Tune to the frequency shown before you enter.",
+    src: P("1.11", 87, "Post-test answer 11; p.82"),
+  },
+  {
+    id: "tunnel-restrictions", unit: "1.11", term: "Tunnel restrictions", visual: "tunnel-banned",
+    meaning: "Who and what may not use a tunnel without conditions.",
+    key: "No pedestrians, learners or cyclists; large vehicles check limits; hazardous loads need permission.",
+    src: P("1.11", 82, "Restrictions"),
+  },
 ];

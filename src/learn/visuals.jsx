@@ -333,11 +333,30 @@ function IconGrid({ cells, ring = C.bad, rows = 3, size = 9 }) {
     return (
       <g key={label}>
         <circle cx={x} cy={y} r={size} fill="#ffffff" stroke={ring} strokeWidth="1.2" />
-        <text x={x} y={y + size * 0.37} fontSize={size * 1.05} textAnchor="middle">{icon}</text>
+        {icon === "L"
+          ? <g><rect x={x - size * 0.55} y={y - size * 0.55} width={size * 1.1} height={size * 1.1} fill="#ffffff" stroke="#dc2626" strokeWidth="0.6" /><text x={x} y={y + size * 0.37} fontSize={size} fontWeight="900" textAnchor="middle" fill="#dc2626" fontFamily="system-ui">L</text></g>
+          : <text x={x} y={y + size * 0.37} fontSize={size * 1.05} textAnchor="middle">{icon}</text>}
         <Tag x={x} y={y + size + 5.5} size="3.3" weight={700}>{label}</Tag>
       </g>
     );
   });
+}
+
+/* A tunnel bore seen from above: walls either side, two lanes going up the
+   page (one direction), lights along the roof. */
+function TunnelBore({ h = 100 }) {
+  return (
+    <g>
+      <rect x="0" y="0" width="160" height={h} fill="#1f2937" />
+      <rect x="40" y="0" width="80" height={h} fill={C.road} />
+      <rect x="34" y="0" width="6" height={h} fill="#9ca3af" />
+      <rect x="120" y="0" width="6" height={h} fill="#9ca3af" />
+      <line x1="80" y1="0" x2="80" y2={h} stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      {Array.from({ length: Math.ceil(h / 14) }, (_, i) => (
+        <rect key={i} x="78.5" y={4 + i * 14} width="3" height="1.4" fill="#fef9c3" opacity="0.8" />
+      ))}
+    </g>
+  );
 }
 
 function Frame({ children, title, h = 100 }) {
@@ -2320,6 +2339,131 @@ const DRAW = {
         ["🧊", "de-icer, scraper"], ["🔦", "torch"], ["🧥", "warm clothes"],
         ["🥾", "boots"], ["🩹", "first aid kit"], ["🔋", "jump leads"],
         ["🪏", "shovel"], ["☕", "warm drink"], ["🍫", "emergency food"],
+      ]} />
+    </Frame>
+  ),
+
+  /* ---------------- tunnels (Unit 1.11) ---------------- */
+  "tunnel-sign": () => (
+    <Frame title="Tunnel ahead warning sign">
+      <rect x="78" y="62" width="4" height="34" fill="#475569" />
+      <path d="M80 6 L112 38 L80 70 L48 38 Z" fill="#facc15" stroke="#111827" strokeWidth="1.6" />
+      <path d="M68 50 L68 36 Q68 24 80 24 Q92 24 92 36 L92 50 Z" fill="#111827" />
+      <path d="M72 50 L72 37 Q72 28 80 28 Q88 28 88 37 L88 50 Z" fill="#facc15" />
+      <path d="M76 50 L78 36 L82 36 L84 50 Z" fill="#111827" />
+      <Tag x="80" y="86" size="4">TUNNEL AHEAD</Tag>
+    </Frame>
+  ),
+
+  "tunnel-approach": () => (
+    <Frame title="Before entering a tunnel">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="40" width="160" height="60" fill="#a3c38a" />
+      <path d="M30 40 L30 18 Q30 2 80 2 Q130 2 130 18 L130 40 Z" fill="#78716c" />
+      <path d="M44 40 L44 22 Q44 10 80 10 Q116 10 116 22 L116 40 Z" fill="#111827" />
+      <path d="M50 100 L66 40 L94 40 L110 100 Z" fill={C.road} />
+      <line x1="80" y1="40" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <path d="M68 92 L72 60 L78 60 L76 92 Z" fill="#fde68a" opacity="0.45" />
+      <Tag x="22" y="54" size="3.2" weight={800}>🕶️ sunglasses off</Tag>
+      <Tag x="22" y="59" size="2.8" weight={700}>in good time</Tag>
+      <Tag x="22" y="72" size="3.2" weight={800}>💡 dipped headlights</Tag>
+      <Tag x="138" y="54" size="3.2" weight={800}>⛽ check fuel</Tag>
+      <Tag x="138" y="68" size="3.2" weight={800}>📻 FM frequency</Tag>
+      <Tag x="138" y="73" size="2.8" weight={700}>shown before entry</Tag>
+      <Tag x="80" y="96" size="3" weight={800} color={C.bad}>unwell or unroadworthy? don't enter</Tag>
+    </Frame>
+  ),
+
+  "tunnel-distance": () => (
+    <Frame title="Keeping your distance in a tunnel">
+      <TunnelBore />
+      <Car x="60" y="12" color={C.grey} />
+      <Car x="60" y="52" color={C.good} />
+      <Lorry x={100} y={30} len={26} />
+      <line x1="50" y1="20" x2="50" y2="44" stroke={C.good} strokeWidth="0.9" />
+      <line x1="47" y1="20" x2="53" y2="20" stroke={C.good} strokeWidth="0.9" />
+      <line x1="47" y1="44" x2="53" y2="44" stroke={C.good} strokeWidth="0.9" />
+      <Car x="100" y="92" color={C.grey} />
+      <line x1="110" y1="44" x2="110" y2="84" stroke={C.amber} strokeWidth="0.9" />
+      <Tag x="18" y="30" size="3.3" weight={800} color="#047857">cars:</Tag>
+      <Tag x="18" y="35" size="3.3" weight={800} color="#047857">at least 50 m</Tag>
+      <Tag x="143" y="62" size="3.3" weight={800} color="#b45309">behind</Tag>
+      <Tag x="143" y="67" size="3.3" weight={800} color="#b45309">a lorry:</Tag>
+      <Tag x="143" y="72" size="3.3" weight={800} color="#b45309">100 m</Tag>
+      <Tag x="18" y="70" size="2.9" weight={700}>stay in your lane;</Tag>
+      <Tag x="18" y="74.5" size="2.9" weight={700}>overtake only if</Tag>
+      <Tag x="18" y="79" size="2.9" weight={700}>totally necessary</Tag>
+      <Tag x="18" y="90" size="2.9" weight={800} color={C.bad}>never reverse</Tag>
+      <Tag x="18" y="94.5" size="2.9" weight={800} color={C.bad}>or U-turn</Tag>
+    </Frame>
+  ),
+
+  /* A fire in a tunnel. variant: ahead | behind */
+  "tunnel-fire": ({ variant = "ahead" }) => {
+    const ahead = variant === "ahead";
+    return (
+      <Frame title={ahead ? "Smoke or fire ahead" : "Smoke or fire behind"}>
+        <TunnelBore />
+        <text x="60" y={ahead ? 14 : 94} fontSize="11" textAnchor="middle">🔥</text>
+        <ellipse cx="80" cy={ahead ? 14 : 90} rx="40" ry="12" fill="#6b7280" opacity="0.55" />
+        <Car x="60" y="50" color={C.good} />
+        {ahead ? (
+          <g>
+            <rect x="20" y="40" width="12" height="12" rx="1" fill="#16a34a" />
+            <text x="26" y="49" fontSize="8" textAnchor="middle">🏃</text>
+            <Arrow d="M52 54 L36 50" color="#16a34a" w={1.2} />
+            <Tag x="140" y="40" size="3.2" weight={800}>stop, engine off,</Tag>
+            <Tag x="140" y="45" size="3.2" weight={800}>leave the vehicle</Tag>
+            <Tag x="140" y="58" size="3.2" weight={800} color="#047857">out by the nearest</Tag>
+            <Tag x="140" y="63" size="3.2" weight={800} color="#047857">pedestrian exit</Tag>
+            <Tag x="140" y="76" size="2.9" weight={700}>distance markers on</Tag>
+            <Tag x="140" y="80.5" size="2.9" weight={700}>the wall show the way</Tag>
+            <Tag x="140" y="14" size="3.6" color={C.bad}>FIRE AHEAD</Tag>
+          </g>
+        ) : (
+          <g>
+            <Arrow d="M60 42 L60 8" />
+            <Tag x="140" y="90" size="3.6" color={C.bad}>FIRE BEHIND</Tag>
+            <Tag x="140" y="40" size="3.4" weight={800} color="#047857">drive on,</Tag>
+            <Tag x="140" y="45" size="3.4" weight={800} color="#047857">out of the tunnel</Tag>
+          </g>
+        )}
+      </Frame>
+    );
+  },
+
+  "tunnel-safety": () => (
+    <Frame title="Tunnel safety features">
+      <TunnelBore />
+      <rect x="20" y="30" width="20" height="34" fill={C.road} />
+      <line x1="40" y1="30" x2="40" y2="64" stroke={C.line} strokeWidth="0.8" strokeDasharray="2 2" />
+      <Car x="30" y="48" color={C.good} />
+      <g className="vis-blink">
+        {[[25.6, 40], [32.6, 40], [25.6, 54.4], [32.6, 54.4]].map(([x, y], i) => <rect key={i} x={x} y={y} width="1.8" height="1.6" fill={C.amber} />)}
+      </g>
+      {[[37, 8, "☎️"], [37, 80, "🧯"], [123, 20, "📹"], [123, 60, "📢"]].map(([x, y, ic], i) => (
+        <g key={i}><circle cx={x} cy={y} r="4.6" fill="#ffffff" stroke="#334155" strokeWidth="0.4" /><text x={x} y={y + 1.8} fontSize="5" textAnchor="middle">{ic}</text></g>
+      ))}
+      <rect x="56" y="2" width="48" height="9" rx="1" fill="#111827" stroke="#facc15" strokeWidth="0.5" />
+      <text x="80" y="8.4" fontSize="4.2" fontWeight="800" textAnchor="middle" fill="#facc15" fontFamily="monospace">KEEP DISTANCE</text>
+      <Tag x="16" y="22" size="2.8" weight={800}>emergency</Tag>
+      <Tag x="16" y="26" size="2.8" weight={800}>lay-by ~1 km</Tag>
+      <Tag x="16" y="8" size="2.8" weight={700}>phones: left</Tag>
+      <Tag x="16" y="90" size="2.8" weight={700}>hydrants 125 m,</Tag>
+      <Tag x="16" y="94" size="2.8" weight={700}>hose reels 60 m</Tag>
+      <Tag x="143" y="30" size="2.8" weight={700}>CCTV sees</Tag>
+      <Tag x="143" y="34" size="2.8" weight={700}>every part</Tag>
+      <Tag x="143" y="70" size="2.8" weight={700}>loudspeakers</Tag>
+      <Tag x="143" y="74" size="2.8" weight={700}>and message</Tag>
+      <Tag x="143" y="78" size="2.8" weight={700}>signs: obey</Tag>
+    </Frame>
+  ),
+
+  "tunnel-banned": () => (
+    <Frame title="Tunnel restrictions">
+      <IconGrid rows={2} cells={[
+        ["🚶", "no pedestrians"], ["L", "no learner drivers"], ["🚲", "no pedal cyclists"],
+        ["📏", "high or wide: check limits"], ["☣️", "hazardous loads: permission"], ["↩️", "never reverse or U-turn"],
       ]} />
     </Frame>
   ),

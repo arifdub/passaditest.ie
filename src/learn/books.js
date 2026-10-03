@@ -26,6 +26,7 @@ import UNIT_1_7 from "./book1/unit1_7";
 import UNIT_1_8 from "./book1/unit1_8";
 import UNIT_1_9 from "./book1/unit1_9";
 import UNIT_1_10 from "./book1/unit1_10";
+import UNIT_1_11 from "./book1/unit1_11";
 import GLOSSARY_1 from "./book1/glossary";
 
 export const BOOKS = [
@@ -50,7 +51,7 @@ export const BOOKS = [
       { id: "1.8",  title: "Motorway Driving",                   pages: [64, 71], badge: "Motorway Specialist", content: UNIT_1_8 },
       { id: "1.9",  title: "Night Driving",                      pages: [72, 75], badge: "Night Driving Specialist", content: UNIT_1_9 },
       { id: "1.10", title: "Weather, Driver Vision & Its Effects", pages: [76, 81], badge: "All-Weather Driver", content: UNIT_1_10 },
-      { id: "1.11", title: "Driving in Tunnels",                 pages: [82, 83], badge: "Tunnel Specialist" },
+      { id: "1.11", title: "Driving in Tunnels",                 pages: [82, 83], badge: "Tunnel Specialist", content: UNIT_1_11 },
     ],
   },
   { id: "b2", number: 2, title: "Book 2", subtitle: "Coming soon", units: [] },

@@ -27,6 +27,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_8.js` | Unit 1.8 Motorway Driving (pp.64–71). |
 | `book1/unit1_9.js` | Unit 1.9 Night Driving (pp.72–75). |
 | `book1/unit1_10.js` | Unit 1.10 Weather, Driver Vision & Its Effects (pp.76–81). |
+| `book1/unit1_11.js` | Unit 1.11 Driving in Tunnels (pp.82–83). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -150,5 +151,10 @@ challenge ≥ 80%, retention check ≥ 70%.
   Weather?". Page 77 says two seconds of glare blindness at 60 km/h covers
   "more than half the distance of a football field" — that's about 33 m,
   less than half a pitch — so the comparison isn't used.
-- **Unit 1.11** (pages 82–83) has a post test but no retention test in the
-  book; its challenge will need building from the post-test answers (p.87).
+- **Unit 1.11** (pages 82–83) has no retention test in the book, and its
+  post-test questions aren't printed — only the model answers (page 87).
+  Its Retention Check is built from those model answers and the unit text:
+  each correct answer is the book's wording; the wrong options are written
+  for the course. Page 83's note that cameras "will begin working shortly"
+  in Dublin's Port Tunnel is dated and isn't used. Its recognition game is
+  "Tunnel Sense".

@@ -308,6 +308,38 @@ function Night() {
   return <rect x="0" y="0" width="160" height="100" fill="#1e293b" />;
 }
 
+/* A fog bank fading in from `y0` (clear) up to the top of the frame. */
+function Fog({ y0 = 100, top = 0.92 }) {
+  const id = useId().replace(/:/g, "");
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`fg${id}`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#f8fafc" stopOpacity="0.15" />
+          <stop offset="1" stopColor="#f8fafc" stopOpacity={top} />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="160" height={y0} fill={`url(#fg${id})`} />
+    </g>
+  );
+}
+
+/* A ring of items (icon + label), 3 per row — for checklists and bans. */
+function IconGrid({ cells, ring = C.bad, rows = 3, size = 9 }) {
+  const cols = 3, rowH = 100 / rows;
+  return cells.map(([icon, label], i) => {
+    const x = 27 + (i % cols) * 53;
+    const y = rowH * Math.floor(i / cols) + rowH * 0.42;
+    return (
+      <g key={label}>
+        <circle cx={x} cy={y} r={size} fill="#ffffff" stroke={ring} strokeWidth="1.2" />
+        <text x={x} y={y + size * 0.37} fontSize={size * 1.05} textAnchor="middle">{icon}</text>
+        <Tag x={x} y={y + size + 5.5} size="3.3" weight={700}>{label}</Tag>
+      </g>
+    );
+  });
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -2084,6 +2116,213 @@ const DRAW = {
       </Frame>
     );
   },
+
+  /* ---------------- weather & vision (Unit 1.10) ---------------- */
+  "fog-distance": () => (
+    <Frame title="Driving in fog">
+      <VRoad />
+      <Fog y0={70} />
+      <Car x="62" y="30" color={C.grey} ghost />
+      <rect x="57.8" y="36" width="2.2" height="1.4" fill="#ef4444" />
+      <rect x="64" y="36" width="2.2" height="1.4" fill="#ef4444" />
+      <Beam x={62} y={90} kind="dipped" reach={26} />
+      <Car x="62" y="90" color={C.good} />
+      <line x1="74" y1="82" x2="74" y2="62" stroke={C.good} strokeWidth="1" />
+      <line x1="71" y1="82" x2="77" y2="82" stroke={C.good} strokeWidth="1" />
+      <line x1="71" y1="62" x2="77" y2="62" stroke={C.good} strokeWidth="1" />
+      <Tag x="138" y="72" size="3.2" weight={800} color="#047857">stop well within</Tag>
+      <Tag x="138" y="77" size="3.2" weight={800} color="#047857">the distance you</Tag>
+      <Tag x="138" y="82" size="3.2" weight={800} color="#047857">can see is clear</Tag>
+      <Tag x="22" y="30" size="3" weight={800} color={C.bad}>don't hang on to</Tag>
+      <Tag x="22" y="34.5" size="3" weight={800} color={C.bad}>its tail lights —</Tag>
+      <Tag x="22" y="39" size="3" weight={700}>you'll be too close</Tag>
+      <Tag x="22" y="82" size="3" weight={700}>dipped beam +</Tag>
+      <Tag x="22" y="86.5" size="3" weight={700}>fog lights</Tag>
+      <Tag x="80" y="9" size="4">FOG</Tag>
+    </Frame>
+  ),
+
+  "fog-shadow": () => (
+    <Frame title="Main beam behind another car in fog">
+      <VRoad />
+      <Fog y0={100} top={0.75} />
+      <Beam x={62} y={90} kind="main" reach={84} />
+      <Car x="62" y="40" color={C.grey} />
+      <polygon points="58,32 66,32 70,6 54,6" fill="#0f172a" opacity="0.55" />
+      <Car x="62" y="90" color={C.good} />
+      <Tag x="22" y="20" size="3.2" weight={800} color={C.bad}>its own shadow</Tag>
+      <Tag x="22" y="25" size="3.2" weight={800} color={C.bad}>falls ahead of it</Tag>
+      <Tag x="138" y="66" size="3.2" weight={800}>✗ main beam in fog</Tag>
+      <Tag x="138" y="71" size="3" weight={700}>shadows the car ahead,</Tag>
+      <Tag x="138" y="75.5" size="3" weight={700}>and may dazzle</Tag>
+      <Tag x="138" y="90" size="3.2" weight={800} color="#047857">✓ dipped beam</Tag>
+    </Frame>
+  ),
+
+  "fog-junction": () => (
+    <Frame title="At a junction in fog">
+      <rect x="0" y="12" width="160" height="30" fill={C.road} />
+      <line x1="0" y1="27" x2="160" y2="27" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <rect x="62" y="42" width="36" height="58" fill={C.road} />
+      <line x1="62" y1="43.5" x2="80" y2="43.5" stroke={C.line} strokeWidth="1" strokeDasharray="2 1.5" />
+      <Fog y0={45} top={0.95} />
+      <Car x="71" y="56" color={C.good} />
+      <ellipse cx="71" cy="68" rx="7" ry="5" fill="#ef4444" opacity="0.35" />
+      <g className="vis-blink"><rect x="74.6" y="48.2" width="1.8" height="1.6" fill={C.amber} /></g>
+      <path d="M62 50 q-3 3 0 6 M59 48 q-5 5 0 10" fill="none" stroke={C.ink} strokeWidth="0.7" />
+      <Tag x="30" y="56" size="3" weight={800}>window open —</Tag>
+      <Tag x="30" y="60.5" size="3" weight={800}>listen for traffic</Tag>
+      <Tag x="30" y="74" size="3" weight={700}>horn, if it would</Tag>
+      <Tag x="30" y="78.5" size="3" weight={700}>warn others</Tag>
+      <Tag x="130" y="56" size="3" weight={800}>signal early</Tag>
+      <Tag x="130" y="70" size="3" weight={700}>footbrake for short</Tag>
+      <Tag x="130" y="74.5" size="3" weight={700}>stops — warns those</Tag>
+      <Tag x="130" y="79" size="3" weight={700}>behind</Tag>
+      <Tag x="80" y="94" size="3" weight={700} color={C.bad}>never use the centre line as a guide</Tag>
+    </Frame>
+  ),
+
+  "stopping-weather": () => (
+    <Frame title="Stopping distances in the wet and on ice">
+      {[["DRY", 1, "#64748b", 16], ["WET", 2, "#3b82f6", 46], ["ICY", 10, "#93c5fd", 76]].map(([lbl, k, col, y]) => (
+        <g key={lbl}>
+          <Tag x="16" y={y + 4} size="4">{lbl}</Tag>
+          <rect x="30" y={y - 4} width={Math.min(12 * k, 122)} height="10" rx="2" fill={col} />
+          <SideCar x={30 + Math.min(12 * k, 122) - 2} y={y + 6} color={C.good} />
+        </g>
+      ))}
+      <Tag x="64" y="35" size="3.2" weight={700}>at least double — tyres have less grip</Tag>
+      <Tag x="92" y="95" size="3.2" weight={800} color="#1d4ed8">up to ten times as far</Tag>
+    </Frame>
+  ),
+
+  "aquaplaning": () => (
+    <Frame title="Steering goes light on water">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="66" width="160" height="34" fill={C.road} />
+      <rect x="0" y="62" width="160" height="5" fill="#60a5fa" opacity="0.75" />
+      <SideCar x="70" y="62" color={C.good} />
+      <path d="M86 61 q6 -6 12 -2 q4 -6 10 -1" fill="none" stroke="#3b82f6" strokeWidth="1.2" />
+      <Tag x="80" y="14" size="4">STEERING UNRESPONSIVE?</Tag>
+      <Tag x="80" y="21" size="3.3" weight={600}>water is stopping the tyres gripping the road</Tag>
+      <Tag x="80" y="80" size="3.6" color="#047857">ease off the accelerator</Tag>
+      <Tag x="80" y="86" size="3.6" color="#047857">slow down gradually</Tag>
+      <Tag x="80" y="95" size="3" weight={700} color={C.bad}>no sudden braking or steering</Tag>
+    </Frame>
+  ),
+
+  "crosswind": () => (
+    <Frame title="Strong crosswinds">
+      <VRoad />
+      <rect x="0" y="0" width="40" height="100" fill="#4d7c0f" />
+      <rect x="0" y="34" width="40" height="18" fill={C.ground} />
+      {[38, 43, 48].map(y => <Arrow key={y} d={`M4 ${y} L36 ${y}`} color="#0ea5e9" w={1.1} />)}
+      <Lorry x={62} y={30} len={30} />
+      <text x="0" y="0" fontSize="7" textAnchor="middle" dominantBaseline="central" transform="translate(92 40) rotate(-90)">🏍️</text>
+      <path d="M90 42 Q86 34 92 26" fill="none" stroke={C.bad} strokeWidth="0.9" strokeDasharray="2 1.5" />
+      <Car x="62" y="86" color={C.good} />
+      <Tag x="20" y="30" size="3" weight={800} color="#0369a1">gap in the hedge</Tag>
+      <Tag x="20" y="62" size="2.8" weight={700}>gusts blow cyclists,</Tag>
+      <Tag x="20" y="66.5" size="2.8" weight={700}>motorcyclists, riders</Tag>
+      <Tag x="20" y="71" size="2.8" weight={700}>— and cars — off course</Tag>
+      <Tag x="138" y="66" size="3.1" weight={800}>keep well back from</Tag>
+      <Tag x="138" y="70.5" size="3.1" weight={800}>a motorcyclist passing</Tag>
+      <Tag x="138" y="75" size="3.1" weight={800}>a high-sided vehicle</Tag>
+      <Tag x="138" y="90" size="3" weight={700}>open roads, bridges, gaps</Tag>
+    </Frame>
+  ),
+
+  "snowplough": () => (
+    <Frame title="Snowploughs">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <VRoad kerb={false} />
+      <rect x="45" y="0" width="35" height="50" fill="#e2e8f0" />
+      <rect x="80" y="0" width="35" height="100" fill="#cbd5e1" opacity="0.5" />
+      <g transform="translate(62 54)">
+        <rect x="-6" y="-10" width="12" height="22" rx="1.5" fill="#f59e0b" stroke="#0f172a" strokeWidth="0.4" />
+        <rect x="-9" y="-14" width="18" height="3" fill="#475569" />
+      </g>
+      {[[-1, 44], [1, 80]].map(([d, x]) => (
+        <g key={d}>{[0, 1, 2].map(i => <circle key={i} cx={x + d * i * 4} cy={36 + i * 3} r="1.6" fill="#ffffff" stroke="#94a3b8" strokeWidth="0.3" />)}</g>
+      ))}
+      <Car x="62" y="88" color={C.good} />
+      <Tag x="22" y="20" size="3" weight={800}>snow thrown</Tag>
+      <Tag x="22" y="24.5" size="3" weight={800}>out both sides</Tag>
+      <Tag x="138" y="40" size="3.1" weight={800} color={C.bad}>never overtake —</Tag>
+      <Tag x="138" y="44.5" size="3.1" weight={700}>unless the lane you'll</Tag>
+      <Tag x="138" y="49" size="3.1" weight={700}>use is already cleared</Tag>
+      <Tag x="138" y="76" size="3" weight={700}>care passing gritters</Tag>
+      <Tag x="138" y="80.5" size="3" weight={700}>spreading salt</Tag>
+    </Frame>
+  ),
+
+  "icy-bend": () => (
+    <Frame title="Ice on a bend">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <path d="M62 100 L62 50 Q62 20 100 18 L160 18 L160 46 L102 46 Q88 48 88 62 L88 100 Z" fill={C.road} />
+      <path d="M75 100 L75 56 Q75 32 102 32 L160 32" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="5 4" />
+      <path d="M62 52 Q62 20 100 18 L160 18 L160 46 L102 46 Q88 48 88 60 Z" fill="#bfdbfe" opacity="0.55" />
+      <rect x="63" y="66" width="11" height="22" fill={C.good} opacity="0.35" />
+      <Car x="68" y="94" color={C.good} />
+      <Arrow d="M68 86 L68 60 Q68 38 92 30 L140 26" color="#047857" w={1.1} dash="2 1.6" />
+      <Tag x="30" y="74" size="3.2" weight={800} color="#047857">brake gently</Tag>
+      <Tag x="30" y="79" size="3.2" weight={800} color="#047857">on the straight</Tag>
+      <Tag x="120" y="64" size="3.2" weight={800}>then steer smoothly</Tag>
+      <Tag x="120" y="69" size="3.2" weight={800}>round — no sudden</Tag>
+      <Tag x="120" y="74" size="3.2" weight={800}>actions</Tag>
+      <Tag x="40" y="10" size="3" weight={700}>light steering, no tyre noise = ice</Tag>
+    </Frame>
+  ),
+
+  "low-sun": () => (
+    <Frame title="Low sun on a wet road">
+      <rect x="0" y="0" width="160" height="100" fill="#fef3c7" />
+      <circle cx="80" cy="30" r="12" fill="#fbbf24" />
+      <circle cx="80" cy="30" r="20" fill="#fde68a" opacity="0.6" />
+      <path d="M60 100 L76 44 L84 44 L100 100 Z" fill={C.road} />
+      <path d="M68 100 L78 44 L82 44 L92 100 Z" fill="#ffffff" opacity="0.55" />
+      <line x1="80" y1="100" x2="80" y2="46" stroke={C.line} strokeWidth="0.6" strokeDasharray="4 4" opacity="0.4" />
+      <Tag x="80" y="8" size="3.6">LOW SUN, WET ROAD</Tag>
+      <Tag x="30" y="64" size="3" weight={800}>glare off the road</Tag>
+      <Tag x="30" y="68.5" size="3" weight={800}>hides the markings</Tag>
+      <Tag x="130" y="58" size="3" weight={800} color="#047857">sun visor, correct</Tag>
+      <Tag x="130" y="62.5" size="3" weight={800} color="#047857">sunglasses</Tag>
+      <Tag x="130" y="74" size="3" weight={800}>clean screen inside</Tag>
+      <Tag x="130" y="78.5" size="3" weight={800}>and out</Tag>
+      <Tag x="130" y="90" size="3" weight={800} color={C.bad}>dazzled? slow down,</Tag>
+      <Tag x="130" y="94.5" size="3" weight={800} color={C.bad}>stop if necessary</Tag>
+    </Frame>
+  ),
+
+  "demist": () => (
+    <Frame title="Clearing a misted windscreen">
+      <rect x="0" y="0" width="160" height="100" fill="#cbd5e1" />
+      <path d="M14 70 Q80 6 146 70 Z" fill="#94a3b8" stroke="#334155" strokeWidth="1.2" />
+      <path d="M14 70 Q80 6 146 70 Z" fill="#f8fafc" opacity="0.55" />
+      <path d="M40 66 Q80 26 120 66 Z" fill="#7dd3fc" opacity="0.55" />
+      <rect x="0" y="70" width="160" height="30" fill="#334155" />
+      {[[40, "FRESH AIR", true], [120, "RECIRCULATE", false]].map(([x, lbl, ok]) => (
+        <g key={lbl}>
+          <rect x={x - 18} y="76" width="36" height="12" rx="3" fill={ok ? "#047857" : "#7f1d1d"} />
+          <text x={x} y="84.2" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{lbl}</text>
+          <Tag x={x} y="96" size="4" color={ok ? "#047857" : C.bad}>{ok ? "✓" : "✗"}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="44" size="3.4" weight={800}>demister + warm, dry air</Tag>
+      <Tag x="80" y="50" size="3" weight={700}>open a window to let moisture out</Tag>
+      <Tag x="80" y="22" size="3" weight={700}>clean the inside before you set out</Tag>
+    </Frame>
+  ),
+
+  "winter-kit": () => (
+    <Frame title="Winter emergency kit">
+      <IconGrid ring={C.good} rows={3} size={8} cells={[
+        ["🧊", "de-icer, scraper"], ["🔦", "torch"], ["🧥", "warm clothes"],
+        ["🥾", "boots"], ["🩹", "first aid kit"], ["🔋", "jump leads"],
+        ["🪏", "shovel"], ["☕", "warm drink"], ["🍫", "emergency food"],
+      ]} />
+    </Frame>
+  ),
 
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {

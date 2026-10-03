@@ -26,6 +26,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_7.js` | Unit 1.7 Level Crossings & Tramways (pp.59–63). |
 | `book1/unit1_8.js` | Unit 1.8 Motorway Driving (pp.64–71). |
 | `book1/unit1_9.js` | Unit 1.9 Night Driving (pp.72–75). |
+| `book1/unit1_10.js` | Unit 1.10 Weather, Driver Vision & Its Effects (pp.76–81). |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -144,5 +145,10 @@ challenge ≥ 80%, retention check ≥ 70%.
 - **Unit 1.10** is headed "Weather, Driver Vision & It's Effects" (page 76);
   the answer pages call it "Weather & Vision". The page 76 heading is used
   (spelling corrected to "Its").
+- **Retention test 1.10** — the answer key agrees with the unit text for
+  all ten questions; all are used. Its recognition game is "What's the
+  Weather?". Page 77 says two seconds of glare blindness at 60 km/h covers
+  "more than half the distance of a football field" — that's about 33 m,
+  less than half a pitch — so the comparison isn't used.
 - **Unit 1.11** (pages 82–83) has a post test but no retention test in the
   book; its challenge will need building from the post-test answers (p.87).

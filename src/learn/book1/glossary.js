@@ -672,4 +672,72 @@ export default [
     key: "Switch lights on sooner and off later than lighter-coloured cars.",
     src: P("1.9", 72, "Lights at Night; p.86 answer 2"),
   },
+
+  /* ---------------- Unit 1.10 — Weather, Driver Vision & Its Effects ---------------- */
+  {
+    id: "fog-distance", unit: "1.10", term: "Stopping within what you can see", visual: "fog-distance",
+    meaning: "In fog, keeping a speed at which you can stop within the distance you can see to be clear.",
+    key: "Never hang on to the tail lights of the car ahead — you'll be too close.",
+    src: P("1.10", 79, "You must be able to stop; Front and rear fog lights"),
+  },
+  {
+    id: "fog-shadow", unit: "1.10", term: "Main beam in fog", visual: "fog-shadow",
+    meaning: "Using full headlights behind another vehicle in fog.",
+    key: "Don't: it casts a shadow ahead of that vehicle and may dazzle its driver.",
+    src: P("1.10", 79, "You must be able to stop; p.87 answer 10"),
+  },
+  {
+    id: "fog-junction", unit: "1.10", term: "Junctions in fog", visual: "fog-junction",
+    meaning: "Waiting to emerge or turn when you can't see far.",
+    key: "Window open to listen, signal early, footbrake on for short stops; never steer by the centre line.",
+    src: P("1.10", 79, "At junctions"),
+  },
+  {
+    id: "weather-stopping", unit: "1.10", term: "Stopping in wet and ice", visual: "stopping-weather",
+    meaning: "How far it takes to stop when the tyres have less grip.",
+    key: "Wet: at least double. Ice: up to ten times.",
+    src: P("1.10", 76, "Wet weather; p.78"),
+  },
+  {
+    id: "unresponsive-steering", unit: "1.10", term: "Unresponsive steering", visual: "aquaplaning",
+    meaning: "Steering that goes light because water stops the tyres gripping the road.",
+    key: "Ease off the accelerator and slow down gradually.",
+    src: P("1.10", 76, "Steering unresponsive"),
+  },
+  {
+    id: "icy-bend", unit: "1.10", term: "Icy bends", visual: "icy-bend",
+    meaning: "Bends where loss of traction is more likely on ice and snow.",
+    key: "Brake progressively on the straight, then steer smoothly round.",
+    src: P("1.10", 78, "When driving in icy or snowy weather"),
+  },
+  {
+    id: "snowplough", unit: "1.10", term: "Snowploughs and gritters", visual: "snowplough",
+    meaning: "Winter maintenance vehicles that throw snow or spread salt.",
+    key: "Never overtake a snowplough unless your lane is already cleared; take care passing gritters.",
+    src: P("1.10", 78, "When driving in icy or snowy weather"),
+  },
+  {
+    id: "crosswind", unit: "1.10", term: "Crosswinds", visual: "crosswind",
+    meaning: "Strong side gusts on exposed roads, by bridges and through gaps in hedges.",
+    key: "Keep well back from motorcyclists overtaking high-sided vehicles.",
+    src: P("1.10", 78, "Windy weather"),
+  },
+  {
+    id: "low-sun", unit: "1.10", term: "Low sun glare", visual: "low-sun",
+    meaning: "Bright sun low ahead, worse off a wet road.",
+    key: "It hides road markings: visor, correct sunglasses, clean screen — slow down or stop if dazzled.",
+    src: P("1.10", 79, "Hot Weather; p.87 answers 13, 14"),
+  },
+  {
+    id: "demist", unit: "1.10", term: "Demisting", visual: "demist",
+    meaning: "Clearing condensation from the inside of the windows.",
+    key: "Fresh air, not recirculation; demister and warm dry air; open a window if necessary.",
+    src: P("1.10", 76, "Interior Environment; p.79; p.87 answer 2"),
+  },
+  {
+    id: "winter-kit", unit: "1.10", term: "Winter emergency kit", visual: "winter-kit",
+    meaning: "What to carry in winter in case you're stuck or break down.",
+    key: "De-icer and scraper, torch, warm clothes, boots, first aid, jump leads, shovel, warm drink, food.",
+    src: P("1.10", 76, "Icy and snowy weather"),
+  },
 ];

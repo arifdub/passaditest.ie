@@ -47,11 +47,15 @@ export function HomeScreen({ go }) {
   const { getSection, getModule, overall, entries } = useProgress();
   const [lockedPrompt, setLockedPrompt] = React.useState(null);
 
-  /* Interactive Learning — Book 1's progress, for its entry card. */
-  const book1 = BOOKS[0];
-  const book1Record = readRecord(entries[book1.moduleId]?.completedIds || []);
-  const book1Pct = bookProgress(book1Record, book1).overall;
-  const book1Xp = totalXp(book1Record);
+  /* Interactive Learning — progress across the books that have content,
+     for its entry card. */
+  const liveBooks = BOOKS.filter(b => b.moduleId && b.units.some(u => u.content));
+  const bookStats = liveBooks.map(b => {
+    const rec = readRecord(entries[b.moduleId]?.completedIds || []);
+    return { pct: bookProgress(rec, b).overall, xp: totalXp(rec) };
+  });
+  const learnPct = Math.round(bookStats.reduce((a, b) => a + b.pct, 0) / (bookStats.length || 1));
+  const learnXp = bookStats.reduce((a, b) => a + b.xp, 0);
 
 
   /* Combined flashcard progress across every deck. Counted from the real
@@ -155,13 +159,13 @@ export function HomeScreen({ go }) {
                 <span className="text-[10px] font-black uppercase tracking-wider bg-white text-emerald-700 rounded-full px-2 py-0.5">New</span>
               </div>
               <p className="mt-0.5 text-sm text-emerald-50 leading-snug">
-                Book 1 · {book1.title}. Lessons, scenarios, hazard hunts and games.
+                Books {liveBooks.map(b => b.number).join(" & ")} · driving procedures, car controls and mechanics. Lessons, scenarios and games.
               </p>
               <div className="mt-2.5 flex items-center gap-2.5">
                 <div className="flex-1 h-1.5 rounded-full bg-white/20 overflow-hidden">
-                  <div className="h-full bg-white rounded-full" style={{ width: `${book1Pct}%` }} />
+                  <div className="h-full bg-white rounded-full" style={{ width: `${learnPct}%` }} />
                 </div>
-                <span className="text-[11px] font-bold tabular-nums">{book1Pct}% · {book1Xp} XP</span>
+                <span className="text-[11px] font-bold tabular-nums">{learnPct}% · {learnXp} XP</span>
               </div>
             </div>
             <ChevronRight size={18} className="text-white/70 shrink-0 mt-3" />

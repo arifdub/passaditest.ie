@@ -28,6 +28,8 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_9.js` | Unit 1.9 Night Driving (pp.72–75). |
 | `book1/unit1_10.js` | Unit 1.10 Weather, Driver Vision & Its Effects (pp.76–81). |
 | `book1/unit1_11.js` | Unit 1.11 Driving in Tunnels (pp.82–83). |
+| `book2/unit2_1.js` | Unit 2.1 The Car Controls & Driving Aids (pp.5–13). |
+| `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
 | `engine.js` | Progress maths: the record format, XP, levels, mastery, badges, weak areas, review. No UI. |
@@ -158,3 +160,17 @@ challenge ≥ 80%, retention check ≥ 70%.
   for the course. Page 83's note that cameras "will begin working shortly"
   in Dublin's Port Tunnel is dated and isn't used. Its recognition game is
   "Tunnel Sense".
+
+## Audit notes — Book 2
+
+Book 2 is "Theory Resource Workbook 2 of 4 — Mechanical Knowledge,
+Pedestrians & Traffic Signs". Eleven units (2.1–2.11); post-test model
+answers on pages 90–95, retention answers on pages 96–97. Its units link
+to the "Basic Mechanics & Vehicle Maintenance" MCQ section (2.10 and 2.11
+will link to Road Safety).
+
+- **Retention test 2.1, Q19** — omitted: the key gives c ("burn engine oil
+  faster") for selecting higher gears as soon as possible; page 8 presents
+  that as eco driving, which supports d ("better for the environment").
+  Q6, Q7, Q9, Q11 and Q16 cover points the unit text doesn't state and are
+  kept as the book sets them. Its recognition game is "Know Your Controls".

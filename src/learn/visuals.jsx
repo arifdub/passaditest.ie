@@ -2468,6 +2468,228 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ================= BOOK 2 ================= */
+  /* ---------------- car controls (Unit 2.1) ---------------- */
+  "driving-seat": () => (
+    <Frame title="A good driving position">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      {/* seat */}
+      <path d="M38 88 L72 88 L74 80 L44 78 Z" fill="#475569" />
+      <path d="M38 88 L30 40 Q29 34 35 34 L40 34 L46 78 Z" fill="#475569" />
+      <rect x="29" y="22" width="12" height="12" rx="3" fill="#64748b" />
+      {/* driver */}
+      <circle cx="42" cy="26" r="7" fill="#fcd34d" stroke="#0f172a" strokeWidth="0.5" />
+      <path d="M40 34 L46 72" stroke="#2563eb" strokeWidth="8" strokeLinecap="round" />
+      <path d="M46 72 L76 70" stroke="#1e3a8a" strokeWidth="6" strokeLinecap="round" />
+      <path d="M76 70 L96 86" stroke="#1e3a8a" strokeWidth="5" strokeLinecap="round" />
+      <path d="M95 86 L104 82" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
+      <path d="M44 42 L66 50 L84 42" fill="none" stroke="#2563eb" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      {/* wheel and pedal */}
+      <line x1="88" y1="30" x2="84" y2="56" stroke="#111827" strokeWidth="3" strokeLinecap="round" />
+      <line x1="104" y1="74" x2="110" y2="90" stroke="#111827" strokeWidth="2" />
+      <rect x="102" y="70" width="8" height="4" rx="1" fill="#111827" />
+      <path d="M36 42 L58 70" stroke="#0f172a" strokeWidth="1.2" strokeDasharray="2 1.5" />
+      <Tag x="128" y="16" size="3.2" weight={800}>reach every control</Tag>
+      <Tag x="128" y="21" size="3.2" weight={800}>without stretching</Tag>
+      <Tag x="128" y="36" size="3" weight={700} color="#047857">arms relaxed,</Tag>
+      <Tag x="128" y="40.5" size="3" weight={700} color="#047857">bent at the elbows</Tag>
+      <Tag x="128" y="58" size="3" weight={700} color="#047857">knee slightly bent</Tag>
+      <Tag x="128" y="62.5" size="3" weight={700} color="#047857">with the clutch down</Tag>
+      <Tag x="18" y="12" size="3" weight={700}>head restraint</Tag>
+      <Tag x="18" y="54" size="2.8" weight={700}>seat belt</Tag>
+      <Tag x="80" y="97" size="3" weight={700}>seat locked in position · clear view of the road</Tag>
+    </Frame>
+  ),
+
+  "pedals": () => (
+    <Frame title="Foot controls: A, B and C">
+      <rect x="0" y="0" width="160" height="100" fill="#1f2937" />
+      {[[40, 26, 22, "C", "CLUTCH", "left foot", "#f59e0b"], [80, 26, 22, "B", "BRAKE", "right foot", "#ef4444"], [120, 14, 30, "A", "ACCELERATOR", "right foot", "#22c55e"]].map(([x, w, h, l, name, foot, col]) => (
+        <g key={l}>
+          <line x1={x} y1="6" x2={x} y2="40" stroke="#6b7280" strokeWidth="2" />
+          <rect x={x - w / 2} y="40" width={w} height={h} rx="3" fill="#374151" stroke={col} strokeWidth="1.4" />
+          {[0, 1, 2, 3].map(i => <line key={i} x1={x - w / 2 + 3} y1={44 + i * (h - 6) / 3} x2={x + w / 2 - 3} y2={44 + i * (h - 6) / 3} stroke="#4b5563" strokeWidth="1" />)}
+          <text x={x} y="58" fontSize="12" fontWeight="900" textAnchor="middle" fill={col} fontFamily="system-ui">{l}</text>
+          <Tag x={x} y="82" size="3.6" weight={900} color={col}>{name}</Tag>
+          <Tag x={x} y="88" size="3" weight={700}>{foot}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="97" size="3" weight={700}>left to right: Clutch · Brake · Accelerator</Tag>
+    </Frame>
+  ),
+
+  /* Hands on the wheel. variant: ten-two | quarter-three | crossed */
+  "wheel-hands": ({ variant = "quarter-three" }) => {
+    const ang = { "ten-two": [-60, 60], "quarter-three": [-90, 90], crossed: [20, -30] }[variant];
+    const bad = variant === "crossed";
+    const pos = a => [80 + 30 * Math.sin(a * Math.PI / 180), 48 - 30 * Math.cos(a * Math.PI / 180)];
+    return (
+      <Frame title="Holding the steering wheel">
+        <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+        <circle cx="80" cy="48" r="30" fill="none" stroke="#111827" strokeWidth="5" />
+        <circle cx="80" cy="48" r="8" fill="#374151" />
+        {[-90, 90, 180].map(a => { const [x, y] = pos(a); return <line key={a} x1="80" y1="48" x2={x} y2={y} stroke="#374151" strokeWidth="3" />; })}
+        {ang.map((a, i) => { const [x, y] = pos(a); return <circle key={i} cx={x} cy={y} r="5.5" fill={bad ? "#fca5a5" : "#fcd34d"} stroke="#0f172a" strokeWidth="0.6" />; })}
+        {bad && <path d="M60 60 L100 36 M60 36 L100 60" stroke={C.bad} strokeWidth="1.4" opacity="0.7" />}
+        <Tag x="80" y="88" size="4" color={bad ? C.bad : "#047857"}>
+          {{ "ten-two": "TEN TO TWO", "quarter-three": "QUARTER TO THREE", crossed: "✗ HANDS CROSSED" }[variant]}
+        </Tag>
+        <Tag x="80" y="94" size="3" weight={700}>{bad ? "less control — and the airbag drives your arms into your face" : "light but firm grip, thumbs up, both hands on"}</Tag>
+      </Frame>
+    );
+  },
+
+  "push-pull": () => (
+    <Frame title="Push-pull steering">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      {[[40, "①", "left hand pulls down"], [120, "②", "right hand pushes up"]].map(([cx, n, lbl], k) => (
+        <g key={cx}>
+          <circle cx={cx} cy="46" r="26" fill="none" stroke="#111827" strokeWidth="4.5" />
+          <circle cx={cx} cy="46" r="6" fill="#374151" />
+          <circle cx={cx - 26} cy={k ? 52 : 34} r="4.6" fill="#fcd34d" stroke="#0f172a" strokeWidth="0.5" />
+          <circle cx={cx + 26} cy={k ? 34 : 52} r="4.6" fill="#fcd34d" stroke="#0f172a" strokeWidth="0.5" />
+          <Arrow d={k ? `M${cx + 30} 56 Q${cx + 34} 40 ${cx + 26} 28` : `M${cx - 30} 30 Q${cx - 34} 48 ${cx - 24} 62`} color="#047857" w={1.2} />
+          <Tag x={cx} y="84" size="3.4" weight={800}>{n} {lbl}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="10" size="3.8">PUSH-PULL — turning left</Tag>
+      <Tag x="80" y="94" size="3" weight={700}>feed the wheel through your hands · never cross them</Tag>
+    </Frame>
+  ),
+
+  "gear-pattern": () => (
+    <Frame title="A typical gear pattern">
+      <rect x="0" y="0" width="160" height="100" fill="#1f2937" />
+      <path d="M40 50 L120 50 M40 22 L40 78 M80 22 L80 78 M120 22 L120 78" stroke="#9ca3af" strokeWidth="3" strokeLinecap="round" />
+      {[[40, 22, "1"], [40, 78, "2"], [80, 22, "3"], [80, 78, "4"], [120, 22, "5"], [120, 78, "R"]].map(([x, y, g]) => (
+        <g key={g}>
+          <circle cx={x} cy={y} r="7" fill={g === "R" ? "#7f1d1d" : "#111827"} stroke="#e5e7eb" strokeWidth="1" />
+          <text x={x} y={y + 3.4} fontSize="9" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{g}</text>
+        </g>
+      ))}
+      <circle cx="80" cy="50" r="3" fill="#f59e0b" />
+      <Tag x="88" y="47" size="2.8" weight={800} anchor="start">neutral</Tag>
+      <Tag x="40" y="94" size="2.9" weight={800}>palm towards</Tag>
+      <Tag x="40" y="98" size="2.9" weight={800}>passenger</Tag>
+      <Tag x="80" y="94" size="2.9" weight={800}>palm on top</Tag>
+      <Tag x="120" y="94" size="2.9" weight={800}>palm towards</Tag>
+      <Tag x="120" y="98" size="2.9" weight={800}>driver</Tag>
+      <Tag x="22" y="10" size="3" weight={800} color="#047857">1st: most powerful</Tag>
+      <Tag x="140" y="8" size="3" weight={800} color="#047857">top: least powerful,</Tag>
+      <Tag x="140" y="13" size="3" weight={800} color="#047857">most economical</Tag>
+    </Frame>
+  ),
+
+  /* The clutch. variant: up (engaged) | down (disengaged) | biting */
+  "clutch-plates": ({ variant = "up" }) => {
+    const gap = { up: 0, down: 10, biting: 2 }[variant];
+    return (
+      <Frame title="How the clutch works">
+        <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+        <rect x="6" y="40" width="40" height="8" fill="#64748b" />
+        <rect x="114" y="40" width="40" height="8" fill="#64748b" />
+        <rect x={68 - gap / 2} y="18" width="8" height="52" rx="2" fill="#475569" />
+        <rect x={84 + gap / 2} y="18" width="8" height="52" rx="2" fill="#b45309" />
+        <rect x="46" y="40" width={22 - gap / 2} height="8" fill="#64748b" />
+        <rect x={92 + gap / 2} y="40" width={22 - gap / 2} height="8" fill="#64748b" />
+        {variant !== "down" && [24, 32, 56, 64].map(y => <path key={y} d={`M${100 + gap} ${y} l4 -2 l4 4 l4 -4 l4 4`} fill="none" stroke="#0f172a" strokeWidth="0.8" />)}
+        <Tag x="26" y="34" size="3.2" weight={800}>ENGINE</Tag>
+        <Tag x="134" y="34" size="3.2" weight={800}>GEARBOX → wheels</Tag>
+        <Tag x="80" y="84" size="4" color={variant === "up" ? "#047857" : variant === "down" ? C.bad : "#b45309"}>
+          {{ up: "PEDAL UP — plates held together", down: "PEDAL DOWN — plates apart", biting: "BITING POINT — plates just touching" }[variant]}
+        </Tag>
+        <Tag x="80" y="91" size="3" weight={700}>
+          {{ up: "spring pressure: the engine drives the wheels", down: "the engine runs without driving the wheels", biting: "engine note drops slightly — felt and heard" }[variant]}
+        </Tag>
+      </Frame>
+    );
+  },
+
+  "oversteer": () => (
+    <Frame title="Oversteer and understeer">
+      <path d="M40 100 L40 60 Q40 22 80 20 L160 20 L160 46 L82 46 Q66 48 66 64 L66 100 Z" fill={C.road} />
+      <Car x="53" y="88" color={C.good} />
+      <Arrow d="M53 78 L53 62 Q53 34 86 33 L150 33" />
+      <path d="M53 76 Q55 54 70 52 L92 60" fill="none" stroke={C.bad} strokeWidth="1.3" strokeDasharray="2 1.6" />
+      <path d="M53 78 L54 56 Q58 26 96 12 L110 6" fill="none" stroke={C.amber} strokeWidth="1.3" strokeDasharray="2 1.6" />
+      <Tag x="122" y="42" size="3.2" weight={800} color="#047857">what you steered for</Tag>
+      <Tag x="112" y="72" size="3.3" weight={800} color={C.bad}>OVERSTEER</Tag>
+      <Tag x="112" y="77" size="2.9" weight={700}>turns MORE than you expect</Tag>
+      <Tag x="122" y="8" size="3.3" weight={800} color="#b45309">UNDERSTEER</Tag>
+      <Tag x="122" y="13" size="2.9" weight={700}>turns LESS than you expect</Tag>
+      <Tag x="112" y="92" size="2.8" weight={700}>steering lock: the angle the front wheels can turn</Tag>
+    </Frame>
+  ),
+
+  "progressive-brake": () => (
+    <Frame title="Progressive braking">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <line x1="20" y1="80" x2="148" y2="80" stroke="#334155" strokeWidth="0.8" />
+      <line x1="20" y1="80" x2="20" y2="14" stroke="#334155" strokeWidth="0.8" />
+      <path d="M20 80 Q40 78 60 56 Q80 30 100 28 Q120 30 140 70" fill="none" stroke="#047857" strokeWidth="2" />
+      <path d="M20 80 L24 20 L44 20 L46 80" fill="none" stroke={C.bad} strokeWidth="1.2" strokeDasharray="2 1.6" />
+      <Tag x="40" y="70" size="3" weight={800} color="#047857">① light</Tag>
+      <Tag x="88" y="22" size="3" weight={800} color="#047857">② firmer as it slows</Tag>
+      <Tag x="132" y="56" size="3" weight={800} color="#047857">③ ease off</Tag>
+      <Tag x="132" y="61" size="3" weight={800} color="#047857">to stop</Tag>
+      <Tag x="50" y="14" size="3" weight={800} color={C.bad}>✗ harsh: all at once</Tag>
+      <Tag x="84" y="90" size="3" weight={700}>time →</Tag>
+      <Tag x="10" y="48" size="2.8" weight={700}>pressure</Tag>
+    </Frame>
+  ),
+
+  "ignition": () => (
+    <Frame title="Ignition switch positions">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <circle cx="56" cy="50" r="28" fill="#e2e8f0" stroke="#334155" strokeWidth="1.4" />
+      <rect x="52" y="30" width="8" height="40" rx="3" fill="#94a3b8" stroke="#334155" strokeWidth="0.8" transform="rotate(30 56 50)" />
+      {[["0", -60], ["1", -10], ["2", 30], ["3", 70]].map(([n, a]) => {
+        const x = 56 + 36 * Math.sin(a * Math.PI / 180), y = 50 - 36 * Math.cos(a * Math.PI / 180);
+        return <text key={n} x={x} y={y + 2} fontSize="7" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{n}</text>;
+      })}
+      <Tag x="124" y="24" size="3.2" weight={800}>1 · accessories</Tag>
+      <Tag x="124" y="29" size="2.8" weight={600}>e.g. radio</Tag>
+      <Tag x="124" y="44" size="3.2" weight={800}>2 · ignition</Tag>
+      <Tag x="124" y="49" size="2.8" weight={600}>and instruments</Tag>
+      <Tag x="124" y="64" size="3.2" weight={800}>3 · starter</Tag>
+      <Tag x="124" y="69" size="2.8" weight={600}>release once it starts</Tag>
+      <Tag x="80" y="94" size="3" weight={700}>before starting: parking brake on, gear lever in neutral (P in an automatic)</Tag>
+    </Frame>
+  ),
+
+  "warning-colours": () => (
+    <Frame title="Dashboard warning-light colours">
+      <rect x="0" y="0" width="160" height="100" fill="#0f172a" />
+      {[[30, "#ef4444", "RED", "danger", "(!)"], [80, "#f59e0b", "AMBER", "warning", "⚠"], [130, "#22c55e", "GREEN", "working / in use", "⇦⇨"]].map(([x, col, name, mean, sym]) => (
+        <g key={name}>
+          <circle cx={x} cy="38" r="16" fill="#111827" stroke={col} strokeWidth="2" />
+          <text x={x} y="43" fontSize="11" fontWeight="900" textAnchor="middle" fill={col} fontFamily="system-ui">{sym}</text>
+          <Tag x={x} y="70" size="4.2" weight={900} color={col}>{name}</Tag>
+          <Tag x={x} y="77" size="3.2" weight={700}>{mean}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="94" size="3" weight={700}>red or amber while driving usually warns of danger</Tag>
+    </Frame>
+  ),
+
+  "parking-brake": () => (
+    <Frame title="Applying the handbrake">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <rect x="20" y="70" width="60" height="10" rx="2" fill="#475569" />
+      <path d="M28 72 L64 34" stroke="#111827" strokeWidth="8" strokeLinecap="round" />
+      <circle cx="66" cy="32" r="4" fill="#ef4444" />
+      <Arrow d="M74 40 L74 22" color="#047857" w={1.4} />
+      <text x="56" y="58" fontSize="6" fontWeight="900" fill="#ffffff" textAnchor="middle" transform="rotate(-48 56 58)" fontFamily="system-ui">P</text>
+      <circle cx="124" cy="40" r="15" fill="#111827" stroke="#ef4444" strokeWidth="2" />
+      <text x="124" y="45" fontSize="12" fontWeight="900" textAnchor="middle" fill="#ef4444" fontFamily="system-ui">(!)</text>
+      <Tag x="124" y="66" size="3" weight={800}>check only the</Tag>
+      <Tag x="124" y="70.5" size="3" weight={800}>parking-brake light shows</Tag>
+      <Tag x="44" y="12" size="3" weight={800}>press the button, pull up firmly,</Tag>
+      <Tag x="44" y="17" size="3" weight={800}>release the button</Tag>
+      <Tag x="80" y="92" size="3" weight={700}>usually works on the rear wheels · electric: a button marked "P"</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

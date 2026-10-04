@@ -28,6 +28,8 @@ import UNIT_1_9 from "./book1/unit1_9";
 import UNIT_1_10 from "./book1/unit1_10";
 import UNIT_1_11 from "./book1/unit1_11";
 import GLOSSARY_1 from "./book1/glossary";
+import UNIT_2_1 from "./book2/unit2_1";
+import GLOSSARY_2 from "./book2/glossary";
 
 export const BOOKS = [
   {
@@ -54,7 +56,28 @@ export const BOOKS = [
       { id: "1.11", title: "Driving in Tunnels",                 pages: [82, 83], badge: "Tunnel Specialist", content: UNIT_1_11 },
     ],
   },
-  { id: "b2", number: 2, title: "Book 2", subtitle: "Coming soon", units: [] },
+  {
+    id: "b2",
+    number: 2,
+    title: "Mechanical Knowledge, Pedestrians & Traffic Signs",
+    subtitle: "Book 2",
+    source: "Theory Resource Workbook 2 of 4 — Driver Education Supplies",
+    moduleId: "learn.b2",
+    glossary: GLOSSARY_2,
+    units: [
+      { id: "2.1",  title: "The Car Controls & Driving Aids", pages: [5, 13],  badge: "Controls Master", content: UNIT_2_1 },
+      { id: "2.2",  title: "The Driving Mirrors",             pages: [14, 19], badge: "Mirror Master" },
+      { id: "2.3",  title: "Beginning to Drive",              pages: [20, 26], badge: "Moving-Off Specialist" },
+      { id: "2.4",  title: "Changing Gear",                   pages: [27, 31], badge: "Gear Specialist" },
+      { id: "2.5",  title: "Braking",                         pages: [32, 39], badge: "Braking Specialist" },
+      { id: "2.6",  title: "Road Holding",                    pages: [40, 47], badge: "Road Holding Specialist" },
+      { id: "2.7",  title: "Manoeuvring",                     pages: [48, 55], badge: "Manoeuvring Specialist" },
+      { id: "2.8",  title: "Automatic Transmission",          pages: [56, 59], badge: "Automatic Specialist" },
+      { id: "2.9",  title: "Mechanical Principles",           pages: [60, 71], badge: "Mechanics Specialist" },
+      { id: "2.10", title: "Pedestrians & Cyclists",          pages: [72, 80], badge: "Vulnerable Road Users Specialist" },
+      { id: "2.11", title: "Traffic Signs & Signals",         pages: [81, 89], badge: "Signs Specialist" },
+    ],
+  },
   { id: "b3", number: 3, title: "Book 3", subtitle: "Coming soon", units: [] },
   { id: "b4", number: 4, title: "Book 4", subtitle: "Coming soon", units: [] },
 ];

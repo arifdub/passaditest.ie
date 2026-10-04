@@ -30,7 +30,7 @@ import HazardHunt from "./HazardHunt";
 import { Visual, Visuals } from "./visuals";
 
 const ACTIVITY_ICON = {
-  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", crossings: "🚂", motorway: "🛣️", lights: "🔦", weather: "🌦️", tunnels: "🚇", matching: "🧩", procedure: "🔁",
+  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", crossings: "🚂", motorway: "🛣️", lights: "🔦", weather: "🌦️", tunnels: "🚇", controls: "🎛️", matching: "🧩", procedure: "🔁",
   scenarios: "🚗", walkthrough: "🧭", retention: "🧠", challenge: "🏁",
 };
 
@@ -443,7 +443,7 @@ function GlossaryEntry({ count, label = "Visual Driving Glossary", onOpen }) {
       <div className="flex-1 min-w-0">
         <p className="font-bold text-slate-900 dark:text-white">{label}</p>
         <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
-          See it, then name it — {count} road term{count === 1 ? "" : "s"}, each drawn
+          See it, then name it — {count} term{count === 1 ? "" : "s"}, each drawn
         </p>
       </div>
       <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0" />

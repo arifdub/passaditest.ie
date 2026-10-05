@@ -520,7 +520,7 @@ const scenarios = {
     { id: "s2", type: "choice", label: "Scenario", concept: "gears", visual: "gear-pattern",
       scene: "👇 Your pupil keeps glancing down at the gear lever when changing gear.",
       prompt: "What do you advise?",
-      options: ["Keep one eye on the lever", "Look only if a mistake is made", "Look well ahead", "Look down quickly"], answer: 3,
+      options: ["Keep one eye on the lever", "Look only if a mistake is made", "Look well ahead", "Look down quickly"], answer: 2,
       explain: "Change gear without taking your eyes off the road — look well ahead.", src: P(13, "Retention Q12 (answer d, p.96); p.8") },
     { id: "s3", type: "choice", label: "Scenario", concept: "crossed-hands", visual: "wheel-hands:crossed",
       scene: "🛞 Your pupil crosses their hands to turn on a normal road junction.",

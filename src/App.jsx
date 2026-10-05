@@ -90,6 +90,13 @@ function AppShell() {
 
   const view = stack[stack.length - 1];
 
+  /* The frame's height. Installed to the iPhone home screen, iOS reports a
+     viewport about one status-bar height shorter than the screen, so a
+     CSS-sized frame stops short and leaves a band under the tab bar (and
+     100lvh overshoots). The app fills the whole screen there, so use the
+     screen's own height. In a browser tab, the visible viewport (dvh). */
+  const appHeight = useAppHeight();
+
   /* iPhone Safari shows the page itself below the app frame (behind its
      toolbar). Tell the CSS whether the tab bar is showing, so that strip is
      painted the tab bar's colour rather than white. See index.css. */
@@ -142,7 +149,8 @@ function AppShell() {
        and the tab bar is the frame's last row, so it can't drift with the
        content when iPhone Safari's toolbar resizes the viewport. */
     <div
-      className="fixed inset-0 flex flex-col bg-slate-50 dark:bg-slate-900"
+      className="fixed inset-x-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-900"
+      style={{ height: appHeight }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -157,6 +165,25 @@ function AppShell() {
       {view.screen === "home" && <InstallPrompt />}
     </div>
   );
+}
+
+function useAppHeight() {
+  const calc = () => {
+    const standalone = window.navigator.standalone === true ||
+      window.matchMedia?.("(display-mode: standalone)").matches;
+    if (!standalone) return "100dvh";
+    const { width, height } = window.screen;
+    const portrait = window.innerHeight >= window.innerWidth;
+    return `${portrait ? Math.max(width, height) : Math.min(width, height)}px`;
+  };
+  const [h, setH] = useState(calc);
+  useEffect(() => {
+    const on = () => setH(calc());
+    window.addEventListener("resize", on);
+    window.addEventListener("orientationchange", on);
+    return () => { window.removeEventListener("resize", on); window.removeEventListener("orientationchange", on); };
+  }, []);
+  return h;
 }
 
 /* Quiz runs and flashcard decks take over the screen — the tab bar would only

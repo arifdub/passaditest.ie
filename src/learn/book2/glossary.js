@@ -133,4 +133,54 @@ export default [
     key: "The only exception: an emergency stop.",
     src: P("2.2", 15, "You MUST always use the mirrors"),
   },
+
+  /* ---------------- Unit 2.3 — Beginning to Drive ---------------- */
+  {
+    id: "daily-checks", unit: "2.3", term: "Everyday safety checks", visual: "daily-checks",
+    meaning: "Quick checks before driving: glass and mirrors clean, lights and indicators working, brakes, loads.",
+    key: "It's your legal responsibility to keep the car roadworthy.",
+    src: P("2.3", 20, "Everyday Safety Checks"),
+  },
+  {
+    id: "periodic-checks", unit: "2.3", term: "Periodic checks", visual: "periodic-checks",
+    meaning: "At least weekly and as the handbook says: tyres, wipers, washers, oil, coolant, brake fluid, battery, belts.",
+    key: "Oil on level ground; coolant with the engine cold; tyre pressures at least weekly.",
+    src: P("2.3", 20, "Periodic Checks; p.91 answer 3"),
+  },
+  {
+    id: "cockpit-drill", unit: "2.3", term: "Cockpit drill", visual: "cockpit-drill",
+    meaning: "The checks every time you get in: handbrake, doors, seat, steering, seat belts, mirrors, fuel, loads.",
+    key: "For your safety, your passengers' and other road users'.",
+    src: P("2.3", 21, "Cockpit Drill"),
+  },
+  {
+    id: "tickover", unit: "2.3", term: "Tick-over (idling)", visual: "ignition",
+    meaning: "The engine running at normal speed without the accelerator.",
+    key: "After starting, ease off the gas once it runs smoothly.",
+    src: P("2.3", 91, "Post-test answer 7"),
+  },
+  {
+    id: "moving-off-routine", unit: "2.3", term: "Moving-off routine", visual: "observe-routine",
+    meaning: "Observe – Prepare – Observe – Signal if necessary – Move off: a variation of MSM.",
+    key: "You must not cause anyone to change speed or direction.",
+    src: P("2.3", 22, "Moving Off/Away"),
+  },
+  {
+    id: "angle-start", unit: "2.3", term: "Angle start", visual: "angle-start",
+    meaning: "Moving off from behind an obstruction such as a parked car.",
+    key: "Steer briskly, slow with clutch control, extra right-shoulder checks; clutch fully up only when clear.",
+    src: P("2.3", 22, "At an angle; p.91 answer 11"),
+  },
+  {
+    id: "uphill-start", unit: "2.3", term: "Uphill start", visual: "hill-start:up",
+    meaning: "Moving off on an upward slope.",
+    key: "More gas; find the biting point before releasing the handbrake.",
+    src: P("2.3", 22, "Uphill"),
+  },
+  {
+    id: "downhill-start", unit: "2.3", term: "Downhill start", visual: "hill-start:down",
+    meaning: "Moving off on a downward slope.",
+    key: "Footbrake on, release the handbrake; no gas needed; gear to suit — maybe second.",
+    src: P("2.3", 23, "Downhill"),
+  },
 ];

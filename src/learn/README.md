@@ -30,6 +30,7 @@ existing section named in the unit's `mcqLink`.
 | `book1/unit1_11.js` | Unit 1.11 Driving in Tunnels (pp.82–83). |
 | `book2/unit2_1.js` | Unit 2.1 The Car Controls & Driving Aids (pp.5–13). |
 | `book2/unit2_2.js` | Unit 2.2 The Driving Mirrors (pp.14–19). |
+| `book2/unit2_3.js` | Unit 2.3 Beginning to Drive (pp.20–26). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -185,3 +186,9 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   offside (b). Q1, Q3 and Q4 cover points the unit text doesn't state and
   are kept as the book sets them. Page 16's A-pillar table of named car
   models isn't used. Its recognition game is "Check Your Mirrors".
+- **Retention test 2.3, Q1 and Q7** — omitted. Q1 keys "once every day"
+  for pre-start checks, but the cockpit drill is "every time you get in"
+  (option d). Q7 keys "complete the cockpit drill", but page 21's rule
+  before starting (handbrake, clutch down, neutral) matches no option in
+  full. Q10–Q12 cover points the text doesn't state and are kept as set.
+  Its recognition game is "Ready to Go?".

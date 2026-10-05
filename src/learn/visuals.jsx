@@ -359,6 +359,23 @@ function TunnelBore({ h = 100 }) {
   );
 }
 
+/* A row of numbered step chips, wrapping onto a second row if needed. */
+function StepChips({ steps, y = 30, perRow = 4, color = "#047857", start = 1 }) {
+  const w = 160 / perRow;
+  return steps.map((t, i) => {
+    const col = i % perRow, row = Math.floor(i / perRow);
+    const x = col * w + w / 2, yy = y + row * 34;
+    return (
+      <g key={i}>
+        <circle cx={x} cy={yy} r="9" fill={color} />
+        <text x={x} y={yy + 3.6} fontSize="10" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{i + start}</text>
+        <Tag x={x} y={yy + 16} size="3.3" weight={800}>{t}</Tag>
+        {col < perRow - 1 && i < steps.length - 1 && <path d={`M${x + 11} ${yy} L${x + w - 11} ${yy}`} stroke={color} strokeWidth="1" strokeDasharray="2 1.6" />}
+      </g>
+    );
+  });
+}
+
 function Frame({ children, title, h = 100 }) {
   return (
     <svg viewBox={`0 0 160 ${h}`} className="w-full h-auto block" role="img" aria-label={title}>
@@ -2863,6 +2880,139 @@ const DRAW = {
         ["🔀", "turning"], ["🚗", "overtaking"], ["🛣️", "changing lane"],
         ["🐢", "slowing or stopping"], ["🚪", "opening your door"], ["🛑", "except: emergency stop"],
       ]} />
+    </Frame>
+  ),
+
+  /* ---------------- beginning to drive (Unit 2.3) ---------------- */
+  "daily-checks": () => (
+    <Frame title="Everyday safety checks">
+      <IconGrid ring={C.good} rows={2} cells={[
+        ["🪟", "glass & mirrors clean"], ["💡", "lights & indicators"], ["🛑", "brakes, first chance"],
+        ["🧳", "loads secure"], ["🛞", "tyres look right"], ["🪞", "mirrors not knocked"],
+      ]} />
+    </Frame>
+  ),
+
+  "periodic-checks": () => (
+    <Frame title="Periodic checks">
+      <IconGrid ring={C.blue} rows={3} size={8} cells={[
+        ["🛞", "tyre pressures: weekly"], ["📏", "tread depth legal"], ["🧽", "wipers and blades"],
+        ["💧", "washer bottles"], ["🛢️", "oil: level ground, cold"], ["🌡️", "coolant: cold engine"],
+        ["🛑", "brake fluid"], ["🔋", "battery"], ["🪢", "seat belts"],
+      ]} />
+    </Frame>
+  ),
+
+  "cockpit-drill": () => (
+    <Frame title="The cockpit drill">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <Tag x="80" y="10" size="4">EVERY TIME YOU GET IN</Tag>
+      <StepChips y={30} perRow={4} steps={["Handbrake on", "Doors closed", "Seat", "Steering"]} />
+      <StepChips y={64} perRow={4} steps={["Seat belts", "Mirrors", "Fuel", "Loads secure"]} color="#0f766e" start={5} />
+    </Frame>
+  ),
+
+  "observe-routine": () => (
+    <Frame title="Moving off: observe, prepare, observe, signal, move">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <StepChips y={36} perRow={5} steps={["Observe", "Prepare", "Observe", "Signal?", "Move off"]} />
+      <Tag x="16" y="62" size="2.8" weight={700}>(look)</Tag>
+      <Tag x="80" y="62" size="2.8" weight={700}>(mirrors, blind spots)</Tag>
+      <Tag x="112" y="62" size="2.8" weight={700}>(if needed)</Tag>
+      <Tag x="80" y="12" size="3.6">A VARIATION OF MSM</Tag>
+      <Tag x="80" y="84" size="3.4" weight={900} color={C.bad}>You must not cause anyone</Tag>
+      <Tag x="80" y="90" size="3.4" weight={900} color={C.bad}>to change speed or direction</Tag>
+    </Frame>
+  ),
+
+  "move-off-level": () => (
+    <Frame title="Moving off from the kerb">
+      <VRoad />
+      <Car x="50" y="70" color={C.good} />
+      <path d="M50 60 Q50 46 60 40 L62 8" fill="none" stroke={C.good} strokeWidth="1.6" strokeDasharray="2 1.6" />
+      <path d="M56 74 A16 16 0 0 1 72 90" fill="none" stroke={C.amber} strokeWidth="1.2" />
+      <path d="M44 74 A16 16 0 0 0 28 90" fill="none" stroke={C.amber} strokeWidth="1.2" />
+      <Car x="62" y="98" color={C.grey} ghost />
+      <Car x="97" y="22" rot={180} color={C.grey} />
+      <Tag x="22" y="50" size="3" weight={800} color="#b45309">look over</Tag>
+      <Tag x="22" y="54.5" size="3" weight={800} color="#b45309">both shoulders</Tag>
+      <Tag x="138" y="62" size="3" weight={800}>mirrors and blind</Tag>
+      <Tag x="138" y="66.5" size="3" weight={800}>spots, signal if</Tag>
+      <Tag x="138" y="71" size="3" weight={800}>necessary, look again</Tag>
+      <Tag x="138" y="88" size="3" weight={800} color={C.bad}>nobody should have to</Tag>
+      <Tag x="138" y="92.5" size="3" weight={800} color={C.bad}>slow down for you</Tag>
+      <Tag x="22" y="20" size="2.9" weight={700} color="#047857">then about 1 m</Tag>
+      <Tag x="22" y="24.5" size="2.9" weight={700} color="#047857">from the kerb</Tag>
+    </Frame>
+  ),
+
+  "angle-start": () => (
+    <Frame title="Moving off at an angle">
+      <VRoad />
+      <Car x="51" y="46" color={C.grey} door />
+      <Car x="51" y="76" color={C.good} />
+      <path d="M52 66 Q54 58 68 54 L70 22 Q70 12 60 6" fill="none" stroke={C.good} strokeWidth="1.6" strokeDasharray="2 1.6" />
+      <Car x="97" y="16" rot={180} color={C.amber} />
+      <text x="40" y="34" fontSize="6" textAnchor="middle">🚶</text>
+      <Tag x="22" y="62" size="3" weight={800}>a) what angle?</Tag>
+      <Tag x="22" y="68" size="3" weight={800}>b) how far out?</Tag>
+      <Tag x="22" y="74" size="3" weight={800}>c) oncoming traffic?</Tag>
+      <Tag x="136" y="40" size="3" weight={800} color="#047857">slow, with clutch</Tag>
+      <Tag x="136" y="44.5" size="3" weight={800} color="#047857">control; extra right</Tag>
+      <Tag x="136" y="49" size="3" weight={800} color="#047857">shoulder checks</Tag>
+      <Tag x="136" y="66" size="2.9" weight={700}>room for a door to open;</Tag>
+      <Tag x="136" y="70.5" size="2.9" weight={700}>watch for pedestrians</Tag>
+      <Tag x="136" y="75" size="2.9" weight={700}>stepping out ahead</Tag>
+      <Tag x="136" y="90" size="2.9" weight={800} color={C.bad}>don't release the clutch</Tag>
+      <Tag x="136" y="94.5" size="2.9" weight={800} color={C.bad}>fully until clear</Tag>
+    </Frame>
+  ),
+
+  /* Moving off on a slope (side view). variant: up | down */
+  "hill-start": ({ variant = "up" }) => {
+    const up = variant === "up";
+    return (
+      <Frame title={up ? "Moving off uphill" : "Moving off downhill"}>
+        <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+        <path d={up ? "M0 92 L160 40 L160 100 L0 100 Z" : "M0 40 L160 92 L160 100 L0 100 Z"} fill="#a3c38a" />
+        <path d={up ? "M0 92 L160 40" : "M0 40 L160 92"} stroke={C.road} strokeWidth="3" />
+        <SideCar x={60} y={up ? 72.5 : 59.5} rot={up ? -18 : 18} color={C.good} />
+        <Tag x={up ? 50 : 110} y="14" size="4.2">{up ? "UPHILL START" : "DOWNHILL START"}</Tag>
+        {up ? (
+          <g>
+            <Tag x="50" y="22" size="3.2" weight={800} color="#047857">more gas</Tag>
+            <Tag x="50" y="27" size="3.2" weight={800} color="#047857">biting point BEFORE releasing</Tag>
+            <Tag x="50" y="32" size="3.2" weight={800} color="#047857">the handbrake — a little more gas</Tag>
+            <Tag x="124" y="78" size="3" weight={800} color={C.bad}>else: rolling back</Tag>
+            <Tag x="124" y="83" size="3" weight={800} color={C.bad}>or stalling</Tag>
+          </g>
+        ) : (
+          <g>
+            <Tag x="110" y="22" size="3.2" weight={800} color="#047857">footbrake on, release the handbrake</Tag>
+            <Tag x="110" y="27" size="3.2" weight={800} color="#047857">no gas, no biting point needed</Tag>
+            <Tag x="110" y="32" size="3.2" weight={800} color="#047857">gear to suit the slope — maybe 2nd</Tag>
+            <Tag x="40" y="76" size="3" weight={800}>the car's weight</Tag>
+            <Tag x="40" y="81" size="3" weight={800}>helps you move off</Tag>
+          </g>
+        )}
+      </Frame>
+    );
+  },
+
+  "look-ahead": () => (
+    <Frame title="Look well ahead">
+      <VRoad />
+      <path d="M62 66 L48 0 L76 0 Z" fill={C.amber} opacity="0.2" />
+      <path d="M62 66 L58 54 L66 54 Z" fill={C.bad} opacity="0.4" />
+      <Car x="62" y="74" color={C.good} />
+      <Tag x="22" y="14" size="3.2" weight={800} color="#047857">✓ look well</Tag>
+      <Tag x="22" y="19" size="3.2" weight={800} color="#047857">ahead</Tag>
+      <Tag x="22" y="56" size="3.2" weight={800} color={C.bad}>✗ not just over</Tag>
+      <Tag x="22" y="61" size="3.2" weight={800} color={C.bad}>the bonnet</Tag>
+      <Tag x="136" y="40" size="3" weight={800}>smooth, steady</Tag>
+      <Tag x="136" y="44.5" size="3" weight={800}>movements</Tag>
+      <line x1="47" y1="90" x2="57" y2="90" stroke={C.good} strokeWidth="0.8" />
+      <Tag x="136" y="84" size="3" weight={800} color="#047857">about 1 m from the kerb</Tag>
     </Frame>
   ),
 

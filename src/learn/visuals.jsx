@@ -2582,23 +2582,43 @@ const DRAW = {
 
   /* The clutch. variant: up (engaged) | down (disengaged) | biting */
   "clutch-plates": ({ variant = "up" }) => {
-    const gap = { up: 0, down: 10, biting: 2 }[variant];
+    const gap = { up: 0, biting: 4, down: 18 }[variant];
+    const aL = 66 - gap / 2, bL = 74 + gap / 2;   /* plate left edges, 8 wide */
+    const pad = { up: [36, 64], biting: [34, 77], down: [29, 89] }[variant];
+    const col = { up: "#047857", biting: "#b45309", down: C.bad }[variant];
     return (
       <Frame title="How the clutch works">
         <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
-        <rect x="6" y="40" width="40" height="8" fill="#64748b" />
-        <rect x="114" y="40" width="40" height="8" fill="#64748b" />
-        <rect x={68 - gap / 2} y="18" width="8" height="52" rx="2" fill="#475569" />
-        <rect x={84 + gap / 2} y="18" width="8" height="52" rx="2" fill="#b45309" />
-        <rect x="46" y="40" width={22 - gap / 2} height="8" fill="#64748b" />
-        <rect x={92 + gap / 2} y="40" width={22 - gap / 2} height="8" fill="#64748b" />
-        {variant !== "down" && [24, 32, 56, 64].map(y => <path key={y} d={`M${100 + gap} ${y} l4 -2 l4 4 l4 -4 l4 4`} fill="none" stroke="#0f172a" strokeWidth="0.8" />)}
-        <Tag x="26" y="34" size="3.2" weight={800}>ENGINE</Tag>
-        <Tag x="134" y="34" size="3.2" weight={800}>GEARBOX → wheels</Tag>
-        <Tag x="80" y="84" size="4" color={variant === "up" ? "#047857" : variant === "down" ? C.bad : "#b45309"}>
+        {/* shafts and plates */}
+        <rect x="6" y="31" width={aL - 6} height="7" fill="#64748b" />
+        <rect x={bL + 8} y="31" width={154 - bL - 8} height="7" fill="#64748b" />
+        <rect x={aL} y="10" width="8" height="49" rx="2" fill="#475569" />
+        <rect x={bL} y="10" width="8" height="49" rx="2" fill="#b45309" />
+        {variant !== "down" && [16, 48].map(y => (
+          <path key={y} d={`M${bL + 10} ${y} l3 -3 l3 6 l3 -6 l3 6 l3 -3`} fill="none" stroke="#0f172a" strokeWidth="0.9" />
+        ))}
+        {/* drive: full, partial, none */}
+        {variant === "up" && <Arrow d="M10 66 L150 66" color={col} w={2.4} />}
+        {variant === "biting" && <Arrow d="M10 66 L120 66" color={col} w={1.6} dash="3 2" />}
+        {variant === "down" && (
+          <g>
+            <Arrow d="M10 66 L58 66" color="#475569" w={2} />
+            <text x="80" y="70" fontSize="10" fontWeight="900" textAnchor="middle" fill={C.bad} fontFamily="system-ui">✗</text>
+          </g>
+        )}
+        {/* the pedal */}
+        <rect x="6" y="56" width="40" height="40" rx="3" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.5" />
+        <line x1="8" y1="93" x2="44" y2="93" stroke="#334155" strokeWidth="1.2" />
+        <circle cx="14" cy="60" r="1.6" fill="#334155" />
+        <line x1="14" y1="60" x2={pad[0]} y2={pad[1]} stroke="#111827" strokeWidth="2" />
+        <rect x={pad[0] - 3} y={pad[1] - 1.5} width="8" height="3.4" rx="1" fill={col} transform={`rotate(-30 ${pad[0]} ${pad[1]})`} />
+        <Tag x="26" y="52" size="2.8" weight={800}>clutch pedal</Tag>
+        <Tag x="22" y="26" size="3.2" weight={800}>ENGINE</Tag>
+        <Tag x="136" y="26" size="3.2" weight={800}>GEARBOX → wheels</Tag>
+        <Tag x="102" y="82" size="3.8" color={col}>
           {{ up: "PEDAL UP — plates held together", down: "PEDAL DOWN — plates apart", biting: "BITING POINT — plates just touching" }[variant]}
         </Tag>
-        <Tag x="80" y="91" size="3" weight={700}>
+        <Tag x="102" y="89" size="2.9" weight={700}>
           {{ up: "spring pressure: the engine drives the wheels", down: "the engine runs without driving the wheels", biting: "engine note drops slightly — felt and heard" }[variant]}
         </Tag>
       </Frame>

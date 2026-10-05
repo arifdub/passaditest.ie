@@ -169,8 +169,12 @@ answers on pages 90–95, retention answers on pages 96–97. Its units link
 to the "Basic Mechanics & Vehicle Maintenance" MCQ section (2.10 and 2.11
 will link to Road Safety).
 
+- **Retention test 2.1, Q16** — omitted: the stem mixes "when stationary"
+  (horn only if there is danger from another moving vehicle, as Book 1's
+  post test answers) with "in a built-up area" (not 23:30–07:00), so both
+  c and the keyed d are defensible.
 - **Retention test 2.1, Q19** — omitted: the key gives c ("burn engine oil
   faster") for selecting higher gears as soon as possible; page 8 presents
   that as eco driving, which supports d ("better for the environment").
-  Q6, Q7, Q9, Q11 and Q16 cover points the unit text doesn't state and are
+  Q6, Q7, Q9 and Q11 cover points the unit text doesn't state and are
   kept as the book sets them. Its recognition game is "Know Your Controls".

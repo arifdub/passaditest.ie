@@ -8,12 +8,16 @@
   answers on page 96 (1c 2b 3a 4d 5b 6b 7a 8a 9c 10b 11d 12d 13b 14c 15a
   16d 17c 18b 19c 20c).
 
+  Retention test Q16 is omitted: its stem mixes two horn rules — "when
+  stationary" (allowed only if there is danger from another moving vehicle,
+  as Book 1's post test answers) and "in a built-up area" (not between
+  23:30 and 07:00) — so both c and the keyed d are defensible.
+
   Retention test Q19 is omitted: its key gives c ("burn engine oil
   faster") for selecting a higher gear as soon as possible, but page 8
   presents early upshifts as eco driving, which supports d ("be better for
   the environment"). Q6 (power steering), Q7 (diesel = compression
-  ignition), Q9 (dual-circuit brakes), Q11 (clutch control) and Q16 (horn
-  hours) cover points the unit text doesn't state; they are kept as the
+  ignition), Q9 (dual-circuit brakes) and Q11 (clutch control) cover points the unit text doesn't state; they are kept as the
   book sets them.
   ===========================================================================
 */
@@ -584,7 +588,7 @@ const walkthrough = {
 };
 
 /* ---------------------------------------------------------------------------
-   8. RETENTION CHECK — answers from page 96. Q19 is omitted (see top).
+   8. RETENTION CHECK — answers from page 96. Q16 and Q19 are omitted (see top).
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept, visual) => ({
   id: `ret${n}`, type: "choice", label: "Retention check", concept, visual,
@@ -614,7 +618,6 @@ const retention = {
     R(13, "Cars with heated windscreens front and/or back should be", ["only used before you commence travelling", "only used for as long as necessary", "used to assist in heating the interior of the vehicle", "used one at a time"], 1, "visual-aids"),
     R(14, "The Mechanical Principles book states rear fog lamps should only be used when visibility is seriously reduced, that is to less than", ["328 metres", "50 metres", "100 metres", "300 metres"], 2, "cockpit", "light-symbol:rear-fog"),
     R(15, "'Driving Essential Skills' states that the horn should normally only be used", ["to warn other road users of your presence whilst moving", "to tell other drivers that they are obstructing you", "to give priority to another road user", "only when the vehicle is stationary"], 0, "cockpit"),
-    R(16, "'Driving Essential Skills' states that when the car is stationary, the horn must not be used in a built-up area", ["under any circumstance", "between the hours of 2100 and 0630", "unless there is danger from another moving vehicle", "between the hours of 2330 and 0700"], 3, "cockpit"),
     R(17, "Before operating the starter, the driver should ensure that", ["the ignition warning lights are off", "the gear lever is in neutral", "the handbrake is applied and the gear lever is in neutral", "the oil warning light is off"], 2, "starting", "ignition"),
     R(18, "Vehicles with an automatic transmission have", ["no gearshift lever", "no clutch", "no handbrake", "no gears"], 1, "clutch"),
     R(20, "A red or amber button with a \"triangle symbol\" on the dashboard or steering column", ["is the direction indicator repeat light", "operates the handbrake", "operates the hazard warning lights", "warns of an engine emission fault"], 2, "cockpit", "rear-lights:hazard"),

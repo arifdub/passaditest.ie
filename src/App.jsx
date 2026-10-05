@@ -142,7 +142,7 @@ function AppShell() {
        and the tab bar is the frame's last row, so it can't drift with the
        content when iPhone Safari's toolbar resizes the viewport. */
     <div
-      className="fixed inset-0 flex flex-col bg-slate-50 dark:bg-slate-900"
+      className="app-frame fixed inset-x-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-900"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -371,8 +371,9 @@ function TabBar({ tab, onSelect, hidden }) {
           );
         })}
       </div>
-      {/* iPhone home-indicator clearance */}
-      <div style={{ height: "env(safe-area-inset-bottom)" }} />
+      {/* Just enough to clear the iPhone home-indicator line, no more —
+          the full inset (34pt) left an empty band under the tabs. */}
+      <div style={{ height: "max(4px, calc(env(safe-area-inset-bottom) - 20px))" }} />
     </nav>
   );
 }

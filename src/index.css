@@ -9,6 +9,14 @@ html, body, #root {
 html, body {
   overscroll-behavior: none;
 }
+/* The app frame (App.jsx) fills the whole screen, so the tab bar sits at
+   the very bottom. dvh tracks Safari's toolbar in the browser; installed
+   on the home screen there is no toolbar, so use the full screen height. */
+.app-frame { height: 100vh; height: 100dvh; }
+@media (display-mode: standalone) {
+  .app-frame { height: 100vh; height: 100lvh; }
+}
+
 /* What shows below the app frame on iPhone (behind Safari's toolbar):
    the colour of the bar at the bottom of the screen — the tab bar, or a
    quiz's Previous/Next bar (white in light mode). Specificity beats the

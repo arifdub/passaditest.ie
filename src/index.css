@@ -5,6 +5,10 @@
 html, body, #root {
   height: 100%;
 }
+/* The app scrolls inside #app-scroll (App.jsx); the page itself never does. */
+html, body {
+  overscroll-behavior: none;
+}
 
 /* ---- correct-answer celebration (QuizPlayer.jsx) ---- */
 .cheer-badge {

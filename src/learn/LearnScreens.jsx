@@ -12,6 +12,7 @@
   ===========================================================================
 */
 
+import { scrollAppToTop } from "../appScroll";
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   ChevronRight, Lock, Check, X, Sparkles, BookOpen, Flame, Trophy,
@@ -653,7 +654,7 @@ function LearnCards({ activity, unit, save, stamp, go, back, bookId }) {
   const gated = card?.ask && asked === null;
 
   const next = () => {
-    if (i + 1 < cards.length) { setI(i + 1); setAsked(null); window.scrollTo(0, 0); return; }
+    if (i + 1 < cards.length) { setI(i + 1); setAsked(null); scrollAppToTop(); return; }
     save([
       `done:${unit.id}:${activity.id}`,
       `best:${unit.id}:${activity.id}:100`,
@@ -873,7 +874,7 @@ function ItemRunner({ steps, activity, unit, record, save, stamp, go, back, book
     firstResult.current = null;
     setAnswer(null);
     setAttempt(0);
-    if (at + 1 < steps.length) { setAt(at + 1); window.scrollTo(0, 0); return; }
+    if (at + 1 < steps.length) { setAt(at + 1); scrollAppToTop(); return; }
     finish();
   };
 

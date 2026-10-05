@@ -24,6 +24,7 @@ import AuthScreen from "./AuthScreen";
 import { HomeScreen, MockHubScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
 import InstallPrompt from "./InstallPrompt";
+import { scrollAppToTop } from "./appScroll";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
 import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
@@ -72,19 +73,19 @@ function AppShell() {
      returns to the unit rather than stepping through every activity. */
   const go = useCallback((view, opts) => {
     setStack(s => (opts?.replace && s.length > 1 ? [...s.slice(0, -1), view] : [...s, view]));
-    window.scrollTo(0, 0);
+    scrollAppToTop();
   }, []);
 
   const back = useCallback(() => {
     setStack(s => (s.length > 1 ? s.slice(0, -1) : s));
-    window.scrollTo(0, 0);
+    scrollAppToTop();
   }, []);
 
   /* Tapping a tab resets that tab to its root — the expected app behaviour. */
   const selectTab = (id) => {
     setTab(id);
     setStack([{ screen: id }]);
-    window.scrollTo(0, 0);
+    scrollAppToTop();
   };
 
   const view = stack[stack.length - 1];
@@ -129,14 +130,19 @@ function AppShell() {
   }
 
   return (
+    /* A fixed frame that never scrolls: the screen scrolls inside #app-scroll
+       and the tab bar is the frame's last row, so it can't drift with the
+       content when iPhone Safari's toolbar resizes the viewport. */
     <div
-      className="min-h-screen bg-slate-50 dark:bg-slate-900"
+      className="fixed inset-0 flex flex-col bg-slate-50 dark:bg-slate-900"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={() => { swipe.current = null; }}
     >
-      <CurrentScreen view={view} go={go} back={back} theme={theme} toggleTheme={toggleTheme} />
+      <div id="app-scroll" className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <CurrentScreen view={view} go={go} back={back} theme={theme} toggleTheme={toggleTheme} />
+      </div>
       <TabBar tab={activeTab} onSelect={selectTab} hidden={isFullScreen(view)} />
       {/* "Add to Home Screen" help, on the home screen only — never over a
           quiz or a deck. It decides for itself whether it's needed. */}
@@ -337,7 +343,7 @@ function NotReady({ onBack }) {
 function TabBar({ tab, onSelect, hidden }) {
   if (hidden) return null;
   return (
-    <nav className="fixed bottom-0 inset-x-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur border-t border-slate-200 dark:border-slate-700 z-20">
+    <nav className="shrink-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur border-t border-slate-200 dark:border-slate-700 z-20">
       <div className="max-w-2xl mx-auto flex">
         {TABS.map(({ id, label, icon: Icon }) => {
           const active = tab === id;

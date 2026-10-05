@@ -29,6 +29,7 @@ import UNIT_1_10 from "./book1/unit1_10";
 import UNIT_1_11 from "./book1/unit1_11";
 import GLOSSARY_1 from "./book1/glossary";
 import UNIT_2_1 from "./book2/unit2_1";
+import UNIT_2_2 from "./book2/unit2_2";
 import GLOSSARY_2 from "./book2/glossary";
 
 export const BOOKS = [
@@ -66,7 +67,7 @@ export const BOOKS = [
     glossary: GLOSSARY_2,
     units: [
       { id: "2.1",  title: "The Car Controls & Driving Aids", pages: [5, 13],  badge: "Controls Master", content: UNIT_2_1 },
-      { id: "2.2",  title: "The Driving Mirrors",             pages: [14, 19], badge: "Mirror Master" },
+      { id: "2.2",  title: "The Driving Mirrors",             pages: [14, 19], badge: "Mirror Master", content: UNIT_2_2 },
       { id: "2.3",  title: "Beginning to Drive",              pages: [20, 26], badge: "Moving-Off Specialist" },
       { id: "2.4",  title: "Changing Gear",                   pages: [27, 31], badge: "Gear Specialist" },
       { id: "2.5",  title: "Braking",                         pages: [32, 39], badge: "Braking Specialist" },

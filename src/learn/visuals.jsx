@@ -2710,6 +2710,162 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- driving mirrors (Unit 2.2) ---------------- */
+  "mirror-coverage": () => (
+    <Frame title="What the mirrors cover — and the blind spots">
+      <rect x="40" y="0" width="80" height="100" fill={C.road} />
+      <line x1="80" y1="0" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <path d="M62 32 L54 100 L70 100 Z" fill="#3b82f6" opacity="0.4" />
+      <path d="M57 22 L36 100 L50 100 Z" fill="#22c55e" opacity="0.45" />
+      <path d="M67 22 L80 100 L96 100 Z" fill="#22c55e" opacity="0.45" />
+      <path d="M57 26 L28 34 L42 74 Z" fill={C.bad} opacity="0.45" />
+      <path d="M67 26 L100 36 L84 78 Z" fill={C.bad} opacity="0.45" />
+      <Car x="62" y="24" color={C.good} />
+      <Tag x="62" y="94" size="3" weight={800} color="#1e40af">interior</Tag>
+      <Tag x="20" y="40" size="3" weight={800} color="#047857">nearside</Tag>
+      <Tag x="20" y="44.5" size="3" weight={800} color="#047857">door mirror</Tag>
+      <Tag x="140" y="40" size="3" weight={800} color="#047857">offside</Tag>
+      <Tag x="140" y="44.5" size="3" weight={800} color="#047857">door mirror</Tag>
+      <Tag x="140" y="74" size="3.2" weight={900} color={C.bad}>BLIND SPOTS</Tag>
+      <Tag x="140" y="79" size="2.8" weight={700}>beside the rear —</Tag>
+      <Tag x="140" y="83.5" size="2.8" weight={700}>in no mirror</Tag>
+      <Arrow d="M124 70 L98 52" color={C.bad} w={0.8} />
+      <Tag x="62" y="8" size="3" weight={700}>driving ↑</Tag>
+    </Frame>
+  ),
+
+  "flat-convex": () => (
+    <Frame title="Flat and convex mirrors">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      {[[40, false], [120, true]].map(([cx, convex]) => (
+        <g key={cx}>
+          <rect x={cx - 30} y="14" width="60" height="38" rx={convex ? 10 : 4} fill="#cbd5e1" stroke="#334155" strokeWidth="1.2" />
+          <rect x={cx - 26} y="18" width="52" height="30" rx={convex ? 8 : 2} fill={convex ? "#bae6fd" : "#e0f2fe"} />
+          <path d={`M${cx - 26} 48 L${cx - 6} 30 L${cx + 6} 30 L${cx + 26} 48 Z`} fill="#94a3b8" />
+          <g transform={`translate(${cx} 36) scale(${convex ? 0.5 : 1.05}) rotate(180)`}><Car x={0} y={0} color={C.blue} /></g>
+        </g>
+      ))}
+      <Tag x="40" y="64" size="4">FLAT GLASS</Tag>
+      <Tag x="40" y="70" size="3" weight={700}>interior mirror — a true picture</Tag>
+      <Tag x="120" y="64" size="4">CONVEX GLASS</Tag>
+      <Tag x="120" y="70" size="3" weight={700}>door mirrors — a wider view, but</Tag>
+      <Tag x="120" y="75" size="3" weight={700}>vehicles look smaller and</Tag>
+      <Tag x="120" y="80" size="3" weight={700} color={C.bad}>FURTHER AWAY than they are</Tag>
+    </Frame>
+  ),
+
+  "a-pillar": () => (
+    <Frame title="The A-pillar blind spot">
+      <rect x="0" y="0" width="160" height="100" fill="#cbd5e1" />
+      <rect x="0" y="0" width="160" height="62" fill="#bfdbfe" />
+      <rect x="0" y="40" width="160" height="22" fill="#94a3b8" />
+      <text x="0" y="0" fontSize="16" textAnchor="middle" dominantBaseline="central" transform="translate(113 47)">🏍️</text>
+      <path d="M96 0 L122 0 L112 62 L100 62 Z" fill="#1f2937" />
+      <rect x="0" y="62" width="160" height="38" fill="#111827" />
+      <path d="M20 100 Q24 76 50 74 Q76 76 80 100" fill="none" stroke="#374151" strokeWidth="5" />
+      <Tag x="108" y="70" size="3.2" weight={800}>A-PILLAR</Tag>
+      <Tag x="40" y="14" size="3.4" weight={900}>a motorcycle — or a whole car —</Tag>
+      <Tag x="40" y="19.5" size="3.4" weight={900}>can hide behind the pillar</Tag>
+      <Tag x="40" y="32" size="3" weight={700} color="#047857">move your head: look around it,</Tag>
+      <Tag x="40" y="36.5" size="3" weight={700} color="#047857">especially at junctions</Tag>
+      <Tag x="132" y="86" size="3" weight={800}>can hide objects</Tag>
+      <Tag x="132" y="91" size="3" weight={800}>23 m away</Tag>
+    </Frame>
+  ),
+
+  /* The interior mirror at night. variant: day | night */
+  "anti-dazzle": ({ variant = "day" }) => {
+    const night = variant === "night";
+    return (
+      <Frame title="Day and night (anti-dazzle) mirror">
+        <rect x="0" y="0" width="160" height="100" fill="#0f172a" />
+        <rect x="76" y="6" width="8" height="10" fill="#475569" />
+        <rect x="24" y="16" width="112" height="40" rx="10" fill="#334155" stroke="#94a3b8" strokeWidth="1.2" />
+        <rect x="29" y="21" width="102" height="30" rx="7" fill={night ? "#1e293b" : "#1e3a5f"} />
+        {[64, 96].map(x => (
+          <g key={x}>
+            <circle cx={x} cy="36" r={night ? 3 : 9} fill="#fef08a" opacity={night ? 0.7 : 0.9} />
+            {!night && <circle cx={x} cy="36" r="16" fill="#fef08a" opacity="0.3" />}
+          </g>
+        ))}
+        <rect x="74" y="56" width="12" height="5" rx="1.5" fill="#94a3b8" />
+        {night && <Arrow d="M80 76 L80 64" color="#22c55e" w={1.3} />}
+        <Tag x="80" y="80" size="4" color={night ? "#047857" : C.bad}>{night ? "NIGHT SETTING — tab flipped" : "DAZZLED by lights behind"}</Tag>
+        <Tag x="80" y="87" size="3" weight={700}>{night ? "glare deflected — but a little less rear clarity" : "flip the tab to deflect the glare"}</Tag>
+      </Frame>
+    );
+  },
+
+  "lorry-blindspot": () => (
+    <Frame title="Don't sit in a lorry's blind spot">
+      <rect x="30" y="0" width="100" height="100" fill={C.road} />
+      <line x1="80" y1="0" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <path d="M50 52 L30 100 L74 100 L70 52 Z" fill={C.bad} opacity="0.25" />
+      <path d="M72 30 L80 30 L80 74 L72 60 Z" fill={C.bad} opacity="0.25" />
+      <path d="M48 30 L30 30 L30 74 L48 60 Z" fill={C.bad} opacity="0.25" />
+      <Lorry x={60} y={30} len={42} />
+      <Car x="97" y="50" color={C.good} />
+      <Car x="60" y="82" color={C.grey} />
+      <Tag x="148" y="40" size="3" weight={800} color={C.bad} anchor="middle">alongside</Tag>
+      <Tag x="148" y="44.5" size="3" weight={800} color={C.bad} anchor="middle">its rear:</Tag>
+      <Tag x="148" y="49" size="3" weight={800} color={C.bad} anchor="middle">unseen</Tag>
+      <Tag x="14" y="88" size="2.9" weight={800} color={C.bad}>too close</Tag>
+      <Tag x="14" y="92.5" size="2.9" weight={800} color={C.bad}>behind</Tag>
+      <Tag x="148" y="80" size="2.8" weight={700} anchor="middle">can't see the</Tag>
+      <Tag x="148" y="84.5" size="2.8" weight={700} anchor="middle">driver in their</Tag>
+      <Tag x="148" y="89" size="2.8" weight={700} anchor="middle">mirror? They</Tag>
+      <Tag x="148" y="93.5" size="2.8" weight={700} anchor="middle">can't see you</Tag>
+    </Frame>
+  ),
+
+  "offside-nearside": () => (
+    <Frame title="Offside and nearside">
+      <VRoad />
+      <Car x="62" y="56" color={C.good} />
+      <rect x="55.6" y="52" width="2.2" height="3" fill="#94a3b8" />
+      <rect x="66.2" y="52" width="2.2" height="3" fill="#94a3b8" />
+      <Arrow d="M76 50 L96 40" color="#047857" w={1.2} />
+      <Arrow d="M48 50 L30 40" color="#b45309" w={1.2} />
+      <Tag x="22" y="30" size="3.6" color="#b45309">NEARSIDE</Tag>
+      <Tag x="22" y="35.5" size="2.9" weight={700}>left — the kerb side</Tag>
+      <Tag x="136" y="26" size="3.6" color="#047857">OFFSIDE</Tag>
+      <Tag x="136" y="31.5" size="2.9" weight={700}>right — the driver's side</Tag>
+      <Tag x="136" y="66" size="2.9" weight={800}>offside mirror before</Tag>
+      <Tag x="136" y="70.5" size="2.9" weight={800}>moving right, turning</Tag>
+      <Tag x="136" y="75" size="2.9" weight={800}>right or overtaking</Tag>
+      <Tag x="22" y="70" size="2.9" weight={800}>exterior mirrors</Tag>
+      <Tag x="22" y="74.5" size="2.9" weight={800}>are "directional"</Tag>
+    </Frame>
+  ),
+
+  "msmpsl": () => (
+    <Frame title="The hazard routine: MS(M)PSL">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      {[["M", "Mirrors"], ["S", "Signal"], ["(M)", "Mirror"], ["P", "Position"], ["S", "Speed"], ["L", "Look"]].map(([k, lbl], i) => (
+        <g key={i}>
+          <rect x={6 + i * 25} y={64 - i * 9} width="23" height="14" rx="2" fill={i === 2 ? "#e2e8f0" : "#047857"} stroke="#047857" strokeWidth="0.8" strokeDasharray={i === 2 ? "2 1.4" : undefined} />
+          <text x={17.5 + i * 25} y={74 - i * 9} fontSize="7" fontWeight="900" textAnchor="middle" fill={i === 2 ? "#047857" : "#ffffff"} fontFamily="system-ui">{k}</text>
+          <Tag x={17.5 + i * 25} y={84 - i * 9} size="2.8" weight={800}>{lbl}</Tag>
+        </g>
+      ))}
+      <Tag x="134" y="12" size="3" weight={800} color="#047857">LOOK → assess →</Tag>
+      <Tag x="134" y="17" size="3" weight={800} color="#047857">decide → act</Tag>
+      <Tag x="40" y="20" size="3" weight={700}>(M): an extra check, usually</Tag>
+      <Tag x="40" y="24.5" size="3" weight={700}>the door mirror — e.g. turning right</Tag>
+      <Tag x="80" y="96" size="2.9" weight={700}>apply it to any hazard: anything that might change your course or speed</Tag>
+    </Frame>
+  ),
+
+  "mirrors-when": () => (
+    <Frame title="Use the mirrors well before…">
+      <IconGrid ring={C.good} rows={3} size={8} cells={[
+        ["🚦", "moving off"], ["💡", "signalling"], ["↪️", "changing direction"],
+        ["🔀", "turning"], ["🚗", "overtaking"], ["🛣️", "changing lane"],
+        ["🐢", "slowing or stopping"], ["🚪", "opening your door"], ["🛑", "except: emergency stop"],
+      ]} />
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

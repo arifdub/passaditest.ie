@@ -83,4 +83,54 @@ export default [
     key: "Red = danger, amber = warning, green = working or in use.",
     src: P("2.1", 10, "Visual Driving Aids"),
   },
+
+  /* ---------------- Unit 2.2 — The Driving Mirrors ---------------- */
+  {
+    id: "blind-spots", unit: "2.2", term: "Blind spots", visual: "mirror-coverage",
+    meaning: "Areas around the car not seen in any mirror — hidden by the body or outside the mirrors' range.",
+    key: "Look round when stationary; on the move, a quick glance only as the exception.",
+    src: P("2.2", 15, "Blind Spots"),
+  },
+  {
+    id: "flat-convex", unit: "2.2", term: "Flat and convex mirrors", visual: "flat-convex",
+    meaning: "Flat glass gives a true picture; convex glass a wider view.",
+    key: "In a convex mirror, vehicles appear further away than they are.",
+    src: P("2.2", 14, "The Function of the Mirrors; p.90 answer 4"),
+  },
+  {
+    id: "a-pillar", unit: "2.2", term: "A-pillar (A-frame)", visual: "a-pillar",
+    meaning: "The windscreen pillars, which can hide pedestrians, cyclists, motorcycles — even a car.",
+    key: "Look around them, especially at junctions — they can hide objects 23 m away.",
+    src: P("2.2", 15, "The A-frame Blind Spots"),
+  },
+  {
+    id: "anti-dazzle", unit: "2.2", term: "Day/night mirror", visual: "anti-dazzle:night",
+    meaning: "An interior mirror with a flip tab that cuts glare from lights behind.",
+    key: "Electric chromic mirrors do it automatically.",
+    src: P("2.2", 14, "Day and Night Mirror; ECM"),
+  },
+  {
+    id: "lorry-blindspot", unit: "2.2", term: "Another driver's blind spot", visual: "lorry-blindspot",
+    meaning: "The areas a driver — especially of a large vehicle — can't see.",
+    key: "If you can't see the driver in their mirror, they can't see you.",
+    src: P("2.2", 15, "Blind Spots"),
+  },
+  {
+    id: "offside-nearside", unit: "2.2", term: "Offside and nearside", visual: "offside-nearside",
+    meaning: "Offside: the driver's (right) side. Nearside: the kerb (left) side.",
+    key: "Door mirrors are directional — check the one on the side you're moving to.",
+    src: P("2.2", 15, "Using the Mirrors"),
+  },
+  {
+    id: "msmpsl", unit: "2.2", term: "MS(M)PSL", visual: "msmpsl",
+    meaning: "Mirrors, Signal, (Mirror), Position, Speed, Look — the hazard routine, an expansion of MSM.",
+    key: "Look = look, assess, decide and act.",
+    src: P("2.2", 16, "The Hazard Routine"),
+  },
+  {
+    id: "mirrors-when", unit: "2.2", term: "When to use the mirrors", visual: "mirrors-when",
+    meaning: "Well before moving off, signalling, turning, overtaking, changing lane, slowing, stopping, opening a door.",
+    key: "The only exception: an emergency stop.",
+    src: P("2.2", 15, "You MUST always use the mirrors"),
+  },
 ];

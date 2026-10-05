@@ -149,8 +149,8 @@ function AppShell() {
        and the tab bar is the frame's last row, so it can't drift with the
        content when iPhone Safari's toolbar resizes the viewport. */
     <div
-      className="fixed inset-x-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-900"
-      style={{ height: appHeight }}
+      className={`${appHeight.standalone ? "absolute" : "fixed"} inset-x-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-900`}
+      style={{ height: appHeight.height }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -168,13 +168,19 @@ function AppShell() {
 }
 
 function useAppHeight() {
+  /* Installed to the iPhone home screen, iOS lays the page out in a
+     viewport one status-bar height shorter than the screen and clips
+     position:fixed content to it — so a fixed tab bar either stops short
+     (a band under it) or, made taller, gets cut off. There the frame is
+     instead an ordinary page element sized to the full screen, with the
+     page itself locked so it can't scroll. In a browser tab: fixed, 100dvh. */
   const calc = () => {
     const standalone = window.navigator.standalone === true ||
-      window.matchMedia?.("(display-mode: standalone)").matches;
-    if (!standalone) return "100dvh";
+      !!window.matchMedia?.("(display-mode: standalone)").matches;
+    if (!standalone) return { standalone, height: "100dvh" };
     const { width, height } = window.screen;
     const portrait = window.innerHeight >= window.innerWidth;
-    return `${portrait ? Math.max(width, height) : Math.min(width, height)}px`;
+    return { standalone, height: `${portrait ? Math.max(width, height) : Math.min(width, height)}px` };
   };
   const [h, setH] = useState(calc);
   useEffect(() => {
@@ -183,6 +189,11 @@ function useAppHeight() {
     window.addEventListener("orientationchange", on);
     return () => { window.removeEventListener("resize", on); window.removeEventListener("orientationchange", on); };
   }, []);
+  useEffect(() => {
+    const els = [document.documentElement, document.body];
+    if (h.standalone) els.forEach(el => { el.style.height = h.height; el.style.overflow = "hidden"; });
+    else els.forEach(el => { el.style.height = ""; el.style.overflow = ""; });
+  }, [h]);
   return h;
 }
 

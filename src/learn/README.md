@@ -31,6 +31,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_1.js` | Unit 2.1 The Car Controls & Driving Aids (pp.5–13). |
 | `book2/unit2_2.js` | Unit 2.2 The Driving Mirrors (pp.14–19). |
 | `book2/unit2_3.js` | Unit 2.3 Beginning to Drive (pp.20–26). |
+| `book2/unit2_4.js` | Unit 2.4 Changing Gear (pp.27–31). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -192,3 +193,7 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   before starting (handbrake, clutch down, neutral) matches no option in
   full. Q10–Q12 cover points the text doesn't state and are kept as set.
   Its recognition game is "Ready to Go?".
+- **Retention test 2.4** — the answer key agrees with the unit text for all
+  ten questions; all are used. Page 28's gear speed-range chart is drawn
+  without numbers (its scale is unclear). Its recognition game is "Right
+  Gear?".

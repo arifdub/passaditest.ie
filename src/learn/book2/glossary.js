@@ -183,4 +183,42 @@ export default [
     key: "Footbrake on, release the handbrake; no gas needed; gear to suit — maybe second.",
     src: P("2.3", 23, "Downhill"),
   },
+
+  /* ---------------- Unit 2.4 — Changing Gear ---------------- */
+  {
+    id: "synchromesh", unit: "2.4", term: "Synchromesh", visual: "gear-pattern",
+    meaning: "A gearbox mechanism that synchronises the gear wheels, so you needn't exactly match engine and road speed.",
+    key: "Forward gears only. Older cars needed double de-clutching.",
+    src: P("2.4", 27, "Synchromesh; p.92 answer 3"),
+  },
+  {
+    id: "gear-ranges", unit: "2.4", term: "Gear speed ranges", visual: "gear-ranges",
+    meaning: "Each gear can be used over a range of speeds; the ranges overlap.",
+    key: "Higher speed, higher gear — but load and hills call for lower gears.",
+    src: P("2.4", 28, "Speed; Engine size"),
+  },
+  {
+    id: "rev-counter", unit: "2.4", term: "Rev counter (tachometer)", visual: "rev-counter",
+    meaning: "Shows engine revolutions per minute, usually ×1,000.",
+    key: "About 1,500–2,000 rpm at a steady speed for economy.",
+    src: P("2.4", 28, "REV Counters"),
+  },
+  {
+    id: "block-change", unit: "2.4", term: "Block gear changing", visual: "block-change",
+    meaning: "Missing out intermediate gears — e.g. braking, then 5th straight to 2nd.",
+    key: "Just as safe as changing in order, done in sympathy with the engine.",
+    src: P("2.4", 28, "Note"),
+  },
+  {
+    id: "under-acceleration-gear", unit: "2.4", term: "Changing down under acceleration", visual: "gear-pattern",
+    meaning: "Changing down to accelerate harder, keeping some pressure on the gas.",
+    key: "\"Under acceleration\": the engine pulling the car — not always gaining speed.",
+    src: P("2.4", 27, "Changing down whilst under acceleration; p.28"),
+  },
+  {
+    id: "coasting", unit: "2.4", term: "Coasting", visual: "coasting",
+    meaning: "Moving without the engine driving — clutch down or neutral.",
+    key: "Less control of steering and braking; never coast down a hill.",
+    src: P("2.4", 29, "Good driving practices; p.92 answers 12, 13"),
+  },
 ];

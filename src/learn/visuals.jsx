@@ -3016,6 +3016,88 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- changing gear (Unit 2.4) ---------------- */
+  "gear-ranges": () => (
+    <Frame title="Each gear covers a range of speeds">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <line x1="30" y1="84" x2="150" y2="84" stroke="#334155" strokeWidth="0.8" />
+      <Arrow d="M30 90 L150 90" color="#334155" w={0.9} />
+      <Tag x="90" y="97" size="3" weight={700}>road speed →</Tag>
+      {[["1st", 30, 62], ["2nd", 40, 80], ["3rd", 52, 110], ["4th", 70, 140], ["5th", 92, 148]].map(([g, a, b], i) => (
+        <g key={g}>
+          <Tag x="16" y={16 + i * 14} size="3.6">{g}</Tag>
+          <rect x={a} y={11 + i * 14} width={b - a} height="7" rx="3.5" fill={["#ef4444", "#f97316", "#f59e0b", "#84cc16", "#22c55e"][i]} />
+        </g>
+      ))}
+      <Tag x="120" y="10" size="3" weight={800}>ranges overlap — the same</Tag>
+      <Tag x="120" y="14.5" size="3" weight={800}>speed in 2 or 3 gears</Tag>
+    </Frame>
+  ),
+
+  "rev-counter": () => {
+    const cx = 80, cy = 56, r = 34;
+    const ang = v => (-120 + v * (240 / 7)) * Math.PI / 180;      /* 0–7 (×1000 rpm) over 240° */
+    const pt = (v, rr) => [cx + rr * Math.sin(ang(v)), cy - rr * Math.cos(ang(v))];
+    const arc = (v0, v1, col, w) => {
+      const [x0, y0] = pt(v0, r), [x1, y1] = pt(v1, r);
+      return <path d={`M${x0} ${y0} A${r} ${r} 0 ${ang(v1) - ang(v0) > Math.PI ? 1 : 0} 1 ${x1} ${y1}`} fill="none" stroke={col} strokeWidth={w} />;
+    };
+    const [nx, ny] = pt(1.8, r - 8);
+    return (
+      <Frame title="The rev counter">
+        <rect x="0" y="0" width="160" height="100" fill="#0f172a" />
+        {arc(0, 7, "#334155", 5)}
+        {arc(1.5, 2, "#22c55e", 6)}
+        {arc(6, 7, "#ef4444", 6)}
+        {[0, 1, 2, 3, 4, 5, 6, 7].map(n => {
+          const [x, y] = pt(n, r - 11);
+          return <text key={n} x={x} y={y + 2.2} fontSize="6.5" fontWeight="800" textAnchor="middle" fill="#e2e8f0" fontFamily="system-ui">{n}</text>;
+        })}
+        <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r="3.5" fill="#f59e0b" />
+        <Tag x="80" y="76" size="3.4" weight={800}>RPM × 1000</Tag>
+        <Tag x="80" y="88" size="3.2" weight={800} color="#047857">green: about 1,500–2,000 rpm at a steady speed —</Tag>
+        <Tag x="80" y="93.5" size="3.2" weight={800} color="#047857">best fuel economy</Tag>
+        <Tag x="140" y="40" size="3" weight={800} color={C.bad}>red line</Tag>
+      </Frame>
+    );
+  },
+
+  "block-change": () => (
+    <Frame title="Block gear changing">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      {[5, 4, 3, 2].map((g, i) => (
+        <g key={g}>
+          <circle cx={26 + i * 36} cy="34" r="10" fill={g === 4 || g === 3 ? "#e2e8f0" : "#047857"} stroke="#047857" strokeWidth="1" strokeDasharray={g === 4 || g === 3 ? "2 1.5" : undefined} />
+          <text x={26 + i * 36} y="38" fontSize="11" fontWeight="900" textAnchor="middle" fill={g === 4 || g === 3 ? "#94a3b8" : "#ffffff"} fontFamily="system-ui">{g}</text>
+        </g>
+      ))}
+      <path d="M30 20 Q80 2 130 20" fill="none" stroke="#047857" strokeWidth="1.6" />
+      <path d="M126 16 L131 21 L124 22" fill="#047857" />
+      <Tag x="80" y="58" size="4">BRAKE FIRST, THEN 5th → 2nd</Tag>
+      <Tag x="80" y="66" size="3.2" weight={700}>miss out the gears you don't need</Tag>
+      <Tag x="80" y="80" size="3.2" weight={800} color="#047857">just as safe as changing down in order —</Tag>
+      <Tag x="80" y="86" size="3.2" weight={800} color="#047857">done in sympathy with the engine</Tag>
+    </Frame>
+  ),
+
+  "coasting": () => (
+    <Frame title="Coasting">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 30 L160 82 L160 100 L0 100 Z" fill="#a3c38a" />
+      <path d="M0 30 L160 82" stroke={C.road} strokeWidth="3" />
+      <SideCar x="76" y="54.5" rot={18} color={C.bad} />
+      <circle cx="60" cy="24" r="9" fill="#ffffff" stroke={C.bad} strokeWidth="1.2" />
+      <text x="60" y="28" fontSize="11" fontWeight="900" textAnchor="middle" fill={C.bad} fontFamily="system-ui">N</text>
+      <Tag x="120" y="14" size="4" color={C.bad}>✗ COASTING</Tag>
+      <Tag x="120" y="21" size="3" weight={700}>clutch down or neutral</Tag>
+      <Tag x="120" y="26" size="3" weight={700}>while the car is moving</Tag>
+      <Tag x="40" y="80" size="3" weight={800}>less control of</Tag>
+      <Tag x="40" y="85" size="3" weight={800}>steering and braking;</Tag>
+      <Tag x="40" y="90" size="3" weight={800}>speed builds downhill</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -9,6 +9,13 @@ html, body, #root {
 html, body {
   overscroll-behavior: none;
 }
+/* What shows below the app frame on iPhone (behind Safari's toolbar):
+   the colour of the bar at the bottom of the screen — the tab bar, or a
+   quiz's Previous/Next bar (white in light mode). Specificity beats the
+   light-theme page rule in app/index.html. */
+html[data-tabbar]:not(.dark), html[data-tabbar]:not(.dark) body { background-color: #ffffff; }
+html.dark[data-tabbar], html.dark[data-tabbar] body             { background-color: #0f172a; }
+html.dark[data-tabbar="1"], html.dark[data-tabbar="1"] body     { background-color: #1e293b; }
 
 /* ---- correct-answer celebration (QuizPlayer.jsx) ---- */
 .cheer-badge {

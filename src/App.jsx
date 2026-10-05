@@ -89,6 +89,14 @@ function AppShell() {
   };
 
   const view = stack[stack.length - 1];
+
+  /* iPhone Safari shows the page itself below the app frame (behind its
+     toolbar). Tell the CSS whether the tab bar is showing, so that strip is
+     painted the tab bar's colour rather than white. See index.css. */
+  const tabBarShown = !isFullScreen(view);
+  useEffect(() => {
+    document.documentElement.dataset.tabbar = tabBarShown ? "1" : "0";
+  }, [tabBarShown]);
   const canGoBack = stack.length > 1;
 
   /* Which tab lights up. Derived from what's actually on screen rather than

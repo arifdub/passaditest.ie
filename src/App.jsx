@@ -142,7 +142,7 @@ function AppShell() {
        and the tab bar is the frame's last row, so it can't drift with the
        content when iPhone Safari's toolbar resizes the viewport. */
     <div
-      className="app-frame fixed inset-x-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-900"
+      className="fixed inset-0 flex flex-col bg-slate-50 dark:bg-slate-900"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

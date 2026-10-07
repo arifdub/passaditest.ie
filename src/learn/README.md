@@ -32,6 +32,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_2.js` | Unit 2.2 The Driving Mirrors (pp.14–19). |
 | `book2/unit2_3.js` | Unit 2.3 Beginning to Drive (pp.20–26). |
 | `book2/unit2_4.js` | Unit 2.4 Changing Gear (pp.27–31). |
+| `book2/unit2_5.js` | Unit 2.5 Braking (pp.32–39). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -197,3 +198,12 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   ten questions; all are used. Page 28's gear speed-range chart is drawn
   without numbers (its scale is unclear). Its recognition game is "Right
   Gear?".
+- **Retention test 2.5, Q17, Q18 and Q19** — omitted. Q17 keys reaction
+  time for thinking distance, but page 34 says it is proportional to speed
+  and reaction time (speed is also an option). Q18 keys speed for braking
+  distance, but the road surface (also an option) is on the same list.
+  Q19 keys "four times the distance" for 30 v 60 km/h, but the book's own
+  table gives 10.8 m v 32.4 m — about a third (option d); "four times"
+  is the braking-distance rule. Q20 keys 12 m at 60 km/h where the table
+  gives 11.0 m (nearest option) and is kept. The dry table's "50" on the
+  77.7 m row is the 100 km/h row. Its recognition game is "Brake Smart".

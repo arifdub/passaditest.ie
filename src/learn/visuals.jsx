@@ -3098,6 +3098,215 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- braking (Book 2, Unit 2.5) ---------------- */
+  "golden-rule": () => (
+    <Frame title="Stop well within the distance you can see to be clear">
+      <VRoad l={58} r={102} />
+      <circle cx="44" cy="8" r="13" fill="#4d7c0f" /><circle cx="60" cy="4" r="11" fill="#4d7c0f" />
+      <circle cx="116" cy="8" r="13" fill="#4d7c0f" /><circle cx="100" cy="4" r="11" fill="#4d7c0f" />
+      <rect x="58" y="0" width="44" height="16" fill="#4d7c0f" opacity="0.9" />
+      <Car x="70" y="86" color={C.good} />
+      <line x1="48" y1="18" x2="48" y2="78" stroke="#0369a1" strokeWidth="0.8" />
+      <line x1="45" y1="18" x2="51" y2="18" stroke="#0369a1" strokeWidth="0.8" />
+      <line x1="45" y1="78" x2="51" y2="78" stroke="#0369a1" strokeWidth="0.8" />
+      <line x1="112" y1="44" x2="112" y2="78" stroke="#047857" strokeWidth="1.4" />
+      <line x1="109" y1="44" x2="115" y2="44" stroke="#047857" strokeWidth="1.4" />
+      <line x1="109" y1="78" x2="115" y2="78" stroke="#047857" strokeWidth="1.4" />
+      <Tag x="24" y="44" size="3" weight={800} color="#0369a1">distance you</Tag>
+      <Tag x="24" y="49" size="3" weight={800} color="#0369a1">can see to</Tag>
+      <Tag x="24" y="54" size="3" weight={800} color="#0369a1">be clear</Tag>
+      <Tag x="136" y="56" size="3" weight={800} color="#047857">your stopping</Tag>
+      <Tag x="136" y="61" size="3" weight={800} color="#047857">distance —</Tag>
+      <Tag x="136" y="66" size="3" weight={800} color="#047857">well within it</Tag>
+      <Tag x="80" y="26" size="3.3" weight={800}>? hidden beyond the bend</Tag>
+    </Frame>
+  ),
+
+  "stopping-distance": () => (
+    <Frame title="Stopping distances on a dry road">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="8" size="3.6">DRY ROAD — thinking + braking = stopping</Tag>
+      {[[30, 5.5, 5.3, 10.8], [50, 9.2, 14.8, 24.0], [80, 14.7, 38.0, 52.7], [100, 18.3, 59.4, 77.7], [120, 22, 85.5, 107.5]].map(([v, t, b, s], i) => {
+        const y = 16 + i * 14, k = 1.05;
+        return (
+          <g key={v}>
+            <Tag x="15" y={y + 5} size="3.4" weight={800}>{v} km/h</Tag>
+            <rect x="28" y={y} width={t * k} height="7" fill={C.amber} />
+            <rect x={28 + t * k} y={y} width={b * k} height="7" fill={C.bad} />
+            <Tag x={30 + s * k} y={y + 5} size="3.2" weight={800} anchor="start">{s} m</Tag>
+          </g>
+        );
+      })}
+      <rect x="34" y="88" width="6" height="5" fill={C.amber} />
+      <Tag x="42" y="92" size="3.2" weight={700} anchor="start">thinking</Tag>
+      <rect x="78" y="88" width="6" height="5" fill={C.bad} />
+      <Tag x="86" y="92" size="3.2" weight={700} anchor="start">braking</Tag>
+    </Frame>
+  ),
+
+  "stopping-wet-dry": () => (
+    <Frame title="Stopping distances: dry and wet">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="8" size="3.6">THE SAME SPEED — DRY v WET</Tag>
+      {[["60 dry", 11.0, 21.4, 32.4, "#64748b"], ["60 wet", 11.0, 37.5, 48.5, "#3b82f6"], ["100 dry", 18.3, 59.4, 77.7, "#64748b"], ["100 wet", 18.3, 104.3, 122.6, "#3b82f6"]].map(([lbl, t, b, s, col], i) => {
+        const y = 16 + i * 16 + (i > 1 ? 6 : 0), k = 0.92;
+        return (
+          <g key={lbl}>
+            <Tag x="15" y={y + 5} size="3.3" weight={800} color={col}>{lbl}</Tag>
+            <rect x="28" y={y} width={t * k} height="8" fill={C.amber} />
+            <rect x={28 + t * k} y={y} width={b * k} height="8" fill={col} />
+            <Tag x={i === 3 ? 140 : 31 + s * k} y={y + (i === 3 ? 13 : 5.5)} size="3.2" weight={800} anchor={i === 3 ? "middle" : "start"}>{s} m</Tag>
+          </g>
+        );
+      })}
+      <Tag x="80" y="94" size="3.2" weight={700} color="#1d4ed8">same thinking distance — far longer braking distance in the wet</Tag>
+    </Frame>
+  ),
+
+  "weight-transfer": () => (
+    <Frame title="Braking throws weight onto the front wheels">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="72" width="160" height="28" fill={C.road} />
+      <g transform="translate(80 72) scale(3)"><SideCar x={0} y={0} rot={4} color={C.good} /></g>
+      <Arrow d="M101 30 L101 60" color={C.bad} w={3} />
+      <Arrow d="M60 54 L60 60" color={C.grey} w={1.4} />
+      <Arrow d="M118 40 L132 40" color="#0369a1" w={1.4} />
+      <Tag x="80" y="10" size="4">BRAKING: WEIGHT GOES FORWARD</Tag>
+      <Tag x="116" y="28" size="3.2" weight={800} color={C.bad}>more weight on the front</Tag>
+      <Tag x="36" y="36" size="3.2" weight={800} color="#475569">rear wheels lighter —</Tag>
+      <Tag x="36" y="41" size="3.2" weight={800} color="#475569">they lock more easily</Tag>
+      <Tag x="142" y="48" size="3" weight={700} color="#0369a1">direction</Tag>
+      <Tag x="80" y="92" size="3.2" weight={700}>the harder you brake, the more weight is thrown forward</Tag>
+    </Frame>
+  ),
+
+  "brake-bend": () => (
+    <Frame title="Braking on a bend">
+      <path d="M40 100 L40 60 Q40 20 80 20 L160 20" fill="none" stroke={C.road} strokeWidth="34" />
+      <path d="M40 100 L40 60 Q40 20 80 20 L160 20" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <Car x="32" y="84" color={C.good} />
+      <Arrow d="M32 76 L32 60" color="#047857" w={1.4} />
+      <Car x="38" y="40" rot={40} color={C.bad} ghost />
+      <Arrow d="M40 38 L22 18" color={C.bad} w={1.4} dash="2 1.5" />
+      <Tag x="100" y="56" size="3.4" weight={800} color="#047857">✓ brake on the straight,</Tag>
+      <Tag x="100" y="61" size="3.4" weight={800} color="#047857">before the bend</Tag>
+      <Tag x="100" y="74" size="3.4" weight={800} color={C.bad}>✗ braking while steering —</Tag>
+      <Tag x="100" y="79" size="3.4" weight={800} color={C.bad}>weight thrown outward: skid</Tag>
+      <Tag x="16" y="12" size="3" weight={800} color={C.bad}>skid</Tag>
+    </Frame>
+  ),
+
+  "normal-stop": () => (
+    <Frame title="Stopping normally">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="10" size="3.8">STOPPING NORMALLY</Tag>
+      <StepChips y={26} perRow={4} steps={["Mirrors", "Signal?", "Off the gas", "Light footbrake"]} />
+      <StepChips y={62} perRow={4} start={5} color="#0f766e" steps={["Clutch just before", "Ease the brake", "Handbrake", "Neutral"]} />
+      <Tag x="80" y="96" size="3" weight={700}>then cancel any signal and take your feet off the pedals</Tag>
+    </Frame>
+  ),
+
+  "emergency-stop": () => (
+    <Frame title="The emergency stop">
+      <VRoad />
+      <text x="70" y="22" fontSize="9" textAnchor="middle">🧒</text>
+      <circle cx="60" cy="26" r="2.4" fill="#f97316" />
+      <Car x="64" y="62" color={C.good} />
+      <path d="M62 70 L62 90 M66 70 L66 90" stroke="#111827" strokeWidth="0.9" opacity="0.5" />
+      <Tag x="80" y="8" size="3.8">AN EMERGENCY: IMMINENT DANGER TO PEOPLE</Tag>
+      <Tag x="138" y="30" size="3.1" weight={800} color="#047857">both hands on</Tag>
+      <Tag x="138" y="34.5" size="3.1" weight={800} color="#047857">the wheel</Tag>
+      <Tag x="138" y="46" size="3.1" weight={800} color="#047857">footbrake first —</Tag>
+      <Tag x="138" y="50.5" size="3.1" weight={800} color="#047857">progressive, firm</Tag>
+      <Tag x="138" y="62" size="3.1" weight={800} color="#047857">clutch just</Tag>
+      <Tag x="138" y="66.5" size="3.1" weight={800} color="#047857">before stopping</Tag>
+      <Tag x="22" y="46" size="3.1" weight={800} color={C.bad}>✗ no mirrors</Tag>
+      <Tag x="22" y="51" size="3.1" weight={800} color={C.bad}>✗ no signal</Tag>
+      <Tag x="22" y="56" size="3.1" weight={800} color={C.bad}>✗ handbrake</Tag>
+      <Tag x="22" y="61" size="3.1" weight={800} color={C.bad}>alone</Tag>
+      <Tag x="80" y="97" size="3.1" weight={700}>stopped: look all around — over both shoulders — before moving off</Tag>
+    </Frame>
+  ),
+
+  "cadence-braking": () => (
+    <Frame title="Cadence braking">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <line x1="20" y1="80" x2="148" y2="80" stroke="#334155" strokeWidth="0.8" />
+      <line x1="20" y1="80" x2="20" y2="14" stroke="#334155" strokeWidth="0.8" />
+      <line x1="20" y1="26" x2="148" y2="26" stroke={C.bad} strokeWidth="0.8" strokeDasharray="3 2" />
+      <path d="M20 80 L38 30 L46 72 L62 30 L70 72 L86 30 L94 72 L110 30 L118 72 L134 30 L142 80" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinejoin="round" />
+      <Tag x="84" y="22" size="3" weight={800} color={C.bad}>wheels lock</Tag>
+      <Tag x="40" y="42" size="2.8" weight={800} color="#7c3aed">press</Tag>
+      <Tag x="56" y="86" size="2.8" weight={800} color="#7c3aed">release just before lock</Tag>
+      <Tag x="120" y="86" size="2.8" weight={800} color="#7c3aed">reapply</Tag>
+      <Tag x="84" y="94" size="3" weight={700}>pumping — for older cars without ABS</Tag>
+      <Tag x="10" y="48" size="2.8" weight={700}>pressure</Tag>
+      <Tag x="80" y="9" size="3.6">CADENCE BRAKING</Tag>
+    </Frame>
+  ),
+
+  "abs-steer": () => (
+    <Frame title="ABS keeps steering control">
+      <VRoad />
+      <rect x="53" y="18" width="18" height="9" rx="1.5" fill={C.amber} stroke="#0f172a" strokeWidth="0.4" />
+      <Car x="62" y="86" color={C.good} />
+      <Arrow d="M62 78 Q62 52 84 40 L88 26" color="#047857" w={1.4} />
+      <Car x="62" y="42" color={C.bad} ghost />
+      <Arrow d="M62 50 L62 31" color={C.bad} w={1} dash="2 1.5" />
+      <Tag x="80" y="10" size="3.8">BRAKING HARD WITH ABS</Tag>
+      <Tag x="138" y="58" size="3.2" weight={800} color="#047857">✓ ABS: you can</Tag>
+      <Tag x="138" y="63" size="3.2" weight={800} color="#047857">steer while braking</Tag>
+      <Tag x="22" y="40" size="3.1" weight={800} color={C.bad}>locked wheels:</Tag>
+      <Tag x="22" y="45" size="3.1" weight={800} color={C.bad}>no steering</Tag>
+      <Tag x="80" y="98" size="3" weight={700}>limits: ice, snow, wet leaves, loose gravel</Tag>
+    </Frame>
+  ),
+
+  "pedestrian-speed": () => (
+    <Frame title="Speed and pedestrian survival">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.6">PEDESTRIANS HIT BY A CAR</Tag>
+      {[[30, 60, 9], [80, 50, 5], [130, 30, 1]].map(([cx, v, dead]) => (
+        <g key={v}>
+          <circle cx={cx} cy="26" r="9" fill="#ffffff" stroke="#dc2626" strokeWidth="2" />
+          <text x={cx} y="29.3" fontSize="8" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{v}</text>
+          {Array.from({ length: 10 }, (_, i) => {
+            const x = cx - 16 + (i % 5) * 8, y = 46 + Math.floor(i / 5) * 14;
+            const col = i < dead ? C.bad : C.good;
+            return (
+              <g key={i}>
+                <circle cx={x} cy={y - 3} r="1.8" fill={col} />
+                <rect x={x - 1.6} y={y - 0.8} width="3.2" height="6" rx="1.2" fill={col} />
+              </g>
+            );
+          })}
+          <Tag x={cx} y="82" size="3.4" weight={800} color={C.bad}>{dead} in 10 killed</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="95" size="3.1" weight={700}>that's why there are 30 km/h slow zones</Tag>
+    </Frame>
+  ),
+
+  "rural-speed-sign": () => (
+    <Frame title="Rural speed limit sign">
+      <rect x="30" y="6" width="60" height="94" rx="6" fill="#365314" />
+      <rect x="58" y="62" width="4" height="38" fill="#94a3b8" />
+      <circle cx="60" cy="34" r="20" fill="#ffffff" stroke="#0f172a" strokeWidth="1.2" />
+      <clipPath id="rss"><circle cx="60" cy="34" r="18" /></clipPath>
+      <g clipPath="url(#rss)">
+        {[-8, -3, 2, 7, 12].map(d => <line key={d} x1={60 - 24 + d} y1={34 + 24 + d} x2={60 + 24 + d} y2={34 - 24 + d} stroke="#0f172a" strokeWidth="1.6" />)}
+      </g>
+      <rect x="44" y="58" width="32" height="12" rx="1.5" fill="#ffffff" stroke="#0f172a" strokeWidth="0.6" />
+      <text x="60" y="63.5" fontSize="4" fontWeight="800" textAnchor="middle" fontFamily="system-ui" fontStyle="italic">Go Mall</text>
+      <text x="60" y="68.5" fontSize="4" fontWeight="900" textAnchor="middle" fontFamily="system-ui">SLOW</text>
+      <Tag x="122" y="30" size="3.2" weight={800}>white circle,</Tag>
+      <Tag x="122" y="35" size="3.2" weight={800}>black diagonal lines</Tag>
+      <Tag x="122" y="48" size="3" weight={700}>from 2015: use your</Tag>
+      <Tag x="122" y="52.5" size="3" weight={700}>judgement — never</Tag>
+      <Tag x="122" y="57" size="3" weight={700}>above 80 km/h</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

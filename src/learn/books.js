@@ -32,6 +32,7 @@ import UNIT_2_1 from "./book2/unit2_1";
 import UNIT_2_2 from "./book2/unit2_2";
 import UNIT_2_3 from "./book2/unit2_3";
 import UNIT_2_4 from "./book2/unit2_4";
+import UNIT_2_5 from "./book2/unit2_5";
 import GLOSSARY_2 from "./book2/glossary";
 
 export const BOOKS = [
@@ -72,7 +73,7 @@ export const BOOKS = [
       { id: "2.2",  title: "The Driving Mirrors",             pages: [14, 19], badge: "Mirror Master", content: UNIT_2_2 },
       { id: "2.3",  title: "Beginning to Drive",              pages: [20, 26], badge: "Moving-Off Specialist", content: UNIT_2_3 },
       { id: "2.4",  title: "Changing Gear",                   pages: [27, 31], badge: "Gear Specialist", content: UNIT_2_4 },
-      { id: "2.5",  title: "Braking",                         pages: [32, 39], badge: "Braking Specialist" },
+      { id: "2.5",  title: "Braking",                         pages: [32, 39], badge: "Braking Specialist", content: UNIT_2_5 },
       { id: "2.6",  title: "Road Holding",                    pages: [40, 47], badge: "Road Holding Specialist" },
       { id: "2.7",  title: "Manoeuvring",                     pages: [48, 55], badge: "Manoeuvring Specialist" },
       { id: "2.8",  title: "Automatic Transmission",          pages: [56, 59], badge: "Automatic Specialist" },

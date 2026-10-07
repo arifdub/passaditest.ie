@@ -221,4 +221,52 @@ export default [
     key: "Less control of steering and braking; never coast down a hill.",
     src: P("2.4", 29, "Good driving practices; p.92 answers 12, 13"),
   },
+  {
+    id: "stopping-distance", unit: "2.5", term: "Stopping distance", visual: "stopping-distance",
+    meaning: "Thinking distance plus braking distance.",
+    key: "Double your speed and the braking distance is about four times as long.",
+    src: P("2.5", 33, "Stopping distances; p.34; p.92 answer 7"),
+  },
+  {
+    id: "thinking-distance", unit: "2.5", term: "Thinking distance", visual: "stopping-distance",
+    meaning: "Distance travelled between seeing a hazard and pressing the brake.",
+    key: "Depends on how quickly you react.",
+    src: P("2.5", 33, "Stopping distances for cars; p.92 answer 8"),
+  },
+  {
+    id: "braking-distance", unit: "2.5", term: "Braking distance", visual: "stopping-wet-dry",
+    meaning: "Distance travelled from pressing the brake until the car stops.",
+    key: "Depends on the driver, speed, brakes and tyres, load, gradient, weather and road surface.",
+    src: P("2.5", 34, "Thinking and braking distances; p.92 answer 9"),
+  },
+  {
+    id: "emergency-stop", unit: "2.5", term: "Emergency stop", visual: "emergency-stop",
+    meaning: "Stopping as quickly as possible, under full control, for imminent danger of injury to people.",
+    key: "Not for animals. No mirrors or signal; both hands on the wheel.",
+    src: P("2.5", 35, "Most important aspect of the stop; p.92 answers 14, 23, 24"),
+  },
+  {
+    id: "cadence-braking", unit: "2.5", term: "Cadence braking", visual: "cadence-braking",
+    meaning: "Pumping the brake: full pressure, release just before the wheels lock, reapply.",
+    key: "For older cars without ABS — ABS makes it unnecessary.",
+    src: P("2.5", 35, "Cadence braking"),
+  },
+  {
+    id: "abs", unit: "2.5", term: "ABS (anti-lock brakes)", visual: "abs-steer",
+    meaning: "Stops the wheels locking under hard braking, so you can still steer.",
+    key: "Not a cure-all: ice, snow, wet leaves and loose gravel still lengthen stopping.",
+    src: P("2.5", 35, "ABS/ESP"),
+  },
+  {
+    id: "weight-transfer", unit: "2.5", term: "Weight transfer", visual: "weight-transfer",
+    meaning: "Braking throws weight onto the front wheels; braking on a bend throws it outward.",
+    key: "Avoid braking while steering.",
+    src: P("2.5", 32, "Braking and steering; p.35 How ABS works"),
+  },
+  {
+    id: "rural-speed-sign", unit: "2.5", term: "Rural speed limit sign", visual: "rural-speed-sign",
+    meaning: "White circle with black diagonal stripes, used on narrow country roads instead of a number.",
+    key: "Use sensible judgement — but never exceed 80 km/h.",
+    src: P("2.5", 34, "Rural speed limit sign; p.36"),
+  },
 ];

@@ -3526,6 +3526,154 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- manoeuvring (Book 2, Unit 2.7) ---------------- */
+  "four-questions": () => (
+    <Frame title="Before manoeuvring: four questions">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} cells={[["🛡️", "Is it safe?"], ["👍", "Is it convenient?"], ["⚖️", "Is it legal?"], ["🚐", "Practical for this vehicle?"]]} />
+      <Tag x="106" y="74" size="3.4" weight={800} color="#047857">Never start until</Tag>
+      <Tag x="106" y="79.5" size="3.4" weight={800} color="#047857">all four are YES</Tag>
+    </Frame>
+  ),
+
+  "reverse-never": () => (
+    <Frame title="Never reverse">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid rows={2} cells={[["↩️", "minor road onto a major road"], ["✚", "at a crossroads"], ["⛔", "against a one-way flow"], ["📏", "further than necessary"], ["🛣️", "on a motorway"]]} />
+    </Frame>
+  ),
+
+  "reverse-observe": () => (
+    <Frame title="Observation when reversing">
+      <rect x="0" y="0" width="160" height="100" fill={C.road} />
+      <rect x="0" y="0" width="160" height="12" fill={C.kerb} />
+      <Car x="80" y="40" color={C.good} />
+      <text x="88" y="88" fontSize="9" textAnchor="middle">🧒</text>
+      <Arrow d="M80 50 L80 76" color="#fde047" w={1.2} dash="2 1.5" />
+      <Arrow d="M76 46 L48 76" color="#fde047" w={1.2} dash="2 1.5" />
+      <Arrow d="M84 46 L112 76" color="#fde047" w={1.2} dash="2 1.5" />
+      <Arrow d="M80 32 L80 18" color="#fde047" w={1} dash="2 1.5" />
+      <Tag x="80" y="8" size="3.4">LOOK ALL AROUND — AND KEEP LOOKING</Tag>
+      <Tag x="30" y="38" size="3.1" weight={800}>over the left</Tag>
+      <Tag x="30" y="43" size="3.1" weight={800}>shoulder</Tag>
+      <Tag x="130" y="38" size="3.1" weight={800}>over the right</Tag>
+      <Tag x="130" y="43" size="3.1" weight={800}>shoulder</Tag>
+      <Tag x="44" y="92" size="3" weight={800} color="#b45309">mostly through the rear window</Tag>
+      <Tag x="128" y="92" size="3" weight={800} color={C.bad}>in doubt? get out and look</Tag>
+    </Frame>
+  ),
+
+  "reverse-steer": () => (
+    <Frame title="Steering in reverse">
+      <rect x="0" y="0" width="160" height="100" fill={C.road} />
+      <WheelCar x={80} y={44} steer={-25} />
+      <Arrow d="M80 56 Q78 76 60 88" color={C.good} w={1.6} />
+      <Arrow d="M86 30 L100 22" color={C.amber} w={1.4} dash="2 1.5" />
+      <Tag x="80" y="8" size="3.6">REVERSING: STEER THE WAY YOU WANT THE BACK TO GO</Tag>
+      <Tag x="34" y="76" size="3.2" weight={800} color="#047857">wheel left →</Tag>
+      <Tag x="34" y="81" size="3.2" weight={800} color="#047857">rear goes left</Tag>
+      <Tag x="128" y="26" size="3.1" weight={800} color="#b45309">the front swings</Tag>
+      <Tag x="128" y="31" size="3.1" weight={800} color="#b45309">out the other way</Tag>
+      <Tag x="128" y="64" size="3" weight={700}>move slowly — remember</Tag>
+      <Tag x="128" y="69" size="3" weight={700}>which way the wheels point</Tag>
+    </Frame>
+  ),
+
+  "reverse-left": () => (
+    <Frame title="Reversing into a side road on the left">
+      <rect x="62" y="0" width="70" height="100" fill={C.road} />
+      <rect x="0" y="52" width="62" height="36" fill={C.road} />
+      <line x1="97" y1="0" x2="97" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <line x1="0" y1="70" x2="56" y2="70" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <path d="M52 52 Q62 52 62 42 L62 52 Z" fill={C.road} />
+      <path d="M52 88 Q62 88 62 98 L62 88 Z" fill={C.road} />
+      <Car x="72" y="96" color={C.good} ghost />
+      <Car x="72" y="22" color={C.good} />
+      <Arrow d="M72 32 L72 42 Q72 61 54 61 L38 61" color={C.amber} w={1.4} dash="2.5 1.8" />
+      <Car x="28" y="61" rot={90} color={C.good} />
+      <Tag x="110" y="20" size="3.1" weight={800}>① stop past the</Tag>
+      <Tag x="110" y="25" size="3.1" weight={800}>junction, close</Tag>
+      <Tag x="110" y="30" size="3.1" weight={800}>and parallel</Tag>
+      <Tag x="112" y="50" size="3.1" weight={800} color="#b45309">② look all round;</Tag>
+      <Tag x="112" y="55" size="3.1" weight={800} color="#b45309">turn as the rear</Tag>
+      <Tag x="112" y="60" size="3.1" weight={800} color="#b45309">wheel reaches the corner</Tag>
+      <Tag x="28" y="44" size="3.1" weight={800} color="#047857">③ straighten, go</Tag>
+      <Tag x="28" y="49" size="3.1" weight={800} color="#047857">back far enough</Tag>
+      <Tag x="30" y="96" size="3" weight={700}>then emerge to turn right</Tag>
+    </Frame>
+  ),
+
+  "turnabout": () => (
+    <Frame title="Turning in the road">
+      <rect x="0" y="20" width="160" height="64" fill={C.road} />
+      <rect x="0" y="14" width="160" height="6" fill={C.kerb} />
+      <rect x="0" y="84" width="160" height="6" fill={C.kerb} />
+      <line x1="0" y1="52" x2="160" y2="52" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <Car x="34" y="34" rot={90} color={C.good} ghost />
+      <Arrow d="M44 34 Q70 34 78 64" color={C.good} w={1.3} />
+      <Car x="82" y="72" rot={160} color={C.good} ghost />
+      <Arrow d="M86 64 Q92 44 100 36" color={C.amber} w={1.3} dash="2.5 1.8" />
+      <Car x="104" y="32" rot={225} color={C.good} ghost />
+      <Arrow d="M98 38 Q80 66 62 70" color={C.good} w={1.3} />
+      <Car x="50" y="70" rot={270} color={C.good} />
+      <Tag x="64" y="28" size="3.4" weight={900} color="#047857">1</Tag>
+      <Tag x="98" y="52" size="3.4" weight={900} color="#b45309">2</Tag>
+      <Tag x="80" y="62" size="3.4" weight={900} color="#047857">3</Tag>
+      <Tag x="80" y="8" size="3.4">1 forward, full right lock · 2 reverse, full left lock · 3 forward</Tag>
+      <Tag x="80" y="96" size="3" weight={700}>slowly, steering briskly — stop before the kerb each time</Tag>
+    </Frame>
+  ),
+
+  "u-turn": () => (
+    <Frame title="Making a U-turn">
+      <rect x="0" y="18" width="160" height="58" fill={C.road} />
+      <rect x="0" y="12" width="160" height="6" fill={C.kerb} />
+      <rect x="0" y="76" width="160" height="6" fill={C.kerb} />
+      <line x1="0" y1="47" x2="160" y2="47" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <Car x="30" y="32" rot={90} color={C.good} />
+      <Arrow d="M40 32 L84 32 Q110 32 110 47 Q110 62 84 62 L50 62" color={C.good} w={1.4} />
+      <Tag x="80" y="7" size="3.4">MSM · wide and quiet enough · no kerb</Tag>
+      <Tag x="80" y="89" size="3" weight={800} color={C.bad}>not on a motorway, in a one-way street,</Tag>
+      <Tag x="80" y="94" size="3" weight={800} color={C.bad}>where signs forbid it, or where it causes danger or delay</Tag>
+    </Frame>
+  ),
+
+  "parallel-park": () => (
+    <Frame title="Reverse parallel parking">
+      <rect x="0" y="16" width="160" height="70" fill={C.road} />
+      <rect x="0" y="10" width="160" height="6" fill={C.kerb} />
+      <Car x="77" y="25" rot={90} color={C.grey} />
+      <Car x="114" y="25" rot={90} color={C.grey} />
+      <Car x="116" y="40" rot={90} color={C.good} />
+      <Arrow d="M108 40 Q104 38 102 32 Q100 26 93 25" color={C.amber} w={1.3} dash="2.5 1.8" />
+      <Car x="96" y="25" rot={90} color={C.good} ghost />
+      <line x1="84.5" y1="54" x2="106.5" y2="54" stroke="#0369a1" strokeWidth="0.7" />
+      <line x1="84.5" y1="51" x2="84.5" y2="57" stroke="#0369a1" strokeWidth="0.7" />
+      <line x1="106.5" y1="51" x2="106.5" y2="57" stroke="#0369a1" strokeWidth="0.7" />
+      <Tag x="80" y="62" size="3.2" weight={800} color="#0369a1">a gap of at least 1½ car lengths</Tag>
+      <Tag x="138" y="52" size="3" weight={800}>alongside, level,</Tag>
+      <Tag x="138" y="56.5" size="3" weight={800}>within 1 m</Tag>
+      <Tag x="80" y="76" size="3" weight={700}>left to bring the rear in · right to bring the front in · left to straighten</Tag>
+      <Tag x="80" y="95" size="3" weight={700}>always give way to approaching traffic and pedestrians</Tag>
+    </Frame>
+  ),
+
+  "bay-park": () => (
+    <Frame title="Reversing into a parking bay">
+      <rect x="0" y="0" width="160" height="100" fill={C.road} />
+      {[20, 44, 68, 92, 116, 140].map(x => <line key={x} x1={x} y1="8" x2={x} y2="46" stroke={C.line} strokeWidth="0.9" />)}
+      <Car x="32" y="27" color={C.grey} />
+      <Car x="104" y="27" color={C.grey} />
+      <Car x="80" y="27" rot={180} color={C.good} ghost />
+      <Car x="110" y="66" rot={90} color={C.good} />
+      <Arrow d="M102 66 Q80 66 80 40" color={C.amber} w={1.3} dash="2.5 1.8" />
+      <Tag x="56" y="62" size="3.1" weight={800}>reverse in like a</Tag>
+      <Tag x="56" y="67" size="3.1" weight={800}>left or right reverse</Tag>
+      <Tag x="80" y="86" size="3.1" weight={800}>park parallel to the lines, centrally</Tag>
+      <Tag x="80" y="92" size="2.9" weight={700}>driving in forwards and backing out restricts your view of traffic</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

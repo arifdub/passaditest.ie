@@ -31,7 +31,7 @@ import HazardHunt from "./HazardHunt";
 import { Visual, Visuals } from "./visuals";
 
 const ACTIVITY_ICON = {
-  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", crossings: "🚂", motorway: "🛣️", lights: "🔦", weather: "🌦️", tunnels: "🚇", controls: "🎛️", mirrors: "🪞", ready: "✅", gears: "⚙️", brakes: "🛑", grip: "🛞", matching: "🧩", procedure: "🔁",
+  learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", crossings: "🚂", motorway: "🛣️", lights: "🔦", weather: "🌦️", tunnels: "🚇", controls: "🎛️", mirrors: "🪞", ready: "✅", gears: "⚙️", brakes: "🛑", grip: "🛞", manoeuvres: "🔄", matching: "🧩", procedure: "🔁",
   scenarios: "🚗", walkthrough: "🧭", retention: "🧠", challenge: "🏁",
 };
 

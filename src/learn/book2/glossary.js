@@ -335,4 +335,52 @@ export default [
     key: "Not a substitute for safe driving.",
     src: P("2.6", 43, "Electronic Stability Control"),
   },
+  {
+    id: "four-questions", unit: "2.7", term: "Four questions before manoeuvring", visual: "four-questions",
+    meaning: "Is it safe? Convenient? Legal? Practical for the vehicle I'm driving?",
+    key: "Never start until all four are YES.",
+    src: P("2.7", 48, "Before manoeuvring"),
+  },
+  {
+    id: "dry-steering", unit: "2.7", term: "Dry steering", visual: "reverse-steer",
+    meaning: "Turning the steering wheel while the car is stationary.",
+    key: "Avoid it — steer once the car begins to move.",
+    src: P("2.7", 55, "Retention Q20; p.93 answer 8"),
+  },
+  {
+    id: "reverse-left-road", unit: "2.7", term: "Reversing into a side road on the left", visual: "reverse-left",
+    meaning: "Stopping beyond a side road, then reversing round the corner close to the kerb.",
+    key: "Turn as the rear wheel reaches the corner — the front swings out.",
+    src: P("2.7", 49, "Reversing into a side road on the left"),
+  },
+  {
+    id: "reverse-right-road", unit: "2.7", term: "Reversing into a side road on the right", visual: "reverse-observe",
+    meaning: "Crossing to the right-hand side and reversing into a side road there.",
+    key: "For vans or no rear view; all-round checks matter even more.",
+    src: P("2.7", 50, "Reversing into a side road on the right"),
+  },
+  {
+    id: "turnabout", unit: "2.7", term: "Turning in the road", visual: "turnabout",
+    meaning: "Turning round using forward and reverse gears — not necessarily three points.",
+    key: "Move slowly, steer briskly, look all around each stage.",
+    src: P("2.7", 50, "Turnabout"),
+  },
+  {
+    id: "u-turn", unit: "2.7", term: "U-turn", visual: "u-turn",
+    meaning: "Turning round in one sweep without reverse gear.",
+    key: "Wide, quiet, legal; MSM. Never on a motorway or one-way street.",
+    src: P("2.7", 51, "Making a U-turn"),
+  },
+  {
+    id: "parallel-parking", unit: "2.7", term: "Reverse parallel parking", visual: "parallel-park",
+    meaning: "Reversing into a gap between two parked cars, parallel to the kerb.",
+    key: "Needs a gap of at least one and a half car lengths.",
+    src: P("2.7", 51, "Reverse (parallel) parking"),
+  },
+  {
+    id: "bay-parking", unit: "2.7", term: "Reversing into a parking bay", visual: "bay-park",
+    meaning: "Reversing into a marked bay at 90° (or less) to the traffic flow.",
+    key: "Park parallel to the lines and centrally between them.",
+    src: P("2.7", 52, "Reversing into a parking bay"),
+  },
 ];

@@ -34,6 +34,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_4.js` | Unit 2.4 Changing Gear (pp.27–31). |
 | `book2/unit2_5.js` | Unit 2.5 Braking (pp.32–39). |
 | `book2/unit2_6.js` | Unit 2.6 Road Holding (pp.40–47). |
+| `book2/unit2_7.js` | Unit 2.7 Manoeuvring (pp.48–55). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -213,3 +214,10 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   brake pressure) and Q16 (radials grip better) aren't stated word for
   word but are the only defensible options, and are kept. Its recognition
   game is "Grip Check".
+- **Retention test 2.7, Q8, Q11 and Q18** — omitted: their keyed answers
+  (judging the kerb as it "reappears in the side window"; "turn off the
+  main road and find a suitable place"; "switch on your hazard lights")
+  aren't in the text, and another option is just as defensible each time.
+  Q13 (clutch down, then brake) is kept: the turnabout stages say
+  "declutch and brake to stop". Its recognition game is "Name That
+  Manoeuvre".

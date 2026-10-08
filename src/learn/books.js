@@ -35,6 +35,7 @@ import UNIT_2_4 from "./book2/unit2_4";
 import UNIT_2_5 from "./book2/unit2_5";
 import UNIT_2_6 from "./book2/unit2_6";
 import UNIT_2_7 from "./book2/unit2_7";
+import UNIT_2_8 from "./book2/unit2_8";
 import GLOSSARY_2 from "./book2/glossary";
 
 export const BOOKS = [
@@ -78,7 +79,7 @@ export const BOOKS = [
       { id: "2.5",  title: "Braking",                         pages: [32, 39], badge: "Braking Specialist", content: UNIT_2_5 },
       { id: "2.6",  title: "Road Holding",                    pages: [40, 47], badge: "Road Holding Specialist", content: UNIT_2_6 },
       { id: "2.7",  title: "Manoeuvring",                     pages: [48, 55], badge: "Manoeuvring Specialist", content: UNIT_2_7 },
-      { id: "2.8",  title: "Automatic Transmission",          pages: [56, 59], badge: "Automatic Specialist" },
+      { id: "2.8",  title: "Automatic Transmission",          pages: [56, 59], badge: "Automatic Specialist", content: UNIT_2_8 },
       { id: "2.9",  title: "Mechanical Principles",           pages: [60, 71], badge: "Mechanics Specialist" },
       { id: "2.10", title: "Pedestrians & Cyclists",          pages: [72, 80], badge: "Vulnerable Road Users Specialist" },
       { id: "2.11", title: "Traffic Signs & Signals",         pages: [81, 89], badge: "Signs Specialist" },

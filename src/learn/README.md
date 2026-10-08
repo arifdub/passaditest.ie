@@ -35,6 +35,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_5.js` | Unit 2.5 Braking (pp.32–39). |
 | `book2/unit2_6.js` | Unit 2.6 Road Holding (pp.40–47). |
 | `book2/unit2_7.js` | Unit 2.7 Manoeuvring (pp.48–55). |
+| `book2/unit2_8.js` | Unit 2.8 Automatic Transmission (pp.56–59). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -221,3 +222,7 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   Q13 (clutch down, then brake) is kept: the turnabout stages say
   "declutch and brake to stop". Its recognition game is "Name That
   Manoeuvre".
+- **Retention test 2.8** — the answer key (p.97) agrees with the unit
+  text for all ten questions; all are used. Page 57's note that some CVTs
+  "must be started in D or R" is shown only as "check the handbook". Its
+  recognition game is "Select It".

@@ -3674,6 +3674,125 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- automatic transmission (Book 2, Unit 2.8) ---------------- */
+  "auto-selector": () => (
+    <Frame title="Automatic gear selector">
+      <rect x="0" y="0" width="160" height="100" fill="#1f2937" />
+      <rect x="22" y="8" width="26" height="86" rx="6" fill="#111827" stroke="#4b5563" strokeWidth="1" />
+      <rect x="33" y="14" width="4" height="74" rx="2" fill="#374151" />
+      {[["P", "Park — locks it; only when stopped", "#ef4444"], ["R", "Reverse", "#f8fafc"], ["N", "Neutral", "#f8fafc"], ["D", "Drive — forward gears", "#22c55e"], ["2", "2nd gear lock", "#f59e0b"], ["1", "1st gear lock", "#f59e0b"], ["L", "Lock — stops it changing up", "#f59e0b"]].map(([l, t, col], i) => (
+        <g key={l}>
+          <text x="28" y={20 + i * 11.4} fontSize="7" fontWeight="900" textAnchor="middle" fill={col} fontFamily="system-ui">{l}</text>
+          <text x="56" y={19 + i * 11.4} fontSize="4" fontWeight="700" fill="#e2e8f0" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <rect x="40" y="48" width="8" height="6" rx="2" fill="#22c55e" />
+      <text x="56" y="96" fontSize="3.4" fontWeight="700" fill="#94a3b8" fontFamily="system-ui">L, 2, 1: heavy traffic, slow manoeuvres, steep hills</text>
+    </Frame>
+  ),
+
+  "auto-pedals": () => (
+    <Frame title="Pedals in an automatic">
+      <rect x="0" y="0" width="160" height="100" fill="#1f2937" />
+      {[[66, 40, 22, "BRAKE", "#ef4444"], [112, 14, 30, "GAS", "#22c55e"]].map(([x, w, h, name, col]) => (
+        <g key={name}>
+          <line x1={x} y1="6" x2={x} y2="36" stroke="#6b7280" strokeWidth="2" />
+          <rect x={x - w / 2} y="36" width={w} height={h} rx="3" fill="#374151" stroke={col} strokeWidth="1.4" />
+          {[0, 1, 2, 3].map(i => <line key={i} x1={x - w / 2 + 3} y1={40 + i * (h - 6) / 3} x2={x + w / 2 - 3} y2={40 + i * (h - 6) / 3} stroke="#4b5563" strokeWidth="1" />)}
+          <Tag x={x} y="76" size="3.6" weight={900} color={col}>{name}</Tag>
+        </g>
+      ))}
+      <rect x="14" y="38" width="22" height="20" rx="3" fill="none" stroke="#6b7280" strokeWidth="1" strokeDasharray="2 1.5" />
+      <Tag x="25" y="50" size="3" weight={800} color="#94a3b8">no clutch</Tag>
+      <Tag x="80" y="88" size="3.4" weight={800} color="#047857">normally: RIGHT foot for both pedals</Tag>
+      <Tag x="80" y="95" size="3" weight={700}>manoeuvring: very light gas, speed held with left-foot braking</Tag>
+    </Frame>
+  ),
+
+  "kick-down": () => (
+    <Frame title="Kick-down">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="60" width="160" height="40" fill={C.road} />
+      <line x1="0" y1="80" x2="160" y2="80" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <g transform="translate(30 76) rotate(90)"><Car x={0} y={0} color={C.good} /></g>
+      <g transform="translate(64 70) rotate(90)"><Lorry x={-6} y={-6} len={26} /></g>
+      <Arrow d="M40 76 Q60 90 104 90" color={C.good} w={1.4} />
+      <rect x="114" y="14" width="16" height="28" rx="3" fill="#374151" stroke="#22c55e" strokeWidth="1.2" />
+      <Arrow d="M122 4 L122 36" color={C.bad} w={1.8} />
+      <Tag x="80" y="10" size="3.6">A SHORT, SHARP PRESS RIGHT DOWN</Tag>
+      <Tag x="70" y="22" size="3.2" weight={800} color="#047857">→ the next lowest gear</Tag>
+      <Tag x="70" y="28" size="3.2" weight={800} color="#047857">→ a power reserve to overtake</Tag>
+      <Tag x="122" y="50" size="3" weight={800}>gas pedal</Tag>
+    </Frame>
+  ),
+
+  "creep": () => (
+    <Frame title="Creep">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <path d="M0 52 L80 52 L160 22 L160 100 L0 100 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.8" />
+      <g transform="translate(36 52) scale(1.4)"><SideCar x={0} y={0} color={C.good} /></g>
+      <Arrow d="M56 44 L70 44" color={C.amber} w={1.4} />
+      <g transform="translate(120 37) rotate(-20) scale(1.4)"><SideCar x={0} y={0} color={C.grey} /></g>
+      <Arrow d="M104 44 L94 50" color={C.bad} w={1.4} dash="2 1.5" />
+      <Tag x="80" y="10" size="3.6">CREEP: TICK-OVER MOVES THE CAR IN GEAR</Tag>
+      <Tag x="40" y="64" size="3.1" weight={800} color="#b45309">level: hold it with the brakes</Tag>
+      <Tag x="40" y="69" size="3.1" weight={800} color="#b45309">check creep here</Tag>
+      <Tag x="120" y="64" size="3.1" weight={800} color={C.bad}>uphill: never rely on creep</Tag>
+      <Tag x="120" y="69" size="3.1" weight={800} color={C.bad}>engine cuts out = rolls back</Tag>
+      <Tag x="80" y="88" size="3.2" weight={800} color="#047857">stationary? HANDBRAKE ON — unless in P or N it can move off</Tag>
+      <Tag x="80" y="95" size="3" weight={700}>too much creep: have the tick-over adjusted</Tag>
+    </Frame>
+  ),
+
+  "auto-bend": () => (
+    <Frame title="Bends in an automatic">
+      <path d="M50 100 L50 64 Q50 30 90 30 L160 30" fill="none" stroke={C.road} strokeWidth="40" />
+      <path d="M50 100 L50 64 Q50 30 90 30 L160 30" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <Car x="40" y="86" color={C.good} />
+      <rect x="32" y="66" width="16" height="3" fill={C.bad} opacity="0.8" />
+      <Arrow d="M40 62 Q40 40 64 26 L80 22" color="#047857" w={1.3} />
+      <Tag x="112" y="56" size="3.2" weight={800} color={C.bad}>slow down in good time —</Tag>
+      <Tag x="112" y="61" size="3.2" weight={800} color={C.bad}>before the bend</Tag>
+      <Tag x="112" y="74" size="3.2" weight={800} color="#047857">then gentle gas through it:</Tag>
+      <Tag x="112" y="79" size="3.2" weight={800} color="#047857">"under acceleration"</Tag>
+      <Tag x="112" y="92" size="2.9" weight={700}>slowing late, the box may change UP</Tag>
+    </Frame>
+  ),
+
+  "auto-types": () => (
+    <Frame title="Types of automatic">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[4, 4, "AUTOMATIC", "no clutch; changes gear itself", "#1d4ed8"], [82, 4, "SEMI-AUTOMATIC", "no clutch; the DRIVER picks the gear", "#7c3aed"], [4, 52, "PRE-SELECTOR", "choose the gear, then press the change pedal (coaches)", "#b45309"], [82, 52, "CVT (belt drive)", "no gears as such; usually D, N, R (P)", "#047857"]].map(([x, y, t, d, col]) => (
+        <g key={t}>
+          <rect x={x} y={y} width="74" height="44" rx="5" fill="#ffffff" stroke={col} strokeWidth="1.2" />
+          <Tag x={x + 37} y={y + 17} size="4" color={col}>{t}</Tag>
+          <Tag x={x + 37} y={y + 28} size="2.9" weight={700}>{d.length > 34 ? d.slice(0, d.lastIndexOf(" ", 34)) : d}</Tag>
+          {d.length > 34 && <Tag x={x + 37} y={y + 33} size="2.9" weight={700}>{d.slice(d.lastIndexOf(" ", 34) + 1)}</Tag>}
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "hybrid": () => (
+    <Frame title="Hybrid and electric">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="12" y="20" width="36" height="24" rx="4" fill="#94a3b8" />
+      <Tag x="30" y="34" size="3.4" weight={900}>⛽ engine</Tag>
+      <rect x="112" y="20" width="36" height="24" rx="4" fill="#22c55e" />
+      <Tag x="130" y="34" size="3.4" weight={900}>⚡ motor</Tag>
+      <rect x="62" y="56" width="36" height="18" rx="3" fill="#0ea5e9" />
+      <Tag x="80" y="67" size="3.2" weight={900}>🔋 battery</Tag>
+      <Arrow d="M48 32 L70 32" color="#475569" w={1.2} />
+      <Arrow d="M112 32 L90 32" color="#047857" w={1.2} />
+      <circle cx="80" cy="32" r="7" fill="#ffffff" stroke="#0f172a" strokeWidth="0.8" />
+      <Tag x="80" y="34" size="3" weight={900}>🚗</Tag>
+      <Arrow d="M118 44 L96 58" color="#0369a1" w={1} dash="2 1.5" />
+      <Tag x="80" y="10" size="3.6">HYBRIDS AND EVs ARE AUTOMATICS</Tag>
+      <Tag x="80" y="84" size="3" weight={800}>HEV: engine, motor or both — charged by the engine and braking</Tag>
+      <Tag x="80" y="91" size="3" weight={800}>PHEV: also drives on electric only — and plugs in to charge</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

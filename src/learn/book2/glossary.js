@@ -383,4 +383,52 @@ export default [
     key: "Park parallel to the lines and centrally between them.",
     src: P("2.7", 52, "Reversing into a parking bay"),
   },
+  {
+    id: "auto-transmission", unit: "2.8", term: "Automatic transmission", visual: "auto-pedals",
+    meaning: "No clutch pedal — the transmission changes gear itself with speed and load.",
+    key: "Reduced engine braking; it won't always pick the right gear.",
+    src: P("2.8", 56, "Automatic transmission; p.94 answer 1"),
+  },
+  {
+    id: "auto-selector", unit: "2.8", term: "Gear selector (P R N D 2 1 L)", visual: "auto-selector",
+    meaning: "Replaces the gear lever: Park, Reverse, Neutral, Drive and low-gear locks.",
+    key: "P only when stationary; L, 2, 1 stop unwanted upward changes.",
+    src: P("2.8", 56, "Gear selector"),
+  },
+  {
+    id: "kick-down", unit: "2.8", term: "Kick-down", visual: "kick-down",
+    meaning: "A short, sharp press right down on the gas for the next lowest gear.",
+    key: "A power reserve for quick acceleration, e.g. overtaking.",
+    src: P("2.8", 56, "Kick-down; p.94 answer 6"),
+  },
+  {
+    id: "creep", unit: "2.8", term: "Creep", visual: "creep",
+    meaning: "The engine's tick-over moving the car when a gear is selected.",
+    key: "Never rely on it uphill — use the handbrake.",
+    src: P("2.8", 57, "Creep; p.94 answers 12–15"),
+  },
+  {
+    id: "cvt", unit: "2.8", term: "CVT (belt drive)", visual: "auto-types",
+    meaning: "A belt-and-pulley automatic that varies the ratio with no gears as such.",
+    key: "Usually D, N, R and sometimes P; handbrake essential.",
+    src: P("2.8", 57, "Belt drive automatics; p.94 answer 10"),
+  },
+  {
+    id: "semi-automatic", unit: "2.8", term: "Semi-automatic", visual: "auto-types",
+    meaning: "No clutch pedal, but the driver decides and selects the gear.",
+    key: "It de-clutches automatically.",
+    src: P("2.8", 57, "Other types; p.94 answers 18, 19"),
+  },
+  {
+    id: "pre-selector", unit: "2.8", term: "Pre-selector", visual: "auto-types",
+    meaning: "Choose the gear with a lever; it changes when a gear-change pedal is pressed.",
+    key: "Not a clutch pedal; common on coaches.",
+    src: P("2.8", 57, "Other types; p.94 answer 20"),
+  },
+  {
+    id: "hybrid", unit: "2.8", term: "Hybrid (HEV / PHEV)", visual: "hybrid",
+    meaning: "Petrol engine plus electric motor; a plug-in hybrid can also run on electric only and charges from the mains.",
+    key: "Charged by the engine and regenerative braking.",
+    src: P("2.8", 57, "Hybrid or electric vehicles"),
+  },
 ];

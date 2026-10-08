@@ -5,7 +5,7 @@
   Source: "Theory Resource Workbook 2 of 4" (Driver Education Supplies),
   book pages 32–39, with the post-test model answers on page 92 and the
   retention-test answers on page 96 (1c 2b 3b 4d 5b 6b 7d 8d 9b 10d 11b
-  12b 13c 14c 15a 16a 17b 18c 19b 20b 21c).
+  12b 13c 14c 15a 16a 17b 18c 19d 20b 21c).
 
   Omitted retention questions (answer key unsafe):
   - Q17 ("thinking distance depends above all on…", keyed "the driver's
@@ -16,10 +16,9 @@
     vehicle"): the unit's own list (p.34; p.92 answer 9) puts the road
     surface, weather, brakes and tyres alongside speed, and "the condition
     of the road surface" is also an option — two defensible answers.
-  - Q19 (30 v 60 km/h, keyed "four times the distance"): the book's own
-    table gives 10.8 m at 30 km/h and 32.4 m at 60 km/h — about a third,
-    which is option d, not b. The "four times" rule applies to braking
-    distance alone, not the overall stop the question asks about.
+
+  Q19 (30 v 60 km/h, keyed d "a third of the distance") agrees with the
+  table: 10.8 m v 32.4 m.
 
   Kept with a note: Q20 keys "about 12 m" for the reaction distance at
   60 km/h; the table on p.33 gives 11.0 m — 12 m is the nearest option.
@@ -569,8 +568,8 @@ const walkthrough = {
 };
 
 /* ---------------------------------------------------------------------------
-   8. RETENTION CHECK — answers from page 96. Q17, Q18 and Q19 are omitted
-   (see header).
+   8. RETENTION CHECK — answers from page 96. Q17 and Q18 are omitted (see
+   header).
    --------------------------------------------------------------------------- */
 const R = (n, prompt, options, answer, concept, visual) => ({
   id: `ret${n}`, type: "choice", label: "Retention check", concept, visual,
@@ -601,6 +600,7 @@ const retention = {
     R(14, "Whilst driving, you notice a vehicle behind is following too closely. From a safety point of view you should", ["dab the footbrake to warn the driver to keep back", "brake firmly to teach the other driver a lesson", "increase your distance from the vehicle ahead", "increase the distance between you"], 2, "separation"),
     R(15, "Safe and controlled braking depends above all on", ["the driver", "the vehicle", "the road", "the weather conditions"], 0, "golden-rule"),
     R(16, "The thinking distance, as part of the overall stopping distance, is the distance travelled between", ["seeing the hazard, reacting and pressing the brake", "applying the footbrake and stopping", "seeing the hazard and beginning to react", "seeing the hazard and stopping the car"], 0, "stopping-distance"),
+    R(19, "Compared with a road speed of 60 km/h, when travelling at 30 km/h a driver could expect to stop the car safely", ["in half the distance", "in four times the distance", "in twice the distance", "in a third of the distance"], 3, "tables", "stopping-distance"),
     R(20, "The reaction distance at 60 km/h for an alert driver is approximately", ["9 metres", "12 metres", "20 metres", "24 metres"], 1, "tables", "stopping-distance"),
     R(21, "The braking distance at 100 km/h for an alert driver on a wet road is approximately", ["150 m", "166 m", "104.3 m", "121 m"], 2, "tables", "stopping-wet-dry"),
   ],

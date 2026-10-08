@@ -3307,6 +3307,225 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- road holding (Book 2, Unit 2.6) ---------------- */
+  "car-forces": () => (
+    <Frame title="Forces acting on a moving car">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="70" width="160" height="30" fill={C.road} />
+      <g transform="translate(80 70) scale(2.6)"><SideCar x={0} y={0} color={C.good} /></g>
+      <Arrow d="M82 38 L82 58" color="#7c3aed" w={1.6} />
+      <Arrow d="M138 44 L116 44" color="#0ea5e9" w={1.6} />
+      <Arrow d="M80 76 L58 76" color={C.amber} w={1.6} />
+      <Arrow d="M30 60 L50 60" color="#047857" w={1.6} />
+      <Tag x="82" y="34" size="3.3" weight={800} color="#7c3aed">GRAVITY — down onto the road</Tag>
+      <Tag x="140" y="38" size="3.3" weight={800} color="#0369a1">DRAG</Tag>
+      <Tag x="140" y="52" size="2.8" weight={700} color="#0369a1">air resistance</Tag>
+      <Tag x="60" y="84" size="3.2" weight={800} color="#b45309">FRICTION — road v tyres</Tag>
+      <Tag x="24" y="50" size="3.1" weight={800} color="#047857">ACCELERATION:</Tag>
+      <Tag x="24" y="54.5" size="2.8" weight={700} color="#047857">weight to the rear</Tag>
+      <Tag x="80" y="12" size="3.8">MOST STABLE: STRAIGHT, LEVEL, STEADY SPEED</Tag>
+      <Tag x="80" y="95" size="3" weight={700}>braking moves the weight — and the grip — to the front</Tag>
+    </Frame>
+  ),
+
+  "cornering-force": () => (
+    <Frame title="Cornering force">
+      <path d="M50 100 L50 64 Q50 30 90 30 L160 30" fill="none" stroke={C.road} strokeWidth="40" />
+      <path d="M50 100 L50 64 Q50 30 90 30 L160 30" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <g transform="translate(46 56) rotate(35)"><Car x={0} y={0} color={C.good} /></g>
+      <Arrow d="M42 52 L22 40" color={C.bad} w={1.8} />
+      <circle cx="40" cy="62" r="2.2" fill={C.amber} /><circle cx="46" cy="50" r="2.2" fill={C.amber} />
+      <Tag x="16" y="32" size="3.2" weight={800} color={C.bad}>cornering</Tag>
+      <Tag x="16" y="36.5" size="3.2" weight={800} color={C.bad}>force</Tag>
+      <Tag x="112" y="56" size="3.2" weight={800}>steer RIGHT → weight thrown</Tag>
+      <Tag x="112" y="61" size="3.2" weight={800}>to the LEFT (outside) wheels</Tag>
+      <Tag x="112" y="74" size="3.1" weight={800} color={C.bad}>too fast: it slides sideways —</Tag>
+      <Tag x="112" y="79" size="3.1" weight={800} color={C.bad}>or rolls over</Tag>
+      <Tag x="112" y="92" size="3" weight={700} color="#b45309">brake + steer = front-outside wheel</Tag>
+      <Tag x="112" y="96.5" size="3" weight={700} color="#b45309">acts as an anchor</Tag>
+    </Frame>
+  ),
+
+  "flood-ford": () => (
+    <Frame title="Driving through a flood">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <path d="M0 70 L40 70 Q60 82 100 82 Q120 82 160 70 L160 100 L0 100 Z" fill={C.road} />
+      <path d="M40 70 Q60 82 100 82 Q120 82 140 72 Z" fill="#60a5fa" opacity="0.75" />
+      <g transform="translate(30 70) scale(1.6)"><SideCar x={0} y={0} color={C.good} /></g>
+      <line x1="90" y1="70" x2="90" y2="82" stroke="#0f172a" strokeWidth="0.8" />
+      <line x1="87" y1="70" x2="93" y2="70" stroke="#0f172a" strokeWidth="0.8" />
+      <Tag x="80" y="10" size="3.8">A FLOOD OR FORD AHEAD</Tag>
+      <Tag x="40" y="22" size="3.2" weight={800}>① stop and check the depth</Tag>
+      <Tag x="40" y="27" size="2.9" weight={700}>too deep? turn back</Tag>
+      <Tag x="116" y="22" size="3.2" weight={800} color="#047857">② slowly, 1st gear,</Tag>
+      <Tag x="116" y="27" size="3.2" weight={800} color="#047857">revs high, slip the clutch</Tag>
+      <Tag x="116" y="40" size="3.2" weight={800} color="#1d4ed8">③ after: mirrors, then</Tag>
+      <Tag x="116" y="45" size="3.2" weight={800} color="#1d4ed8">test the brakes</Tag>
+      <Tag x="102" y="66" size="2.8" weight={700}>depth?</Tag>
+      <Tag x="80" y="94" size="3" weight={700} color={C.bad}>never rush through: lose control, stall, block the road</Tag>
+    </Frame>
+  ),
+
+  "snow-ice": () => (
+    <Frame title="Driving on snow and ice">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <IconGrid ring="#0284c7" rows={2} cells={[
+        ["🛣️", "markings hidden"], ["🧽", "screen and windows clear"], ["↔️", "bigger gap"],
+        ["🦶", "test brakes gently"], ["⛓️", "chains or snow tyres"], ["⚙️", "high gear, low revs"],
+      ]} />
+    </Frame>
+  ),
+
+  "black-ice": () => (
+    <Frame title="Black ice">
+      <rect x="0" y="0" width="160" height="100" fill="#cbd5e1" />
+      <VRoad />
+      <path d="M50 10 L110 10 L110 60 L50 60 Z" fill="#1e293b" opacity="0.35" />
+      {[[58, 20], [74, 34], [92, 18], [100, 46], [64, 50]].map(([x, y]) => <path key={x} d={`M${x} ${y} l4 -2`} stroke="#ffffff" strokeWidth="0.8" opacity="0.8" />)}
+      <Car x="62" y="80" color={C.good} />
+      <Tag x="80" y="6" size="3.6">BLACK ICE: RAIN FREEZING AS IT FALLS</Tag>
+      <Tag x="28" y="70" size="3.1" weight={800} color="#1d4ed8">invisible —</Tag>
+      <Tag x="28" y="75" size="3.1" weight={800} color="#1d4ed8">first warning:</Tag>
+      <Tag x="28" y="80" size="3.1" weight={800} color="#1d4ed8">light steering</Tag>
+      <Tag x="136" y="70" size="3" weight={800} color={C.bad}>worse as it</Tag>
+      <Tag x="136" y="74.5" size="3" weight={800} color={C.bad}>begins to thaw</Tag>
+      <Tag x="136" y="84" size="3" weight={700}>ABS won't keep</Tag>
+      <Tag x="136" y="88.5" size="3" weight={700}>tyres on the road</Tag>
+    </Frame>
+  ),
+
+  "snow-hill": () => (
+    <Frame title="Hills in snow and ice">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <path d="M0 90 L40 90 L130 40 L160 40 L160 100 L0 100 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.8" />
+      <g transform="translate(26 90) scale(1.3)"><SideCar x={0} y={0} color={C.good} /></g>
+      <g transform="translate(110 51) rotate(-29) scale(1.3)"><SideCar x={0} y={0} color={C.grey} /></g>
+      <line x1="44" y1="78" x2="96" y2="50" stroke="#0369a1" strokeWidth="0.8" strokeDasharray="2 1.5" />
+      <Tag x="80" y="10" size="3.6">GOING UP: HIGHEST GEAR YOU REASONABLY CAN</Tag>
+      <Tag x="44" y="22" size="3.1" weight={800} color="#047857">select it BEFORE the climb —</Tag>
+      <Tag x="44" y="27" size="3.1" weight={800} color="#047857">changing on the slope can spin the wheels</Tag>
+      <Tag x="60" y="56" size="3.1" weight={800} color="#0369a1">extra gap: if they</Tag>
+      <Tag x="60" y="61" size="3.1" weight={800} color="#0369a1">stop, you keep going</Tag>
+      <Tag x="120" y="84" size="3" weight={700}>coming down: slow well</Tag>
+      <Tag x="120" y="88.5" size="3" weight={700}>before the slope, use</Tag>
+      <Tag x="120" y="93" size="3" weight={700}>engine compression</Tag>
+    </Frame>
+  ),
+
+  "tyre-tread": () => (
+    <Frame title="Legal tyre tread">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="40" y="22" width="80" height="50" rx="8" fill="#1f2937" />
+      {[0, 1, 2, 3, 4, 5, 6].map(i => <rect key={i} x={46 + i * 10.5} y="26" width="5" height="42" rx="1" fill="#374151" />)}
+      <rect x="50" y="20" width="60" height="54" fill="none" stroke={C.good} strokeWidth="1.4" strokeDasharray="3 2" />
+      <Tag x="80" y="12" size="3.8">AT LEAST 1.6 mm</Tag>
+      <Tag x="80" y="82" size="3.1" weight={800} color="#047857">across the central three-quarters (75%) of the width</Tag>
+      <Tag x="80" y="88" size="3.1" weight={700}>all the way round — tread visible outside the band too</Tag>
+      <Tag x="80" y="96" size="2.9" weight={700} color={C.bad}>check for cuts and bulges · keep out grease, oil and stones</Tag>
+    </Frame>
+  ),
+
+  "tyre-ply": () => (
+    <Frame title="Cross-ply and radial-ply tyres">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[42, "CROSS-PLY", "cords run diagonally", "older vehicles"], [118, "RADIAL-PLY", "cords at right angles", "thinner, flexible walls"]].map(([x, name, a, b], k) => (
+        <g key={name}>
+          <rect x={x - 26} y="16" width="52" height="46" rx="6" fill="#1f2937" />
+          <clipPath id={`ply${k}`}><rect x={x - 24} y="18" width="48" height="42" rx="5" /></clipPath>
+          <g clipPath={`url(#ply${k})`}>
+            {k === 0
+              ? [-40, -28, -16, -4, 8, 20, 32].flatMap(d => [
+                  <line key={"a" + d} x1={x + d} y1="18" x2={x + d + 42} y2="60" stroke="#f59e0b" strokeWidth="1" />,
+                  <line key={"b" + d} x1={x + d + 42} y1="18" x2={x + d} y2="60" stroke="#f59e0b" strokeWidth="1" />])
+              : [-20, -12, -4, 4, 12, 20].map(d => <line key={d} x1={x + d} y1="18" x2={x + d} y2="60" stroke="#f59e0b" strokeWidth="1.2" />)}
+          </g>
+          <Tag x={x} y="70" size="3.5">{name}</Tag>
+          <Tag x={x} y="76" size="3" weight={700}>{a}</Tag>
+          <Tag x={x} y="81" size="3" weight={700}>{b}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="94" size="3.1" weight={800} color={C.bad}>never mix types — keep the same type all round</Tag>
+    </Frame>
+  ),
+
+  "tyre-burst": () => (
+    <Frame title="A tyre burst">
+      <VRoad />
+      <Car x="62" y="60" color={C.good} />
+      <circle cx="57.5" cy="54" r="3" fill="none" stroke={C.bad} strokeWidth="1" />
+      <path d="M53 50 l-3 -3 M53 58 l-3 3 M50 54 l-4 0" stroke={C.bad} strokeWidth="0.8" />
+      <Arrow d="M62 50 L62 22" color="#047857" w={1.4} />
+      <path d="M62 66 Q56 72 60 80 Q66 88 60 96" fill="none" stroke={C.bad} strokeWidth="0.8" strokeDasharray="2 1.5" />
+      <Tag x="80" y="10" size="3.8">A BLOW-OUT</Tag>
+      <Tag x="138" y="34" size="3.1" weight={800} color="#047857">grip the wheel</Tag>
+      <Tag x="138" y="38.5" size="3.1" weight={800} color="#047857">firmly — keep</Tag>
+      <Tag x="138" y="43" size="3.1" weight={800} color="#047857">it straight</Tag>
+      <Tag x="138" y="56" size="3.1" weight={800} color="#047857">roll to a halt</Tag>
+      <Tag x="138" y="60.5" size="3.1" weight={800} color="#047857">in a safe place</Tag>
+      <Tag x="22" y="40" size="3.1" weight={800} color={C.bad}>✗ heavy</Tag>
+      <Tag x="22" y="45" size="3.1" weight={800} color={C.bad}>braking</Tag>
+    </Frame>
+  ),
+
+  "rear-skid": () => (
+    <Frame title="Correcting a rear-wheel skid">
+      <VRoad />
+      <g transform="translate(62 56) rotate(-25)"><WheelCar x={0} y={0} steer={25} /></g>
+      <Arrow d="M66 72 L80 76" color={C.bad} w={1.4} />
+      <Arrow d="M62 38 L64 20" color="#047857" w={1.4} />
+      <Tag x="80" y="9" size="3.6">REAR SLIDES RIGHT → STEER RIGHT</Tag>
+      <Tag x="136" y="66" size="3.1" weight={800} color={C.bad}>rear swings</Tag>
+      <Tag x="136" y="71" size="3.1" weight={800} color={C.bad}>out to the right</Tag>
+      <Tag x="136" y="30" size="3.1" weight={800} color="#047857">release the brake,</Tag>
+      <Tag x="136" y="35" size="3.1" weight={800} color="#047857">steer into the skid</Tag>
+      <Tag x="22" y="40" size="3" weight={800} color="#b45309">over-correct:</Tag>
+      <Tag x="22" y="44.5" size="3" weight={800} color="#b45309">skid the</Tag>
+      <Tag x="22" y="49" size="3" weight={800} color="#b45309">other way</Tag>
+    </Frame>
+  ),
+
+  "wheelspin": () => (
+    <Frame title="Wheel spin">
+      <rect x="0" y="0" width="160" height="100" fill="#f1f5f9" />
+      <rect x="0" y="70" width="160" height="30" fill="#e2e8f0" />
+      <g transform="translate(80 70) scale(2.4)"><SideCar x={0} y={0} color={C.good} /></g>
+      {[0, 1, 2].map(i => <path key={i} d={`M${58 - i * 5} ${66 - i * 3} q-4 -4 -8 0`} fill="none" stroke="#94a3b8" strokeWidth="0.9" />)}
+      <path d="M96 64 a8 8 0 1 1 -1 -0.1" fill="none" stroke={C.bad} strokeWidth="1" />
+      <Tag x="80" y="12" size="3.8">SKID BY ACCELERATION</Tag>
+      <Tag x="80" y="20" size="3" weight={700}>harsh acceleration spins the DRIVEN wheels</Tag>
+      <Tag x="80" y="84" size="3.2" weight={800} color="#047857">release the accelerator — let the tyres grip again</Tag>
+      <Tag x="80" y="90" size="3" weight={700}>sliding sideways? don't steer until some grip returns</Tag>
+      <Tag x="80" y="97" size="2.9" weight={700} color="#0369a1">moving off in snow: low revs, higher gear</Tag>
+    </Frame>
+  ),
+
+  "skid-causes": () => (
+    <Frame title="Skids: in order of importance">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.bad} rows={2} cells={[["🧑", "1 · the driver"], ["🚗", "2 · the vehicle"], ["🛣️", "3 · the road"]]} />
+      <Tag x="80" y="68" size="3.4" weight={800}>tyres lose grip when you change speed or</Tag>
+      <Tag x="80" y="73.5" size="3.4" weight={800}>direction too suddenly</Tag>
+      <Tag x="80" y="86" size="3.2" weight={800} color="#047857">PARKED CARS DON'T SKID — DRIVERS CAUSE SKIDS</Tag>
+    </Frame>
+  ),
+
+  "esc": () => (
+    <Frame title="Electronic Stability Control">
+      <path d="M40 100 L40 64 Q40 30 80 30 L160 30" fill="none" stroke={C.road} strokeWidth="40" />
+      <path d="M40 100 L40 64 Q40 30 80 30 L160 30" fill="none" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <path d="M30 96 L30 66 Q30 40 74 40 L150 40" fill="none" stroke="#047857" strokeWidth="1.2" strokeDasharray="3 2" />
+      <path d="M30 70 Q30 50 14 30" fill="none" stroke={C.bad} strokeWidth="1" strokeDasharray="2 1.5" />
+      <g transform="translate(32 60) rotate(20)"><Car x={0} y={0} color={C.good} /></g>
+      <circle cx="33" cy="67" r="2.6" fill="none" stroke={C.amber} strokeWidth="1.2" />
+      <Tag x="112" y="58" size="3.1" weight={800} color="#047857">where you're steering</Tag>
+      <Tag x="112" y="66" size="3.1" weight={800} color={C.bad}>where the car is going</Tag>
+      <Tag x="112" y="78" size="3" weight={800} color="#b45309">ESC brakes one wheel and</Tag>
+      <Tag x="112" y="82.5" size="3" weight={800} color="#b45309">cuts power to hold the line</Tag>
+      <Tag x="112" y="94" size="3" weight={700}>not a substitute for safe driving</Tag>
+      <Tag x="14" y="24" size="2.8" weight={800} color={C.bad}>slide</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -557,4 +557,58 @@ export default [
     key: "Slim and hard to see; may ride on footpaths.",
     src: P("2.10", 75, "Electric bikes and scooters"),
   },
+  {
+    id: "mandatory-sign", unit: "2.11", term: "Mandatory sign", visual: "sign-shapes",
+    meaning: "A 'must do' sign — usually a blue circle with white symbols.",
+    key: "Includes STOP and Yield Right of Way.",
+    src: P("2.11", 81, "Mandatory signs; p.95 answer 3"),
+  },
+  {
+    id: "prohibitory-sign", unit: "2.11", term: "Prohibitory sign", visual: "sign-shapes",
+    meaning: "A 'must not do' sign — a red-bordered white circle.",
+    key: "A red bar prohibits a movement.",
+    src: P("2.11", 81, "Prohibitory signs; p.95 answers 3, 8"),
+  },
+  {
+    id: "warning-sign", unit: "2.11", term: "Warning sign", visual: "sign-shapes",
+    meaning: "A black-bordered yellow diamond warning of a hazard.",
+    key: "Orange for road works — must be obeyed.",
+    src: P("2.11", 81, "Diamond; p.82"),
+  },
+  {
+    id: "sign-colours", unit: "2.11", term: "Sign colours", visual: "sign-colours",
+    meaning: "Blue motorway, green primary, white non-primary, brown tourist, red hazard.",
+    key: "Diversions: black symbols on yellow patches.",
+    src: P("2.11", 81, "Rectangular; p.82"),
+  },
+  {
+    id: "hazard-line", unit: "2.11", term: "Hazard line", visual: "road-lines",
+    meaning: "A line along the road with short gaps — danger ahead.",
+    key: "Lane lines have long gaps; centre lines, similar gaps.",
+    src: P("2.11", 83, "Along the road"),
+  },
+  {
+    id: "double-white-lines", unit: "2.11", term: "Solid and broken white lines", visual: "road-lines",
+    meaning: "A solid line on your side: don't cross or straddle it.",
+    key: "Except narrow cases like passing a cyclist under 10 km/h, safely.",
+    src: P("2.11", 83, "Both solid and one broken; p.95 answer 13"),
+  },
+  {
+    id: "ghost-island", unit: "2.11", term: "Ghost island", visual: "hatched",
+    meaning: "Painted hatching separating traffic and protecting right-turners.",
+    key: "Solid border: must not enter.",
+    src: P("2.11", 83, "Hatch markings; p.95 answer 11"),
+  },
+  {
+    id: "box-junction", unit: "2.11", term: "Yellow box junction", visual: "box-junction",
+    meaning: "Yellow criss-cross lines at a junction or entrance.",
+    key: "Don't enter unless your exit is clear.",
+    src: P("2.11", 84, "Yellow box junctions"),
+  },
+  {
+    id: "filter-arrow", unit: "2.11", term: "Green filter arrow", visual: "traffic-lights",
+    meaning: "Lets you go in its direction even if the main light isn't green.",
+    key: "A flashing amber filter: go with caution, give way.",
+    src: P("2.11", 84, "Green filter arrows"),
+  },
 ];

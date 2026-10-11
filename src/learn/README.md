@@ -38,6 +38,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_8.js` | Unit 2.8 Automatic Transmission (pp.56–59). |
 | `book2/unit2_9.js` | Unit 2.9 Mechanical Principles (pp.60–71). |
 | `book2/unit2_10.js` | Unit 2.10 Pedestrians & Cyclists (pp.72–80). |
+| `book2/unit2_11.js` | Unit 2.11 Traffic Signs & Signals (pp.81–89). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -242,3 +243,9 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   "uneven surface" where the unit's own list also gives crosswinds; Q35
   (animals at night) isn't in the unit and two options differ only by an
   armband. 46 are used. Its recognition game is "Share the Road".
+- **Retention test 2.11 (50 questions), Q2, Q9, Q17, Q27, Q30, Q36, Q45
+  and Q50** — omitted. Q9 (two cars with a red sash keyed "outside lane
+  closed" — it means no overtaking) and Q17 (double yellow "no stopping" —
+  the unit allows setting down) contradict the text; Q2, Q27, Q45 and Q50
+  have another option as defensible; Q30 and Q36 aren't in the unit. 42
+  are used. Its recognition game is "Read the Road". Book 2 is complete.

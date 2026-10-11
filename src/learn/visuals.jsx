@@ -4144,6 +4144,116 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- signs and markings (Book 2, Unit 2.11) ---------------- */
+  "sign-shapes": () => (
+    <Frame title="Sign shapes">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="22" cy="28" r="13" fill="#ffffff" stroke="#dc2626" strokeWidth="3.4" />
+      <text x="22" y="32.5" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="system-ui">50</text>
+      <circle cx="62" cy="28" r="13" fill="#1d4ed8" stroke="#ffffff" strokeWidth="1.4" />
+      <path d="M66 22 L58 30 M58 24 L58 30 L64 30" fill="none" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M102 14 L116 28 L102 42 L88 28 Z" fill="#facc15" stroke="#111827" strokeWidth="1.4" />
+      <text x="102" y="33" fontSize="12" textAnchor="middle">!</text>
+      <rect x="126" y="17" width="30" height="22" rx="2" fill="#15803d" stroke="#ffffff" strokeWidth="1" />
+      <text x="141" y="31" fontSize="5" fontWeight="800" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">N3 Dublin</text>
+      <path d="M22 56 L31 59.5 L35 68 L31 76.5 L22 80 L13 76.5 L9 68 L13 59.5 Z" fill="#dc2626" stroke="#ffffff" strokeWidth="1" transform="rotate(22.5 22 68)" />
+      <text x="22" y="70.5" fontSize="6" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">STOP</text>
+      <path d="M50 56 L74 56 L62 78 Z" fill="#ffffff" stroke="#dc2626" strokeWidth="3" strokeLinejoin="round" />
+      <Tag x="22" y="48" size="3" weight={800}>red circle: must NOT</Tag>
+      <Tag x="62" y="48" size="3" weight={800}>blue circle: MUST</Tag>
+      <Tag x="102" y="50" size="3" weight={800}>diamond: warning</Tag>
+      <Tag x="141" y="48" size="3" weight={800}>rectangle: information</Tag>
+      <Tag x="22" y="90" size="3" weight={800}>octagon: STOP</Tag>
+      <Tag x="62" y="90" size="3" weight={800}>inverted triangle: yield</Tag>
+      <Tag x="122" y="68" size="3.2" weight={800} color="#047857">symbols, not words —</Tag>
+      <Tag x="122" y="74" size="3.2" weight={800} color="#047857">quick to understand,</Tag>
+      <Tag x="122" y="80" size="3.2" weight={800} color="#047857">for everyone</Tag>
+    </Frame>
+  ),
+
+  "sign-colours": () => (
+    <Frame title="Sign colours">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["#1d4ed8", "#fff", "BLUE", "motorway"], ["#15803d", "#fff", "GREEN", "primary route"], ["#ffffff", "#111", "WHITE", "non-primary"], ["#92400e", "#fff", "BROWN", "tourist"], ["#f97316", "#111", "ORANGE", "road works"], ["#dc2626", "#fff", "RED", "hazard info"]].map(([bg, fg, n, d], i) => {
+        const x = 8 + (i % 3) * 50, y = 10 + Math.floor(i / 3) * 44;
+        return (
+          <g key={n}>
+            <rect x={x} y={y} width="44" height="24" rx="3" fill={bg} stroke="#111827" strokeWidth="0.8" />
+            <text x={x + 22} y={y + 15} fontSize="6" fontWeight="900" textAnchor="middle" fill={fg} fontFamily="system-ui">{n}</text>
+            <Tag x={x + 22} y={y + 32} size="3.2" weight={800}>{d}</Tag>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "road-lines": () => (
+    <Frame title="Lines along the road">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[16, "6 6", "CENTRE", "keep left"], [48, "10 3", "HAZARD", "short gaps: danger ahead"], [80, "3 9", "LANE", "long gaps: separates lanes"], [112, null, "CONTINUOUS", "don't cross or straddle"], [144, "double", "SOLID + BROKEN", "solid on your side: don't cross"]].map(([x, dash, t, d]) => (
+        <g key={t}>
+          <rect x={x - 12} y="8" width="24" height="64" fill={C.road} />
+          {dash === "double"
+            ? <g><line x1={x - 2} y1="8" x2={x - 2} y2="72" stroke={C.line} strokeWidth="1.4" strokeDasharray="6 4" /><line x1={x + 2} y1="8" x2={x + 2} y2="72" stroke={C.line} strokeWidth="1.4" /></g>
+            : <line x1={x} y1="8" x2={x} y2="72" stroke={C.line} strokeWidth="1.6" strokeDasharray={dash || undefined} />}
+          <Tag x={x} y="80" size="2.9" weight={900}>{t}</Tag>
+          <Tag x={x} y="86" size="2.4" weight={700}>{d.length > 18 ? d.slice(0, d.indexOf(" ", 10)) : d}</Tag>
+          {d.length > 18 && <Tag x={x} y="91" size="2.4" weight={700}>{d.slice(d.indexOf(" ", 10) + 1)}</Tag>}
+        </g>
+      ))}
+      <Tag x="80" y="98" size="2.8" weight={800} color="#b45309">the more paint, the more important the message</Tag>
+    </Frame>
+  ),
+
+  "traffic-lights": () => (
+    <Frame title="Traffic light sequence">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[40, [0, 0, 1], "GREEN", "go if the way is clear"], [80, [0, 1, 0], "AMBER", "stop — unless unsafe"], [120, [1, 0, 0], "RED", "stop at the line"]].map(([x, on, t, d]) => (
+        <g key={t}>
+          <rect x={x - 9} y="8" width="18" height="50" rx="4" fill="#111827" />
+          {["#ef4444", "#f59e0b", "#22c55e"].map((c, i) => <circle key={c} cx={x} cy={18 + i * 15} r="5.5" fill={on[i] ? c : "#374151"} />)}
+          <Tag x={x} y="68" size="3.2" weight={900}>{t}</Tag>
+          <Tag x={x} y="74" size="2.7" weight={700}>{d}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="86" size="3" weight={800} color="#047857">green filter arrow: go that way even if the main light is red</Tag>
+      <Tag x="80" y="93" size="3" weight={800} color="#b45309">flashing amber filter (left): go with caution, give way</Tag>
+    </Frame>
+  ),
+
+  "box-junction": () => (
+    <Frame title="Yellow box junction">
+      <VRoad />
+      <rect x="0" y="34" width="160" height="32" fill={C.road} />
+      <rect x="45" y="34" width="70" height="32" fill="none" stroke="#facc15" strokeWidth="1.4" />
+      <clipPath id="ybx"><rect x="45" y="34" width="70" height="32" /></clipPath>
+      <g clipPath="url(#ybx)">{Array.from({ length: 12 }, (_, i) => <g key={i}><line x1={30 + i * 10} y1="34" x2={62 + i * 10} y2="66" stroke="#facc15" strokeWidth="0.9" /><line x1={62 + i * 10 - 32} y1="66" x2={62 + i * 10} y2="34" stroke="#facc15" strokeWidth="0.9" /></g>)}</g>
+      <Car x="62" y="84" color={C.good} />
+      <Car x="62" y="20" color={C.grey} />
+      <Car x="62" y="8" color={C.grey} />
+      <Tag x="80" y="96" size="3" weight={800} color={C.bad}>don't enter unless your exit is clear</Tag>
+      <Tag x="138" y="80" size="2.9" weight={800} color="#047857">turning right? you may</Tag>
+      <Tag x="138" y="85" size="2.9" weight={800} color="#047857">wait in it for oncoming</Tag>
+      <Tag x="138" y="90" size="2.9" weight={800} color="#047857">traffic only</Tag>
+      <Tag x="22" y="20" size="2.9" weight={800}>exit blocked →</Tag>
+      <Tag x="22" y="25" size="2.9" weight={800}>wait before the box</Tag>
+    </Frame>
+  ),
+
+  "chevron-sign": () => (
+    <Frame title="Chevron and roadside markers">
+      <rect x="0" y="0" width="160" height="100" fill={C.ground} />
+      <path d="M0 100 L0 60 Q0 30 40 30 L160 30 L160 56 L50 56 Q26 56 26 80 L26 100 Z" fill={C.road} />
+      <rect x="64" y="8" width="40" height="16" fill="#ffffff" stroke="#111827" strokeWidth="0.8" />
+      {[0, 1, 2].map(i => <path key={i} d={`M${74 + i * 8} 10 L${80 + i * 8} 16 L${74 + i * 8} 22`} fill="none" stroke="#111827" strokeWidth="2.4" />)}
+      <Tag x="84" y="64" size="3" weight={800}>chevrons point the way: sharp bend or deviation</Tag>
+      <Tag x="84" y="74" size="3" weight={800} color="#b91c1c">red markers: left edge</Tag>
+      <Tag x="84" y="80" size="3" weight={800}>white markers: right edge</Tag>
+      <Tag x="84" y="86" size="3" weight={800} color="#15803d">green: a junction on the left</Tag>
+      <Tag x="84" y="94" size="2.7" weight={700}>red and white chevrons are temporary</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

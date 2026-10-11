@@ -3793,6 +3793,210 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- mechanical principles (Book 2, Unit 2.9) ---------------- */
+  "four-stroke": () => (
+    <Frame title="The four-stroke cycle">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["1 INDUCTION", "fuel + air in", 1, 0, 64, false, "down"], ["2 COMPRESSION", "squeezed", 0, 0, 40, false, "up"], ["3 IGNITION", "spark: power", 0, 0, 64, true, "down"], ["4 EXHAUST", "gases out", 0, 1, 40, false, "up"]].map(([t, d, inl, exh, py, spark, dir], i) => {
+        const x = 20 + i * 40;
+        return (
+          <g key={t}>
+            <rect x={x - 13} y="22" width="26" height="54" fill="#e2e8f0" stroke="#334155" strokeWidth="1" />
+            <rect x={x - 12} y={py} width="24" height="10" fill="#64748b" />
+            <line x1={x} y1={py + 10} x2={x} y2="84" stroke="#334155" strokeWidth="1.6" />
+            <circle cx={x} cy="86" r="3" fill="#334155" />
+            {i === 0 && <rect x={x - 12} y="24" width="24" height={py - 24} fill="#bae6fd" opacity="0.8" />}
+            {i === 1 && <rect x={x - 12} y="24" width="24" height={py - 24} fill="#7dd3fc" />}
+            {i === 2 && <rect x={x - 12} y="24" width="24" height={py - 24} fill="#fdba74" />}
+            {i === 3 && <rect x={x - 12} y="24" width="24" height={py - 24} fill="#cbd5e1" />}
+            <line x1={x - 9} y1={inl ? 26 : 22} x2={x - 3} y2={inl ? 26 : 22} stroke="#0369a1" strokeWidth="2" />
+            <line x1={x + 3} y1={exh ? 26 : 22} x2={x + 9} y2={exh ? 26 : 22} stroke="#b45309" strokeWidth="2" />
+            {spark && <path d={`M${x - 2} 24 l3 4 l-2 0 l3 4`} fill="none" stroke="#dc2626" strokeWidth="1" />}
+            <Arrow d={dir === "down" ? `M${x + 17} ${py - 4} L${x + 17} ${py + 10}` : `M${x + 17} ${py + 14} L${x + 17} ${py}`} color="#475569" w={0.9} />
+            <Tag x={x} y="14" size="3.1">{t}</Tag>
+            <Tag x={x} y="96" size="3" weight={700}>{d}</Tag>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "cooling-system": () => (
+    <Frame title="The cooling system">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="86" y="30" width="56" height="44" rx="4" fill="#94a3b8" stroke="#334155" strokeWidth="1" />
+      <Tag x="114" y="54" size="3.6" weight={900}>ENGINE</Tag>
+      <rect x="10" y="24" width="22" height="56" rx="2" fill="#cbd5e1" stroke="#334155" strokeWidth="1" />
+      {[0, 1, 2, 3, 4, 5, 6].map(i => <line key={i} x1="12" y1={28 + i * 7.6} x2="30" y2={28 + i * 7.6} stroke="#64748b" strokeWidth="0.8" />)}
+      <circle cx="46" cy="52" r="8" fill="none" stroke="#334155" strokeWidth="1" />
+      <path d="M46 44 L46 60 M38 52 L54 52" stroke="#334155" strokeWidth="1" />
+      <Arrow d="M86 36 Q60 24 32 30" color={C.bad} w={1.4} />
+      <Arrow d="M32 74 Q60 82 86 68" color="#0284c7" w={1.4} />
+      <rect x="66" y="22" width="8" height="8" rx="1" fill="#f59e0b" />
+      <circle cx="74" cy="76" r="4" fill="#0ea5e9" />
+      <Tag x="21" y="18" size="3.1" weight={800}>radiator</Tag>
+      <Tag x="46" y="68" size="3" weight={800}>fan</Tag>
+      <Tag x="70" y="17" size="3" weight={800} color="#b45309">thermostat</Tag>
+      <Tag x="74" y="88" size="3" weight={800} color="#0369a1">water pump (fan belt)</Tag>
+      <Tag x="80" y="8" size="3.4">WATER + ANTI-FREEZE KEEPS THE ENGINE AT TEMPERATURE</Tag>
+      <Tag x="80" y="97" size="2.9" weight={700} color={C.bad}>overheated? never open the cap until it has cooled</Tag>
+    </Frame>
+  ),
+
+  "drivetrain": () => (
+    <Frame title="The transmission">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[14, "ENGINE", "#64748b"], [44, "CLUTCH", "#f59e0b"], [74, "GEARBOX", "#3b82f6"], [108, "FINAL DRIVE + DIFFERENTIAL", "#10b981"]].map(([x, t, col], i) => (
+        <g key={t}>
+          <rect x={x - 12} y="38" width={i === 3 ? 34 : 24} height="22" rx="3" fill={col} />
+          <Tag x={x + (i === 3 ? 5 : 0)} y="70" size="3" weight={800}>{t.split(" + ")[0]}</Tag>
+          {i === 3 && <Tag x={x + 5} y="75" size="3" weight={800}>+ DIFFERENTIAL</Tag>}
+          {i < 3 && <Arrow d={`M${x + 13} 49 L${x + 17} 49`} color="#334155" w={1.2} />}
+        </g>
+      ))}
+      <Arrow d="M142 49 L150 49" color="#334155" w={1.2} />
+      <rect x="150" y="34" width="6" height="30" rx="2" fill="#111827" />
+      <Tag x="80" y="16" size="3.6">THE ENGINE'S TURNING FORCE TO THE WHEELS</Tag>
+      <Tag x="80" y="90" size="3" weight={700}>front-wheel drive adds constant velocity (CV) joints</Tag>
+    </Frame>
+  ),
+
+  "differential": () => (
+    <Frame title="The differential">
+      <path d="M40 100 L40 70 Q40 30 90 30 L160 30" fill="none" stroke={C.road} strokeWidth="44" />
+      <path d="M26 100 L26 70 Q26 16 90 16 L160 16" fill="none" stroke="#10b981" strokeWidth="1.2" strokeDasharray="3 2" />
+      <path d="M52 100 L52 72 Q52 44 90 44 L160 44" fill="none" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="3 2" />
+      <g transform="translate(30 76) rotate(20)"><WheelCar x={0} y={0} steer={22} /></g>
+      <Tag x="110" y="8" size="3.1" weight={800} color="#047857">outer wheel: further, faster</Tag>
+      <Tag x="112" y="56" size="3.1" weight={800} color="#b45309">inner wheel: shorter, slower</Tag>
+      <Tag x="112" y="74" size="3.2" weight={800}>the differential lets the</Tag>
+      <Tag x="112" y="79" size="3.2" weight={800}>driven wheels turn at</Tag>
+      <Tag x="112" y="84" size="3.2" weight={800}>different speeds</Tag>
+    </Frame>
+  ),
+
+  "hydraulic-brakes": () => (
+    <Frame title="Hydraulic brakes">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="10" y="40" width="14" height="22" rx="2" fill="#374151" stroke="#ef4444" strokeWidth="1.2" />
+      <rect x="30" y="44" width="22" height="12" rx="2" fill="#64748b" />
+      <path d="M52 48 L80 48 L80 24 L118 24 M80 48 L80 76 L118 76" fill="none" stroke="#dc2626" strokeWidth="1.4" />
+      <path d="M52 52 L86 52 L86 30 L118 30 M86 52 L86 70 L118 70" fill="none" stroke="#2563eb" strokeWidth="1.4" />
+      <circle cx="132" cy="27" r="11" fill="#cbd5e1" stroke="#334155" strokeWidth="1" />
+      <rect x="128" y="14" width="8" height="8" fill="#ef4444" />
+      <circle cx="132" cy="73" r="11" fill="#e2e8f0" stroke="#334155" strokeWidth="1.6" />
+      <path d="M124 73 A8 8 0 0 1 140 73" fill="none" stroke="#b45309" strokeWidth="2" />
+      <Tag x="17" y="70" size="3" weight={800}>pedal</Tag>
+      <Tag x="41" y="64" size="3" weight={800}>master</Tag>
+      <Tag x="41" y="68.5" size="3" weight={800}>cylinder</Tag>
+      <Tag x="132" y="44" size="3" weight={800}>disc + pads (front)</Tag>
+      <Tag x="132" y="92" size="3" weight={800}>drum + shoes (rear)</Tag>
+      <Tag x="98" y="40" size="2.9" weight={800} color="#7c3aed">dual circuit: one</Tag>
+      <Tag x="98" y="44.5" size="2.9" weight={800} color="#7c3aed">half still works</Tag>
+      <Tag x="80" y="8" size="3.4">PEDAL → FLUID → SLAVE CYLINDERS → ALL FOUR WHEELS</Tag>
+      <Tag x="40" y="88" size="2.9" weight={700}>spongy pedal: air in the system</Tag>
+      <Tag x="40" y="94" size="2.9" weight={700}>fade: brakes too hot</Tag>
+    </Frame>
+  ),
+
+  "rack-pinion": () => (
+    <Frame title="Rack and pinion steering">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="40" y="60" width="80" height="7" rx="1" fill="#94a3b8" />
+      {Array.from({ length: 14 }, (_, i) => <rect key={i} x={50 + i * 4.4} y="57" width="2" height="3" fill="#475569" />)}
+      <circle cx="80" cy="54" r="5" fill="#f59e0b" stroke="#334155" strokeWidth="0.8" />
+      <line x1="80" y1="49" x2="80" y2="18" stroke="#475569" strokeWidth="2.4" />
+      <circle cx="80" cy="14" r="10" fill="none" stroke="#0f172a" strokeWidth="2" />
+      <line x1="40" y1="63.5" x2="22" y2="63.5" stroke="#334155" strokeWidth="1.6" />
+      <line x1="120" y1="63.5" x2="138" y2="63.5" stroke="#334155" strokeWidth="1.6" />
+      <rect x="14" y="52" width="8" height="24" rx="2" fill="#111827" transform="rotate(-24 18 64)" />
+      <rect x="138" y="52" width="8" height="24" rx="2" fill="#111827" transform="rotate(-14 142 64)" />
+      <Arrow d="M100 72 L116 72" color="#047857" w={1.2} />
+      <Tag x="98" y="52" size="3" weight={800} color="#b45309">pinion</Tag>
+      <Tag x="80" y="78" size="3" weight={800}>rack — pulls one track rod, pushes the other</Tag>
+      <Tag x="28" y="90" size="2.9" weight={800}>inner wheel: more angle</Tag>
+      <Tag x="132" y="90" size="2.9" weight={800}>outer: less angle</Tag>
+      <Tag x="80" y="96" size="2.8" weight={700} color="#475569">the Ackermann principle</Tag>
+      <Tag x="120" y="18" size="3" weight={700}>worn? excessive free</Tag>
+      <Tag x="120" y="23" size="3" weight={700}>play at the wheel</Tag>
+    </Frame>
+  ),
+
+  "suspension": () => (
+    <Frame title="Springs and dampers">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="20" y="10" width="60" height="10" rx="2" fill="#64748b" />
+      <path d="M38 20 l-6 4 l12 4 l-12 4 l12 4 l-12 4 l12 4 l-6 4" fill="none" stroke="#2563eb" strokeWidth="1.6" />
+      <rect x="58" y="20" width="8" height="22" rx="2" fill="#f59e0b" />
+      <rect x="60" y="40" width="4" height="12" fill="#b45309" />
+      <rect x="22" y="52" width="56" height="5" fill="#475569" />
+      <circle cx="50" cy="72" r="14" fill="#111827" />
+      <circle cx="50" cy="72" r="6" fill="#94a3b8" />
+      <Tag x="22" y="34" size="3" weight={800} color="#1d4ed8">spring</Tag>
+      <Tag x="78" y="32" size="3" weight={800} color="#b45309">damper</Tag>
+      <Tag x="80" y="44" size="2.8" weight={700} color="#b45309">(shock absorber)</Tag>
+      <Tag x="122" y="18" size="3.2" weight={800}>BOUNCE TEST</Tag>
+      <Tag x="122" y="26" size="2.9" weight={700}>push down sharply on</Tag>
+      <Tag x="122" y="31" size="2.9" weight={700}>each corner</Tag>
+      <path d="M104 52 q4 -8 8 0 q4 8 8 0 q4 -8 8 0 q4 8 8 0" fill="none" stroke={C.bad} strokeWidth="1.2" />
+      <Tag x="122" y="64" size="2.9" weight={800} color={C.bad}>keeps bouncing =</Tag>
+      <Tag x="122" y="69" size="2.9" weight={800} color={C.bad}>worn shock absorbers</Tag>
+      <Tag x="80" y="95" size="3" weight={700}>worn: poor handling, less grip, longer braking</Tag>
+    </Frame>
+  ),
+
+  "electrical": () => (
+    <Frame title="The electrical system">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="34" cy="40" r="12" fill="#94a3b8" stroke="#334155" strokeWidth="1" />
+      <Tag x="34" y="42" size="3" weight={900}>ALT</Tag>
+      <circle cx="34" cy="74" r="7" fill="#64748b" />
+      <path d="M22 40 L27 74 M46 40 L41 74" stroke="#111827" strokeWidth="1.2" />
+      <rect x="84" y="30" width="38" height="24" rx="2" fill="#1f2937" />
+      <rect x="90" y="26" width="6" height="4" fill="#dc2626" />
+      <rect x="110" y="26" width="6" height="4" fill="#111827" />
+      <text x="103" y="45" fontSize="5" fontWeight="900" textAnchor="middle" fill="#f8fafc" fontFamily="system-ui">12 V DC</text>
+      <Arrow d="M48 38 L82 38" color="#16a34a" w={1.2} />
+      <path d="M113 26 L113 14 L140 14" fill="none" stroke="#111827" strokeWidth="1" />
+      <Tag x="146" y="12" size="2.8" weight={800}>body</Tag>
+      <rect x="130" y="62" width="14" height="6" rx="1" fill="#fde047" stroke="#334155" strokeWidth="0.6" />
+      <Tag x="34" y="20" size="3" weight={800}>alternator</Tag>
+      <Tag x="34" y="90" size="2.9" weight={700}>driven by the fan belt</Tag>
+      <Tag x="103" y="64" size="3" weight={800}>battery</Tag>
+      <Tag x="137" y="78" size="2.9" weight={800}>fuses protect</Tag>
+      <Tag x="137" y="83" size="2.9" weight={800}>the wiring</Tag>
+      <Tag x="118" y="8" size="2.9" weight={800}>negative earth</Tag>
+      <Tag x="66" y="33" size="2.8" weight={700} color="#15803d">charges</Tag>
+      <Tag x="90" y="95" size="2.9" weight={700} color={C.bad}>ignition light on while driving: charging fault</Tag>
+    </Frame>
+  ),
+
+  "tyre-wear": () => (
+    <Frame title="Reading tyre wear">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[30, "OVER-INFLATED", "centre wears", [0, 1, 1, 1, 0]], [80, "UNDER-INFLATED", "both edges wear", [1, 0, 0, 0, 1]], [130, "ONE EDGE", "wheel alignment", [1, 0, 0, 0, 0]]].map(([x, t, d, worn]) => (
+        <g key={t}>
+          <rect x={x - 16} y="18" width="32" height="50" rx="5" fill="#1f2937" />
+          {worn.map((w, i) => <rect key={i} x={x - 13 + i * 5.6} y="22" width="3.4" height="42" rx="1" fill={w ? "#9ca3af" : "#374151"} />)}
+          <Tag x={x} y="78" size="3.3" weight={900}>{t}</Tag>
+          <Tag x={x} y="84" size="3" weight={700}>{d}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="10" size="3.6">WHAT THE TREAD IS TELLING YOU</Tag>
+      <Tag x="80" y="96" size="2.9" weight={700}>check pressures cold · hit a kerb hard? have the alignment checked</Tag>
+    </Frame>
+  ),
+
+  "overheat-steps": () => (
+    <Frame title="If the engine overheats">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="10" size="3.6">GAUGE HIGH, LOSS OF POWER, PINGING?</Tag>
+      <StepChips y={28} perRow={4} color="#b45309" steps={["Pull off safely", "Neutral + parking brake", "A/C off", "Leak or steam: engine off"]} />
+      <StepChips y={64} perRow={3} start={5} color="#b91c1c" steps={["Bonnet shut till it stops", "Cap only when cool", "Then add coolant"]} />
+      <Tag x="80" y="97" size="2.9" weight={700}>no steam or leak: leave it running and check the fan works</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

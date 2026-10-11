@@ -36,6 +36,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_6.js` | Unit 2.6 Road Holding (pp.40–47). |
 | `book2/unit2_7.js` | Unit 2.7 Manoeuvring (pp.48–55). |
 | `book2/unit2_8.js` | Unit 2.8 Automatic Transmission (pp.56–59). |
+| `book2/unit2_9.js` | Unit 2.9 Mechanical Principles (pp.60–71). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -226,3 +227,12 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   text for all ten questions; all are used. Page 57's note that some CVTs
   "must be started in D or R" is shown only as "check the handbook". Its
   recognition game is "Select It".
+- **Retention test 2.9 (75 questions), Q2, Q8, Q13, Q30, Q34, Q57, Q60
+  and Q75** — omitted. Q34 (synchromesh) and Q75 (sixth gear "increases
+  fuel consumption") contradict the book's own text; the others key facts
+  the unit doesn't give, with another option just as defensible (pre-heater
+  "heats the injectors"; choke "controlled by pre-start temperature"; oil
+  light "switch off immediately" v "add oil"; riding the clutch wears the
+  friction plate v thrust bearing; independent suspension wording;
+  low-profile tyres). 67 are used. Its recognition game is "Under the
+  Bonnet".

@@ -37,6 +37,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_7.js` | Unit 2.7 Manoeuvring (pp.48–55). |
 | `book2/unit2_8.js` | Unit 2.8 Automatic Transmission (pp.56–59). |
 | `book2/unit2_9.js` | Unit 2.9 Mechanical Principles (pp.60–71). |
+| `book2/unit2_10.js` | Unit 2.10 Pedestrians & Cyclists (pp.72–80). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -236,3 +237,8 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   friction plate v thrust bearing; independent suspension wording;
   low-profile tyres). 67 are used. Its recognition game is "Under the
   Bonnet".
+- **Retention test 2.10 (49 questions), Q17, Q20 and Q35** — omitted.
+  Q17 keys a school-bus sign shape the unit doesn't describe; Q20 keys
+  "uneven surface" where the unit's own list also gives crosswinds; Q35
+  (animals at night) isn't in the unit and two options differ only by an
+  armband. 46 are used. Its recognition game is "Share the Road".

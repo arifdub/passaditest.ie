@@ -509,4 +509,52 @@ export default [
     key: "Driven by the fan belt; ignition light on = charging fault.",
     src: P("2.9", 63, "Electrical system"),
   },
+  {
+    id: "zebra-crossing", unit: "2.10", term: "Zebra crossing", visual: "zebra",
+    meaning: "An uncontrolled crossing with flashing yellow beacons and white stripes.",
+    key: "A pedestrian with a foot on it has priority — stop.",
+    src: P("2.10", 74, "Zebra crossings"),
+  },
+  {
+    id: "pelican-crossing", unit: "2.10", term: "Pelican crossing", visual: "crossing-types",
+    meaning: "A light-controlled crossing with a flashing amber phase.",
+    key: "Flashing amber: give way to people on the crossing.",
+    src: P("2.10", 74, "Pelican crossings"),
+  },
+  {
+    id: "puffin-crossing", unit: "2.10", term: "Puffin crossing", visual: "crossing-types",
+    meaning: "A crossing whose sensor holds traffic on red until everyone has crossed.",
+    key: "Pedestrian User Friendly INtelligent.",
+    src: P("2.10", 75, "Puffin crossings"),
+  },
+  {
+    id: "toucan-crossing", unit: "2.10", term: "Toucan crossing", visual: "crossing-types",
+    meaning: "'Two can cross' — pedestrians and cyclists.",
+    key: "No flashing amber phase.",
+    src: P("2.10", 74, "Toucan crossings"),
+  },
+  {
+    id: "staggered-pelican", unit: "2.10", term: "Staggered pelican", visual: "staggered-crossing",
+    meaning: "Separate crossings either side of a central refuge, not in line.",
+    key: "Give way only to people on your side.",
+    src: P("2.10", 95, "Post-test answer 8"),
+  },
+  {
+    id: "zigzag-lines", unit: "2.10", term: "Zigzag lines", visual: "zigzag-zone",
+    meaning: "White zigzags on approach to a crossing.",
+    key: "No overtaking, parking or waiting within them.",
+    src: P("2.10", 74, "Road markings"),
+  },
+  {
+    id: "deaf-blind-stick", unit: "2.10", term: "White stick with red bands", visual: "white-sticks",
+    meaning: "Carried by a person who is deaf and blind.",
+    key: "Two red reflective bands; a white stick alone: blind.",
+    src: P("2.10", 73, "Visually impaired; p.95 answer 10"),
+  },
+  {
+    id: "e-scooter", unit: "2.10", term: "E-bikes and e-scooters", visual: "escooter",
+    meaning: "Electric bikes and scooters that can reach quite high speeds.",
+    key: "Slim and hard to see; may ride on footpaths.",
+    src: P("2.10", 75, "Electric bikes and scooters"),
+  },
 ];

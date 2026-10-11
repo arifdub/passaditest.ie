@@ -3997,6 +3997,153 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- pedestrians and cyclists (Book 2, Unit 2.10) ---------------- */
+  "cyclist-wobble": () => (
+    <Frame title="Cyclists may wobble">
+      <VRoad />
+      <path d="M52 96 q8 -10 0 -20 q-8 -10 2 -20 q8 -10 -2 -20 q-6 -8 2 -16" fill="none" stroke={C.amber} strokeWidth="1" strokeDasharray="2 1.5" />
+      <text x="54" y="32" fontSize="12" textAnchor="middle">🚴</text>
+      <Car x="88" y="78" color={C.good} />
+      <Tag x="136" y="20" size="3" weight={800}>they may swerve for:</Tag>
+      <Tag x="136" y="27" size="2.9" weight={700}>potholes, drains</Tag>
+      <Tag x="136" y="32" size="2.9" weight={700}>crosswinds</Tag>
+      <Tag x="136" y="37" size="2.9" weight={700}>low speed, starting off</Tag>
+      <Tag x="136" y="42" size="2.9" weight={700}>going uphill</Tag>
+      <Tag x="136" y="47" size="2.9" weight={700}>a heavy load</Tag>
+      <Tag x="136" y="70" size="3" weight={800} color="#047857">picture them lying</Tag>
+      <Tag x="136" y="75" size="3" weight={800} color="#047857">on their side —</Tag>
+      <Tag x="136" y="80" size="3" weight={800} color="#047857">clear of your car</Tag>
+      <Tag x="20" y="50" size="3" weight={800} color={C.bad}>the younger,</Tag>
+      <Tag x="20" y="55" size="3" weight={800} color={C.bad}>the more you</Tag>
+      <Tag x="20" y="60" size="3" weight={800} color={C.bad}>watch them</Tag>
+    </Frame>
+  ),
+
+  "cyclist-left-turn": () => (
+    <Frame title="Turning left past a cyclist">
+      <rect x="45" y="0" width="70" height="100" fill={C.road} />
+      <rect x="0" y="22" width="45" height="30" fill={C.road} />
+      <line x1="80" y1="0" x2="80" y2="100" stroke={C.line} strokeWidth="0.8" strokeDasharray="6 5" />
+      <rect x="45" y="52" width="10" height="48" fill="#16a34a" opacity="0.55" />
+      <text x="50" y="72" fontSize="8" textAnchor="middle">🚴</text>
+      <Car x="66" y="80" color={C.good} />
+      <Arrow d="M66 70 Q66 40 40 38 L20 38" color={C.bad} w={1.2} dash="2 1.5" />
+      <Arrow d="M60 76 L52 72" color="#fde047" w={1} />
+      <Tag x="80" y="8" size="3.4">TURNING LEFT? CHECK THE NEARSIDE</Tag>
+      <Tag x="136" y="40" size="3.1" weight={800}>nearside mirror</Tag>
+      <Tag x="136" y="45" size="3.1" weight={800}>and left shoulder</Tag>
+      <Tag x="136" y="60" size="3" weight={700}>a cyclist may be</Tag>
+      <Tag x="136" y="65" size="3" weight={700}>using the bus or</Tag>
+      <Tag x="136" y="70" size="3" weight={700}>cycle lane</Tag>
+      <Tag x="22" y="70" size="3" weight={800} color={C.bad}>don't cut</Tag>
+      <Tag x="22" y="75" size="3" weight={800} color={C.bad}>across them</Tag>
+    </Frame>
+  ),
+
+  "zigzag-zone": () => (
+    <Frame title="Zigzag lines at a crossing">
+      <VRoad />
+      {Array.from({ length: 7 }, (_, i) => <rect key={i} x={47 + i * 10} y="16" width="6" height="14" fill={C.line} />)}
+      <line x1="45" y1="34" x2="115" y2="34" stroke={C.line} strokeWidth="1" strokeDasharray="3 2" />
+      {[47, 79, 112].map(x => <path key={x} d={`M${x} 38 l2 5 l-2 5 l2 5 l-2 5 l2 5 l-2 5 l2 5 l-2 5 l2 5`} fill="none" stroke={C.line} strokeWidth="0.8" />)}
+      <Car x="62" y="52" color={C.grey} />
+      <Car x="62" y="80" color={C.good} />
+      <Arrow d="M70 78 Q78 66 74 52" color={C.bad} w={1} dash="2 1.5" />
+      <path d="M70 62 L78 70 M78 62 L70 70" stroke={C.bad} strokeWidth="1.4" />
+      <Tag x="80" y="8" size="3.4">IN THE ZIGZAG AREA YOU MUST NOT</Tag>
+      <Tag x="136" y="44" size="3.2" weight={800} color={C.bad}>overtake</Tag>
+      <Tag x="136" y="52" size="3.2" weight={800} color={C.bad}>park</Tag>
+      <Tag x="136" y="60" size="3.2" weight={800} color={C.bad}>wait</Tag>
+      <Tag x="136" y="74" size="2.9" weight={700}>wait behind the</Tag>
+      <Tag x="136" y="79" size="2.9" weight={700}>give-way or stop line</Tag>
+      <Tag x="22" y="40" size="2.9" weight={700}>no zigzags?</Tag>
+      <Tag x="22" y="45" size="2.9" weight={700}>still never</Tag>
+      <Tag x="22" y="50" size="2.9" weight={700}>overtake</Tag>
+    </Frame>
+  ),
+
+  "crossing-types": () => (
+    <Frame title="Types of pedestrian crossing">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[20, "ZEBRA", "flashing beacons", "foot on it: stop", "#f59e0b", "🚶"], [60, "PELICAN", "flashing amber:", "give way", "#ef4444", "🚶"], [100, "PUFFIN", "sensor holds red", "till all have crossed", "#2563eb", "🚶"], [140, "TOUCAN", "two can cross —", "no flashing amber", "#047857", "🚶🚴"]].map(([x, t, a, b, col, ic]) => (
+        <g key={t}>
+          <rect x={x - 18} y="10" width="36" height="58" rx="4" fill="#ffffff" stroke={col} strokeWidth="1.2" />
+          <text x={x} y="36" fontSize={ic.length > 2 ? 8 : 10} textAnchor="middle">{ic}</text>
+          {t === "ZEBRA" ? <circle cx={x} cy="18" r="4" fill={C.amber} /> : <rect x={x - 3} y="14" width="6" height="10" rx="1" fill="#111827" />}
+          {t === "PELICAN" && <circle cx={x} cy="21" r="2" fill={C.amber} />}
+          {t === "PUFFIN" && <path d={`M${x - 8} 48 q8 -6 16 0`} fill="none" stroke="#2563eb" strokeWidth="1" />}
+          <Tag x={x} y="58" size="3.4" color={col}>{t}</Tag>
+          <Tag x={x} y="78" size="2.7" weight={700}>{a}</Tag>
+          <Tag x={x} y="83" size="2.7" weight={700}>{b}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="96" size="3" weight={700}>never accelerate towards a crossing — and keep it clear in queues</Tag>
+    </Frame>
+  ),
+
+  "staggered-crossing": () => (
+    <Frame title="Straight and staggered crossings">
+      <rect x="0" y="0" width="160" height="100" fill={C.ground} />
+      {[[40, false, "STRAIGHT ACROSS", "one crossing — give way to people from your right, even on flashing amber"], [120, true, "STAGGERED", "two crossings — give way to those on your side"]].map(([x, stag, t, d]) => (
+        <g key={t}>
+          <rect x={x - 30} y="10" width="60" height="64" fill={C.road} />
+          <rect x={x - 4} y="10" width="8" height="64" fill={C.kerb} />
+          {stag
+            ? <g>{[0, 1, 2].map(i => <rect key={i} x={x - 28 + i * 8} y="24" width="5" height="10" fill={C.line} />)}{[0, 1, 2].map(i => <rect key={"b" + i} x={x + 6 + i * 8} y="48" width="5" height="10" fill={C.line} />)}</g>
+            : [0, 1, 2, 3, 4, 5].map(i => <rect key={i} x={x - 28 + i * (i < 3 ? 8 : 8) + (i > 2 ? 10 : 0)} y="36" width="5" height="10" fill={C.line} />)}
+          <Tag x={x} y="84" size="3.2">{t}</Tag>
+          <Tag x={x} y="90" size="2.6" weight={700}>{d.length > 42 ? d.slice(0, d.lastIndexOf(" ", 42)) : d}</Tag>
+          {d.length > 42 && <Tag x={x} y="95" size="2.6" weight={700}>{d.slice(d.lastIndexOf(" ", 42) + 1)}</Tag>}
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "vulnerable-peds": () => (
+    <Frame title="Vulnerable pedestrians">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.amber} rows={2} cells={[["🧒", "the young: impulsive"], ["🧓", "the elderly: misjudge speed"], ["🦯", "white stick: blind"], ["🦮", "guide dog"], ["♿", "allow more time"], ["🦻", "deaf: may not hear you"]]} />
+    </Frame>
+  ),
+
+  "white-sticks": () => (
+    <Frame title="White sticks">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="48" y="12" width="5" height="70" rx="2" fill="#ffffff" stroke="#334155" strokeWidth="0.8" />
+      <rect x="108" y="12" width="5" height="70" rx="2" fill="#ffffff" stroke="#334155" strokeWidth="0.8" />
+      <rect x="108" y="26" width="5" height="6" fill="#dc2626" />
+      <rect x="108" y="40" width="5" height="6" fill="#dc2626" />
+      <Tag x="50" y="90" size="3.4" weight={900}>BLIND</Tag>
+      <Tag x="110" y="90" size="3.4" weight={900} color="#b91c1c">DEAF AND BLIND</Tag>
+      <Tag x="110" y="96" size="2.8" weight={700}>red reflective bands</Tag>
+      <Tag x="50" y="96" size="2.8" weight={700}>all white</Tag>
+    </Frame>
+  ),
+
+  "danger-spots": () => (
+    <Frame title="Where pedestrians appear">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.bad} rows={2} cells={[["🚌", "behind a stopped bus"], ["🚗", "between parked cars"], ["🍦", "ice-cream vans"], ["🛍️", "busy shopping streets"], ["↩️", "left-hand bends"], ["🌾", "roads with no footpath"]]} />
+    </Frame>
+  ),
+
+  "escooter": () => (
+    <Frame title="E-bikes and e-scooters">
+      <rect x="0" y="0" width="160" height="100" fill={C.road} />
+      <rect x="0" y="0" width="40" height="100" fill={C.kerb} />
+      <text x="20" y="36" fontSize="10" textAnchor="middle">🛴</text>
+      <Arrow d="M20 44 Q30 60 52 66" color={C.bad} w={1.2} dash="2 1.5" />
+      <Car x="72" y="80" color={C.good} />
+      <Tag x="100" y="10" size="3.4">E-BIKES AND E-SCOOTERS</Tag>
+      <Tag x="112" y="28" size="3" weight={800}>quite high speeds,</Tag>
+      <Tag x="112" y="33" size="3" weight={800}>little or no warning</Tag>
+      <Tag x="112" y="45" size="3" weight={800}>slim "straight line"</Tag>
+      <Tag x="112" y="50" size="3" weight={800}>shape: hard to see</Tag>
+      <Tag x="112" y="62" size="3" weight={700}>may ride on the footpath</Tag>
+      <Tag x="112" y="67" size="3" weight={700}>and cross without looking</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

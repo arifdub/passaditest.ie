@@ -4254,6 +4254,79 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- the driver and the instructor (Book 3, Unit 3.1) ---------------- */
+  "driver-qualities": () => (
+    <Frame title="The qualities of a good driver">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} size={8} cells={[["🛡️", "Responsibility"], ["🎯", "Concentration"], ["🔭", "Anticipation"], ["⏳", "Patience"], ["💪", "Confidence"], ["💬", "Communication"]]} />
+      <Tag x="80" y="97" size="3.1" weight={800} color="#047857">+ awareness, experience and skill = the driver's ATTITUDE</Tag>
+    </Frame>
+  ),
+
+  "lesson-plan": () => (
+    <Frame title="A planned lesson">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.6">BEGINNING · MIDDLE · END</Tag>
+      <StepChips y={26} perRow={4} steps={["Recap", "Objectives", "Briefing", "Demonstration"]} />
+      <StepChips y={62} perRow={4} start={5} color="#0f766e" steps={["Practice", "Praise", "Recap at end", "Link to next"]} />
+      <Tag x="80" y="97" size="2.9" weight={700}>set behavioural objectives — measure progress by a change in skill</Tag>
+    </Frame>
+  ),
+
+  "instructor-qualities": () => (
+    <Frame title="The good driver v the good instructor">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="40" y="10" size="3.4" color="#1d4ed8">GOOD DRIVER</Tag>
+      <Tag x="116" y="10" size="3.4" color="#047857">GOOD INSTRUCTOR</Tag>
+      {[["Responsibility", "for pupils' future safety"], ["Concentration", "on the pupil's reactions"], ["Anticipation", "of the pupil's actions, needs"], ["Patience", "to keep their confidence"], ["Confidence", "to set an example"]].map(([q, i], k) => {
+        const y = 22 + k * 14;
+        return (
+          <g key={q}>
+            <rect x="10" y={y - 5} width="60" height="10" rx="3" fill="#dbeafe" />
+            <Tag x="40" y={y + 1.5} size="3.1" weight={800}>{q}</Tag>
+            <Arrow d={`M72 ${y} L82 ${y}`} color="#475569" w={0.9} />
+            <rect x="84" y={y - 5} width="66" height="10" rx="3" fill="#d1fae5" />
+            <Tag x="117" y={y + 1.5} size="2.8" weight={700}>{i}</Tag>
+          </g>
+        );
+      })}
+      <Tag x="80" y="96" size="2.9" weight={800} color={C.bad}>not every good driver is a good teacher</Tag>
+    </Frame>
+  ),
+
+  "teaching-aids": () => (
+    <Frame title="Visual teaching aids">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="44" cy="50" r="28" fill="#e2e8f0" />
+      <path d="M44 50 L44 22 A28 28 0 1 1 16 50 Z" fill="#0ea5e9" />
+      <text x="54" y="64" fontSize="11" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">¾</text>
+      <Tag x="44" y="90" size="3.1" weight={800}>of knowledge comes from what we SEE</Tag>
+      <rect x="92" y="22" width="52" height="38" rx="3" fill="#ffffff" stroke="#334155" strokeWidth="1" />
+      <rect x="96" y="26" width="44" height="24" fill="#dbeafe" />
+      <path d="M100 46 L116 32 L124 40 L136 30" fill="none" stroke="#2563eb" strokeWidth="1.4" />
+      <Tag x="118" y="56" size="2.9" weight={800}>diagrams, folders, boards</Tag>
+      <Tag x="118" y="72" size="2.9" weight={700}>shorter explanations,</Tag>
+      <Tag x="118" y="77" size="2.9" weight={700}>more interest, a</Tag>
+      <Tag x="118" y="82" size="2.9" weight={700}>professional image</Tag>
+    </Frame>
+  ),
+
+  "learning-curves": () => (
+    <Frame title="No two learners are the same">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <line x1="20" y1="82" x2="150" y2="82" stroke="#334155" strokeWidth="0.8" />
+      <line x1="20" y1="82" x2="20" y2="12" stroke="#334155" strokeWidth="0.8" />
+      <path d="M20 80 Q46 26 80 34 Q110 40 146 22" fill="none" stroke="#f59e0b" strokeWidth="1.8" />
+      <path d="M20 80 Q60 70 90 52 Q120 34 146 22" fill="none" stroke="#2563eb" strokeWidth="1.8" />
+      <circle cx="146" cy="22" r="2.6" fill="#047857" />
+      <Tag x="60" y="24" size="3" weight={800} color="#b45309">fast start, then a plateau</Tag>
+      <Tag x="98" y="66" size="3" weight={800} color="#1d4ed8">slow start, steady progress</Tag>
+      <Tag x="134" y="14" size="3" weight={800} color="#047857">both meet at the end</Tag>
+      <Tag x="84" y="92" size="2.9" weight={700}>lessons →</Tag>
+      <Tag x="10" y="48" size="2.8" weight={700}>skill</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

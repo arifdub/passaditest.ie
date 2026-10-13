@@ -40,6 +40,8 @@ import UNIT_2_9 from "./book2/unit2_9";
 import UNIT_2_10 from "./book2/unit2_10";
 import UNIT_2_11 from "./book2/unit2_11";
 import GLOSSARY_2 from "./book2/glossary";
+import UNIT_3_1 from "./book3/unit3_1";
+import GLOSSARY_3 from "./book3/glossary";
 
 export const BOOKS = [
   {
@@ -88,7 +90,27 @@ export const BOOKS = [
       { id: "2.11", title: "Traffic Signs & Signals",         pages: [81, 89], badge: "Signs Specialist", content: UNIT_2_11 },
     ],
   },
-  { id: "b3", number: 3, title: "Book 3", subtitle: "Coming soon", units: [] },
+  {
+    id: "b3",
+    number: 3,
+    title: "The Driving Test, Law & Licensing",
+    subtitle: "Book 3",
+    source: "Theory Resource Workbook 3 of 4 — Driver Education Supplies",
+    moduleId: "learn.b3",
+    glossary: GLOSSARY_3,
+    units: [
+      { id: "3.1",  title: "The Driver & the Instructor",     pages: [5, 10],  badge: "Instructor Specialist", content: UNIT_3_1 },
+      { id: "3.2",  title: "Before Driving",                  pages: [11, 16], badge: "Ready-to-Drive Specialist" },
+      { id: "3.3",  title: "The Road Traffic Acts & the Law", pages: [17, 26], badge: "Law Specialist" },
+      { id: "3.4",  title: "Driving Instructor Regulations",  pages: [27, 39], badge: "Regulations Specialist" },
+      { id: "3.5",  title: "Driver Licensing",                pages: [40, 52], badge: "Licensing Specialist" },
+      { id: "3.6",  title: "Vehicle Registration & Licensing", pages: [53, 56], badge: "Registration Specialist" },
+      { id: "3.7",  title: "The Driving Test",                pages: [57, 67], badge: "Driving Test Specialist" },
+      { id: "3.8",  title: "Driving Test Forms",              pages: [68, 72], badge: "Test Forms Specialist" },
+      { id: "3.9",  title: "Teaching Drivers with Disabilities", pages: [73, 82], badge: "Inclusive Instructor" },
+      { id: "3.10", title: "Safety Belts & Child Restraints", pages: [83, 87], badge: "Restraints Specialist" },
+    ],
+  },
   { id: "b4", number: 4, title: "Book 4", subtitle: "Coming soon", units: [] },
 ];
 

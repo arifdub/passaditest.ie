@@ -39,6 +39,8 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_9.js` | Unit 2.9 Mechanical Principles (pp.60–71). |
 | `book2/unit2_10.js` | Unit 2.10 Pedestrians & Cyclists (pp.72–80). |
 | `book2/unit2_11.js` | Unit 2.11 Traffic Signs & Signals (pp.81–89). |
+| `book3/glossary.js` | Book 3 visual glossary (terms added unit by unit). |
+| `book3/unit3_1.js` | Unit 3.1 The Driver & the Instructor (pp.5–10). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -249,3 +251,15 @@ to the closest MCQ section: car controls and mechanics to "Basic Mechanics
   the unit allows setting down) contradict the text; Q2, Q27, Q45 and Q50
   have another option as defensible; Q30 and Q36 aren't in the unit. 42
   are used. Its recognition game is "Read the Road". Book 2 is complete.
+
+## Audit notes — Book 3
+
+Source: "Theory Resource Workbook 3 of 4" — The Driving Test, Law &
+Licensing. Ten units (the contents page lists nine; Unit 3.10 on safety
+belts follows 3.9). Post-test model answers pp.88–92; retention answers
+p.93 onwards.
+
+- **Retention test 3.1, Q5** — omitted: the key gives "anticipation" as
+  the hallmark of a good driver, which the unit doesn't say; "sound
+  judgement" is as defensible. Its recognition game is "Good Driver, Good
+  Teacher".

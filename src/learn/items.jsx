@@ -10,13 +10,13 @@
     truefalse  a statement, true or false
     choice     tap the correct option (statements, rules, scenarios)
     fill       tap the missing word
-    order      tap the steps into the right order
-    match      pair each left-hand item with its right-hand partner
+    order      drag (or tap) the step cards into the right order
+    match      drag (or tap) each meaning onto its term
     sort       put each card in its group
   ===========================================================================
 */
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { Check, X, RotateCcw } from "lucide-react";
 import { shuffle } from "./engine";
 import { Visual } from "./visuals";
@@ -228,167 +228,336 @@ function Fill({ item, onAnswer }) {
   );
 }
 
-/* ---------------------------------------------------------------- order */
+/* ------------------------------------------------------------ drag kit
+   Pointer-event dragging, so it works the same with a finger or a mouse.
+   Drop targets carry data-drop={index}. A press that doesn't move counts
+   as a tap, so every drag interaction also works tap-then-tap — for
+   anyone who can't drag, and with a keyboard (Enter / Space). */
+function buzz() {
+  try { navigator.vibrate?.(12); } catch { /* not supported */ }
+}
+
+function dropAt(x, y) {
+  const el = document.elementFromPoint(x, y)?.closest?.("[data-drop]");
+  return el ? Number(el.dataset.drop) : null;
+}
+
+function useDrag({ onMove, onDrop, onTap }) {
+  const [drag, setDrag] = useState(null);
+  const ref = useRef(null);
+  const down = (e, from, label) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    ref.current = { from, label, sx: e.clientX, sy: e.clientY, x: e.clientX, y: e.clientY,
+      w: r.width, h: r.height, dx: e.clientX - r.left, dy: e.clientY - r.top, moved: false, over: null };
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ignore */ }
+  };
+  const move = (e) => {
+    const d = ref.current;
+    if (!d) return;
+    d.x = e.clientX; d.y = e.clientY;
+    if (!d.moved && Math.hypot(d.x - d.sx, d.y - d.sy) > 6) d.moved = true;
+    if (!d.moved) return;
+    d.over = dropAt(d.x, d.y);
+    onMove?.(d);
+    /* Keep the list in view while dragging near the top or bottom. */
+    const sc = document.getElementById("app-scroll");
+    if (sc) {
+      if (d.y < 110) sc.scrollTop -= 10;
+      else if (d.y > window.innerHeight - 130) sc.scrollTop += 10;
+    }
+    setDrag({ ...d });
+  };
+  const up = (e) => {
+    const d = ref.current;
+    ref.current = null;
+    setDrag(null);
+    if (!d) return;
+    if (!d.moved) { onTap?.(d.from); return; }
+    onDrop?.(d.from, dropAt(e.clientX, e.clientY), d);
+  };
+  const cancel = () => { ref.current = null; setDrag(null); };
+  const bind = (i, label) => ({
+    onPointerDown: (e) => down(e, i, label),
+    onPointerMove: move,
+    onPointerUp: up,
+    onPointerCancel: cancel,
+    onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTap?.(i); } },
+  });
+  return { drag, bind };
+}
+
+/* The card that follows the finger. */
+function Ghost({ drag, children }) {
+  if (!drag) return null;
+  return (
+    <div className="fixed z-50 pointer-events-none" style={{ left: drag.x - drag.dx, top: drag.y - drag.dy, width: drag.w }}>
+      <div className="rotate-[1.5deg] scale-[1.04] shadow-2xl shadow-black/40 rounded-2xl">{children}</div>
+    </div>
+  );
+}
+
+/* A little burst for a perfect answer. */
+const BURST = ["#10b981", "#34d399", "#f59e0b", "#3b82f6", "#ec4899", "#fbbf24"];
+function Burst() {
+  const [pieces] = useState(() => Array.from({ length: 16 }, (_, i) => {
+    const a = (i / 16) * Math.PI * 2;
+    return { x: Math.cos(a) * (70 + (i % 3) * 25), y: Math.sin(a) * (60 + (i % 4) * 18) - 30, r: (i * 47) % 360, c: BURST[i % BURST.length], d: (i % 5) * 25 };
+  }));
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-visible">
+      <div className="relative">
+        {pieces.map((p, i) => (
+          <span key={i} className="confetti-piece" style={{ background: p.c, "--x": `${p.x}px`, "--y": `${p.y}px`, "--r": `${p.r}deg`, animationDelay: `${p.d}ms` }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const Grip = () => (
+  <span className="grid grid-cols-2 gap-[3px] shrink-0 opacity-60" aria-hidden="true">
+    {[0, 1, 2, 3, 4, 5].map(i => <span key={i} className="w-[4px] h-[4px] rounded-full bg-current" />)}
+  </span>
+);
+
+/* ---------------------------------------------------------------- order
+   A timeline of step cards. Drag a card up or down and the others slide out
+   of the way; or tap one card, then tap where it should go. */
 function Order({ item, onAnswer }) {
-  const pool = useMemo(() => {
+  const [list, setList] = useState(() => {
     let s = shuffle(item.steps);
     // Never start already solved.
     while (s.every((x, i) => x === item.steps[i]) && item.steps.length > 1) s = shuffle(item.steps);
     return s;
-  }, [item]);
-  const [placed, setPlaced] = useState([]);
+  });
+  const [sel, setSel] = useState(null);
   const [checked, setChecked] = useState(false);
-  const left = pool.filter(p => !placed.includes(p));
+  const [touched, setTouched] = useState(false);
 
+  const moveItem = (from, to) => setList(l => {
+    const x = [...l];
+    const [v] = x.splice(from, 1);
+    x.splice(to, 0, v);
+    return x;
+  });
+
+  const { drag, bind } = useDrag({
+    onMove: (d) => {
+      if (d.over !== null && d.over !== d.from) {
+        moveItem(d.from, d.over);
+        d.from = d.over;
+        setTouched(true);
+      }
+    },
+    onDrop: () => { buzz(); setSel(null); },
+    onTap: (i) => {
+      if (sel === null) { setSel(i); return; }
+      if (sel !== i) { moveItem(sel, i); setTouched(true); buzz(); }
+      setSel(null);
+    },
+  });
+
+  const right = list.filter((v, i) => v === item.steps[i]).length;
   const check = () => {
     setChecked(true);
-    const right = placed.filter((p, i) => p === item.steps[i]).length;
+    setSel(null);
     onAnswer({ score: right / item.steps.length, correct: right === item.steps.length });
   };
+  const perfect = checked && right === item.steps.length;
+  const draggingText = drag ? list[drag.from] : null;
 
   return (
-    <div>
+    <div className="relative">
       <Label>{item.label || "Procedure builder"}</Label>
       <p className="rd-lead font-bold text-slate-900 dark:text-white">{item.prompt}</p>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Tap the steps in order. Tap a placed step to take it back.</p>
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        Drag the cards into order — or tap a card, then tap where it goes.
+      </p>
 
-      <ol className="mt-4 space-y-2">
-        {item.steps.map((_, i) => {
-          const val = placed[i];
-          const ok = checked && val === item.steps[i];
-          const wrong = checked && val !== item.steps[i];
+      <ol className="mt-4 relative">
+        <span className="absolute left-[15px] top-4 bottom-4 w-[2px] bg-slate-200 dark:bg-slate-700" aria-hidden="true" />
+        {list.map((v, i) => {
+          const ok = checked && v === item.steps[i];
+          const wrong = checked && !ok;
+          const isDrag = draggingText === v;
           return (
-            <li key={i}>
-              <button
-                disabled={checked || !val}
-                onClick={() => setPlaced(placed.filter(p => p !== val))}
-                className={`w-full flex items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-left min-h-[48px] ${
+            <li key={v} className="relative flex items-stretch gap-3 py-1">
+              <span className={`relative z-[1] mt-2.5 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0 transition ${
+                ok ? "bg-emerald-500 text-white" : wrong ? "bg-red-500 text-white" : "bg-slate-900 dark:bg-slate-600 text-white"
+              }`}>
+                {ok ? <Check size={16} strokeWidth={3} /> : wrong ? <X size={16} strokeWidth={3} /> : i + 1}
+              </span>
+              <div
+                data-drop={i}
+                role="button"
+                tabIndex={checked ? -1 : 0}
+                aria-label={`Step ${i + 1}: ${v}`}
+                {...(checked ? {} : bind(i, v))}
+                style={{ touchAction: checked ? "auto" : "none", animationDelay: perfect ? `${i * 70}ms` : undefined }}
+                className={`flex-1 select-none flex items-center gap-3 rounded-2xl border-2 px-3.5 py-3 min-h-[52px] transition ${
+                  perfect ? "learn-pop" : ""} ${
                   ok ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40"
                     : wrong ? "border-red-400 bg-red-50 dark:bg-red-950/40"
-                    : val ? "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800"
-                    : "border-dashed border-slate-200 dark:border-slate-700"
+                    : isDrag ? "border-dashed border-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 opacity-40"
+                    : sel === i ? "border-emerald-500 bg-white dark:bg-slate-800 ring-4 ring-emerald-500/20"
+                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-grab active:cursor-grabbing"
                 }`}
               >
-                <span className="w-6 h-6 rounded-full bg-slate-900 dark:bg-slate-600 text-white text-xs font-black flex items-center justify-center shrink-0">{i + 1}</span>
-                <span className={`font-semibold ${val ? "text-slate-900 dark:text-white" : "text-slate-300 dark:text-slate-600"}`}>{val || "…"}</span>
-                {wrong && <span className="ml-auto text-xs font-bold text-emerald-600 dark:text-emerald-400">{item.steps[i]}</span>}
-              </button>
+                {!checked && <span className="text-slate-400"><Grip /></span>}
+                <span className="font-semibold text-slate-900 dark:text-white leading-snug">{v}</span>
+                {wrong && (
+                  <span className="ml-auto shrink-0 text-[11px] font-black rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 px-2 py-0.5">
+                    step {item.steps.indexOf(v) + 1}
+                  </span>
+                )}
+              </div>
             </li>
           );
         })}
       </ol>
 
-      {!checked && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {left.map(p => (
-            <button key={p} onClick={() => setPlaced([...placed, p])}
-              className="rounded-xl bg-slate-900 dark:bg-slate-700 text-white font-bold px-4 py-3 active:scale-95 transition">
-              {p}
-            </button>
-          ))}
+      <Ghost drag={drag}>
+        <div className="flex items-center gap-3 rounded-2xl border-2 border-emerald-500 bg-white dark:bg-slate-800 px-3.5 py-3 min-h-[52px]">
+          <span className="text-emerald-500"><Grip /></span>
+          <span className="font-semibold text-slate-900 dark:text-white leading-snug">{draggingText}</span>
         </div>
-      )}
+      </Ghost>
+
+      {perfect && <Burst />}
 
       {!checked && (
-        <div className="mt-5 flex gap-2.5">
-          <button onClick={() => setPlaced([])} disabled={!placed.length}
-            className="border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold px-4 py-3 rounded-xl disabled:opacity-40 inline-flex items-center gap-1.5">
-            <RotateCcw size={15} /> Reset
-          </button>
-          <button onClick={check} disabled={placed.length !== item.steps.length}
-            className="flex-1 bg-emerald-500 text-slate-900 font-bold py-3 rounded-xl disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500">
-            Check order
-          </button>
-        </div>
+        <button onClick={check} disabled={!touched}
+          className="mt-5 w-full bg-emerald-500 text-slate-900 font-bold py-3.5 rounded-2xl disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500">
+          {touched ? "Check order" : "Move a card to begin"}
+        </button>
       )}
     </div>
   );
 }
 
-/* ---------------------------------------------------------------- match */
-const PAIR_TONES = ["bg-sky-100 border-sky-400 dark:bg-sky-950/50", "bg-violet-100 border-violet-400 dark:bg-violet-950/50", "bg-amber-100 border-amber-400 dark:bg-amber-950/50", "bg-pink-100 border-pink-400 dark:bg-pink-950/50", "bg-teal-100 border-teal-400 dark:bg-teal-950/50", "bg-lime-100 border-lime-400 dark:bg-lime-950/50"];
+/* ---------------------------------------------------------------- match
+   Terms on the left, meanings on the right. Drag a meaning onto the term
+   it belongs to (the two cards swap places), or tap a meaning then tap
+   where it goes. Checking marks every row. */
+function derange(arr, target) {
+  let best = shuffle(arr), bestHits = Infinity;
+  for (let t = 0; t < 40; t++) {
+    const s = shuffle(arr);
+    const hits = s.filter((v, i) => v === target[i]).length;
+    if (hits < bestHits) { best = s; bestHits = hits; }
+    if (hits === 0) break;
+  }
+  return best;
+}
 
 function Match({ item, onAnswer }) {
-  /* Right-hand cards are tracked by their position in the shuffled list,
-     not by their text — two cards can say the same thing. A pairing is
-     marked on the text, so either of two identical answers counts. */
-  const rights = useMemo(() => shuffle(item.pairs.map(p => p[1])), [item]);
-  const [sel, setSel] = useState(null);           // left index selected
-  const [links, setLinks] = useState({});         // left index -> right index
+  const want = useMemo(() => item.pairs.map(p => p[1]), [item]);
+  const [cards, setCards] = useState(() => derange(want, want));
+  const [moved, setMoved] = useState(() => new Set());
+  const [sel, setSel] = useState(null);
   const [checked, setChecked] = useState(false);
-  const linkedRights = Object.values(links);
-  const textOf = (i) => (links[i] === undefined ? undefined : rights[links[i]]);
 
-  const pickRight = (ri) => {
-    if (checked || sel === null) return;
-    const next = { ...links };
-    for (const k of Object.keys(next)) if (next[k] === ri) delete next[k];
-    next[sel] = ri;
-    setLinks(next);
-    setSel(null);
+  const swap = (a, b) => {
+    if (b === null || b === undefined || a === b) return;
+    setCards(c => { const x = [...c]; [x[a], x[b]] = [x[b], x[a]]; return x; });
+    setMoved(m => new Set([...m, a, b]));
+    buzz();
   };
+  const { drag, bind } = useDrag({
+    onDrop: (from, over) => { swap(from, over); setSel(null); },
+    onTap: (i) => {
+      if (sel === null) { setSel(i); return; }
+      swap(sel, i);
+      setSel(null);
+    },
+  });
 
+  const okRow = (i) => cards[i] === want[i];
+  const right = want.filter((_, i) => okRow(i)).length;
   const check = () => {
     setChecked(true);
-    const right = item.pairs.filter((p, i) => textOf(i) === p[1]).length;
-    onAnswer({ score: right / item.pairs.length, correct: right === item.pairs.length });
+    setSel(null);
+    onAnswer({ score: right / want.length, correct: right === want.length });
   };
-
-  const toneFor = (i) => PAIR_TONES[i % PAIR_TONES.length];
+  const perfect = checked && right === want.length;
+  const over = drag?.over;
 
   return (
-    <div>
+    <div className="relative">
       <Label>{item.label || "Match"}</Label>
       <p className="rd-lead font-bold text-slate-900 dark:text-white">{item.prompt}</p>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Tap an item on the left, then its match on the right.</p>
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        Drag each meaning onto the right term — or tap a meaning, then tap where it goes.
+      </p>
 
-      <div className="mt-4 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2.5">
-        <div className="space-y-2">
-          {item.pairs.map((p, i) => {
-            const linked = links[i] !== undefined;
-            const ok = checked && textOf(i) === p[1];
-            return (
-              <button key={i} disabled={checked} onClick={() => setSel(sel === i ? null : i)}
-                className={`w-full min-h-[56px] rounded-xl border-2 px-3 py-2 text-left font-bold text-sm text-slate-900 dark:text-white transition ${
-                  checked ? (ok ? good : bad)
-                    : sel === i ? "border-slate-900 dark:border-white bg-white dark:bg-slate-800"
-                    : linked ? toneFor(i) : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
-                }`}>
-                {p[0]}
-              </button>
-            );
-          })}
-        </div>
-        <div className="space-y-2">
-          {rights.map((r, ri) => {
-            const owner = Object.keys(links).find(k => links[k] === ri);
-            return (
-              <button key={ri} disabled={checked} onClick={() => pickRight(ri)}
-                className={`w-full min-h-[56px] rounded-xl border-2 px-3 py-2 text-left text-[13px] leading-snug text-slate-700 dark:text-slate-200 transition ${
-                  owner !== undefined && !checked ? toneFor(Number(owner))
-                    : sel !== null && !checked ? "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 animate-pulse"
-                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
-                }`}>
-                {r}
-              </button>
-            );
-          })}
-        </div>
+      <div className="mt-4 space-y-2.5">
+        {item.pairs.map((p, i) => {
+          const ok = checked && okRow(i);
+          const wrong = checked && !ok;
+          const target = drag && over === i && drag.from !== i;
+          const isDrag = drag && drag.from === i;
+          return (
+            <div key={i}>
+              <div className="grid grid-cols-[minmax(0,2fr)_18px_minmax(0,3fr)] items-stretch gap-1.5">
+                <div data-drop={i}
+                  className={`relative min-h-[60px] rounded-2xl border-2 px-3 py-2 flex items-center justify-between gap-2 font-black text-[15px] leading-tight transition ${
+                    ok ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-slate-900 dark:text-white"
+                      : wrong ? "border-red-400 bg-red-50 dark:bg-red-950/40 text-slate-900 dark:text-white"
+                      : target ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 text-slate-900 dark:text-white scale-[1.02]"
+                      : moved.has(i) ? "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      : "border-dashed border-slate-300 dark:border-slate-600 bg-white/60 dark:bg-slate-800/50 text-slate-900 dark:text-white"
+                  }`}>
+                  <span>{p[0]}</span>
+                  {ok && <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 learn-pop"><Check size={14} strokeWidth={3} /></span>}
+                  {wrong && <span className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shrink-0 learn-pop"><X size={14} strokeWidth={3} /></span>}
+                </div>
+                <svg viewBox="0 0 18 20" className={`self-center w-[18px] ${ok ? "text-emerald-500" : wrong ? "text-red-400" : "text-slate-400"}`} aria-hidden="true">
+                  <path d="M16 10 C11 4, 7 16, 3 10" fill="none" stroke="currentColor" strokeWidth="1.4" strokeDasharray="2 2" />
+                  <path d="M6 7 L2.5 10 L6 13" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                </svg>
+                <div data-drop={i}
+                  role="button"
+                  tabIndex={checked ? -1 : 0}
+                  aria-label={`${cards[i]} — matched to ${p[0]}`}
+                  {...(checked ? {} : bind(i, cards[i]))}
+                  style={{ touchAction: checked ? "auto" : "none" }}
+                  className={`select-none min-h-[60px] rounded-2xl border-2 px-3 py-2 flex items-center gap-2.5 text-[13.5px] leading-snug font-semibold transition ${
+                    ok ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-slate-800 dark:text-slate-100"
+                      : wrong ? "border-red-400 bg-red-50 dark:bg-red-950/40 text-slate-800 dark:text-slate-100"
+                      : isDrag ? "border-dashed border-emerald-400 opacity-40 text-slate-500"
+                      : target ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 text-slate-800 dark:text-slate-100"
+                      : sel === i ? "border-emerald-500 ring-4 ring-emerald-500/20 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+                      : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-grab active:cursor-grabbing"
+                  }`}>
+                  {!checked && <span className="text-slate-400"><Grip /></span>}
+                  <span>{cards[i]}</span>
+                </div>
+              </div>
+              {wrong && (
+                <p className="mt-1 ml-1 text-[13px] text-emerald-700 dark:text-emerald-400 learn-fade">
+                  <Check size={13} strokeWidth={3} className="inline -mt-0.5 mr-1" />
+                  <b>{p[0]}</b> → {p[1]}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {checked && item.pairs.some((p, i) => links[i] !== p[1]) && (
-        <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 space-y-1.5">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Correct pairs</p>
-          {item.pairs.map(p => (
-            <p key={p[0]} className="text-sm text-slate-700 dark:text-slate-200"><b>{p[0]}</b> → {p[1]}</p>
-          ))}
+      <Ghost drag={drag}>
+        <div className="min-h-[60px] rounded-2xl border-2 border-emerald-500 bg-white dark:bg-slate-800 px-3 py-2 flex items-center gap-2.5 text-[13.5px] leading-snug font-semibold text-slate-800 dark:text-slate-100">
+          <span className="text-emerald-500"><Grip /></span>
+          <span>{drag ? cards[drag.from] : ""}</span>
         </div>
-      )}
+      </Ghost>
+
+      {perfect && <Burst />}
 
       {!checked && (
-        <button onClick={check} disabled={linkedRights.length !== item.pairs.length}
-          className="mt-5 w-full bg-emerald-500 text-slate-900 font-bold py-3 rounded-xl disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500">
-          Check matches
+        <button onClick={check} disabled={!moved.size}
+          className="mt-5 w-full bg-emerald-500 text-slate-900 font-bold py-3.5 rounded-2xl disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-800 dark:disabled:text-slate-500">
+          {moved.size ? "Check answers" : "Drag a meaning to begin"}
         </button>
       )}
     </div>

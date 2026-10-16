@@ -4895,6 +4895,79 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- safety belts & child restraints (Book 3, Unit 3.10) ---------------- */
+  "child-seat-stages": () => (
+    <Frame title="Child restraints by size">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["👶", "under 3", ["correct child seat", "(taxis excepted)"], "#7c3aed", 22], ["🧒", "3+, under 150 cm", ["& 36 kg: child seat", "or booster"], "#0891b2", 34], ["🧑", "150 cm / 36 kg +", ["adult seat belt"], "#047857", 46]].map(([icon, h, rows, c, ht], i) => {
+        const x = 28 + i * 52;
+        return (
+          <g key={h}>
+            <rect x={x - 6} y={70 - ht} width="12" height={ht} rx="2" fill={c} opacity="0.85" />
+            <text x={x} y={66 - ht} fontSize="12" textAnchor="middle">{icon}</text>
+            <text x={x} y="78" fontSize="4.2" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+            {rows.map((t, k) => <text key={t} x={x} y={85 + k * 6} fontSize="3.7" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+          </g>
+        );
+      })}
+      <line x1="4" y1="70" x2="156" y2="70" stroke="#94a3b8" strokeWidth="0.8" />
+    </Frame>
+  ),
+
+  "airbag-rearward": () => (
+    <Frame title="Rear-facing seat + active airbag">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <path d="M12 30 L60 30 L60 46 L12 46 Z" fill="#334155" />
+      <ellipse cx="66" cy="40" rx="12" ry="9" fill="#fde68a" stroke="#b45309" strokeWidth="1" />
+      <text x="66" y="42" fontSize="3.6" fontWeight="900" textAnchor="middle" fill="#92400e" fontFamily="system-ui">AIRBAG</text>
+      <path d="M118 22 L118 80 L136 80 L136 60" fill="none" stroke="#475569" strokeWidth="5" strokeLinejoin="round" />
+      <path d="M82 50 Q84 74 104 74 L116 74 L116 46 Q100 40 86 44 Z" fill="#7c3aed" opacity="0.85" />
+      <text x="98" y="62" fontSize="11" textAnchor="middle">👶</text>
+      <circle cx="80" cy="18" r="9" fill="#b91c1c" />
+      <text x="80" y="22" fontSize="11" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">✗</text>
+      <Tag x="80" y="92" size="3.3" weight={800} color="#b91c1c">never in a front seat with an active airbag</Tag>
+    </Frame>
+  ),
+
+  "belt-fit": () => (
+    <Frame title="A belt that protects">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="34" y="16" width="34" height="74" rx="6" fill="#cbd5e1" />
+      <circle cx="51" cy="14" r="9" fill="#fde68a" stroke="#92400e" strokeWidth="0.8" />
+      <rect x="38" y="26" width="26" height="40" rx="5" fill="#60a5fa" />
+      <path d="M62 24 L40 64" stroke="#0f172a" strokeWidth="4" strokeLinecap="round" />
+      <path d="M36 64 L66 64" stroke="#0f172a" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="64" cy="22" r="3.4" fill="#f59e0b" stroke="#92400e" strokeWidth="0.6" />
+      {[["webbing flat — no twists", 22], ["one belt, one person", 36], ["inertia reel locks on a sudden stop", 50], ["check: cuts, tears, anchorages", 64], ["adjust to the wearer's size", 78]].map(([t, y]) => (
+        <text key={t} x="78" y={y} fontSize="4" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+    </Frame>
+  ),
+
+  "crash-scene": () => (
+    <Frame title="First on the scene">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={20} perRow={3} color="#b91c1c" steps={["make it safe", "call 112 or 999", "engines off, no smoking"]} />
+      <StepChips y={62} perRow={3} color="#1d4ed8" start={4} steps={["Airway open", "Breathing", "Compressions"]} />
+    </Frame>
+  ),
+
+  "casualty-care": () => (
+    <Frame title="Helping casualties">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#ecfdf5" stroke="#047857" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#fef2f2" stroke="#b91c1c" strokeWidth="1" />
+      <text x="41" y="20" fontSize="8" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">DO</text>
+      <text x="119" y="20" fontSize="8" fontWeight="900" textAnchor="middle" fill="#b91c1c" fontFamily="system-ui">DON'T</text>
+      {["keep them warm", "reassure them", "stay with them", "keep them talking", "watch for traffic"].map((t, i) => (
+        <text key={t} x="41" y={36 + i * 11} fontSize="4.3" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+      {["move them (unless danger)", "remove a helmet", "(unless essential)", "give food or drink", "become a victim"].map((t, i) => (
+        <text key={t} x="119" y={36 + i * 11} fontSize="4.1" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

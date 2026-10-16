@@ -49,6 +49,7 @@ import UNIT_3_6 from "./book3/unit3_6";
 import UNIT_3_7 from "./book3/unit3_7";
 import UNIT_3_8 from "./book3/unit3_8";
 import UNIT_3_9 from "./book3/unit3_9";
+import UNIT_3_10 from "./book3/unit3_10";
 import GLOSSARY_3 from "./book3/glossary";
 
 export const BOOKS = [
@@ -116,7 +117,7 @@ export const BOOKS = [
       { id: "3.7",  title: "The Driving Test",                pages: [57, 67], badge: "Driving Test Specialist", content: UNIT_3_7 },
       { id: "3.8",  title: "Driving Test Forms",              pages: [68, 72], badge: "Test Forms Specialist", content: UNIT_3_8 },
       { id: "3.9",  title: "Teaching Drivers with Disabilities", pages: [73, 82], badge: "Inclusive Instructor", content: UNIT_3_9 },
-      { id: "3.10", title: "Safety Belts & Child Restraints", pages: [83, 87], badge: "Restraints Specialist" },
+      { id: "3.10", title: "Safety Belts & Child Restraints", pages: [83, 87], badge: "Restraints Specialist", content: UNIT_3_10 },
     ],
   },
   { id: "b4", number: 4, title: "Book 4", subtitle: "Coming soon", units: [] },

@@ -334,4 +334,28 @@ export default [
     key: "Pedestrians have priority; never on motorways.",
     src: P("3.9", 73, "Options; On the footpath"),
   },
+  {
+    id: "child-restraint", unit: "3.10", term: "Child restraint system", visual: "child-seat-stages",
+    meaning: "A child seat, booster seat or booster cushion suited to the child's size.",
+    key: "Required under 150 cm and 36 kg.",
+    src: P("3.10", 83, "Child restraint systems"),
+  },
+  {
+    id: "inertia-reel", unit: "3.10", term: "Inertia reel", visual: "belt-fit",
+    meaning: "The belt mechanism that allows free movement but locks in a sudden stop.",
+    key: "Check it weekly with the webbing and anchorages.",
+    src: P("3.10", 92, "Post test Q12, Q15 model answers"),
+  },
+  {
+    id: "belt-exemption-certificate", unit: "3.10", term: "Seat belt exemption certificate", visual: "seatbelt-exempt",
+    meaning: "A certificate from an EU-registered doctor that a belt is inadvisable on medical grounds.",
+    key: "Shows name, address and duration.",
+    src: P("3.10", 83, "Exempt persons"),
+  },
+  {
+    id: "active-airbag", unit: "3.10", term: "Active frontal airbag", visual: "airbag-rearward",
+    meaning: "A front airbag that's switched on.",
+    key: "Never put a rear-facing child seat in front of one.",
+    src: P("3.10", 84, "Examples of restraint systems"),
+  },
 ];

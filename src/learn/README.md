@@ -49,6 +49,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_7.js` | Unit 3.7 The Driving Test (pp.57–67). |
 | `book3/unit3_8.js` | Unit 3.8 Driving Test Forms (pp.68–72). |
 | `book3/unit3_9.js` | Unit 3.9 Teaching Drivers with Disabilities (pp.73–82). |
+| `book3/unit3_10.js` | Unit 3.10 Safety Belts & Child Restraints (pp.83–87). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -318,3 +319,9 @@ p.93 onwards.
   are used. Post-test model answer 3 (it doesn't answer "what is tunnel
   vision") and the text's e-scooter helmet rule aren't used. Its
   recognition game is "Find the Solution".
+- **Retention test 3.10 (11 questions), Q1 and Q9** — omitted: Q1's
+  1971 vehicle rule is unclear and not in the unit; Q9's keyed option
+  ("the driver passenger") is garbled. 9 are used. Post-test model answers
+  3, 4, 8, 9 and 17 aren't used (unclear, or they contradict the text or
+  the retention key), and the text's CPR depth and rate aren't shown. Its
+  recognition game is "Buckle Up". Book 3 is complete.

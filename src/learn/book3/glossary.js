@@ -298,4 +298,40 @@ export default [
     key: "Valid for two years only.",
     src: P("3.8", 68, "Pass certificate"),
   },
+  {
+    id: "steering-ball", unit: "3.9", term: "Steering ball", visual: "hand-controls",
+    meaning: "A knob fixed to the steering wheel so it can be turned with one hand.",
+    key: "Used for loss of a limb or its use.",
+    src: P("3.9", 75, "Physical disabilities"),
+  },
+  {
+    id: "left-foot-accelerator", unit: "3.9", term: "Left-foot accelerator", visual: "disability-solutions",
+    meaning: "An accelerator moved to the left of the brake in an automatic.",
+    key: "For drivers unable to use their right leg.",
+    src: P("3.9", 75, "Disability and possible solutions"),
+  },
+  {
+    id: "tunnel-vision", unit: "3.9", term: "Tunnel vision", visual: "tunnel-vision",
+    meaning: "A field of vision with much less peripheral (side) vision than normal.",
+    key: "Mild cases: more head movement and mirrors; severe cases may be refused a licence.",
+    src: P("3.9", 75, "The more common visual disabilities"),
+  },
+  {
+    id: "primary-medical-certificate", unit: "3.9", term: "Primary Medical Certificate (PMC)", visual: "disability-solutions",
+    meaning: "The certificate needed for Revenue's disabled drivers tax reliefs.",
+    key: "Issued by a medical examiner — not a GP.",
+    src: P("3.9", 76, "To qualify"),
+  },
+  {
+    id: "e-moped", unit: "3.9", term: "E-moped (L1e-A / L1e-B)", visual: "e-mobility",
+    meaning: "A battery-powered moped — a mechanically propelled vehicle under Irish law.",
+    key: "Must be registered with Revenue and taxed.",
+    src: P("3.9", 77, "What is an e-moped"),
+  },
+  {
+    id: "mobility-scooter", unit: "3.9", term: "Powered mobility scooter", visual: "mobility-scooter",
+    meaning: "A speed-limited vehicle for people with mobility needs, mainly for footpaths.",
+    key: "Pedestrians have priority; never on motorways.",
+    src: P("3.9", 73, "Options; On the footpath"),
+  },
 ];

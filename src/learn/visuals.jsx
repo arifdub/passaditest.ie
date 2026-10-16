@@ -4799,6 +4799,102 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- drivers with disabilities (Book 3, Unit 3.9) ---------------- */
+  "disability-solutions": () => (
+    <Frame title="Disability → possible solution">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["left leg or foot", ["automatic transmission"]], ["right leg or foot", ["hand accelerator/brake + steering ball,", "or left-foot accelerator (automatic)"]], ["both legs", ["full hand (lever) controls,", "automatic + steering ball"]], ["one or both arms", ["automatic, repositioned controls,", "steering ball or foot steering aid"]], ["artificial limbs", ["special attachments to", "pedals and steering"]]].map(([d, sol], i) => {
+        const y = 6 + i * 18.5;
+        return (
+          <g key={d}>
+            <rect x="4" y={y} width="44" height="15" rx="2" fill="#1d4ed8" />
+            <text x="26" y={y + 9.2} fontSize="3.9" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{d}</text>
+            <path d={`M49 ${y + 7.5} L54 ${y + 7.5}`} stroke="#047857" strokeWidth="1.2" />
+            <rect x="55" y={y} width="101" height="15" rx="2" fill="#ecfdf5" stroke="#047857" strokeWidth="0.6" />
+            {sol.map((t, k) => <text key={t} x="105.5" y={y + (sol.length === 1 ? 9.2 : 6.6 + k * 5)} fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "hand-controls": () => (
+    <Frame title="Steering ball and hand control">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="62" cy="48" r="32" fill="none" stroke="#334155" strokeWidth="5" />
+      <circle cx="62" cy="48" r="8" fill="#475569" />
+      <path d="M62 48 L32 48 M62 48 L92 48 M62 48 L62 80" stroke="#475569" strokeWidth="4" />
+      <circle cx="84" cy="25" r="5.5" fill="#1d4ed8" stroke="#1e3a8a" strokeWidth="1" />
+      <rect x="112" y="44" width="5" height="40" rx="2" fill="#64748b" />
+      <rect x="108" y="30" width="13" height="16" rx="5" fill="#b45309" />
+      <Tag x="84" y="14" size="3.4" weight={800}>steering ball</Tag>
+      <Tag x="115" y="92" size="3.4" weight={800}>hand control</Tag>
+      <Tag x="40" y="95" size="3.1" weight={700}>steer with one hand</Tag>
+    </Frame>
+  ),
+
+  "one-eye": () => (
+    <Frame title="Sight in one eye">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <path d="M80 82 L20 10 L80 10 Z" fill="#cbd5e1" opacity="0.7" />
+      <path d="M80 82 L80 10 L140 10 Z" fill="#bbf7d0" />
+      <circle cx="80" cy="84" r="9" fill="#fde68a" stroke="#92400e" strokeWidth="0.8" />
+      <circle cx="76.5" cy="82" r="1.4" fill="#475569" />
+      <circle cx="83.5" cy="82" r="1.4" fill="#0f172a" />
+      <path d="M74.5 80 L78.5 84" stroke="#475569" strokeWidth="0.8" />
+      <Tag x="44" y="40" size="3.4" weight={800} color="#475569">side with sight lost</Tag>
+      <Tag x="116" y="40" size="3.4" weight={800} color="#047857">seeing side</Tag>
+      <Tag x="40" y="94" size="3.1" weight={800}>turn the head more</Tag>
+      <Tag x="122" y="94" size="3.1" weight={800}>use the mirrors more</Tag>
+    </Frame>
+  ),
+
+  "tunnel-vision": () => (
+    <Frame title="Normal field vs tunnel vision">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="6" y="14" width="70" height="56" rx="4" fill="#bbf7d0" stroke="#047857" strokeWidth="0.8" />
+      <rect x="84" y="14" width="70" height="56" rx="4" fill="#0f172a" />
+      <ellipse cx="119" cy="42" rx="13" ry="10" fill="#bbf7d0" />
+      <text x="41" y="46" fontSize="12" textAnchor="middle">🚸</text>
+      <text x="119" y="46" fontSize="9" textAnchor="middle">🚗</text>
+      <text x="16" y="62" fontSize="7" textAnchor="middle">🚲</text>
+      <Tag x="41" y="80" size="3.4" weight={800}>normal field of vision</Tag>
+      <Tag x="119" y="80" size="3.4" weight={800}>tunnel vision</Tag>
+      <Tag x="119" y="90" size="3" weight={700}>little or no side vision</Tag>
+    </Frame>
+  ),
+
+  "deaf-pupil": () => (
+    <Frame title="Teaching a deaf pupil">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#7c3aed" rows={2} size={9} cells={[["✋", "agreed hand signals"], ["📝", "written notes, parked"], ["🃏", "flashcards and diagrams"], ["🧭", "route cards"], ["👀", "demonstrations"], ["📳", "feels the vibrations"]]} />
+    </Frame>
+  ),
+
+  "mobility-scooter": () => (
+    <Frame title="Wheelchairs and mobility scooters">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#0891b2" rows={2} size={9} cells={[["🦼", "footpath when available"], ["🚶", "pedestrians first"], ["⬇️", "use dropped kerbs"], ["➡️", "on the road: with traffic"], ["🦺", "hi-vis; lights at night"], ["🚫", "never on motorways"]]} />
+    </Frame>
+  ),
+
+  "e-mobility": () => (
+    <Frame title="E-scooters, e-bikes, e-mopeds">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["🛴", "E-SCOOTER", ["16 or over", "max 20 km/h", "no footpaths", "no passengers"]], ["🚲", "E-BIKE", ["pedal-assisted", "max 25 km/h", "max 250 W", "treated as a bicycle"]], ["🛵", "E-MOPED L1e-A", ["pedal-assisted", "max 25 km/h", "register + €35 tax", "no licence needed"]]].map(([icon, h, rows], i) => {
+        const x = 5 + i * 51.7;
+        return (
+          <g key={h}>
+            <rect x={x} y="6" width="47" height="88" rx="4" fill="#ffffff" stroke="#0891b2" strokeWidth="0.8" />
+            <text x={x + 23.5} y="24" fontSize="13" textAnchor="middle">{icon}</text>
+            <text x={x + 23.5} y="36" fontSize="4.4" fontWeight="900" textAnchor="middle" fill="#0e7490" fontFamily="system-ui">{h}</text>
+            {rows.map((t, k) => <text key={t} x={x + 23.5} y={50 + k * 10} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

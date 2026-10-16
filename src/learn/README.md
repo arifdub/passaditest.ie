@@ -48,6 +48,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_6.js` | Unit 3.6 Vehicle Registration & Licensing (pp.53–56). |
 | `book3/unit3_7.js` | Unit 3.7 The Driving Test (pp.57–67). |
 | `book3/unit3_8.js` | Unit 3.8 Driving Test Forms (pp.68–72). |
+| `book3/unit3_9.js` | Unit 3.9 Teaching Drivers with Disabilities (pp.73–82). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -310,3 +311,10 @@ p.93 onwards.
   line that a permit plus a pass certificate "function as a full licence"
   isn't used (it conflicts with Unit 3.7). Its recognition game is "Mark
   the Fault".
+- **Retention test 3.9 (40 questions), Q8 and Q39** — omitted: Q8 keys
+  "must pass the RSA test" though tuition from an ADI (EDT) is also
+  required; Q39 keys a steering ball with an artificial-hand attachment
+  though a plain steering ball for the left hand is also defensible. 38
+  are used. Post-test model answer 3 (it doesn't answer "what is tunnel
+  vision") and the text's e-scooter helmet rule aren't used. Its
+  recognition game is "Find the Solution".

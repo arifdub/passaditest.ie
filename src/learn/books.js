@@ -50,7 +50,9 @@ import UNIT_3_7 from "./book3/unit3_7";
 import UNIT_3_8 from "./book3/unit3_8";
 import UNIT_3_9 from "./book3/unit3_9";
 import UNIT_3_10 from "./book3/unit3_10";
+import UNIT_4_1 from "./book4/unit4_1";
 import GLOSSARY_3 from "./book3/glossary";
+import GLOSSARY_4 from "./book4/glossary";
 
 export const BOOKS = [
   {
@@ -120,7 +122,27 @@ export const BOOKS = [
       { id: "3.10", title: "Safety Belts & Child Restraints", pages: [83, 87], badge: "Restraints Specialist", content: UNIT_3_10 },
     ],
   },
-  { id: "b4", number: 4, title: "Book 4", subtitle: "Coming soon", units: [] },
+  {
+    id: "b4",
+    number: 4,
+    title: "Instructional Techniques & Practices",
+    subtitle: "Book 4",
+    source: "Theory Resource Workbook 4 of 4 — Driver Education Supplies",
+    moduleId: "learn.b4",
+    glossary: GLOSSARY_4,
+    units: [
+      { id: "4.1",  title: "Communication",                   pages: [7, 16],  badge: "Communication Specialist", content: UNIT_4_1 },
+      { id: "4.2",  title: "Behavioural Objectives",          pages: [17, 21], badge: "Objectives Specialist" },
+      { id: "4.3",  title: "Teaching & Testing",              pages: [22, 27], badge: "Assessment Specialist" },
+      { id: "4.4",  title: "Perception & Learning",           pages: [28, 32], badge: "Learning Specialist" },
+      { id: "4.5",  title: "Teaching Adults",                 pages: [33, 37], badge: "Adult Learning Specialist" },
+      { id: "4.6",  title: "Lesson Preparation",              pages: [38, 44], badge: "Lesson Planning Specialist" },
+      { id: "4.7",  title: "Question & Answer Technique",     pages: [45, 48], badge: "Q&A Specialist" },
+      { id: "4.8",  title: "Practical Teaching",              pages: [49, 55], badge: "Practical Teaching Specialist" },
+      { id: "4.9",  title: "Vehicle Safety & Maintenance",    pages: [56, 69], badge: "Vehicle Safety Specialist" },
+      { id: "4.10", title: "Mechanics Self-Test",             pages: [70, 77], badge: "Self-Test Specialist" },
+    ],
+  },
 ];
 
 export const BOOK_BY_ID = Object.fromEntries(BOOKS.map(b => [b.id, b]));

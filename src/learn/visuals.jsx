@@ -4968,6 +4968,82 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- communication (Book 4, Unit 4.1) ---------------- */
+  "two-way-comm": () => (
+    <Frame title="One-way vs two-way communication">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <text x="20" y="30" fontSize="13" textAnchor="middle">🧑‍🏫</text>
+      <text x="70" y="30" fontSize="13" textAnchor="middle">🧑</text>
+      <path d="M30 25 L58 25" stroke="#94a3b8" strokeWidth="1.4" />
+      <path d="M53 21 L59 25 L53 29" fill="none" stroke="#94a3b8" strokeWidth="1.4" />
+      <Tag x="45" y="42" size="3.3" weight={800} color="#b91c1c">one-way: no check it's understood</Tag>
+      <text x="20" y="74" fontSize="13" textAnchor="middle">🧑‍🏫</text>
+      <text x="70" y="74" fontSize="13" textAnchor="middle">🧑</text>
+      <path d="M30 64 Q45 56 58 64" fill="none" stroke="#047857" strokeWidth="1.4" />
+      <path d="M53 59 L59 64 L52 65" fill="none" stroke="#047857" strokeWidth="1.4" />
+      <path d="M58 76 Q45 84 30 76" fill="none" stroke="#1d4ed8" strokeWidth="1.4" />
+      <path d="M35 81 L29 76 L36 75" fill="none" stroke="#1d4ed8" strokeWidth="1.4" />
+      <Tag x="45" y="94" size="3.3" weight={800} color="#047857">two-way: the pupil responds</Tag>
+      <Tag x="122" y="58" size="3.3" weight={800}>message</Tag>
+      <Tag x="122" y="66" size="3.3" weight={800} color="#1d4ed8">↓ response:</Tag>
+      <Tag x="122" y="74" size="3.1" weight={700}>action, gesture,</Tag>
+      <Tag x="122" y="81" size="3.1" weight={700}>expression or speech</Tag>
+    </Frame>
+  ),
+
+  "body-language": () => (
+    <Frame title="Reading non-verbal signals">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#7c3aed" rows={2} size={9} cells={[["🥱", "bored: glazed look"], ["😕", "puzzled"], ["😮", "surprised"], ["😟", "nervous: fidgeting"], ["🙂", "interested"], ["👀", "down-turned eyes"]]} />
+    </Frame>
+  ),
+
+  "rapport": () => (
+    <Frame title="Building rapport">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} size={9} cells={[["🧱", "firm"], ["⚖️", "fair"], ["☀️", "warm"], ["🤝", "friendly"], ["👂", "listen carefully"], ["👍", "encourage, even if wrong"]]} />
+    </Frame>
+  ),
+
+  "comm-barriers": () => (
+    <Frame title="Barriers to communication">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#fdf4ff" stroke="#a21caf" strokeWidth="1" />
+      <text x="41" y="19" fontSize="6" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">EXTRINSIC</text>
+      <text x="41" y="26" fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">(outside the pupil)</text>
+      <text x="119" y="19" fontSize="6" fontWeight="900" textAnchor="middle" fill="#a21caf" fontFamily="system-ui">INTRINSIC</text>
+      <text x="119" y="26" fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#a21caf" fontFamily="system-ui">(inside the pupil)</text>
+      {["🔊 noise", "🗣️ how you speak", "🚧 activity outside", "📱 objects in the car"].map((t, i) => (
+        <text key={t} x="12" y={42 + i * 13} fontSize="4.5" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+      {["😒 attitudes", "😢 feelings, emotions", "🤔 thoughts about you", "💭 unrelated worries"].map((t, i) => (
+        <text key={t} x="89" y={42 + i * 13} fontSize="4.5" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+    </Frame>
+  ),
+
+  "feedback-loop": () => (
+    <Frame title="Feedback works both ways">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="80" cy="50" r="30" fill="none" stroke="#cbd5e1" strokeWidth="6" />
+      <path d="M58 28 A30 30 0 0 1 102 28" fill="none" stroke="#047857" strokeWidth="6" />
+      <path d="M102 72 A30 30 0 0 1 58 72" fill="none" stroke="#1d4ed8" strokeWidth="6" />
+      <text x="80" y="54" fontSize="12" textAnchor="middle">🔁</text>
+      <Tag x="80" y="10" size="3.4" weight={800} color="#047857">instructor → praise for effort and attainment</Tag>
+      <Tag x="80" y="92" size="3.4" weight={800} color="#1d4ed8">pupil → actions and replies to your questions</Tag>
+      <Tag x="22" y="50" size="3.2" weight={800}>objectives</Tag>
+      <Tag x="22" y="56" size="3.2" weight={800}>being met?</Tag>
+    </Frame>
+  ),
+
+  "first-impressions": () => (
+    <Frame title="Making first impressions count">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#b45309" rows={2} size={9} cells={[["👔", "dress for the part"], ["🧼", "well groomed"], ["🚗", "tidy training car"], ["✊", "a brief, light greeting"], ["🏷️", "ask their preferred name"], ["📵", "no phone calls in lessons"]]} />
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

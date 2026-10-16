@@ -5316,6 +5316,85 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- lesson preparation (Book 4, Unit 4.6) ---------------- */
+  "lesson-structure": () => (
+    <Frame title="The three stages of a lesson">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["INTRODUCTION", ["recap", "aim given", "objectives set"], "#1d4ed8", 5, 42], ["DEVELOPMENT", ["explanation", "demonstration", "practice", "validation"], "#047857", 50, 60], ["CONCLUSION", ["recap", "post-test", "forward plan"], "#b45309", 113, 42]].map(([h, rows, c, x, w]) => (
+        <g key={h}>
+          <rect x={x} y="10" width={w} height="80" rx="4" fill="#ffffff" stroke={c} strokeWidth="1.2" />
+          <rect x={x} y="10" width={w} height="14" rx="4" fill={c} />
+          <text x={x + w / 2} y="19.5" fontSize={w > 50 ? 4.6 : 3.8} fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{h}</text>
+          {rows.map((t, k) => <text key={t} x={x + w / 2} y={36 + k * 12} fontSize="4.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+        </g>
+      ))}
+      <Tag x="80" y="97" size="3" weight={800} color="#047857">most time goes to the developmental phase</Tag>
+    </Frame>
+  ),
+
+  "prep-stages": () => (
+    <Frame title="Preparing a lesson plan">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={24} perRow={3} color="#7c3aed" steps={["DECIDE", "PLAN", "CHECK"]} />
+      {[["objectives, resources,", "methods, route"], ["time for each part,", "fit to the objectives"], ["aids in the car,", "be organised"]].map(([a, b], i) => (
+        <g key={a}>
+          <text x={26.7 + i * 53.3} y="54" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#334155" fontFamily="system-ui">{a}</text>
+          <text x={26.7 + i * 53.3} y="60" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#334155" fontFamily="system-ui">{b}</text>
+        </g>
+      ))}
+      <Tag x="80" y="84" size="3.4" weight={800} color="#b91c1c">no better recipe for disaster than an unprepared lesson</Tag>
+    </Frame>
+  ),
+
+  "learning-types": () => (
+    <Frame title="Ways a pupil learns">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["signal", "child seen → mirror"], ["stimulus-response", "praise reinforces"], ["trial and error", "try until right"], ["insight (gestalt)", "the whole, in a flash"], ["chaining", "steps linked in order"], ["verbal association", "new words via old"], ["multiple discrimination", "like from unlike"], ["concept", "group by property"], ["principle", "concepts → a rule"]].map(([h, t], i) => {
+        const x = 4 + (i % 3) * 51, y = 6 + Math.floor(i / 3) * 31;
+        return (
+          <g key={h}>
+            <rect x={x} y={y} width="49" height="27" rx="3" fill="#eef2ff" stroke="#4f46e5" strokeWidth="0.6" />
+            <text x={x + 24.5} y={y + 11} fontSize={h.length > 16 ? 3.4 : 4} fontWeight="900" textAnchor="middle" fill="#3730a3" fontFamily="system-ui">{h}</text>
+            <text x={x + 24.5} y={y + 20} fontSize="3.3" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "transfer-types": () => (
+    <Frame title="Transfer of learning">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["POSITIVE", "past learning agrees", "→ helps", "#047857", "➕"], ["NEGATIVE", "past learning conflicts", "→ hinders", "#b91c1c", "➖"], ["NEUTRAL", "completely new", "→ no effect", "#64748b", "⚪"]].map(([h, a, b, c, icon], i) => {
+        const x = 5 + i * 51.7;
+        return (
+          <g key={h}>
+            <rect x={x} y="10" width="47" height="80" rx="4" fill="#ffffff" stroke={c} strokeWidth="1.2" />
+            <text x={x + 23.5} y="36" fontSize="14" textAnchor="middle">{icon}</text>
+            <text x={x + 23.5} y="52" fontSize="4.8" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+            <text x={x + 23.5} y="64" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{a}</text>
+            <text x={x + 23.5} y="72" fontSize="3.8" fontWeight="800" textAnchor="middle" fill={c} fontFamily="system-ui">{b}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "training-plateau": () => (
+    <Frame title="A learning curve with a plateau">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <line x1="20" y1="82" x2="150" y2="82" stroke="#334155" strokeWidth="0.8" />
+      <line x1="20" y1="82" x2="20" y2="12" stroke="#334155" strokeWidth="0.8" />
+      <path d="M20 80 Q40 52 62 46 L102 44 Q124 40 146 18" fill="none" stroke="#2563eb" strokeWidth="2" />
+      <rect x="62" y="36" width="40" height="16" rx="3" fill="#fef3c7" opacity="0.8" />
+      <text x="82" y="46" fontSize="4.2" fontWeight="900" textAnchor="middle" fill="#92400e" fontFamily="system-ui">PLATEAU</text>
+      <Tag x="82" y="62" size="3.1" weight={800}>time to let it sink in;</Tag>
+      <Tag x="82" y="68" size="3.1" weight={800}>praise what's achieved</Tag>
+      <Tag x="84" y="92" size="2.9" weight={700}>time →</Tag>
+      <Tag x="10" y="48" size="2.8" weight={700}>skill</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

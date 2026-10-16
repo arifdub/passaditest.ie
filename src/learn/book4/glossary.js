@@ -148,4 +148,34 @@ export default [
     key: "It makes learning harder.",
     src: P("4.5", 37, "Retention Q7"),
   },
+  {
+    id: "lesson-structure", unit: "4.6", term: "Lesson structure", visual: "lesson-structure",
+    meaning: "Introduction, developmental phase and conclusion.",
+    key: "Most time goes to the developmental phase.",
+    src: P("4.6", 39, "Lesson structure"),
+  },
+  {
+    id: "validation", unit: "4.6", term: "Validation", visual: "lesson-structure",
+    meaning: "The pupil performs the task without guidance from the instructor.",
+    key: "Give the opportunity in every lesson.",
+    src: P("4.6", 41, "Validation"),
+  },
+  {
+    id: "transfer-of-learning", unit: "4.6", term: "Transfer of learning", visual: "transfer-types",
+    meaning: "How previous learning helps (positive), hinders (negative) or doesn't affect (neutral) new learning.",
+    key: "The aim: transfer responsibility to the pupil.",
+    src: P("4.6", 42, "The transfer of learning"),
+  },
+  {
+    id: "training-plateau", unit: "4.6", term: "Learning curve / plateau", visual: "training-plateau",
+    meaning: "A graph of performance over time; a plateau is a spell of no improvement.",
+    key: "Allow time to absorb; praise progress.",
+    src: P("4.6", 42, "Measuring the transfer of learning"),
+  },
+  {
+    id: "signal-learning", unit: "4.6", term: "Signal learning", visual: "learning-types",
+    meaning: "A conditioned response: sees a child (signal), checks the mirror (response).",
+    key: "Prompt until it's automatic.",
+    src: P("4.6", 38, "Signal learning"),
+  },
 ];

@@ -12,9 +12,10 @@
     an appeal hearing): appeal procedures aren't in the unit.
   - Q14 (cancelling a test without losing the fee, keyed "ten clear days'
     notice"): not in the unit.
-  - Q21 (six driving faults on stage 2, keyed "must consider that the
-    candidate has reached the required standard"): the unit says a
-    maximum of 5 faults — six means failure.
+  - Q15 (where to apply to join the register, keyed "the driving testing
+    services in Ballina"): "the RSA ADI unit" is just as defensible.
+  - Q36 (displaying the ADI badge, keyed "only when teaching a learner for
+    reward"): not in the unit; "at all times" is as defensible.
   - Q22 (seats in the back of the test vehicle): the unit gives three
     adjustable forward-facing passenger seats, so two options fit.
 
@@ -466,9 +467,9 @@ const walkthrough = {
   xpPer: 10,
   situation: "🧭 Aoife wants to become an ADI. Guide her through the process.",
   items: [
-    { id: "w1", type: "choice", step: "Applying", concept: "eligibility", prompt: "Where does she apply to join the Register?",
-      options: ["The RSA ADI unit", "The local test centre", "Driver Licensing", "The Department of Transport"], answer: 0,
-      explain: "Applications go to the RSA ADI unit.", src: P(37, "Retention Q15 (answer a, p.93)") },
+    { id: "w1", type: "choice", step: "Applying", concept: "eligibility", prompt: "Before she can apply, how long must she have held a full licence in the category?",
+      options: ["Six months", "At least two years", "Five years", "No minimum"], answer: 1,
+      explain: "A full, valid licence for at least two years in the category she'll teach.", src: P(27, "Legal position") },
     { id: "w2", type: "choice", step: "Requirements", concept: "eligibility", prompt: "To be accepted she must…",
       options: ["Be an experienced instructor", "Be tax compliant, Garda vetted and of good repute", "Own a driving school car", "Have no convictions in 6 months"], answer: 1,
       explain: "Plus residence, a PPSN and a licence for 2+ years.", src: P(38, "Retention Q32 (answer b, p.93)") },
@@ -488,8 +489,8 @@ const walkthrough = {
 };
 
 /* ---------------------------------------------------------------------------
-   8. RETENTION CHECK — answers from page 93. Q10, Q11, Q14, Q21 and Q22 are
-   omitted (see header).
+   8. RETENTION CHECK — answers from page 93. Q10, Q11, Q14, Q15, Q22 and
+   Q36 are omitted (see header).
    --------------------------------------------------------------------------- */
 const page = n => (n <= 11 ? 36 : n <= 21 ? 37 : n <= 33 ? 38 : 39);
 const R = (n, prompt, options, answer, concept, visual) => ({
@@ -516,12 +517,12 @@ const retention = {
     R(9, "If you disagree with how an ADI examination was conducted, you must initially complain to", ["the Minister for Transport", "the RSA Registrar", "the Garda Ombudsman", "a solicitor"], 1, "eligibility"),
     R(12, "Having passed the theory, you must undertake stage 2 within", ["2 years of commencing stage one", "1 year of passing stage one", "4 years of passing stage one", "6 weeks of passing stage one"], 0, "stages"),
     R(13, "In the theory exam, you", ["bring a pencil and pen", "need nothing — a pen is supplied", "answer questions on a computer", "have the questions read to you"], 2, "theory"),
-    R(15, "Applications for entry onto the instructor register should be made to", ["the RSA ADI unit", "the driving testing services in Ballina", "the local driving test centre", "the Department of Transport"], 0, "eligibility"),
     R(16, "A candidate who fails any part may re-sit without losing credit for passed stages within", ["six months of stage one", "two years of sitting stage one", "one year of stage one", "36 weeks of stage one"], 1, "stages", "adi-stages"),
     R(17, "For the practical parts of the ADI exams, the RSA will", ["insure your vehicle for their risks", "accept responsibility for risks your insurance doesn't cover", "accept no responsibility for any damage caused", "only accept responsibility for damage caused by the candidate"], 2, "stage3-car"),
     R(18, "For ADIs to advertise the ADI qualification they must", ["seek permission from the Registrar", "advertise when they apply", "advertise when they get a trainee permit", "be examined, monitored and registered as approved"], 3, "after"),
     R(19, "On applying for the ADI exam you may be requested to", ["produce a tax clearance certificate", "never produce character references", "have a higher category licence than the one you'll teach", "have held your licence for at least 6 years"], 0, "eligibility"),
     R(20, "The ADI application form says you must hold a full licence for a minimum period in", ["the category in which you'll teach", "that category and one lower", "that category and one higher", "no particular category"], 0, "eligibility"),
+    R(21, "At the end of a stage 2 test a candidate has made six driving faults, none dangerous or potentially dangerous. The examiner", ["must consider the candidate has reached the required standard", "will consider failing the candidate", "must fail the candidate", "issues a borderline pass and debriefs the candidate"], 2, "stage2"),
     R(23, "Vehicles used for the ADI practical examinations", ["must be a driving school car", "must be taxed, insured and have an NCT cert if required", "must have four doors", "must reach and maintain 70 km/h"], 1, "stage3-car"),
     R(24, "To give free driving instruction to a friend or relative in a car you must", ["have a full licence for the category for at least two years", "have an ADI application form", "be an ADI", "notify Driver Licensing"], 0, "eligibility"),
     R(25, "A candidate enters the Register of Approved Driving Instructors when they", ["have passed all exams including stage three", "have a trainee licence", "have passed the exams, paid the fees and received confirmation", "have passed stage 1"], 2, "after"),
@@ -535,7 +536,6 @@ const retention = {
     R(33, "In the ADI stage 3 test, candidates are examined in", ["one phase", "two phases", "three phases", "four phases"], 1, "stage3", "stage3-phases"),
     R(34, "The number of times a candidate may sit stage 1 within two years is", ["as many as they wish", "twice", "once", "four times"], 0, "theory"),
     R(35, "Candidates for the stage 3 test", ["must provide a vehicle and pupil", "may remove head restraints", "must act the part of a pupil", "will give instruction to a 'role-played' pupil"], 3, "stage3"),
-    R(36, "Once qualified you'll receive an RSA ADI display badge and number. When teaching learners you must", ["have it displayed at all times", "display it only when teaching for reward", "display it only for full licence holders", "no conditions apply"], 0, "after"),
     R(37, "To apply for a trainee driving instructor permit you must", ["apply with your initial application", "apply having passed stages one and two", "apply having passed all three stages", "there's no such permit"], 1, "trainee"),
     R(38, "If you presented an automatic car in category B, the outcome would be", ["teach any category B car", "the RSA only accepts manual cars", "a restricted certificate to teach category B automatics only", "teach automatic, manual and lower categories"], 2, "stage3-car"),
     R(39, "The vehicle used for the RSA ADI stage 3 test must", ["have dual controls removed", "have a roof sign or L-plates and dual controls fitted", "have dual controls and a blind-spot mirror", "have dual exterior mirrors"], 1, "stage3-car"),

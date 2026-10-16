@@ -277,8 +277,8 @@ p.93 onwards.
   unit's 23.30–07.00; Q34 limits the fog-lamp rule to rear lamps; Q45 and
   Q51 key facts not in the unit. 50 are used. This unit has no post test.
   Its recognition game is "Legal or Not?".
-- **Retention test 3.4 (40 questions), Q10, Q11, Q14, Q21 and Q22** —
-  omitted. Q21 keys six stage-2 faults as "reached the standard", but the
-  unit allows a maximum of 5; Q22's seat requirement has two fitting
-  options; Q10, Q11 and Q14 (appeals and cancellation notice) aren't in
-  the unit. 35 are used. Its recognition game is "Stage by Stage".
+- **Retention test 3.4 (40 questions), Q10, Q11, Q14, Q15, Q22 and Q36**
+  — omitted. Q15 keys "the driving testing services in Ballina" where "the
+  RSA ADI unit" is as defensible; Q36 (badge display) and Q10, Q11, Q14
+  (appeals and cancellation notice) aren't in the unit; Q22's seat
+  requirement has two fitting options. 34 are used. Its recognition game is "Stage by Stage".

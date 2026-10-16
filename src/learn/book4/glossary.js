@@ -64,4 +64,34 @@ export default [
     key: "Learned through feedback from the car.",
     src: P("4.2", 19, "The psychomotor domain"),
   },
+  {
+    id: "validity", unit: "4.3", term: "Validity (of a test)", visual: "valid-reliable",
+    meaning: "The degree to which a test measures what it was intended to test.",
+    key: "Link the test to the lesson objectives.",
+    src: P("4.3", 23, "Validity of tests"),
+  },
+  {
+    id: "reliability", unit: "4.3", term: "Reliability (of a test)", visual: "valid-reliable",
+    meaning: "The degree to which a test consistently measures what it was intended to.",
+    key: "Needs an objective examiner and a set pass standard.",
+    src: P("4.3", 23, "Reliability of tests"),
+  },
+  {
+    id: "criterion-referenced", unit: "4.3", term: "Criterion-referenced test", visual: "norm-criterion",
+    meaning: "A test where candidates must reach a fixed minimum standard to pass.",
+    key: "The driving test is criterion-referenced.",
+    src: P("4.3", 24, "Criterion referencing"),
+  },
+  {
+    id: "retention-test", unit: "4.3", term: "Pre-, post- and retention tests", visual: "test-timeline",
+    meaning: "Tests before instruction, immediately after it, and at a later date.",
+    key: "Together they show how much learning took place.",
+    src: P("4.3", 22, "Types of tests"),
+  },
+  {
+    id: "must-should-could", unit: "4.3", term: "Critical, important, relevant", visual: "must-should-could",
+    meaning: "Material the pupil MUST, SHOULD or COULD know.",
+    key: "Critical material is needed for the course objectives.",
+    src: P("4.3", 23, "Relevant – Important – Critical"),
+  },
 ];

@@ -5120,6 +5120,70 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- teaching & testing (Book 4, Unit 4.3) ---------------- */
+  "test-timeline": () => (
+    <Frame title="When each test is given">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <line x1="4" y1="45" x2="156" y2="45" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2 1.5" />
+      <rect x="40" y="38" width="62" height="14" rx="3" fill="#dbeafe" stroke="#1d4ed8" strokeWidth="0.8" />
+      <text x="71" y="47.5" fontSize="4.4" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">INSTRUCTION</text>
+      {[[22, "PRE-TEST", "what they know already", "#7c3aed"], [71, "DIAGNOSTIC", "find the weak spots", "#b45309"], [114, "POST-TEST", "straight after", "#047857"], [140, "RETENTION", "a later date", "#b91c1c"]].map(([x, h, t, c], i) => (
+        <g key={h}>
+          <circle cx={x} cy={i === 1 ? 62 : 45} r="4" fill={c} />
+          <text x={x} y={i === 1 ? 74 : i % 2 ? 62 : 28} fontSize="4" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+          <text x={x} y={i === 1 ? 80 : i % 2 ? 68 : 34} fontSize="3.3" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "valid-reliable": () => (
+    <Frame title="Valid and reliable">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[40, "VALID", "measures what it's meant to", [[0, 0], [3, -2], [-2, 3]]], [120, "RELIABLE", "measures it consistently", [[14, -12], [16, -10], [13, -9]]]].map(([cx, h, t, hits]) => (
+        <g key={h}>
+          {[22, 15, 8].map((r, k) => <circle key={r} cx={cx} cy="44" r={r} fill={["#fee2e2", "#ffffff", "#fecaca"][k]} stroke="#b91c1c" strokeWidth="0.6" />)}
+          <circle cx={cx} cy="44" r="2.5" fill="#b91c1c" />
+          {hits.map(([dx, dy], k) => <circle key={k} cx={cx + dx} cy={44 + dy} r="2" fill="#1d4ed8" stroke="#ffffff" strokeWidth="0.6" />)}
+          <text x={cx} y="78" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{h}</text>
+          <text x={cx} y="86" fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#334155" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <Tag x="80" y="96" size="3.2" weight={800} color="#047857">a useful test must be both</Tag>
+    </Frame>
+  ),
+
+  "must-should-could": () => (
+    <Frame title="Relevant – Important – Critical">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["CRITICAL", "MUST be known — to achieve the course objectives", "#b91c1c", 128], ["IMPORTANT", "SHOULD be known — not essential to the objective", "#b45309", 116], ["RELEVANT", "COULD be known — not immediately important", "#64748b", 104]].map(([h, t, c, w], i) => (
+        <g key={h}>
+          <rect x={80 - w / 2 - 10} y={8 + i * 29} width={w + 20} height="25" rx="3" fill="#ffffff" stroke={c} strokeWidth="1.2" />
+          <text x="80" y={19 + i * 29} fontSize="5.4" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+          <text x="80" y={27 + i * 29} fontSize="3.4" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "norm-criterion": () => (
+    <Frame title="Norm vs criterion referencing">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#ecfdf5" stroke="#047857" strokeWidth="1" />
+      <text x="41" y="18" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">NORM</text>
+      <text x="119" y="18" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">CRITERION</text>
+      <path d="M12 70 Q41 20 70 70" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1" />
+      <line x1="48" y1="30" x2="48" y2="72" stroke="#b91c1c" strokeWidth="1" strokeDasharray="1.5 1" />
+      <rect x="90" y="44" width="58" height="3" fill="#047857" />
+      {[[96, 34], [108, 52], [118, 30], [130, 56], [140, 38]].map(([x, y], k) => <circle key={k} cx={x} cy={y} r="2.5" fill={y < 44 ? "#047857" : "#b91c1c"} />)}
+      <text x="41" y="81" fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">a fixed proportion pass;</text>
+      <text x="41" y="87" fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">mark may vary — theory exams</text>
+      <text x="119" y="81" fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">reach a fixed standard;</text>
+      <text x="119" y="87" fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">e.g. the driving test</text>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

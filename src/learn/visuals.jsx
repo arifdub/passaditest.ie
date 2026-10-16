@@ -4622,6 +4622,34 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- vehicle registration (Book 3, Unit 3.6) ---------------- */
+  "vrc-transfer": () => (
+    <Frame title="Selling a car privately">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="58" y="16" width="44" height="54" rx="3" fill="#ffffff" stroke="#334155" strokeWidth="1" />
+      <text x="80" y="26" fontSize="4.2" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">VEHICLE</text>
+      <text x="80" y="31" fontSize="4.2" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">REGISTRATION</text>
+      <text x="80" y="36" fontSize="4.2" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">CERTIFICATE</text>
+      {[0, 1, 2].map(i => <line key={i} x1="64" y1={44 + i * 5} x2="96" y2={44 + i * 5} stroke="#94a3b8" strokeWidth="1" />)}
+      <path d="M66 63 q4 -4 8 0 t8 0" fill="none" stroke="#1d4ed8" strokeWidth="0.9" />
+      <text x="28" y="40" fontSize="16" textAnchor="middle">🧑</text>
+      <text x="132" y="40" fontSize="16" textAnchor="middle">🧑‍💼</text>
+      <Tag x="28" y="52" size="3.2" weight={900}>SELLER</Tag>
+      <Tag x="132" y="52" size="3.2" weight={900}>BUYER</Tag>
+      <Tag x="80" y="80" size="3.1" weight={800}>both sign the change-of-ownership section</Tag>
+      <Tag x="80" y="88" size="3.1" weight={800} color="#047857">the SELLER sends it to vehicle registration</Tag>
+      <Tag x="80" y="96" size="2.8" weight={700}>to a dealer: form RF105 with the garage identity code</Tag>
+    </Frame>
+  ),
+
+  "tax-refund": () => (
+    <Frame title="Motor tax refunds">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} size={8} cells={[["♻️", "scrapped or exported"], ["🚨", "stolen, not recovered"], ["🅿️", "not used on a public road"], ["🤕", "illness or injury"], ["✈️", "abroad for work or study"], ["🎖️", "defence forces overseas"]]} />
+      <Tag x="80" y="97" size="3" weight={800} color="#b45309">at least 3 whole months must be left on the disc</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -214,4 +214,28 @@ export default [
     key: "Residency means more than 185 days a year here.",
     src: P("3.5", 46, "Driving licence exchange"),
   },
+  {
+    id: "vrc", unit: "3.6", term: "Vehicle Registration Certificate (VRC)", visual: "vrc-transfer",
+    meaning: "The document naming a vehicle's registered owner.",
+    key: "On a private sale the seller sends it in.",
+    src: P("3.6", 53, "Purchasing a second-hand vehicle"),
+  },
+  {
+    id: "vrt", unit: "3.6", term: "VRT (Vehicle Registration Tax)", visual: "tax-refund",
+    meaning: "An import tax on new or second-hand vehicles brought into Ireland.",
+    key: "Must be paid before the vehicle can be registered.",
+    src: P("3.6", 53, "Vehicle Registration Tax"),
+  },
+  {
+    id: "motor-tax-disc", unit: "3.6", term: "Motor tax disc", visual: "driving-docs",
+    meaning: "Proof of motor tax, issued for 3, 6 or 12 months.",
+    key: "Can't be transferred to another vehicle.",
+    src: P("3.6", 53, "Renewing; Vehicle licensing"),
+  },
+  {
+    id: "tax-refund", unit: "3.6", term: "Motor tax refund", visual: "tax-refund",
+    meaning: "Tax back when a vehicle is off the road for a qualifying reason.",
+    key: "At least three whole months must be left on the disc.",
+    src: P("3.6", 54, "Refunds of motor tax"),
+  },
 ];

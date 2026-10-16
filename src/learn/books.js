@@ -46,6 +46,7 @@ import UNIT_3_3 from "./book3/unit3_3";
 import UNIT_3_4 from "./book3/unit3_4";
 import UNIT_3_5 from "./book3/unit3_5";
 import UNIT_3_6 from "./book3/unit3_6";
+import UNIT_3_7 from "./book3/unit3_7";
 import GLOSSARY_3 from "./book3/glossary";
 
 export const BOOKS = [
@@ -110,7 +111,7 @@ export const BOOKS = [
       { id: "3.4",  title: "Driving Instructor Regulations",  pages: [27, 39], badge: "Regulations Specialist", content: UNIT_3_4 },
       { id: "3.5",  title: "Driver Licensing",                pages: [40, 52], badge: "Licensing Specialist", content: UNIT_3_5 },
       { id: "3.6",  title: "Vehicle Registration & Licensing", pages: [53, 56], badge: "Registration Specialist", content: UNIT_3_6 },
-      { id: "3.7",  title: "The Driving Test",                pages: [57, 67], badge: "Driving Test Specialist" },
+      { id: "3.7",  title: "The Driving Test",                pages: [57, 67], badge: "Driving Test Specialist", content: UNIT_3_7 },
       { id: "3.8",  title: "Driving Test Forms",              pages: [68, 72], badge: "Test Forms Specialist" },
       { id: "3.9",  title: "Teaching Drivers with Disabilities", pages: [73, 82], badge: "Inclusive Instructor" },
       { id: "3.10", title: "Safety Belts & Child Restraints", pages: [83, 87], badge: "Restraints Specialist" },

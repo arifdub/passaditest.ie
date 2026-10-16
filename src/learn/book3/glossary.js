@@ -238,4 +238,34 @@ export default [
     key: "At least three whole months must be left on the disc.",
     src: P("3.6", 54, "Refunds of motor tax"),
   },
+  {
+    id: "technical-checks", unit: "3.7", term: "Technical checks", visual: "tech-checks",
+    meaning: "Checks the candidate explains on test — 3 chosen at random.",
+    key: "Some need the bonnet opened and closed securely.",
+    src: P("3.7", 58, "Technical checks"),
+  },
+  {
+    id: "certificate-of-competency", unit: "3.7", term: "Certificate of Competency", visual: "test-result",
+    meaning: "The certificate signed after passing the driving test.",
+    key: "Apply for a full licence within two years of passing.",
+    src: P("3.7", 60, "If you pass your driving test"),
+  },
+  {
+    id: "form-d104", unit: "3.7", term: "Form D104 (Defer Decision)", visual: "test-result",
+    meaning: "Issued when the tester defers a decision pending a Certificate of Fitness.",
+    key: "The candidate is told the tester is 'satisfied with their driving'.",
+    src: P("3.7", 61, "Decision deferred"),
+  },
+  {
+    id: "marking-sheet", unit: "3.7", term: "Test marking sheet", visual: "marking-sheet",
+    meaning: "The tester's report, set out in 18 sections with subsections.",
+    key: "From rules & checks to parking.",
+    src: P("3.7", 61, "The test report / marking sheet"),
+  },
+  {
+    id: "mobility-centre", unit: "3.7", term: "Mobility Centre", visual: "adaptations",
+    meaning: "A centre offering assessments and advice on vehicle adaptations.",
+    key: "Assessment is for a fee; can help find an instructor.",
+    src: P("3.7", 62, "Adaptations & equipment"),
+  },
 ];

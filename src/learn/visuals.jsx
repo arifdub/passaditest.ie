@@ -4650,6 +4650,95 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- the driving test (Book 3, Unit 3.7) ---------------- */
+  "test-day": () => (
+    <Frame title="Test day, in order">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={22} perRow={4} color="#1d4ed8" steps={["arrive early", "ID at the desk", "Rules questions", "vehicle checks", "technical checks", "secondary controls", "the drive", "result at the desk"]} />
+    </Frame>
+  ),
+
+  "tech-checks": () => (
+    <Frame title="Technical checks — any 3, picked at random">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#1d4ed8" rows={3} size={7.5} cells={[["🛞", "tyres"], ["💡", "lights"], ["🔶", "reflectors"], ["↔️", "indicators"], ["🛢️", "engine oil"], ["🌡️", "coolant"], ["💦", "washer"], ["🛑", "brakes"], ["📯", "horn"]]} />
+    </Frame>
+  ),
+
+  "test-vehicle": () => (
+    <Frame title="At the vehicle the tester checks">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#1d4ed8" rows={2} size={9} cells={[["L", "L-plates front and rear"], ["🛡️", "insurance disc"], ["✅", "NCT disc"], ["💶", "tax disc"], ["🔴", "brake lights"], ["↔️", "indicators"]]} />
+    </Frame>
+  ),
+
+  "test-manoeuvres": () => (
+    <Frame title="On the drive you'll be asked for">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} size={9} cells={[["🔄", "turnabout"], ["↩️", "reverse round a corner"], ["✋", "hand signals"], ["⛰️", "hill start"], ["🅿️", "parking"], ["🛑", "refuse one: test ends"]]} />
+    </Frame>
+  ),
+
+  "marking-sheet": () => (
+    <Frame title="The marking sheet: 18 sections">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="6" y="4" width="148" height="92" rx="3" fill="#ffffff" stroke="#334155" strokeWidth="0.8" />
+      {["rules & checks", "position", "observation", "hazards", "mirrors", "clearance", "signals", "motorcycles", "courtesy", "alighting", "progress", "controls", "speed", "traffic controls", "right of way", "reverse", "turnabout", "parking"].map((t, i) => {
+        const x = 10 + (i % 3) * 48, y = 8 + Math.floor(i / 3) * 14.5;
+        return (
+          <g key={t}>
+            <rect x={x} y={y} width="44" height="11.5" rx="1.5" fill="#eff6ff" stroke="#93c5fd" strokeWidth="0.5" />
+            <text x={x + 3} y={y + 7.6} fontSize="3.6" fontWeight="900" fill="#1d4ed8" fontFamily="system-ui">{i + 1}</text>
+            <text x={x + 9} y={y + 7.6} fontSize="3.6" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "test-result": () => (
+    <Frame title="The result, given at the desk">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#ecfdf5" stroke="#047857" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#fef2f2" stroke="#b91c1c" strokeWidth="1" />
+      <text x="41" y="22" fontSize="9" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">PASS</text>
+      <text x="119" y="22" fontSize="9" fontWeight="900" textAnchor="middle" fill="#b91c1c" fontFamily="system-ui">NOT YET</text>
+      {["sign the Certificate", "of Competency", "apply for a licence", "within 2 years", "N-plates for 2 years"].map((t, i) => (
+        <text key={t} x="41" y={36 + i * 10} fontSize="4.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+      {["statement of faults", "unfair? appeal to the", "District Court", "free retest — but the", "result can't be overturned"].map((t, i) => (
+        <text key={t} x="119" y={36 + i * 10} fontSize="4.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+      ))}
+    </Frame>
+  ),
+
+  "dual-controls": () => (
+    <Frame title="Dual controls on test">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["clutch", true], ["brake", true], ["accelerator", false]].map(([t, ok], i) => {
+        const x = 30 + i * 50;
+        return (
+          <g key={t}>
+            <rect x={x - 11} y="22" width="22" height="34" rx="4" fill="#475569" stroke="#1e293b" strokeWidth="1" />
+            {[0, 1, 2, 3].map(k => <line key={k} x1={x - 7} y1={29 + k * 7} x2={x + 7} y2={29 + k * 7} stroke="#94a3b8" strokeWidth="1" />)}
+            <circle cx={x + 11} cy="22" r="7" fill={ok ? "#047857" : "#b91c1c"} />
+            <text x={x + 11} y="25" fontSize="8" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{ok ? "✓" : "✗"}</text>
+            <Tag x={x} y="66" size="3.6" weight={800}>{`dual ${t}`}</Tag>
+          </g>
+        );
+      })}
+      <Tag x="80" y="82" size="3.3" weight={800} color="#b91c1c">no dual accelerator on test</Tag>
+      <Tag x="80" y="92" size="3.1" weight={700}>no audio or video recording devices</Tag>
+    </Frame>
+  ),
+
+  "adaptations": () => (
+    <Frame title="Common vehicle adaptations">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={3} size={7.5} cells={[["🖐️", "hand controls"], ["⚪", "steering ball"], ["💺", "swivel seat"], ["🦵", "leg lifter"], ["🪵", "transfer board"], ["🏗️", "hoist or lift"], ["🦶", "left-foot accelerator"], ["🔘", "switch extensions"], ["🪞", "extra mirrors"]]} />
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -47,6 +47,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_5.js` | Unit 3.5 Driver Licensing (pp.40–52). |
 | `book3/unit3_6.js` | Unit 3.6 Vehicle Registration & Licensing (pp.53–56). |
 | `book3/unit3_7.js` | Unit 3.7 The Driving Test (pp.57–67). |
+| `book3/unit3_8.js` | Unit 3.8 Driving Test Forms (pp.68–72). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -300,3 +301,12 @@ p.93 onwards.
   fail → terminate) and Q39 (deaf candidate "normal test" vs interpreter)
   have a second defensible option. 36 are used. Its recognition game is
   "Test Day".
+- **Retention test 3.8 (30 questions), Q4, Q6, Q9, Q15, Q22 and Q30** —
+  omitted. Q6 keys a written complaint to the RSA and Q22 an appeal of the
+  "decision", against Unit 3.7's District Court appeal that can't overturn
+  the result; Q30 keys "phone the test centre" though the unit says the
+  RSA website or the number on the form; Q15 keys "control" when an option
+  reads "too wide"; Q4 and Q9 aren't in the unit. 24 are used. The text's
+  line that a permit plus a pass certificate "function as a full licence"
+  isn't used (it conflicts with Unit 3.7). Its recognition game is "Mark
+  the Fault".

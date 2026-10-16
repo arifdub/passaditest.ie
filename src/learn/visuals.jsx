@@ -4739,6 +4739,66 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- driving test forms (Book 3, Unit 3.8) ---------------- */
+  "appointment-letter": () => (
+    <Frame title="The test appointment">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="30" y="5" width="100" height="90" rx="3" fill="#ffffff" stroke="#334155" strokeWidth="1" />
+      <rect x="30" y="5" width="100" height="12" rx="3" fill="#1d4ed8" />
+      <text x="80" y="13.5" fontSize="5" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">DRIVING TEST APPOINTMENT</text>
+      {[["📅", "date and time"], ["📍", "test centre address"], ["🚗", "type of test"], ["⏳", "cancel-by date"], ["🔢", "reference (test) number"], ["☎️", "booking office number"], ["🅿️", "where to park"]].map(([i, t], k) => (
+        <g key={t}>
+          <text x="40" y={27 + k * 10} fontSize="6" textAnchor="middle">{i}</text>
+          <text x="48" y={27 + k * 10} fontSize="4.4" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "test-conditions": () => (
+    <Frame title="The appointment form says">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#b45309" rows={2} size={9} cells={[["⏰", "late? may be no test"], ["🪪", "valid learner permit"], ["🚗", "roadworthy, taxed, insured"], ["L", "L-plates displayed"], ["🚛", "HGV/LGV not loaded"], ["📖", "read the conditions"]]} />
+    </Frame>
+  ),
+
+  "fault-grades": () => (
+    <Frame title="How faults are marked">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["GRADE 1", "minor", "neither serious", "nor dangerous", "#047857", "#ecfdf5"], ["SERIOUS", "fault", "one serious", "fault = fail", "#b45309", "#fffbeb"], ["DANGEROUS", "fault", "one dangerous", "fault = fail", "#b91c1c", "#fef2f2"]].map(([h, s, a, b, c, bg], i) => {
+        const x = 5 + i * 51.7;
+        return (
+          <g key={h}>
+            <rect x={x} y="8" width="47" height="84" rx="4" fill={bg} stroke={c} strokeWidth="1" />
+            <rect x={x} y="8" width="47" height="16" rx="4" fill={c} />
+            <text x={x + 23.5} y="18.5" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{h}</text>
+            <text x={x + 23.5} y="36" fontSize="4.6" fontWeight="800" textAnchor="middle" fill={c} fontFamily="system-ui">{s}</text>
+            <text x={x + 23.5} y="56" fontSize="4.1" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{a}</text>
+            <text x={x + 23.5} y="64" fontSize="4.1" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{b}</text>
+            <text x={x + 23.5} y="83" fontSize="10" textAnchor="middle">{i === 0 ? "🟢" : i === 1 ? "🟠" : "🔴"}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "pass-cert": () => (
+    <Frame title="The certificate of competence">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="24" y="6" width="112" height="88" rx="3" fill="#fffbeb" stroke="#b45309" strokeWidth="1.2" />
+      <rect x="28" y="10" width="104" height="80" rx="2" fill="none" stroke="#f59e0b" strokeWidth="0.6" />
+      <text x="80" y="22" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#92400e" fontFamily="system-ui">CERTIFICATE OF COMPETENCE</text>
+      {["date the test was passed", "driver number", "vehicle category", "notes on any disability"].map((t, k) => (
+        <g key={t}>
+          <line x1="36" y1={36 + k * 10} x2="56" y2={36 + k * 10} stroke="#b45309" strokeWidth="0.8" />
+          <text x="60" y={37.5 + k * 10} fontSize="4.4" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <rect x="36" y="74" width="88" height="11" rx="5.5" fill="#b91c1c" />
+      <text x="80" y="81.6" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">VALID FOR TWO YEARS ONLY</text>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

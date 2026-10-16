@@ -268,4 +268,34 @@ export default [
     key: "Assessment is for a fee; can help find an instructor.",
     src: P("3.7", 62, "Adaptations & equipment"),
   },
+  {
+    id: "test-reference", unit: "3.8", term: "Test reference number", visual: "appointment-letter",
+    meaning: "The number on the appointment — the candidate's test number.",
+    key: "Quote it in any call or letter to the booking office.",
+    src: P("3.8", 68, "Driving test appointments"),
+  },
+  {
+    id: "short-notice-test", unit: "3.8", term: "Short-notice test", visual: "appointment-letter",
+    meaning: "A test offered too late to give a cancellation date.",
+    key: "Only ask for one if you can attend with under a week's notice.",
+    src: P("3.8", 68, "Driving test appointments"),
+  },
+  {
+    id: "grade-1-fault", unit: "3.8", term: "Grade 1 (minor) fault", visual: "fault-grades",
+    meaning: "A fault the tester judges neither serious nor dangerous.",
+    key: "Doesn't fail the test on its own.",
+    src: P("3.8", 68, "An explanation of the testers markings"),
+  },
+  {
+    id: "serious-fault", unit: "3.8", term: "Serious / dangerous fault", visual: "fault-grades",
+    meaning: "Faults marked in their own columns on the report.",
+    key: "One of either means a fail.",
+    src: P("3.8", 68, "An explanation of the testers markings"),
+  },
+  {
+    id: "certificate-of-competence", unit: "3.8", term: "Certificate of competence", visual: "pass-cert",
+    meaning: "Given to every successful candidate: date, driver number, category.",
+    key: "Valid for two years only.",
+    src: P("3.8", 68, "Pass certificate"),
+  },
 ];

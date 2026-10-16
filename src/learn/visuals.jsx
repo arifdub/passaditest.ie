@@ -4327,6 +4327,79 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- before driving (Book 3, Unit 3.2) ---------------- */
+  "learner-path": () => (
+    <Frame title="From theory test to driving test">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.6">THE ROUTE TO A FULL LICENCE</Tag>
+      <StepChips y={28} perRow={3} steps={["Theory test", "Learner permit", "L-plates + supervisor"]} />
+      <StepChips y={64} perRow={3} start={4} color="#0f766e" steps={["12 EDT lessons", "6 months' wait", "Driving test"]} />
+      <Tag x="80" y="97" size="2.9" weight={700}>then a full licence — and N-plates for 2 years</Tag>
+    </Frame>
+  ),
+
+  "driving-docs": () => (
+    <Frame title="Documents before you drive">
+      <rect x="0" y="0" width="160" height="100" fill="#cbd5e1" />
+      <path d="M20 90 L36 18 L124 18 L140 90 Z" fill="#bae6fd" stroke="#334155" strokeWidth="1.4" />
+      {[[108, 74, "#10b981", "TAX"], [124, 74, "#3b82f6", "INS"], [108, 58, "#f59e0b", "NCT"]].map(([x, y, c, t]) => (
+        <g key={t}>
+          <circle cx={x} cy={y} r="7" fill="#ffffff" stroke={c} strokeWidth="1.6" />
+          <text x={x} y={y + 1.6} fontSize="4" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <rect x="30" y="64" width="34" height="20" rx="2" fill="#ffffff" stroke="#334155" strokeWidth="0.8" />
+      <rect x="33" y="67" width="9" height="11" fill="#cbd5e1" />
+      <line x1="45" y1="69" x2="60" y2="69" stroke="#94a3b8" strokeWidth="1" />
+      <line x1="45" y1="73" x2="58" y2="73" stroke="#94a3b8" strokeWidth="1" />
+      <Tag x="47" y="61" size="3" weight={800}>licence / permit</Tag>
+      <Tag x="47" y="94" size="2.8" weight={700}>carry it; show it to a garda</Tag>
+      <Tag x="116" y="94" size="2.8" weight={700}>discs displayed on the windscreen</Tag>
+      <Tag x="80" y="10" size="3.4">LICENCE · INSURANCE · TAX · NCT</Tag>
+    </Frame>
+  ),
+
+  "insurance-tiers": () => (
+    <Frame title="Three types of motor insurance">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[66, "#3b82f6", "THIRD PARTY", "the legal minimum — injury or damage to others"], [42, "#7c3aed", "+ FIRE AND THEFT", "your own car stolen or burnt"], [18, "#047857", "+ COMPREHENSIVE", "accidental damage to your car, injury to you"]].map(([y, c, t, d]) => (
+        <g key={t}>
+          <rect x="14" y={y} width="122" height="20" rx="3" fill={c} />
+          <text x="75" y={y + 8.5} fontSize="4" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{t}</text>
+          <text x="75" y={y + 15.5} fontSize="3" fontWeight="700" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{d}</text>
+        </g>
+      ))}
+      <Arrow d="M150 88 L150 26" color="#475569" w={1} />
+      <Tag x="150" y="22" size="2.8" weight={800}>cost</Tag>
+      <Tag x="80" y="98" size="2.9" weight={800} color={C.bad}>driving uninsured is a criminal offence</Tag>
+    </Frame>
+  ),
+
+  "plates": () => (
+    <Frame title="L-plates and N-plates">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[42, "L", "#dc2626", "LEARNER", "front and rear", "supervised by a driver with 2+ years' full licence"], [118, "N", "#dc2626", "NOVICE", "front and rear, 2 years", "may drive alone — but can't supervise a learner"]].map(([x, l, c, t, a, b]) => (
+        <g key={t}>
+          <rect x={x - 16} y="12" width="32" height="32" fill="#ffffff" stroke="#334155" strokeWidth="0.8" />
+          <text x={x} y="38" fontSize="26" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{l}</text>
+          <Tag x={x} y="56" size="3.6">{t}</Tag>
+          <Tag x={x} y="63" size="3" weight={800}>{a}</Tag>
+          <Tag x={x} y="72" size="2.6" weight={700}>{b.slice(0, b.indexOf(" ", 22))}</Tag>
+          <Tag x={x} y="77" size="2.6" weight={700}>{b.slice(b.indexOf(" ", 22) + 1)}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="94" size="2.9" weight={800} color={C.bad}>learners: no motorways, no towing, never unaccompanied</Tag>
+    </Frame>
+  ),
+
+  "premium-factors": () => (
+    <Frame title="What sets the insurance premium">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.amber} rows={2} size={8} cells={[["🎂", "age"], ["🚗", "car, engine size"], ["💼", "occupation, use"], ["🪪", "experience"], ["⭐", "no-claims bonus"], ["⚖️", "convictions, points"]]} />
+      <Tag x="80" y="97" size="2.9" weight={800} color={C.bad}>never hide a conviction — it can void the policy</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

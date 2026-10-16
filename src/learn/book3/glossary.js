@@ -52,4 +52,58 @@ export default [
     key: "About three quarters of knowledge comes from what we see.",
     src: P("3.1", 7, "Teaching aids"),
   },
+  {
+    id: "learner-permit", unit: "3.2", term: "Learner permit", visual: "learner-path",
+    meaning: "The permit a learner needs to take lessons and the driving test.",
+    key: "Apply only after passing the driver theory test.",
+    src: P("3.2", 11, "Driving licence"),
+  },
+  {
+    id: "six-month-rule", unit: "3.2", term: "Six-month rule", visual: "learner-path",
+    meaning: "First-time permit holders wait six months from the permit date before the test.",
+    key: "Time to gain experience.",
+    src: P("3.2", 12, "The six-month rule"),
+  },
+  {
+    id: "n-plates", unit: "3.2", term: "N-plates (novice driver)", visual: "plates",
+    meaning: "Displayed front and rear for 2 years after a first full licence.",
+    key: "A novice may not accompany a learner.",
+    src: P("3.2", 12, "Novice drivers"),
+  },
+  {
+    id: "edt", unit: "3.2", term: "EDT (Essential Driver Training)", visual: "learner-path",
+    meaning: "12 one-hour lessons with an ADI for first-time car learners.",
+    key: "Recorded in a logbook and uploaded to the RSA.",
+    src: P("3.2", 13, "Essential Driver Training"),
+  },
+  {
+    id: "sponsor", unit: "3.2", term: "Sponsor", visual: "plates",
+    meaning: "A qualified driver who supervises practice outside lessons.",
+    key: "Tracks practice in the logbook.",
+    src: P("3.2", 13, "What is a sponsor"),
+  },
+  {
+    id: "third-party", unit: "3.2", term: "Third party insurance", visual: "insurance-tiers",
+    meaning: "Cover for injury or damage you cause to others.",
+    key: "The legal minimum.",
+    src: P("3.2", 13, "Third party insurance; p.89 answer 4"),
+  },
+  {
+    id: "comprehensive", unit: "3.2", term: "Comprehensive insurance", visual: "insurance-tiers",
+    meaning: "Third party, fire and theft, plus accidental damage to your car and injury to you.",
+    key: "The dearest of the three types.",
+    src: P("3.2", 14, "Comprehensive insurance"),
+  },
+  {
+    id: "no-claims-bonus", unit: "3.2", term: "No-claims bonus", visual: "premium-factors",
+    meaning: "A premium discount for claim-free years — a full bonus can take five years.",
+    key: "Can be protected for an extra premium.",
+    src: P("3.2", 14, "No claims bonuses"),
+  },
+  {
+    id: "nct", unit: "3.2", term: "NCT (vehicle test)", visual: "driving-docs",
+    meaning: "Checks that key safety and environmental systems meet legal standards.",
+    key: "Cars from 4 years old.",
+    src: P("3.2", 89, "Post-test answers 7, 8"),
+  },
 ];

@@ -41,6 +41,7 @@ existing section named in the unit's `mcqLink`.
 | `book2/unit2_11.js` | Unit 2.11 Traffic Signs & Signals (pp.81–89). |
 | `book3/glossary.js` | Book 3 visual glossary (terms added unit by unit). |
 | `book3/unit3_1.js` | Unit 3.1 The Driver & the Instructor (pp.5–10). |
+| `book3/unit3_2.js` | Unit 3.2 Before Driving (pp.11–16). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -263,3 +264,8 @@ p.93 onwards.
   the hallmark of a good driver, which the unit doesn't say; "sound
   judgement" is as defensible. Its recognition game is "Good Driver, Good
   Teacher".
+- **Retention test 3.2, Q2 and Q3** — omitted. Q2 keys "your use of the
+  vehicle is insured" where "insured against third party risks" is as
+  defensible; Q3 keys "reported to the licensing authority" where the unit
+  says to see a doctor before applying. Its recognition game is "Road
+  Legal?".

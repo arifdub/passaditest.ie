@@ -54,6 +54,7 @@ existing section named in the unit's `mcqLink`.
 | `book4/unit4_1.js` | Unit 4.1 Communication (pp.7–16). |
 | `book4/unit4_2.js` | Unit 4.2 Behavioural Objectives (pp.17–21). |
 | `book4/unit4_3.js` | Unit 4.3 Teaching & Testing (pp.22–27). |
+| `book4/unit4_4.js` | Unit 4.4 Perception & Learning (pp.28–32). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -345,3 +346,6 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   test" for measuring one pupil's progress, but the unit defines attainment
   tests as a large group's average (a diagnostic test finds a pupil's
   weaknesses). 9 are used. Its recognition game is "Test the Test".
+- **Retention test 4.4 (10 questions)** — all match the key and are used.
+  The book's sign example uses UK warning "triangles"; the unit uses an
+  Irish yellow diamond instead. Its recognition game is "Mind Games".

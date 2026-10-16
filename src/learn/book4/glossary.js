@@ -94,4 +94,28 @@ export default [
     key: "Critical material is needed for the course objectives.",
     src: P("4.3", 23, "Relevant – Important – Critical"),
   },
+  {
+    id: "perception", unit: "4.4", term: "Perception", visual: "perception-steps",
+    meaning: "The interpretation of information from the senses.",
+    key: "Depends largely on past experience.",
+    src: P("4.4", 28, "Perception"),
+  },
+  {
+    id: "sensory-overload", unit: "4.4", term: "Sensory overload / deprivation", visual: "overload-deprivation",
+    meaning: "Too many inputs at once — or too little stimulation, causing boredom.",
+    key: "Keep to the point; vary your methods.",
+    src: P("4.4", 29, "Attention; Sensory deprivation"),
+  },
+  {
+    id: "discrimination", unit: "4.4", term: "Discrimination", visual: "sign-discrimination",
+    meaning: "The ability to detect the differences between two stimuli.",
+    key: "A sign's shape changes its meaning.",
+    src: P("4.4", 29, "Discrimination"),
+  },
+  {
+    id: "intrinsic-motivation", unit: "4.4", term: "Intrinsic / extrinsic motivation", visual: "motivation-types",
+    meaning: "Motivation from within (curiosity, mastery) or from outside (praise, reward).",
+    key: "Intrinsic leads to self-satisfaction.",
+    src: P("4.4", 29, "Motivation"),
+  },
 ];

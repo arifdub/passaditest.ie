@@ -5184,6 +5184,71 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- perception & learning (Book 4, Unit 4.4) ---------------- */
+  "senses-share": () => (
+    <Frame title="How we take in information">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["👁️", "sight", 75, "#1d4ed8"], ["👂", "hearing", 13, "#7c3aed"], ["✋", "touch, smell, taste", 12, "#b45309"]].map(([icon, t, pc, c], i) => {
+        const y = 14 + i * 28;
+        return (
+          <g key={t}>
+            <text x="12" y={y + 9} fontSize="11" textAnchor="middle">{icon}</text>
+            <rect x="24" y={y} width={pc * 1.45} height="13" rx="2" fill={c} />
+            <text x={28 + pc * 1.45} y={y + 9} fontSize="5.4" fontWeight="900" fill={c} fontFamily="system-ui">{pc}%</text>
+            <text x="24" y={y + 20} fontSize="3.8" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+      <Tag x="80" y="96" size="3.2" weight={800} color="#1d4ed8">so use visual teaching aids</Tag>
+    </Frame>
+  ),
+
+  "perception-steps": () => (
+    <Frame title="How a pupil perceives">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={26} perRow={3} color="#7c3aed" steps={["sense a stimulus", "attend to it", "interpret it"]} />
+      <rect x="10" y="62" width="140" height="24" rx="4" fill="#f5f3ff" stroke="#7c3aed" strokeWidth="0.8" />
+      <text x="80" y="72" fontSize="4.2" fontWeight="800" textAnchor="middle" fill="#5b21b6" fontFamily="system-ui">interpretation depends on PAST EXPERIENCE —</text>
+      <text x="80" y="80" fontSize="4.2" fontWeight="800" textAnchor="middle" fill="#5b21b6" fontFamily="system-ui">new information is compared with what's known</text>
+    </Frame>
+  ),
+
+  "overload-deprivation": () => (
+    <Frame title="Too much, too little">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#fef2f2" stroke="#b91c1c" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#f1f5f9" stroke="#64748b" strokeWidth="1" />
+      <text x="41" y="18" fontSize="5" fontWeight="900" textAnchor="middle" fill="#b91c1c" fontFamily="system-ui">OVERLOAD</text>
+      <text x="119" y="18" fontSize="5" fontWeight="900" textAnchor="middle" fill="#475569" fontFamily="system-ui">DEPRIVATION</text>
+      <text x="41" y="44" fontSize="15" textAnchor="middle">🤯</text>
+      <text x="119" y="44" fontSize="15" textAnchor="middle">😴</text>
+      {["too much detail,", "too many senses at once", "fix: keep to the point (KISS)"].map((t, i) => <text key={t} x="41" y={62 + i * 8} fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+      {["a repetitive, monotone", "'lecture' — boredom", "fix: enthusiasm, variety"].map((t, i) => <text key={t} x="119" y={62 + i * 8} fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+    </Frame>
+  ),
+
+  "motivation-types": () => (
+    <Frame title="Intrinsic and extrinsic motivation">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#b45309" rows={2} size={9} cells={[["🔍", "curiosity (intrinsic)"], ["🏔️", "challenge (intrinsic)"], ["🎯", "mastery (intrinsic)"], ["👏", "praise (extrinsic)"], ["🎁", "reward (extrinsic)"], ["👪", "family, peers (extrinsic)"]]} />
+    </Frame>
+  ),
+
+  "sign-discrimination": () => (
+    <Frame title="Discrimination: spot the difference">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <path d="M40 14 L64 38 L40 62 L16 38 Z" fill="#facc15" stroke="#0f172a" strokeWidth="1.6" strokeLinejoin="round" />
+      <text x="40" y="44" fontSize="15" textAnchor="middle">🚲</text>
+      <circle cx="120" cy="38" r="21" fill="#ffffff" stroke="#dc2626" strokeWidth="4.5" />
+      <text x="120" y="44" fontSize="15" textAnchor="middle">🚲</text>
+      <text x="40" y="70" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">DIAMOND: warning —</text>
+      <text x="40" y="77" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">expect cyclists</text>
+      <text x="120" y="70" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">CIRCLE: prohibition —</text>
+      <text x="120" y="77" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">no cycling</text>
+      <Tag x="80" y="92" size="3.2" weight={800} color="#b91c1c">same picture — the shape changes the meaning</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -196,4 +196,34 @@ export default [
     key: "Avoid — it needs little effort.",
     src: P("4.7", 46, "Avoid elliptical questions"),
   },
+  {
+    id: "adi-formula", unit: "4.8", term: "ADI formula (Alert, Direct, Identify)", visual: "adi-formula",
+    meaning: "A way of giving directions: get attention, give the direction, say where.",
+    key: "Where junctions are close, identify the place first.",
+    src: P("4.8", 52, "The giving of directions"),
+  },
+  {
+    id: "fault-assessment", unit: "4.8", term: "Fault assessment", visual: "fault-steps",
+    meaning: "Identifying, analysing and remedying a pupil's faults.",
+    key: "The ADI's core competency.",
+    src: P("4.8", 50, "Fault assessment"),
+  },
+  {
+    id: "retrospective-instruction", unit: "4.8", term: "Retrospective instruction", visual: "fault-steps",
+    meaning: "Correcting a fault an unnecessarily long time after it happened.",
+    key: "Explain at the first safe opportunity instead.",
+    src: P("4.8", 51, "Where it is necessary to delay"),
+  },
+  {
+    id: "verbal-intervention", unit: "4.8", term: "Verbal / physical intervention", visual: "intervention-ladder",
+    meaning: "A spoken prompt — or, if too late, a steering correction or dual controls.",
+    key: "Early verbal intervention is most effective.",
+    src: P("4.8", 53, "Correcting errors"),
+  },
+  {
+    id: "nursery-route", unit: "4.8", term: "Nursery route", visual: "route-progression",
+    meaning: "Straight, wide, quiet roads for a novice's first lessons.",
+    key: "Then intermediate, then varied routes.",
+    src: P("4.8", 51, "Route planning"),
+  },
 ];

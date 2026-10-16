@@ -5436,6 +5436,69 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- practical teaching (Book 4, Unit 4.8) ---------------- */
+  "adi-formula": () => (
+    <Frame title="Giving directions: Alert, Direct, Identify">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["ALERT", "\"I'd like you to…\"", "#b91c1c"], ["DIRECT", "\"…turn left…\"", "#b45309"], ["IDENTIFY", "\"…at the end of the road.\"", "#1d4ed8"]].map(([h, t, c], i) => (
+        <g key={h}>
+          <rect x="8" y={8 + i * 25} width="40" height="19" rx="3" fill="#ffffff" stroke={c} strokeWidth="1.4" />
+          <text x="28" y={20.5 + i * 25} fontSize="5.4" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+          <text x="56" y={20.5 + i * 25} fontSize="4.6" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <text x="80" y="90" fontSize="3.7" fontWeight="800" textAnchor="middle" fill="#047857" fontFamily="system-ui">say "correct", not "right" · "follow the road", not "go straight"</text>
+    </Frame>
+  ),
+
+  "intervention-ladder": () => (
+    <Frame title="Correcting errors">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={22} perRow={4} color="#b45309" steps={["early verbal prompt", "steering correction", "dual controls", "pull in, explain"]} />
+      <rect x="10" y="58" width="140" height="28" rx="4" fill="#fff7ed" stroke="#c2410c" strokeWidth="0.8" />
+      <text x="80" y="68" fontSize="3.9" fontWeight="800" textAnchor="middle" fill="#9a3412" fontFamily="system-ui">physical only if verbal is too late or doesn't work —</text>
+      <text x="80" y="76" fontSize="3.9" fontWeight="800" textAnchor="middle" fill="#9a3412" fontFamily="system-ui">then say why, how serious, and what could have happened</text>
+    </Frame>
+  ),
+
+  "fault-steps": () => (
+    <Frame title="Fault assessment">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={24} perRow={3} color="#1d4ed8" steps={["IDENTIFY", "ANALYSE", "REMEDY"]} />
+      {[["what went wrong —", "be selective early on"], ["why it happened —", "and get it right"], ["how to avoid it —", "aids, demonstration"]].map(([a, b], i) => (
+        <g key={a}>
+          <text x={26.7 + i * 53.3} y="54" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#334155" fontFamily="system-ui">{a}</text>
+          <text x={26.7 + i * 53.3} y="60" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#334155" fontFamily="system-ui">{b}</text>
+        </g>
+      ))}
+      <Tag x="80" y="80" size="3.3" weight={800} color="#b91c1c">dangerous faults: always point them out</Tag>
+      <Tag x="80" y="88" size="3.1" weight={700}>several at once? pull in safely and discuss</Tag>
+    </Frame>
+  ),
+
+  "route-progression": () => (
+    <Frame title="Routes that build skill">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["NURSERY", ["straight, wide,", "quiet roads"], "#047857", 30], ["INTERMEDIATE", ["junctions,", "hills, bends"], "#b45309", 46], ["VARIED", ["every road", "and traffic"], "#1d4ed8", 62]].map(([h, t, c, ht], i) => {
+        const x = 8 + i * 50;
+        return (
+          <g key={h}>
+            <rect x={x} y={82 - ht} width="44" height={ht} rx="3" fill={c} opacity="0.88" />
+            <text x={x + 22} y={90 - ht + 4} fontSize={h.length > 9 ? 3.6 : 4.4} fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{h}</text>
+            {t.map((w, k) => <text key={w} x={x + 22} y={89 + k * 6} fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{w}</text>)}
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "instructor-traits": () => (
+    <Frame title="The good instructor is">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#7c3aed" rows={2} size={9} cells={[["🗣️", "articulate"], ["🔥", "enthusiastic"], ["👏", "encouraging"], ["🙂", "friendly"], ["⏳", "patient"], ["💪", "confident"]]} />
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

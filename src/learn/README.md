@@ -52,6 +52,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_10.js` | Unit 3.10 Safety Belts & Child Restraints (pp.83–87). |
 | `book4/glossary.js` | Book 4 visual glossary (terms added unit by unit). |
 | `book4/unit4_1.js` | Unit 4.1 Communication (pp.7–16). |
+| `book4/unit4_2.js` | Unit 4.2 Behavioural Objectives (pp.17–21). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -337,3 +338,5 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   and diagrams" for using a pupil's curiosity, but the text equally names
   question-and-answer technique. 9 are used. Its recognition game is
   "Read the Signs".
+- **Retention test 4.2 (10 questions)** — all match the key and are used.
+  Its recognition game is "Sort the Objective".

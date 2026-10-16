@@ -51,6 +51,7 @@ import UNIT_3_8 from "./book3/unit3_8";
 import UNIT_3_9 from "./book3/unit3_9";
 import UNIT_3_10 from "./book3/unit3_10";
 import UNIT_4_1 from "./book4/unit4_1";
+import UNIT_4_2 from "./book4/unit4_2";
 import GLOSSARY_3 from "./book3/glossary";
 import GLOSSARY_4 from "./book4/glossary";
 
@@ -132,7 +133,7 @@ export const BOOKS = [
     glossary: GLOSSARY_4,
     units: [
       { id: "4.1",  title: "Communication",                   pages: [7, 16],  badge: "Communication Specialist", content: UNIT_4_1 },
-      { id: "4.2",  title: "Behavioural Objectives",          pages: [17, 21], badge: "Objectives Specialist" },
+      { id: "4.2",  title: "Behavioural Objectives",          pages: [17, 21], badge: "Objectives Specialist", content: UNIT_4_2 },
       { id: "4.3",  title: "Teaching & Testing",              pages: [22, 27], badge: "Assessment Specialist" },
       { id: "4.4",  title: "Perception & Learning",           pages: [28, 32], badge: "Learning Specialist" },
       { id: "4.5",  title: "Teaching Adults",                 pages: [33, 37], badge: "Adult Learning Specialist" },

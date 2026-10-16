@@ -5044,6 +5044,82 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- behavioural objectives (Book 4, Unit 4.2) ---------------- */
+  "aim-objective": () => (
+    <Frame title="Aim vs objective">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <path d="M10 10 L150 10 L104 54 L56 54 Z" fill="#dbeafe" stroke="#1d4ed8" strokeWidth="1" />
+      <path d="M56 58 L104 58 L92 92 L68 92 Z" fill="#d1fae5" stroke="#047857" strokeWidth="1" />
+      <text x="80" y="22" fontSize="6" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">AIM — broad intent</text>
+      <text x="80" y="32" fontSize="4.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"We're going to try reversing today"</text>
+      <text x="80" y="68" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">OBJECTIVE</text>
+      <text x="80" y="76" fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">exactly what,</text>
+      <text x="80" y="82" fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">how well</text>
+    </Frame>
+  ),
+
+  "objective-parts": () => (
+    <Frame title="The 3 parts of a behavioural objective">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["🎯", "TERMINAL BEHAVIOUR", ["what the pupil", "must be able to do"], "#1d4ed8"], ["📍", "CONDITIONS", ["in this vehicle,", "on any road"], "#b45309"], ["📏", "STANDARD", ["no stall, no kerb,", "good observation"], "#047857"]].map(([icon, h, rows, c], i) => {
+        const x = 5 + i * 51.7;
+        return (
+          <g key={h}>
+            <rect x={x} y="8" width="47" height="84" rx="4" fill="#ffffff" stroke={c} strokeWidth="1" />
+            <text x={x + 23.5} y="30" fontSize="13" textAnchor="middle">{icon}</text>
+            <text x={x + 23.5} y="46" fontSize={h.length > 12 ? 3.4 : 4.4} fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+            {rows.map((t, k) => <text key={t} x={x + 23.5} y={60 + k * 8} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "learning-domains": () => (
+    <Frame title="Three domains of learning">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#7c3aed" rows={2} size={10} cells={[["❤️", "AFFECTIVE"], ["🧠", "COGNITIVE"], ["🖐️", "PSYCHOMOTOR"], ["😊", "feelings, attitudes"], ["📚", "knowledge and thought"], ["🦶", "manual skills"]]} />
+    </Frame>
+  ),
+
+  "cognitive-steps": () => (
+    <Frame title="Cognitive objectives, simplest first">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {["recall", "comprehension", "application", "analysis", "synthesis", "evaluation"].map((t, i) => {
+        const x = 6 + i * 25, y = 82 - i * 13;
+        return (
+          <g key={t}>
+            <rect x={x} y={y} width="24" height={94 - y} fill={["#c7d2fe", "#a5b4fc", "#818cf8", "#6366f1", "#4f46e5", "#4338ca"][i]} />
+            <text x={x + 12} y={y - 2.5} fontSize={t.length > 11 ? 3 : 3.6} fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+            <text x={x + 12} y={y + 8} fontSize="6" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{i + 1}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "action-verbs": () => (
+    <Frame title="Action verbs, not vague words">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {["State", "Move", "Identify", "Explain", "Select", "Perform", "Compare", "Describe", "Show", "Choose", "Conclude", "Discriminate"].map((t, i) => {
+        const x = 6 + (i % 4) * 37.5, y = 8 + Math.floor(i / 4) * 15;
+        return (
+          <g key={t}>
+            <rect x={x} y={y} width="35" height="12" rx="2" fill="#d1fae5" stroke="#047857" strokeWidth="0.6" />
+            <text x={x + 17.5} y={y + 8} fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#065f46" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+      {["know", "understand", "appreciate", "grasp"].map((t, i) => (
+        <g key={t}>
+          <rect x={6 + i * 37.5} y="64" width="35" height="12" rx="2" fill="#fee2e2" stroke="#b91c1c" strokeWidth="0.6" />
+          <text x={23.5 + i * 37.5} y="72" fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#991b1b" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+      <Tag x="80" y="88" size="3.3" weight={800} color="#b91c1c">avoid words open to wide interpretation</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

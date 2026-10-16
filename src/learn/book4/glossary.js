@@ -40,4 +40,28 @@ export default [
     key: "The pupil's attitude to you is an intrinsic barrier.",
     src: P("4.1", 8, "Barriers to communication"),
   },
+  {
+    id: "lesson-aim", unit: "4.2", term: "Aim (of a lesson)", visual: "aim-objective",
+    meaning: "A broad statement of intent — the subject of the lesson.",
+    key: "The first step in planning.",
+    src: P("4.2", 17, "An aim"),
+  },
+  {
+    id: "lesson-objective", unit: "4.2", term: "Behavioural objective", visual: "objective-parts",
+    meaning: "Exactly what the pupil must be able to do: terminal behaviour, conditions and standard.",
+    key: "Written with action verbs so it can be observed.",
+    src: P("4.2", 17, "The parts of a behavioural objective"),
+  },
+  {
+    id: "learning-domains", unit: "4.2", term: "Affective, cognitive, psychomotor", visual: "learning-domains",
+    meaning: "The three domains of learning: feelings and attitudes; knowledge and thought; manual skill.",
+    key: "Driving is primarily psychomotor.",
+    src: P("4.2", 18, "Types of objectives"),
+  },
+  {
+    id: "sensorimotor", unit: "4.2", term: "Sensorimotor skill", visual: "learning-domains",
+    meaning: "Unconscious co-ordination that depends on how the controls respond — e.g. brake pressure by feel.",
+    key: "Learned through feedback from the car.",
+    src: P("4.2", 19, "The psychomotor domain"),
+  },
 ];

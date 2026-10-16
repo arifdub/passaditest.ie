@@ -148,4 +148,40 @@ export default [
     key: "12 in 36 months means a 6-month ban.",
     src: P("3.3", 24, "Retention Q31, Q39"),
   },
+  {
+    id: "adi-register", unit: "3.4", term: "Register of Approved Driving Instructors", visual: "adi-stages",
+    meaning: "The RSA's register of those allowed to give driving instruction for reward.",
+    key: "Entry after passing all three stages and paying the fee.",
+    src: P("3.4", 27, "Legal position"),
+  },
+  {
+    id: "three-stage-exam", unit: "3.4", term: "Three-stage ADI exam", visual: "adi-stages",
+    meaning: "Stage 1 theory, stage 2 own driving, stage 3 ability to instruct.",
+    key: "All within two years of passing stage 1.",
+    src: P("3.4", 27, "The examination"),
+  },
+  {
+    id: "trainee-licence", unit: "3.4", term: "Trainee licence", visual: "trainee-licence",
+    meaning: "A licence to gain instructing experience under a sponsoring ADI.",
+    key: "Maximum six months, only after passing stage 2.",
+    src: P("3.4", 31, "A trainee licence"),
+  },
+  {
+    id: "role-play", unit: "3.4", term: "Stage 3 role-play", visual: "stage3-phases",
+    meaning: "The examiner plays a beginner (phase 1) then a test-standard pupil (phase 2).",
+    key: "About 25–30 minutes each.",
+    src: P("3.4", 31, "Stage three test; Role play"),
+  },
+  {
+    id: "check-test", unit: "3.4", term: "Check test", visual: "adi-stages",
+    meaning: "A test of continued ability to instruct, on a real lesson with your pupil.",
+    key: "A condition of continued registration.",
+    src: P("3.4", 34, "The check test"),
+  },
+  {
+    id: "garda-vetting", unit: "3.4", term: "Garda vetting", visual: "trainee-licence",
+    meaning: "Criminal record check by the Garda National Vetting Bureau.",
+    key: "Required for entry on the ADI register.",
+    src: P("3.4", 27, "Legal position"),
+  },
 ];

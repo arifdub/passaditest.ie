@@ -43,6 +43,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_1.js` | Unit 3.1 The Driver & the Instructor (pp.5–10). |
 | `book3/unit3_2.js` | Unit 3.2 Before Driving (pp.11–16). |
 | `book3/unit3_3.js` | Unit 3.3 The Road Traffic Acts & the Law (pp.17–26). |
+| `book3/unit3_4.js` | Unit 3.4 Driving Instructor Regulations (pp.27–39). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -276,3 +277,8 @@ p.93 onwards.
   unit's 23.30–07.00; Q34 limits the fog-lamp rule to rear lamps; Q45 and
   Q51 key facts not in the unit. 50 are used. This unit has no post test.
   Its recognition game is "Legal or Not?".
+- **Retention test 3.4 (40 questions), Q10, Q11, Q14, Q21 and Q22** —
+  omitted. Q21 keys six stage-2 faults as "reached the standard", but the
+  unit allows a maximum of 5; Q22's seat requirement has two fitting
+  options; Q10, Q11 and Q14 (appeals and cancellation notice) aren't in
+  the unit. 35 are used. Its recognition game is "Stage by Stage".

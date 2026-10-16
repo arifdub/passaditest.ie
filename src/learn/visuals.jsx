@@ -4502,6 +4502,70 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- ADI regulations (Book 3, Unit 3.4) ---------------- */
+  "adi-stages": () => (
+    <Frame title="The three-stage ADI exam">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.6">THREE STAGES — ALL WITHIN 2 YEARS OF PASSING STAGE 1</Tag>
+      {[[28, "#2563eb", "1", "THEORY", "computer test", "unlimited attempts"], [80, "#7c3aed", "2", "OWN DRIVING", "1–1½ hours, 25–30 km", "max 5 faults"], [132, "#047857", "3", "INSTRUCTING", "2 phases, role-play", "result in 10 days"]].map(([x, c, n, t, a, b]) => (
+        <g key={n}>
+          <circle cx={x} cy="34" r="12" fill={c} />
+          <text x={x} y="39" fontSize="13" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{n}</text>
+          <Tag x={x} y="56" size="3.4">{t}</Tag>
+          <Tag x={x} y="63" size="2.8" weight={700}>{a}</Tag>
+          <Tag x={x} y="68" size="2.8" weight={700}>{b}</Tag>
+        </g>
+      ))}
+      <Arrow d="M42 34 L64 34" color="#475569" w={1} />
+      <Arrow d="M94 34 L116 34" color="#475569" w={1} />
+      <rect x="20" y="78" width="120" height="12" rx="3" fill="#dcfce7" />
+      <Tag x="80" y="86" size="3" weight={800} color="#047857">pass all three + pay the fee → on the Register for 2 years</Tag>
+      <Tag x="80" y="97" size="2.8" weight={700}>then check tests: a lesson with a pupil of your choice</Tag>
+    </Frame>
+  ),
+
+  "stage3-phases": () => (
+    <Frame title="Stage 3: two phases">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.6">THE EXAMINER ROLE-PLAYS A PUPIL</Tag>
+      {[[42, "#f59e0b", "PHASE 1", "a beginner", "25–30 min"], [118, "#047857", "PHASE 2", "test standard", "25–30 min"]].map(([x, c, t, a, b]) => (
+        <g key={t}>
+          <rect x={x - 32} y="18" width="64" height="44" rx="5" fill="#ffffff" stroke={c} strokeWidth="1.4" />
+          <Tag x={x} y="28" size="3.6" color={c}>{t}</Tag>
+          <text x={x} y="44" fontSize="11" textAnchor="middle">{t === "PHASE 1" ? "🐣" : "🎓"}</text>
+          <Tag x={x} y="52" size="3" weight={800}>{a}</Tag>
+          <Tag x={x} y="57" size="2.8" weight={700}>{b}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="38" size="2.6" weight={700}>a few minutes</Tag>
+      <Tag x="80" y="42" size="2.6" weight={700}>to prepare</Tag>
+      <Tag x="80" y="74" size="3" weight={800} color="#047857">recap · objectives · clear plan · encourage · feedback</Tag>
+      <Tag x="80" y="81" size="3" weight={800} color="#047857">match the pupil's level · change approach if needed</Tag>
+      <Tag x="80" y="94" size="2.8" weight={700}>car: L-plates front and rear, insured for the examiner, manual gearbox</Tag>
+    </Frame>
+  ),
+
+  "trainee-licence": () => (
+    <Frame title="Trainee licence">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="20" y="16" width="56" height="36" rx="3" fill="#ffffff" stroke="#334155" strokeWidth="1" />
+      <rect x="25" y="21" width="14" height="17" fill="#cbd5e1" />
+      <Tag x="58" y="27" size="3.2" weight={900}>TRAINEE</Tag>
+      <Tag x="58" y="33" size="2.8" weight={700}>ADI</Tag>
+      <line x1="44" y1="42" x2="70" y2="42" stroke="#94a3b8" strokeWidth="1" />
+      <line x1="44" y1="46" x2="66" y2="46" stroke="#94a3b8" strokeWidth="1" />
+      <Tag x="48" y="62" size="3.2" weight={800} color="#b45309">max 6 months</Tag>
+      <Tag x="116" y="18" size="3" weight={800}>only after passing</Tag>
+      <Tag x="116" y="23" size="3" weight={800}>stage 2</Tag>
+      <Tag x="116" y="36" size="3" weight={800}>a sponsoring ADI</Tag>
+      <Tag x="116" y="41" size="3" weight={800}>supervises and records</Tag>
+      <Tag x="116" y="54" size="3" weight={800}>one trainee per</Tag>
+      <Tag x="116" y="59" size="3" weight={800}>sponsor</Tag>
+      <Tag x="80" y="80" size="3" weight={700}>RSA syllabus — to build teaching skills for stage 3</Tag>
+      <Tag x="80" y="88" size="3" weight={700}>never held one before</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -44,6 +44,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/unit3_2.js` | Unit 3.2 Before Driving (pp.11–16). |
 | `book3/unit3_3.js` | Unit 3.3 The Road Traffic Acts & the Law (pp.17–26). |
 | `book3/unit3_4.js` | Unit 3.4 Driving Instructor Regulations (pp.27–39). |
+| `book3/unit3_5.js` | Unit 3.5 Driver Licensing (pp.40–52). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -282,3 +283,8 @@ p.93 onwards.
   RSA ADI unit" is as defensible; Q36 (badge display) and Q10, Q11, Q14
   (appeals and cancellation notice) aren't in the unit; Q22's seat
   requirement has two fitting options. 34 are used. Its recognition game is "Stage by Stage".
+- **Retention test 3.5 (55 questions), Q7, Q10, Q12, Q14, Q16, Q19, Q29
+  and Q36** — omitted. Q7 keys "attend in person" though the unit says
+  first licences can be applied for online; Q19 keys "not asked about
+  licence history"; the others have a second defensible option or aren't
+  in the unit. 47 are used. Its recognition game is "Licence Lookup".

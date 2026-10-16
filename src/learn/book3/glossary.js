@@ -184,4 +184,34 @@ export default [
     key: "Required for entry on the ADI register.",
     src: P("3.4", 27, "Legal position"),
   },
+  {
+    id: "licence-category", unit: "3.5", term: "Licence category", visual: "licence-categories",
+    meaning: "The class of vehicle a licence covers — A, AM, B, C, D, W; E adds a trailer.",
+    key: "Category B: up to 3,500 kg and 8 passenger seats.",
+    src: P("3.5", 44, "Vehicle type and category"),
+  },
+  {
+    id: "licence-code", unit: "3.5", term: "Licence code", visual: "licence-codes",
+    meaning: "A number on the licence recording a condition or restriction.",
+    key: "01 glasses, 78 automatics only, 999 must be accompanied.",
+    src: P("3.5", 42, "Driving licence codes"),
+  },
+  {
+    id: "qualified-driver", unit: "3.5", term: "Qualified (accompanying) driver", visual: "plates",
+    meaning: "Someone with a full licence in the category for 2 continuous years.",
+    key: "Must carry their licence too.",
+    src: P("3.5", 46, "Accompaniment requirements"),
+  },
+  {
+    id: "points-effective-date", unit: "3.5", term: "Penalty points effective date", visual: "licence-clock",
+    meaning: "Points apply 28 days after the notice is issued.",
+    key: "They stay at least 3 years.",
+    src: P("3.5", 47, "Penalty point start date"),
+  },
+  {
+    id: "licence-exchange", unit: "3.5", term: "Licence exchange", visual: "licence-categories",
+    meaning: "Swapping a recognised foreign licence for an Irish one.",
+    key: "Residency means more than 185 days a year here.",
+    src: P("3.5", 46, "Driving licence exchange"),
+  },
 ];

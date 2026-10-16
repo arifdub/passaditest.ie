@@ -44,6 +44,7 @@ import UNIT_3_1 from "./book3/unit3_1";
 import UNIT_3_2 from "./book3/unit3_2";
 import UNIT_3_3 from "./book3/unit3_3";
 import UNIT_3_4 from "./book3/unit3_4";
+import UNIT_3_5 from "./book3/unit3_5";
 import GLOSSARY_3 from "./book3/glossary";
 
 export const BOOKS = [
@@ -106,7 +107,7 @@ export const BOOKS = [
       { id: "3.2",  title: "Before Driving",                  pages: [11, 16], badge: "Ready-to-Drive Specialist", content: UNIT_3_2 },
       { id: "3.3",  title: "The Road Traffic Acts & the Law", pages: [17, 26], badge: "Law Specialist", content: UNIT_3_3 },
       { id: "3.4",  title: "Driving Instructor Regulations",  pages: [27, 39], badge: "Regulations Specialist", content: UNIT_3_4 },
-      { id: "3.5",  title: "Driver Licensing",                pages: [40, 52], badge: "Licensing Specialist" },
+      { id: "3.5",  title: "Driver Licensing",                pages: [40, 52], badge: "Licensing Specialist", content: UNIT_3_5 },
       { id: "3.6",  title: "Vehicle Registration & Licensing", pages: [53, 56], badge: "Registration Specialist" },
       { id: "3.7",  title: "The Driving Test",                pages: [57, 67], badge: "Driving Test Specialist" },
       { id: "3.8",  title: "Driving Test Forms",              pages: [68, 72], badge: "Test Forms Specialist" },

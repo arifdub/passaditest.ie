@@ -4566,6 +4566,62 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- driver licensing (Book 3, Unit 3.5) ---------------- */
+  "licence-categories": () => (
+    <Frame title="Licence categories">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["A, A1, A2", "🏍️", "motorcycles"], ["AM", "🛵", "mopeds"], ["B", "🚗", "car, light van ≤3500 kg, ≤8 passenger seats"], ["C, C1", "🚚", "trucks over 3500 kg"], ["D, D1", "🚌", "buses, 8+ passenger seats"], ["W", "🚜", "work vehicles, land tractors"]].map(([c, ic, d], i) => {
+        const x = 6 + (i % 2) * 77, y = 6 + Math.floor(i / 2) * 31;
+        return (
+          <g key={c}>
+            <rect x={x} y={y} width="71" height="26" rx="4" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+            <text x={x + 10} y={y + 17} fontSize="11" textAnchor="middle">{ic}</text>
+            <text x={x + 22} y={y + 11} fontSize="5" fontWeight="900" fill="#1d4ed8" fontFamily="system-ui">{c}</text>
+            <text x={x + 22} y={y + 19} fontSize="3" fontWeight="700" fill="#334155" fontFamily="system-ui">{d.length > 26 ? d.slice(0, d.lastIndexOf(" ", 26)) : d}</text>
+            {d.length > 26 && <text x={x + 22} y={y + 23.5} fontSize="3" fontWeight="700" fill="#334155" fontFamily="system-ui">{d.slice(d.lastIndexOf(" ", 26) + 1)}</text>}
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "licence-codes": () => (
+    <Frame title="Licence codes">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="10" y="12" width="76" height="48" rx="4" fill="#dbeafe" stroke="#1d4ed8" strokeWidth="1" />
+      <rect x="15" y="18" width="18" height="24" fill="#94a3b8" />
+      <text x="38" y="22" fontSize="4" fontWeight="900" fill="#1e3a8a" fontFamily="system-ui">DRIVING LICENCE</text>
+      {[0, 1, 2].map(i => <line key={i} x1="38" y1={28 + i * 5} x2={76 - i * 6} y2={28 + i * 5} stroke="#64748b" strokeWidth="1" />)}
+      <rect x="38" y="47" width="42" height="9" rx="1.5" fill="#ffffff" stroke="#1d4ed8" strokeWidth="0.6" />
+      <text x="59" y="53.5" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#dc2626" fontFamily="system-ui">01 · 78</text>
+      {[["01", "glasses / lenses"], ["78", "automatics only"], ["991", "six-month rule"], ["999", "must be accompanied"], ["115", "organ donor"]].map(([c, d], i) => (
+        <g key={c}>
+          <text x="100" y={18 + i * 9} fontSize="5" fontWeight="900" fill="#dc2626" fontFamily="system-ui">{c}</text>
+          <text x="114" y={18 + i * 9} fontSize="3.4" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{d}</text>
+        </g>
+      ))}
+      <Tag x="80" y="76" size="3.1" weight={800}>codes record conditions and restrictions —</Tag>
+      <Tag x="80" y="82" size="3.1" weight={800}>understood in every EU language</Tag>
+      <Tag x="80" y="94" size="2.8" weight={700}>check a new pupil's permit for code 01</Tag>
+    </Frame>
+  ),
+
+  "licence-clock": () => (
+    <Frame title="Licensing time limits">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["2 years", "theory pass to apply for a permit", "#2563eb"], ["6 months", "first permit to driving test", "#7c3aed"], ["2 years", "a learner permit is valid", "#0891b2"], ["10 years", "full licence, ages 17–70", "#047857"], ["28 days", "until penalty points apply", "#dc2626"], ["3 years", "points stay on the licence", "#b45309"]].map(([n, d, c], i) => {
+        const y = 10 + i * 14.5;
+        return (
+          <g key={i}>
+            <rect x="10" y={y} width="38" height="11" rx="5.5" fill={c} />
+            <text x="29" y={y + 7.6} fontSize="5" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily="system-ui">{n}</text>
+            <text x="54" y={y + 7.4} fontSize="4" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{d}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

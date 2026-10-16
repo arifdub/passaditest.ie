@@ -42,6 +42,7 @@ existing section named in the unit's `mcqLink`.
 | `book3/glossary.js` | Book 3 visual glossary (terms added unit by unit). |
 | `book3/unit3_1.js` | Unit 3.1 The Driver & the Instructor (pp.5–10). |
 | `book3/unit3_2.js` | Unit 3.2 Before Driving (pp.11–16). |
+| `book3/unit3_3.js` | Unit 3.3 The Road Traffic Acts & the Law (pp.17–26). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -269,3 +270,9 @@ p.93 onwards.
   defensible; Q3 keys "reported to the licensing authority" where the unit
   says to see a doctor before applying. Its recognition game is "Road
   Legal?".
+- **Retention test 3.3 (55 questions), Q10, Q18, Q34, Q45 and Q51** —
+  omitted. Q18 keys "loading on single yellow lines" for hazard lights
+  (contradicts the Rules of the Road); Q10's horn hours don't match the
+  unit's 23.30–07.00; Q34 limits the fog-lamp rule to rear lamps; Q45 and
+  Q51 key facts not in the unit. 50 are used. This unit has no post test.
+  Its recognition game is "Legal or Not?".

@@ -4400,6 +4400,108 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- road traffic law (Book 3, Unit 3.3) ---------------- */
+  "bac-limits": () => (
+    <Frame title="Drink-driving limits">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <Tag x="80" y="9" size="3.4">BLOOD ALCOHOL LIMITS (mg per 100 ml of blood)</Tag>
+      <line x1="20" y1="80" x2="150" y2="80" stroke="#334155" strokeWidth="0.8" />
+      {[[48, 20, "#f59e0b", "LEARNER, NOVICE,", "PROFESSIONAL"], [112, 50, "#ef4444", "ALL OTHER", "DRIVERS"]].map(([x, mg, c, a, b]) => (
+        <g key={mg}>
+          <rect x={x - 16} y={80 - mg} width="32" height={mg} rx="2" fill={c} />
+          <text x={x} y={76 - mg} fontSize="7" fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{mg} mg</text>
+          <Tag x={x} y="87" size="2.9" weight={800}>{a}</Tag>
+          <Tag x={x} y="92" size="2.9" weight={800}>{b}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="98" size="2.8" weight={700} color={C.bad}>the only safe rule: if you drink, don't drive</Tag>
+    </Frame>
+  ),
+
+  "towing-rules": () => (
+    <Frame title="Towing a trailer">
+      <rect x="0" y="0" width="160" height="100" fill="#e0ecf5" />
+      <rect x="0" y="60" width="160" height="40" fill={C.road} />
+      <g transform="translate(118 64) scale(1.6)"><SideCar x={0} y={0} color={C.good} /></g>
+      <rect x="22" y="38" width="44" height="22" rx="2" fill="#e2e8f0" stroke="#334155" strokeWidth="0.8" />
+      <circle cx="40" cy="62" r="3.6" fill="#111827" />
+      <line x1="66" y1="54" x2="98" y2="58" stroke="#334155" strokeWidth="1.2" />
+      <line x1="66" y1="72" x2="98" y2="72" stroke="#047857" strokeWidth="0.8" />
+      <line x1="66" y1="69" x2="66" y2="75" stroke="#047857" strokeWidth="0.8" />
+      <line x1="98" y1="69" x2="98" y2="75" stroke="#047857" strokeWidth="0.8" />
+      <Tag x="82" y="80" size="3" weight={800} color="#047857">max 4.5 m</Tag>
+      <Tag x="44" y="34" size="2.9" weight={700}>heavy items over the axle</Tag>
+      <Tag x="80" y="9" size="3.4">TOWING: CHECK, COUPLE, LOAD EVENLY</Tag>
+      <Tag x="80" y="17" size="2.9" weight={700}>tow bar inspected, attached securely — swerving? ease off gently</Tag>
+      <Tag x="80" y="93" size="2.9" weight={800} color={C.bad}>motorway: not in the third lane — overtake in lane 2 only</Tag>
+    </Frame>
+  ),
+
+  "overtake-left": () => (
+    <Frame title="When you may overtake on the left">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[[27, "turn-right"], [80, "turn-left"], [133, "queue"]].map(([cx, kind], i) => (
+        <g key={kind}>
+          <rect x={cx - 22} y="10" width="44" height="62" fill={C.road} />
+          <line x1={cx} y1="10" x2={cx} y2="72" stroke={C.line} strokeWidth="0.6" strokeDasharray="4 3" />
+          {kind === "turn-right" && <g><Car x={cx + 11} y={30} color={C.grey} /><path d={`M${cx + 16} 24 l3 -2`} stroke="#f59e0b" strokeWidth="1.4" /><Car x={cx - 11} y={58} color={C.good} /><Arrow d={`M${cx - 11} 50 L${cx - 11} 16`} color="#047857" w={1} /></g>}
+          {kind === "turn-left" && <g><Car x={cx + 11} y={30} color={C.grey} /><Car x={cx - 11} y={58} color={C.good} /><Arrow d={`M${cx - 11} 50 L${cx - 11} 38 Q${cx - 11} 30 ${cx - 21} 30`} color="#047857" w={1} /></g>}
+          {kind === "queue" && <g>{[22, 40, 58].map(y => <Car key={y} x={cx + 11} y={y} color={C.grey} />)}<Car x={cx - 11} y={50} color={C.good} /><Arrow d={`M${cx - 11} 42 L${cx - 11} 18`} color="#047857" w={1} /></g>}
+          <Tag x={cx} y="80" size="2.9" weight={800}>{["car ahead turning", "you're turning left", "left lane moving"][i]}</Tag>
+          <Tag x={cx} y="85" size="2.9" weight={800}>{["right — you go on", "a short way ahead", "faster in a queue"][i]}</Tag>
+        </g>
+      ))}
+      <Tag x="80" y="96" size="2.8" weight={700} color="#475569">otherwise, overtake on the right only</Tag>
+    </Frame>
+  ),
+
+  "horn-hours": () => (
+    <Frame title="When not to use the horn">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="44" cy="50" r="30" fill="#ffffff" stroke="#334155" strokeWidth="1.2" />
+      <path d={`M44 50 L${44 + 30 * Math.sin(-0.5 / 12 * 2 * Math.PI)} ${50 - 30 * Math.cos(-0.5 / 12 * 2 * Math.PI)} A30 30 0 0 1 ${44 + 30 * Math.sin(7 / 12 * 2 * Math.PI)} ${50 - 30 * Math.cos(7 / 12 * 2 * Math.PI)} Z`} fill="#1e293b" opacity="0.85" />
+      {[12, 3, 6, 9].map(h => <text key={h} x={44 + 24 * Math.sin(h / 12 * 2 * Math.PI)} y={52 - 24 * Math.cos(h / 12 * 2 * Math.PI)} fontSize="5" fontWeight="800" textAnchor="middle" fill="#94a3b8" fontFamily="system-ui">{h}</text>)}
+      <Tag x="44" y="90" size="3.1" weight={800}>23:30 → 07:00</Tag>
+      <Tag x="44" y="95" size="2.8" weight={700}>built-up areas — unless an emergency</Tag>
+      <Tag x="116" y="22" size="3.1" weight={800} color="#047857">✓ to warn others</Tag>
+      <Tag x="116" y="27" size="3.1" weight={800} color="#047857">of your presence</Tag>
+      <Tag x="116" y="42" size="3" weight={800} color={C.bad}>✗ while stationary</Tag>
+      <Tag x="116" y="47" size="2.7" weight={700} color={C.bad}>(except for safety)</Tag>
+      <Tag x="116" y="60" size="3" weight={800} color={C.bad}>✗ near led or ridden animals</Tag>
+      <Tag x="116" y="74" size="2.9" weight={700}>it gives you no priority</Tag>
+      <Tag x="116" y="79" size="2.9" weight={700}>or right of way</Tag>
+    </Frame>
+  ),
+
+  "seatbelt-exempt": () => (
+    <Frame title="Seatbelt exemptions">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.blue} rows={2} size={8} cells={[["🩺", "medical certificate"], ["♿", "disabled person's belt"], ["🧑‍🏫", "instructor during a lesson"], ["📋", "tester during a test"], ["👮", "gardaí on duty"], ["🧒", "under 17: the DRIVER's job"]]} />
+      <Tag x="80" y="97" size="2.9" weight={800} color="#1d4ed8">everyone else must wear a belt where one is fitted</Tag>
+    </Frame>
+  ),
+
+  "space-saver": () => (
+    <Frame title="Space-saver spare and tyre kit">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <circle cx="40" cy="48" r="26" fill="#1f2937" />
+      <circle cx="40" cy="48" r="13" fill="#facc15" />
+      <circle cx="40" cy="48" r="4" fill="#475569" />
+      <circle cx="96" cy="26" r="11" fill="#ffffff" stroke="#dc2626" strokeWidth="2.6" />
+      <text x="96" y="29.5" fontSize="9" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">60</text>
+      <Tag x="40" y="84" size="3.1" weight={800}>skinny spare: only to finish</Tag>
+      <Tag x="40" y="89" size="3.1" weight={800}>the journey</Tag>
+      <Tag x="128" y="26" size="2.9" weight={700}>speed stamped</Tag>
+      <Tag x="128" y="31" size="2.9" weight={700}>on it — often 60</Tag>
+      <Tag x="116" y="52" size="2.9" weight={800} color="#047857">mobility kit: tread</Tag>
+      <Tag x="116" y="57" size="2.9" weight={800} color="#047857">punctures only (~4 mm)</Tag>
+      <Tag x="116" y="68" size="2.8" weight={700} color={C.bad}>not for run-flat damage;</Tag>
+      <Tag x="116" y="73" size="2.8" weight={700} color={C.bad}>leave the nail in</Tag>
+      <Tag x="116" y="84" size="2.8" weight={700}>parking brake on; away</Tag>
+      <Tag x="116" y="89" size="2.8" weight={700}>from moving traffic</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

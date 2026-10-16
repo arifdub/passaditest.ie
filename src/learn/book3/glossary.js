@@ -106,4 +106,46 @@ export default [
     key: "Cars from 4 years old.",
     src: P("3.2", 89, "Post-test answers 7, 8"),
   },
+  {
+    id: "bac-limit", unit: "3.3", term: "Blood alcohol limit", visual: "bac-limits",
+    meaning: "The legal maximum alcohol in the blood while driving.",
+    key: "50 mg per 100 ml for most; 20 mg for learner, novice and professional drivers.",
+    src: P("3.3", 18, "Disqualification periods"),
+  },
+  {
+    id: "horn-rules", unit: "3.3", term: "Horn rules", visual: "horn-hours",
+    meaning: "Use the horn only to warn others of your presence.",
+    key: "Not 23:30–07:00 in built-up areas, unless an emergency.",
+    src: P("3.3", 18, "Vehicle warning instrument"),
+  },
+  {
+    id: "overtake-on-left", unit: "3.3", term: "Overtaking on the left", visual: "overtake-left",
+    meaning: "Allowed only when the car ahead turns right, you turn left soon, or the left lane moves faster in a queue.",
+    key: "Otherwise overtake on the right.",
+    src: P("3.3", 20, "You may only overtake on the left"),
+  },
+  {
+    id: "long-vehicle", unit: "3.3", term: "LONG VEHICLE sign", visual: "overtake-left",
+    meaning: "Marks a vehicle at least 13 metres long.",
+    key: "Allow extra road to overtake it.",
+    src: P("3.3", 20, "Overtaking procedure"),
+  },
+  {
+    id: "towing-gap", unit: "3.3", term: "Towing gap", visual: "towing-rules",
+    meaning: "The distance between a towing vehicle and its trailer.",
+    key: "No more than 4.5 metres.",
+    src: P("3.3", 18, "Towing"),
+  },
+  {
+    id: "space-saver", unit: "3.3", term: "Space-saver spare", visual: "space-saver",
+    meaning: "A skinny temporary spare wheel.",
+    key: "Only to finish the journey, at the stamped speed — often 60 km/h.",
+    src: P("3.3", 21, "Temporary use spare tyres"),
+  },
+  {
+    id: "penalty-points", unit: "3.3", term: "Penalty points", visual: "bac-limits",
+    meaning: "Points recorded on a licence for driving offences.",
+    key: "12 in 36 months means a 6-month ban.",
+    src: P("3.3", 24, "Retention Q31, Q39"),
+  },
 ];

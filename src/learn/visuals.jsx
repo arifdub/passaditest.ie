@@ -5395,6 +5395,47 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- question & answer technique (Book 4, Unit 4.7) ---------------- */
+  "open-closed": () => (
+    <Frame title="Open and closed questions">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#ecfdf5" stroke="#047857" strokeWidth="1" />
+      <text x="41" y="19" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">CLOSED</text>
+      <text x="119" y="19" fontSize="5.4" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">OPEN</text>
+      <rect x="11" y="26" width="60" height="18" rx="6" fill="#ffffff" stroke="#1d4ed8" strokeWidth="0.6" />
+      <text x="41" y="33.5" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"What's the speed</text>
+      <text x="41" y="39.5" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">limit here?"</text>
+      <rect x="89" y="26" width="60" height="18" rx="6" fill="#ffffff" stroke="#047857" strokeWidth="0.6" />
+      <text x="119" y="33.5" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"What might that</text>
+      <text x="119" y="39.5" fontSize="3.5" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">cyclist do next?"</text>
+      {["one correct answer", "checks recall of facts"].map((t, i) => <text key={t} x="41" y={58 + i * 9} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+      {["many possible answers", "thought, reasoning,", "evaluation, anticipation"].map((t, i) => <text key={t} x="119" y={58 + i * 9} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+      <text x="41" y="88" fontSize="3.4" fontWeight="800" textAnchor="middle" fill="#b91c1c" fontFamily="system-ui">avoid yes/no: 50% guesswork</text>
+    </Frame>
+  ),
+
+  "qa-stages": () => (
+    <Frame title="Q&A at every stage">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["INTRODUCTION", "diagnostic: weak spots, the starting level", "#1d4ed8"], ["DEVELOPMENT", "apply what's known; pupil asks too", "#047857"], ["CONCLUSION", "test what was learned", "#b45309"]].map(([h, t, c], i) => (
+        <g key={h}>
+          <rect x="8" y={8 + i * 29} width="144" height="25" rx="4" fill="#ffffff" stroke={c} strokeWidth="1.1" />
+          <text x="16" y={18 + i * 29} fontSize="4.6" fontWeight="900" fill={c} fontFamily="system-ui">{h}</text>
+          <text x="16" y={27 + i * 29} fontSize="3.8" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          <text x="142" y={24 + i * 29} fontSize="10" textAnchor="middle">❓</text>
+        </g>
+      ))}
+    </Frame>
+  ),
+
+  "answer-handling": () => (
+    <Frame title="Getting — and handling — answers">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.good} rows={2} size={9} cells={[["😊", "ask encouragingly"], ["⏳", "allow time to answer"], ["🤐", "don't interrupt"], ["🌗", "part right? praise it"], ["🪜", "wrong? simpler steps"], ["🚫", "never ridicule"]]} />
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

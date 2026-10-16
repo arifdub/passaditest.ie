@@ -178,4 +178,22 @@ export default [
     key: "Prompt until it's automatic.",
     src: P("4.6", 38, "Signal learning"),
   },
+  {
+    id: "open-question", unit: "4.7", term: "Open / closed question", visual: "open-closed",
+    meaning: "Closed: one correct answer. Open: many possible answers that make the pupil think.",
+    key: "Avoid yes/no questions — a 50% guess.",
+    src: P("4.7", 46, "Use the correct type of question"),
+  },
+  {
+    id: "diagnostic-question", unit: "4.7", term: "Diagnostic question", visual: "qa-stages",
+    meaning: "A question at the start of a lesson to find weaknesses and the right starting level.",
+    key: "Used in the introduction.",
+    src: P("4.7", 45, "The introduction"),
+  },
+  {
+    id: "elliptical-question", unit: "4.7", term: "Elliptical question", visual: "open-closed",
+    meaning: "A 'fill in the missing word' question.",
+    key: "Avoid — it needs little effort.",
+    src: P("4.7", 46, "Avoid elliptical questions"),
+  },
 ];

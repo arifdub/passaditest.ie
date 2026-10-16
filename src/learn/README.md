@@ -57,6 +57,7 @@ existing section named in the unit's `mcqLink`.
 | `book4/unit4_4.js` | Unit 4.4 Perception & Learning (pp.28–32). |
 | `book4/unit4_5.js` | Unit 4.5 Teaching Adults (pp.33–37). |
 | `book4/unit4_6.js` | Unit 4.6 Lesson Preparation (pp.38–44). |
+| `book4/unit4_7.js` | Unit 4.7 Question & Answer Technique (pp.45–48). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -356,3 +357,5 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   by content. Its recognition game is "Know Your Learner".
 - **Retention test 4.6 (10 questions)** — all match the key and are used.
   Its recognition game is "Build the Lesson".
+- **Retention test 4.7 (10 questions)** — all match the key and are used.
+  Its recognition game is "Ask It Right".

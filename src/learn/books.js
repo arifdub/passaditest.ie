@@ -54,6 +54,7 @@ import UNIT_4_1 from "./book4/unit4_1";
 import UNIT_4_2 from "./book4/unit4_2";
 import UNIT_4_3 from "./book4/unit4_3";
 import UNIT_4_4 from "./book4/unit4_4";
+import UNIT_4_5 from "./book4/unit4_5";
 import GLOSSARY_3 from "./book3/glossary";
 import GLOSSARY_4 from "./book4/glossary";
 
@@ -138,7 +139,7 @@ export const BOOKS = [
       { id: "4.2",  title: "Behavioural Objectives",          pages: [17, 21], badge: "Objectives Specialist", content: UNIT_4_2 },
       { id: "4.3",  title: "Teaching & Testing",              pages: [22, 27], badge: "Assessment Specialist", content: UNIT_4_3 },
       { id: "4.4",  title: "Perception & Learning",           pages: [28, 32], badge: "Learning Specialist", content: UNIT_4_4 },
-      { id: "4.5",  title: "Teaching Adults",                 pages: [33, 37], badge: "Adult Learning Specialist" },
+      { id: "4.5",  title: "Teaching Adults",                 pages: [33, 37], badge: "Adult Learning Specialist", content: UNIT_4_5 },
       { id: "4.6",  title: "Lesson Preparation",              pages: [38, 44], badge: "Lesson Planning Specialist" },
       { id: "4.7",  title: "Question & Answer Technique",     pages: [45, 48], badge: "Q&A Specialist" },
       { id: "4.8",  title: "Practical Teaching",              pages: [49, 55], badge: "Practical Teaching Specialist" },

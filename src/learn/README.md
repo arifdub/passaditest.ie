@@ -55,6 +55,7 @@ existing section named in the unit's `mcqLink`.
 | `book4/unit4_2.js` | Unit 4.2 Behavioural Objectives (pp.17–21). |
 | `book4/unit4_3.js` | Unit 4.3 Teaching & Testing (pp.22–27). |
 | `book4/unit4_4.js` | Unit 4.4 Perception & Learning (pp.28–32). |
+| `book4/unit4_5.js` | Unit 4.5 Teaching Adults (pp.33–37). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -349,3 +350,6 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
 - **Retention test 4.4 (10 questions)** — all match the key and are used.
   The book's sign example uses UK warning "triangles"; the unit uses an
   Irish yellow diamond instead. Its recognition game is "Mind Games".
+- **Retention test 4.5 (10 questions)** — all match the key and are used.
+  The post test numbers two questions "6", so its model answers are matched
+  by content. Its recognition game is "Know Your Learner".

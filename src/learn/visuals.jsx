@@ -5249,6 +5249,73 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- teaching adults (Book 4, Unit 4.5) ---------------- */
+  "known-unknown": () => (
+    <Frame title="From the known to the unknown">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <text x="36" y="18" fontSize="12" textAnchor="middle">🚲</text>
+      <text x="124" y="18" fontSize="12" textAnchor="middle">🚗</text>
+      {[["stop pedalling", "off the gas"], ["gently squeeze the brakes", "gently brake to slow"], ["squeeze to stop, foot down", "brake to stop, clutch down"]].map(([a, b], i) => {
+        const y = 32 + i * 20;
+        return (
+          <g key={a}>
+            <rect x="4" y={y} width="64" height="14" rx="3" fill="#ecfdf5" stroke="#047857" strokeWidth="0.7" />
+            <text x="36" y={y + 9} fontSize="3.6" fontWeight="800" textAnchor="middle" fill="#065f46" fontFamily="system-ui">{a}</text>
+            <path d={`M70 ${y + 7} L88 ${y + 7}`} stroke="#334155" strokeWidth="1" />
+            <path d={`M84 ${y + 4} L89 ${y + 7} L84 ${y + 10}`} fill="none" stroke="#334155" strokeWidth="1" />
+            <rect x="92" y={y} width="64" height="14" rx="3" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="0.7" />
+            <text x="124" y={y + 9} fontSize="3.6" fontWeight="800" textAnchor="middle" fill="#1e3a8a" fontFamily="system-ui">{b}</text>
+          </g>
+        );
+      })}
+      <Tag x="80" y="96" size="3.2" weight={800}>a normal stop, taught from cycling</Tag>
+    </Frame>
+  ),
+
+  "learner-ages": () => (
+    <Frame title="Adolescents and older adults">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#fff7ed" stroke="#c2410c" strokeWidth="1" />
+      <text x="41" y="20" fontSize="11" textAnchor="middle">🧑‍🎓</text>
+      <text x="119" y="20" fontSize="11" textAnchor="middle">🧓</text>
+      <text x="41" y="30" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#1d4ed8" fontFamily="system-ui">ADOLESCENTS</text>
+      <text x="119" y="30" fontSize="4.6" fontWeight="900" textAnchor="middle" fill="#c2410c" fontFamily="system-ui">OLDER ADULTS</text>
+      {["used to classrooms", "may expect 'spoon feeding'", "peer pressure", "over- or under-confident", "may resist older teachers"].map((t, i) => <text key={t} x="41" y={42 + i * 10} fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+      {["expect to be lectured", "want dignity, respect", "short-term goals", "less confident, anxious", "less free time to study"].map((t, i) => <text key={t} x="119" y={42 + i * 10} fontSize="3.6" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+    </Frame>
+  ),
+
+  "language-codes": () => (
+    <Frame title="Restricted vs elaborate code">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="5" y="6" width="72" height="88" rx="4" fill="#ecfdf5" stroke="#047857" strokeWidth="1" />
+      <rect x="83" y="6" width="72" height="88" rx="4" fill="#f5f3ff" stroke="#7c3aed" strokeWidth="1" />
+      <text x="41" y="19" fontSize="5" fontWeight="900" textAnchor="middle" fill="#047857" fontFamily="system-ui">RESTRICTED</text>
+      <text x="119" y="19" fontSize="5" fontWeight="900" textAnchor="middle" fill="#7c3aed" fontFamily="system-ui">ELABORATE</text>
+      <rect x="12" y="26" width="58" height="14" rx="6" fill="#ffffff" stroke="#047857" strokeWidth="0.6" />
+      <text x="41" y="35" fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"Clutch down, now."</text>
+      <rect x="90" y="24" width="58" height="20" rx="6" fill="#ffffff" stroke="#7c3aed" strokeWidth="0.6" />
+      <text x="119" y="32" fontSize="3.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"Depress the clutch to</text>
+      <text x="119" y="38" fontSize="3.2" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">disengage the drive…"</text>
+      {["✓ short, simple, clear", "✓ easily understood", "✗ meaning may be reduced"].map((t, i) => <text key={t} x="41" y={56 + i * 10} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+      {["✓ in-depth explanation", "✗ lost in detail", "✗ jargon goes over heads"].map((t, i) => <text key={t} x="119" y={56 + i * 10} fontSize="3.8" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>)}
+    </Frame>
+  ),
+
+  "credit-blame": () => (
+    <Frame title="Give the credit, share the blame">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <rect x="8" y="10" width="144" height="30" rx="8" fill="#ffffff" stroke="#b45309" strokeWidth="1" />
+      <text x="80" y="22" fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"WE went a little wide on that turn —</text>
+      <text x="80" y="31" fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">WE'll try another one up ahead."</text>
+      <rect x="8" y="52" width="144" height="30" rx="8" fill="#ffffff" stroke="#047857" strokeWidth="1" />
+      <text x="80" y="64" fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">"That's perfect — YOU used your mirror</text>
+      <text x="80" y="73" fontSize="4.4" fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">and signalled in good time."</text>
+      <Tag x="80" y="94" size="3.2" weight={800}>a late instruction may have caused the fault</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

@@ -118,4 +118,34 @@ export default [
     key: "Intrinsic leads to self-satisfaction.",
     src: P("4.4", 29, "Motivation"),
   },
+  {
+    id: "known-to-unknown", unit: "4.5", term: "Known to the unknown", visual: "known-unknown",
+    meaning: "Building new skills on what the pupil already knows.",
+    key: "E.g. a normal stop taught from cycling.",
+    src: P("4.5", 33, "Adults as learners"),
+  },
+  {
+    id: "peer-group", unit: "4.5", term: "Peer group", visual: "learner-ages",
+    meaning: "People of similar age, sex and interests whose standards members follow.",
+    key: "Be a credible alternative to a careless peer group.",
+    src: P("4.5", 34, "Adolescents; p.85 answer 5"),
+  },
+  {
+    id: "language-code", unit: "4.5", term: "Restricted / elaborate code", visual: "language-codes",
+    meaning: "Short simple speech vs technical, detailed explanation.",
+    key: "Explain technical terms simply.",
+    src: P("4.5", 34, "Language and learning"),
+  },
+  {
+    id: "stereotyping", unit: "4.5", term: "Stereotyping", visual: "credit-blame",
+    meaning: "Pre-judging a pupil by type — age, gender, background.",
+    key: "A pupil adopts the role you portray.",
+    src: P("4.5", 35, "Stereotyping"),
+  },
+  {
+    id: "negative-transfer", unit: "4.5", term: "Negative transfer", visual: "known-unknown",
+    meaning: "When new material conflicts with what's already known.",
+    key: "It makes learning harder.",
+    src: P("4.5", 37, "Retention Q7"),
+  },
 ];

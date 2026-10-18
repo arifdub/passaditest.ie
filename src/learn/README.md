@@ -60,6 +60,7 @@ existing section named in the unit's `mcqLink`.
 | `book4/unit4_7.js` | Unit 4.7 Question & Answer Technique (pp.45–48). |
 | `book4/unit4_8.js` | Unit 4.8 Practical Teaching (pp.49–55). |
 | `book4/unit4_9.js` | Unit 4.9 Vehicle Safety & Maintenance (pp.56–69). |
+| `book4/unit4_10.js` | Unit 4.10 Mechanics Self-Test (pp.70–77). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -370,3 +371,8 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   battery-charging "dc to ac" line (backwards), unverifiable tyre survey
   figures, a 3–6 mm "recommended" tread, and the horn hours. Its
   recognition game is "Car Care".
+- **Unit 4.10** — the book's 45 open self-test questions with printed
+  answers (pp.73–76); the multiple-choice items are built from those
+  answers. Not used: Q10, Q13's "125°", Q41, and the triangle distance,
+  tow-rope length and psi figures (check the Rules of the Road and the
+  handbook). Its recognition game is "Lights & Fixes". Book 4 is complete.

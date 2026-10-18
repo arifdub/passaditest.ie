@@ -59,6 +59,7 @@ import UNIT_4_6 from "./book4/unit4_6";
 import UNIT_4_7 from "./book4/unit4_7";
 import UNIT_4_8 from "./book4/unit4_8";
 import UNIT_4_9 from "./book4/unit4_9";
+import UNIT_4_10 from "./book4/unit4_10";
 import GLOSSARY_3 from "./book3/glossary";
 import GLOSSARY_4 from "./book4/glossary";
 
@@ -148,7 +149,7 @@ export const BOOKS = [
       { id: "4.7",  title: "Question & Answer Technique",     pages: [45, 48], badge: "Q&A Specialist", content: UNIT_4_7 },
       { id: "4.8",  title: "Practical Teaching",              pages: [49, 55], badge: "Practical Teaching Specialist", content: UNIT_4_8 },
       { id: "4.9",  title: "Vehicle Safety & Maintenance",    pages: [56, 69], badge: "Vehicle Safety Specialist", content: UNIT_4_9 },
-      { id: "4.10", title: "Mechanics Self-Test",             pages: [70, 77], badge: "Self-Test Specialist" },
+      { id: "4.10", title: "Mechanics Self-Test",             pages: [70, 77], badge: "Self-Test Specialist", content: UNIT_4_10 },
     ],
   },
 ];

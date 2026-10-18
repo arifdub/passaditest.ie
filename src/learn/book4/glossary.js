@@ -250,4 +250,28 @@ export default [
     key: "Sensitive and expensive — don't submerge the exhaust.",
     src: P("4.9", 63, "The catalytic converter"),
   },
+  {
+    id: "dashboard-warning", unit: "4.10", term: "Dashboard warning lights", visual: "dash-warnings",
+    meaning: "Symbols that warn of faults: red means stop and check, yellow means deal with it soon.",
+    key: "Red oil light: stop, engine off, top up.",
+    src: P("4.10", 73, "Self-test answers 11–18"),
+  },
+  {
+    id: "hazard-lights", unit: "4.10", term: "Hazard warning lights", visual: "dash-warnings",
+    meaning: "All direction indicators flashing together.",
+    key: "Only when stopped or where there's danger.",
+    src: P("4.10", 73, "Self-test answer 19"),
+  },
+  {
+    id: "head-restraint", unit: "4.10", term: "Head restraint", visual: "head-restraint",
+    meaning: "The padded support on top of the seat that guards against whiplash.",
+    key: "Rigid part at eye or ear level, close to the head.",
+    src: P("4.10", 76, "Self-test answer 40"),
+  },
+  {
+    id: "run-flat-tyre", unit: "4.10", term: "Run-flat tyre", visual: "wheel-change",
+    meaning: "A tyre built to get you to the next service station after a puncture.",
+    key: "Drive with caution and at reduced speed.",
+    src: P("4.10", 74, "Self-test answer 29"),
+  },
 ];

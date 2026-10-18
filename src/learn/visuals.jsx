@@ -5561,6 +5561,48 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- mechanics self-test (Book 4, Unit 4.10) ---------------- */
+  "dash-warnings": () => (
+    <Frame title="Dashboard lights and what to do">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["🛢️", "red oil light", "stop, engine off, top up", "#b91c1c"], ["🌡️", "red coolant light", "stop, let it cool, check", "#b91c1c"], ["(!)", "red brake light", "handbrake? low fluid? stop", "#b91c1c"], ["⛽", "yellow fuel light", "fill up soon", "#ca8a04"], ["ABS", "ABS light", "normal brakes still work", "#ca8a04"], ["≡D", "blue light", "main beam is on", "#1d4ed8"]].map(([i, h, t, c], k) => {
+        const x = 4 + (k % 2) * 78, y = 6 + Math.floor(k / 2) * 30;
+        return (
+          <g key={h}>
+            <rect x={x} y={y} width="74" height="26" rx="3" fill="#ffffff" stroke={c} strokeWidth="0.9" />
+            <circle cx={x + 12} cy={y + 13} r="9" fill="#0f172a" />
+            <text x={x + 12} y={y + 16.5} fontSize={i.length > 2 ? 5 : 9} fontWeight="900" textAnchor="middle" fill={c === "#1d4ed8" ? "#60a5fa" : c === "#ca8a04" ? "#facc15" : "#f87171"} fontFamily="system-ui">{i}</text>
+            <text x={x + 25} y={y + 11} fontSize="4" fontWeight="900" fill={c} fontFamily="system-ui">{h}</text>
+            <text x={x + 25} y={y + 19} fontSize="3.3" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
+  "wheel-change": () => (
+    <Frame title="Changing a wheel">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={18} perRow={4} color="#047857" steps={["handbrake, level", "loosen nuts", "jack at the point", "wheel off"]} />
+      <StepChips y={62} perRow={4} color="#047857" start={5} steps={["spare on, nuts", "lower the car", "tighten evenly", "fix the puncture"]} />
+    </Frame>
+  ),
+
+  "head-restraint": () => (
+    <Frame title="Head restraint set-up">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <path d="M40 92 L46 40 Q48 34 54 34 L60 34" fill="none" stroke="#475569" strokeWidth="9" strokeLinecap="round" />
+      <rect x="44" y="12" width="16" height="22" rx="5" fill="#64748b" />
+      <circle cx="74" cy="26" r="11" fill="#fde68a" stroke="#92400e" strokeWidth="0.8" />
+      <circle cx="79" cy="23" r="1.4" fill="#0f172a" />
+      <line x1="40" y1="23" x2="98" y2="23" stroke="#047857" strokeWidth="0.8" strokeDasharray="2 1.5" />
+      <Tag x="124" y="14" size="3.4" weight={800} color="#047857">top at eye or ear level</Tag>
+      <Tag x="124" y="44" size="3.4" weight={800}>close to the head</Tag>
+      <Tag x="124" y="62" size="3.2" weight={700} color="#b91c1c">guards against whiplash</Tag>
+      <Tag x="124" y="70" size="3.2" weight={700} color="#b91c1c">never remove it</Tag>
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

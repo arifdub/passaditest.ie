@@ -226,4 +226,28 @@ export default [
     key: "Then intermediate, then varied routes.",
     src: P("4.8", 51, "Route planning"),
   },
+  {
+    id: "drowsy-driving", unit: "4.9", term: "Drowsy driving", visual: "fatigue-signs",
+    meaning: "Driving while tired: slower reactions, less awareness, poorer judgement.",
+    key: "Stop, nap 15–45 minutes, wait 15 minutes before driving.",
+    src: P("4.9", 56, "Drowsy & fatigued driving"),
+  },
+  {
+    id: "dsssm", unit: "4.9", term: "DSSSM (cockpit drill)", visual: "cockpit-drill",
+    meaning: "Doors, seat, steering, seat belt, mirrors — checked before every drive.",
+    key: "Never adjust the seat while moving.",
+    src: P("4.9", 66, "Prestart checks"),
+  },
+  {
+    id: "tyre-inflation", unit: "4.9", term: "Under- / over-inflation", visual: "tyre-pressure",
+    meaning: "Tyre pressure below or above the handbook figure.",
+    key: "Under wears the edges; over wears the centre.",
+    src: P("4.9", 61, "Tyre under-inflation; over-inflation"),
+  },
+  {
+    id: "catalytic-converter", unit: "4.9", term: "Catalytic converter", visual: "car-emergencies",
+    meaning: "Part of the exhaust that turns harmful gases into a cleaner mixture.",
+    key: "Sensitive and expensive — don't submerge the exhaust.",
+    src: P("4.9", 63, "The catalytic converter"),
+  },
 ];

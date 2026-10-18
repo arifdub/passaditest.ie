@@ -59,6 +59,7 @@ existing section named in the unit's `mcqLink`.
 | `book4/unit4_6.js` | Unit 4.6 Lesson Preparation (pp.38–44). |
 | `book4/unit4_7.js` | Unit 4.7 Question & Answer Technique (pp.45–48). |
 | `book4/unit4_8.js` | Unit 4.8 Practical Teaching (pp.49–55). |
+| `book4/unit4_9.js` | Unit 4.9 Vehicle Safety & Maintenance (pp.56–69). |
 | `book2/glossary.js` | Book 2's Visual Glossary. |
 | `visuals.jsx` | The road diagrams, one per term; shown before definitions, with explanations, in Spot-it questions and the glossary. |
 | `book1/glossary.js` | Book 1's Visual Driving Glossary. |
@@ -364,3 +365,8 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   The p.86 model answers run one number ahead of the post-test questions
   from Q3 (answer 3 is blank), so they're matched by content. Its
   recognition game is "On the Road".
+- **Unit 4.9** — the book has no post or retention test here, so all
+  questions are written from the text and cite their page. Not used: the
+  battery-charging "dc to ac" line (backwards), unverifiable tyre survey
+  figures, a 3–6 mm "recommended" tread, and the horn hours. Its
+  recognition game is "Car Care".

@@ -5499,6 +5499,68 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- vehicle safety & maintenance (Book 4, Unit 4.9) ---------------- */
+  "fatigue-signs": () => (
+    <Frame title="Signs of a drowsy driver">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring={C.bad} rows={2} size={9} cells={[["😪", "eyes close or blur"], ["🥱", "can't stop yawning"], ["💭", "wandering thoughts"], ["❓", "can't recall last miles"], ["↔️", "drifting, missing signs"], ["📳", "hitting rumble strips"]]} />
+    </Frame>
+  ),
+
+  "drowsy-actions": () => (
+    <Frame title="Feeling drowsy at the wheel">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <StepChips y={24} perRow={4} color="#1d4ed8" steps={["stop somewhere safe", "coffee if needed", "nap 15–45 min", "wait 15 min, then go"]} />
+      <rect x="10" y="60" width="140" height="26" rx="4" fill="#fef2f2" stroke="#b91c1c" strokeWidth="0.8" />
+      <text x="80" y="70" fontSize="4" fontWeight="800" textAnchor="middle" fill="#991b1b" fontFamily="system-ui">the radio or an open window won't keep you awake</text>
+      <text x="80" y="79" fontSize="4" fontWeight="800" textAnchor="middle" fill="#991b1b" fontFamily="system-ui">plan a break every 2 hours on long trips</text>
+    </Frame>
+  ),
+
+  "brake-warnings": () => (
+    <Frame title="Brake warning signs">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#b45309" rows={3} size={7.5} cells={[["🔊", "scraping noises"], ["↗️", "pulls to one side"], ["🧽", "spongy pedal"], ["📳", "vibration in the wheel"], ["💧", "leaking brake fluid"], ["🐢", "takes longer to stop"], ["🛞", "rear wheels lock"], ["🔴", "brake warning light"], ["🅿️", "weak handbrake"]]} />
+    </Frame>
+  ),
+
+  "tyre-pressure": () => (
+    <Frame title="Tyre pressure and wear">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["UNDER-INFLATED", "wears both outer edges", [[0, 1], [4, 5]], "#b45309"], ["CORRECT", "even wear, best grip", [], "#047857"], ["OVER-INFLATED", "wears the centre", [[2, 3]], "#b91c1c"]].map(([h, t, worn, c], i) => {
+        const x = 18 + i * 52;
+        return (
+          <g key={h}>
+            <rect x={x} y="10" width="24" height="58" rx="5" fill="#1f2937" />
+            {[0, 1, 2, 3, 4, 5].map(k => <rect key={k} x={x + 2 + k * 3.4} y="14" width="2.4" height="50" rx="1" fill={worn.some(([a, b]) => k === a || k === b) ? "#9ca3af" : "#4b5563"} />)}
+            <text x={x + 12} y="78" fontSize={h.length > 9 ? 3.5 : 4.4} fontWeight="900" textAnchor="middle" fill={c} fontFamily="system-ui">{h}</text>
+            <text x={x + 12} y="86" fontSize="3.3" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+      <Tag x="80" y="96" size="3" weight={800}>check pressures cold, at least once a fortnight</Tag>
+    </Frame>
+  ),
+
+  "under-bonnet": () => (
+    <Frame title="Under the bonnet: show me, tell me">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      <IconGrid ring="#1d4ed8" rows={2} size={9} cells={[["🛢️", "oil: dipstick min–max"], ["🌡️", "coolant: min–max, engine cool"], ["🛑", "brake fluid: min–max"], ["💦", "washer: look inside"], ["🔋", "battery terminals"], ["📖", "check the handbook"]]} />
+    </Frame>
+  ),
+
+  "car-emergencies": () => (
+    <Frame title="Emergencies — what to do">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["💥 tyre blowout", "ease off the gas, grip the wheel, don't brake hard"], ["🛑 brake failure", "pump the pedal; handbrake gently; lower gear"], ["⛽ stuck accelerator", "neutral, brake, stop — ignition off only when stopped"], ["🔥 fire", "pull in, ignition off, everyone out, call 112/999"], ["🌊 into water", "belt off, out through a window, not a door"]].map(([h, t], i) => (
+        <g key={h}>
+          <text x="6" y={14 + i * 18} fontSize="4.6" fontWeight="900" fill="#b91c1c" fontFamily="system-ui">{h}</text>
+          <text x="6" y={21 + i * 18} fontSize="3.6" fontWeight="700" fill="#0f172a" fontFamily="system-ui">{t}</text>
+        </g>
+      ))}
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

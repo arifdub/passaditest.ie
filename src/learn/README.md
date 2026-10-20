@@ -379,10 +379,20 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
 
 ## The five arm signals
 
-New drawings `arm-signal:<right|left|slow|straight|garda-left>` and the
-overview `arm-signals`, with six Book 1 glossary cards (Unit 1.2) and one
-Book 3 card (Unit 3.7). The three signals to other road users and the two to
-a Garda follow the Rules of the Road, which Book 1 p.31 refers to; "straight
-on" matches Book 1's model answer (p.84, answer 1). Pictures were added to
-Unit 1.2 (a new "five arm signals" card, r7, new r7b), Unit 2.10 (r5) and
-Unit 3.7 (the drive card).
+`arm-signal:<right|left|slow|straight|garda-left>` are poster-style panels
+(numbered, coloured, large text; `ArmSignalPanel` / `ArmScene` in
+visuals.jsx) and `arm-signals` is the five-panel overview. Ireland is
+right-hand drive: the three signals to other road users use the RIGHT arm
+out of the driver's window; the two to a Garda use the LEFT hand through the
+windscreen. (A reference picture supplied later showed US left-hand-drive
+signals and a "reversing" signal — not used, as they are wrong for
+Ireland.) "Straight on" matches Book 1's model answer (p.84, answer 1).
+Glossary: six Book 1 cards (Unit 1.2), one Book 3 card (Unit 3.7). Pictures
+in Unit 1.2 (new card, r7, r7b), Unit 2.10 (r5), Unit 3.7 (drive card).
+
+## Tap-to-zoom
+
+Every non-bare `<Visual>` is a button that opens `ZoomViewer` (full screen,
+pinch, double-tap, + / −, up to 500%). The app viewport sets
+maximum-scale=1, so browser pinch-zoom is off and this does it in-app.
+Picture answer options (`bare`) are not zoomable — tapping them answers.

@@ -20,7 +20,8 @@
   ===========================================================================
 */
 
-import React, { useId, useContext, createContext } from "react";
+import React, { useId, useContext, createContext, useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 /* "Bare" drawings hide their text labels — used by the Spot-it picture
    questions, where a label would give the answer away. */
@@ -395,6 +396,169 @@ function VRoad({ l = 45, r = 115, centre = true, h = 100, kerb = true }) {
       <rect x={l} y="0" width={r - l} height={h} fill={C.road} />
       {centre && <line x1={mid} y1="0" x2={mid} y2={h} stroke={C.line} strokeWidth="0.9" strokeDasharray="6 5" />}
     </g>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   ARM SIGNALS — illustrated panels in the style of a road-safety poster.
+   Ireland: right-hand-drive cars, so signals to other road users are given
+   with the RIGHT arm out of the driver's (right-hand) window. The two signals
+   to a Garda are given with the LEFT hand, through the windscreen.
+   --------------------------------------------------------------------------- */
+const ARM = {
+  right:        { n: 1, title: "Turning Right",   col: "#1d4ed8", bg: "#dbeafe", cap: "turning right.",            how: "Right arm straight out, palm forward", lines: ["Right arm straight out,", "palm forward"] },
+  left:         { n: 2, title: "Turning Left",    col: "#dc2626", bg: "#fee2e2", cap: "turning left.",             how: "Right arm out, circling anticlockwise", lines: ["Right arm out,", "circling anticlockwise"] },
+  slow:         { n: 3, title: "Slowing Down",    col: "#ea580c", bg: "#ffedd5", cap: "slowing down or stopping.", how: "Right arm out, palm down, up and down", lines: ["Right arm out, palm", "down, up and down"] },
+  straight:     { n: 4, title: "Straight On",     col: "#047857", bg: "#d1fae5", cap: "going straight on.",        how: "To a Garda: left palm to the windscreen", lines: ["To a Garda: left", "palm to windscreen"] },
+  "garda-left": { n: 5, title: "Turning Left",    col: "#7c3aed", bg: "#ede9fe", cap: "turning left.",             how: "To a Garda: left hand points left", lines: ["To a Garda: left", "hand points left"] },
+};
+const SKIN = "#f1b98a", SKIN_EDGE = "#a0612f", SLEEVE = "#1f2937";
+
+function ArmScene({ variant, ox = 0, oy = 0 }) {
+  const rear = ["right", "left", "slow"].includes(variant);
+  const col = ARM[variant].col;
+  return (
+    <g transform={`translate(${ox} ${oy})`}>
+      <rect x="0" y="0" width="160" height="40" fill="#bae6fd" />
+      <rect x="0" y="40" width="160" height="40" fill="#86c46a" />
+      {[[10, 34], [26, 30], [132, 31], [150, 35]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="12" ry="9" fill="#4d9a3e" />)}
+      <path d="M62 38 L98 38 L150 80 L10 80 Z" fill="#6b7280" />
+      <path d="M66 40 L28 80 M94 40 L132 80" stroke="#f8fafc" strokeWidth="1.2" />
+      {[44, 54, 66].map((y, i) => <rect key={y} x={79.4 - i * 0.4} y={y} width={1.2 + i * 0.8} height={4 + i * 2} fill="#f8fafc" />)}
+      {rear ? (
+        <g>
+          {/* car from behind; the driver sits on the right */}
+          <ellipse cx="80" cy="76" rx="44" ry="3" fill="#000" opacity="0.18" />
+          <path d="M52 32 Q55 20 66 19 L94 19 Q105 20 108 32 Z" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.8" />
+          <path d="M57 31 Q59 23 67 22.5 L93 22.5 Q101 23 103 31 Z" fill="#1e3a5f" />
+          <circle cx="94" cy="27" r="4" fill="#3f2a1d" />
+          <circle cx="66" cy="27.5" r="3.6" fill="#475569" opacity="0.6" />
+          <rect x="73" y="20" width="14" height="1.6" rx="0.8" fill="#ef4444" />
+          <rect x="44" y="31" width="72" height="34" rx="7" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.8" />
+          <rect x="46" y="36" width="14" height="8" rx="2" fill="#dc2626" stroke="#7f1d1d" strokeWidth="0.5" />
+          <rect x="100" y="36" width="14" height="8" rx="2" fill="#dc2626" stroke="#7f1d1d" strokeWidth="0.5" />
+          <rect x="66" y="49" width="28" height="8" rx="1" fill="#ffffff" stroke="#111827" strokeWidth="0.6" />
+          <rect x="66" y="49" width="4" height="8" fill="#1d4ed8" />
+          <rect x="73" y="52" width="18" height="2" rx="1" fill="#111827" />
+          <rect x="44" y="60" width="72" height="7" rx="3" fill="#334155" />
+          <rect x="47" y="66" width="12" height="9" rx="2" fill="#111827" />
+          <rect x="101" y="66" width="12" height="9" rx="2" fill="#111827" />
+          <ellipse cx="40" cy="34" rx="4" ry="3" fill="#cbd5e1" stroke="#64748b" strokeWidth="0.5" />
+          {/* the arm, out of the driver's window */}
+          <path d="M110 29 L140 29" stroke={SLEEVE} strokeWidth="6" strokeLinecap="round" />
+          <path d="M128 29 L142 29" stroke={SKIN} strokeWidth="5" strokeLinecap="round" />
+          {variant === "right" && <rect x="141" y="18" width="9" height="17" rx="3.5" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="0.6" />}
+          {variant === "left" && (
+            <g>
+              <rect x="140" y="25" width="11" height="8" rx="3.5" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="0.6" />
+              <path d="M155 23 A10 10 0 1 0 146 39" fill="none" stroke={col} strokeWidth="2.2" />
+              <path d="M141.5 37 L146 39.5 L149 35" fill="none" stroke={col} strokeWidth="2.2" strokeLinejoin="round" />
+            </g>
+          )}
+          {variant === "slow" && (
+            <g>
+              <rect x="140" y="26" width="13" height="6.5" rx="3" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="0.6" />
+              <path d="M147 7 L147 20 M142.5 11.5 L147 6.5 L151.5 11.5" fill="none" stroke={col} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M147 38 L147 51 M142.5 46.5 L147 51.5 L151.5 46.5" fill="none" stroke={col} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          )}
+        </g>
+      ) : (
+        <g>
+          {/* car from the front; the driver sits on the viewer's left */}
+          <ellipse cx="74" cy="77" rx="42" ry="3" fill="#000" opacity="0.18" />
+          <path d="M44 38 L52 16 L96 16 L104 38 Z" fill="#cfe8fb" stroke="#94a3b8" strokeWidth="1" />
+          <circle cx="62" cy="27" r="5" fill="#3f2a1d" />
+          <rect x="57" y="32" width="10" height="6" rx="2" fill={SLEEVE} />
+          <circle cx="86" cy="28" r="4.2" fill="#94a3b8" opacity="0.7" />
+          <rect x="34" y="37" width="80" height="30" rx="8" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.8" />
+          <rect x="38" y="43" width="16" height="7" rx="3" fill="#fef9c3" stroke="#a16207" strokeWidth="0.5" />
+          <rect x="94" y="43" width="16" height="7" rx="3" fill="#fef9c3" stroke="#a16207" strokeWidth="0.5" />
+          <rect x="62" y="56" width="24" height="7" rx="1" fill="#ffffff" stroke="#111827" strokeWidth="0.6" />
+          <rect x="62" y="56" width="3.5" height="7" fill="#1d4ed8" />
+          <rect x="37" y="66" width="12" height="9" rx="2" fill="#111827" />
+          <rect x="99" y="66" width="12" height="9" rx="2" fill="#111827" />
+          {variant === "straight" ? (
+            <g>
+              <path d="M66 34 L71 26" stroke={SLEEVE} strokeWidth="4" strokeLinecap="round" />
+              <rect x="67" y="13" width="10" height="15" rx="4" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="0.6" />
+              {[0, 1, 2, 3].map(k => <line key={k} x1={68.7 + k * 2.3} y1="13.6" x2={68.7 + k * 2.3} y2="18.5" stroke={SKIN_EDGE} strokeWidth="0.4" />)}
+              <path d="M74 7 L74 -3 M70 1 L74 -4 L78 1" fill="none" stroke={col} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" transform="translate(0 6)" />
+            </g>
+          ) : (
+            <g>
+              <path d="M66 31 L82 27" stroke={SKIN} strokeWidth="4.5" strokeLinecap="round" />
+              <path d="M81 24 L91 26.5 L81 30 Z" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="0.6" />
+              <path d="M96 11 L116 11 M111 6.5 L116.5 11 L111 15.5" fill="none" stroke={col} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          )}
+          {/* Garda in hi-vis at the roadside */}
+          <g transform="translate(138 30)">
+            <rect x="-6" y="8" width="12" height="18" rx="3" fill="#facc15" stroke="#a16207" strokeWidth="0.5" />
+            <rect x="-6" y="14" width="12" height="2" fill="#e2e8f0" />
+            <circle cx="0" cy="3" r="4.5" fill={SKIN} />
+            <rect x="-5.5" y="-3" width="11" height="3.5" rx="1" fill="#1e3a8a" />
+            <rect x="-4.5" y="26" width="3.5" height="12" fill="#1e3a8a" />
+            <rect x="1" y="26" width="3.5" height="12" fill="#1e3a8a" />
+          </g>
+        </g>
+      )}
+    </g>
+  );
+}
+
+function ArmSignalPanel({ variant = "right" }) {
+  const bare = useContext(BareContext);
+  const a = ARM[variant] || ARM.right;
+  const font = "system-ui, -apple-system, Segoe UI, sans-serif";
+  return (
+    <svg viewBox="0 0 160 128" className="w-full h-auto block" role="img" aria-label={`Arm signal: ${a.title}`}>
+      <rect x="0" y="0" width="160" height="128" fill={a.bg} />
+      <circle cx="13" cy="11" r="8.5" fill={a.col} stroke="#ffffff" strokeWidth="1.2" />
+      <text x="13" y="14.6" fontSize="10" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily={font}>{a.n}</text>
+      {!bare && <text x="88" y="15" fontSize="10.5" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily={font}>{a.title}</text>}
+      <rect x="4" y="22" width="152" height="80" rx="4" fill="#ffffff" />
+      <svg x="4" y="22" width="152" height="80" viewBox="0 0 160 84" preserveAspectRatio="xMidYMid slice">
+        <ArmScene variant={variant} />
+      </svg>
+      {!bare && (
+        <g>
+          <text x="80" y="112" fontSize="7" fontWeight="800" textAnchor="middle" fill="#0f172a" fontFamily={font}>
+            {variant === "straight" || variant === "garda-left" ? "Tells the Garda you are" : "Tells others you are"}
+          </text>
+          <text x="80" y="123" fontSize="8.5" fontWeight="900" textAnchor="middle" fill={a.col} fontFamily={font}>{a.cap}</text>
+        </g>
+      )}
+    </svg>
+  );
+}
+
+function ArmSignalsAll() {
+  const font = "system-ui, -apple-system, Segoe UI, sans-serif";
+  const keys = ["right", "left", "slow", "straight", "garda-left"];
+  return (
+    <svg viewBox="0 0 160 150" className="w-full h-auto block" role="img" aria-label="The five arm signals">
+      <rect x="0" y="0" width="160" height="150" fill="#f8fafc" />
+      <text x="80" y="10" fontSize="8" fontWeight="900" textAnchor="middle" fill="#0f172a" fontFamily={font}>The five arm signals</text>
+      {keys.map((k, i) => {
+        const a = ARM[k];
+        const x = i < 3 ? 2 + i * 52.7 : 28.3 + (i - 3) * 52.7, y = i < 3 ? 15 : 82;
+        return (
+          <g key={k}>
+            <rect x={x} y={y} width="50.6" height="64" rx="3.5" fill={a.bg} stroke={a.col} strokeWidth="0.8" />
+            <svg x={x + 2} y={y + 2} width="46.6" height="36" viewBox={["right", "left", "slow"].includes(k) ? "38 0 122 84" : "30 0 122 84"} preserveAspectRatio="xMidYMid slice">
+              <ArmScene variant={k} />
+            </svg>
+            <circle cx={x + 7} cy={y + 7} r="5" fill={a.col} stroke="#ffffff" strokeWidth="0.8" />
+            <text x={x + 7} y={y + 9.2} fontSize="6" fontWeight="900" textAnchor="middle" fill="#ffffff" fontFamily={font}>{a.n}</text>
+            <text x={x + 25.3} y={y + 46} fontSize="5.4" fontWeight="900" textAnchor="middle" fill={a.col} fontFamily={font}>{a.title}</text>
+            {a.lines.map((t, j) => (
+              <text key={j} x={x + 25.3} y={y + 53 + j * 6} fontSize="4" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily={font}>{t}</text>
+            ))}
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
@@ -5608,93 +5772,9 @@ const DRAW = {
      The first three are given out of the driver's (right-hand) window to other
      road users, seen from behind. The last two are shown through the
      windscreen to a Garda or person controlling traffic, seen from in front. */
-  "arm-signal": ({ variant = "right" }) => {
-    const info = {
-      right: ["Arm signal: turning right", "I intend to move out or turn right", "right arm straight out, palm facing forward"],
-      left: ["Arm signal: turning left", "I intend to turn left", "right arm out, circling anticlockwise"],
-      slow: ["Arm signal: slowing down", "I intend to slow down or stop", "right arm out, palm down, moving up and down"],
-      straight: ["To a Garda: straight on", "I intend to go straight on", "left hand raised, palm facing the windscreen"],
-      "garda-left": ["To a Garda: turning left", "I intend to turn left", "left hand pointing left, through the windscreen"],
-    }[variant];
-    const skin = "#f2c094", edge = "#9a5b2e";
-    const rear = ["right", "left", "slow"].includes(variant);
-    return (
-      <Frame title={info[0]}>
-        <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
-        {rear ? (
-          <g>
-            <rect x="34" y="34" width="70" height="34" rx="8" fill={C.blue} stroke="#0f172a" strokeWidth="0.6" />
-            <rect x="42" y="20" width="54" height="18" rx="5" fill="#1d4ed8" />
-            <rect x="46" y="23" width="46" height="11" rx="3" fill="#bfdbfe" />
-            <rect x="58" y="54" width="22" height="7" rx="1" fill="#f8fafc" stroke="#0f172a" strokeWidth="0.4" />
-            <rect x="39" y="66" width="12" height="8" rx="2" fill="#111827" />
-            <rect x="87" y="66" width="12" height="8" rx="2" fill="#111827" />
-            <circle cx="84" cy="28" r="4" fill="#78350f" />
-            <path d="M94 31 L126 31" stroke={skin} strokeWidth="5" strokeLinecap="round" />
-            <path d="M94 31 L126 31" stroke={edge} strokeWidth="0.5" fill="none" />
-            {variant === "right" && <rect x="125" y="22" width="8" height="15" rx="3" fill={skin} stroke={edge} strokeWidth="0.6" />}
-            {variant === "left" && (
-              <g>
-                <rect x="124" y="27" width="10" height="7" rx="3" fill={skin} stroke={edge} strokeWidth="0.6" />
-                <path d="M140 31 A11 11 0 1 0 129 42" fill="none" stroke="#b45309" strokeWidth="1.4" />
-                <path d="M126 39 L129 42 L132 38" fill="none" stroke="#b45309" strokeWidth="1.4" />
-              </g>
-            )}
-            {variant === "slow" && (
-              <g>
-                <rect x="124" y="28" width="12" height="6" rx="2.5" fill={skin} stroke={edge} strokeWidth="0.6" />
-                <path d="M130 14 L130 24 M127 17 L130 14 L133 17 M130 38 L130 48 M127 45 L130 48 L133 45" fill="none" stroke="#b45309" strokeWidth="1.3" />
-              </g>
-            )}
-          </g>
-        ) : (
-          <g>
-            <rect x="30" y="40" width="100" height="32" rx="9" fill={C.blue} stroke="#0f172a" strokeWidth="0.6" />
-            <path d="M42 42 L52 14 L108 14 L118 42 Z" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.2" />
-            <rect x="36" y="50" width="16" height="7" rx="2" fill="#fef9c3" stroke="#0f172a" strokeWidth="0.4" />
-            <rect x="108" y="50" width="16" height="7" rx="2" fill="#fef9c3" stroke="#0f172a" strokeWidth="0.4" />
-            <rect x="34" y="72" width="12" height="7" rx="2" fill="#111827" />
-            <rect x="114" y="72" width="12" height="7" rx="2" fill="#111827" />
-            <circle cx="64" cy="25" r="5" fill="#78350f" />
-            <circle cx="96" cy="27" r="4" fill="#94a3b8" />
-            {variant === "straight" ? (
-              <g>
-                <rect x="73" y="18" width="10" height="15" rx="3.5" fill={skin} stroke={edge} strokeWidth="0.6" />
-                {[0, 1, 2, 3].map(k => <line key={k} x1={74.6 + k * 2.3} y1="18.5" x2={74.6 + k * 2.3} y2="23" stroke={edge} strokeWidth="0.35" />)}
-              </g>
-            ) : (
-              <g>
-                <path d="M70 31 L86 31" stroke={skin} strokeWidth="4.5" strokeLinecap="round" />
-                <path d="M86 29 L92 31 L86 33" fill={skin} stroke={edge} strokeWidth="0.6" />
-                <path d="M100 8 L118 8 M114 5 L118 8 L114 11" fill="none" stroke="#b45309" strokeWidth="1.3" />
-                <Tag x="109" y="4" size="2.8" weight={800} color="#b45309">driver's left</Tag>
-              </g>
-            )}
-            <text x="146" y="30" fontSize="13" textAnchor="middle">👮</text>
-          </g>
-        )}
-        <Tag x="80" y="85" size="4.4" weight={900}>{info[1]}</Tag>
-        <Tag x="80" y="93" size="3.3" weight={700}>{info[2]}</Tag>
-      </Frame>
-    );
-  },
+  "arm-signal": ({ variant = "right" }) => <ArmSignalPanel variant={variant} />,
 
-  "arm-signals": () => (
-    <Frame title="The five arm signals">
-      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
-      {[["➡️", "turning right", "arm straight out"], ["↺", "turning left", "arm circles anticlockwise"], ["⬆️⬇️", "slowing / stopping", "arm moves up and down"], ["✋", "to a Garda: straight on", "left palm at windscreen"], ["👈", "to a Garda: turning left", "left hand points left"]].map(([i, h, t], k) => {
-        const x = k < 3 ? 6 + k * 50 : 31 + (k - 3) * 50, y = k < 3 ? 6 : 52;
-        return (
-          <g key={h}>
-            <rect x={x} y={y} width="47" height="42" rx="4" fill="#ffffff" stroke={k < 3 ? "#1d4ed8" : "#047857"} strokeWidth="0.9" />
-            <text x={x + 23.5} y={y + 16} fontSize="11" fontWeight="900" textAnchor="middle" fill="#b45309">{i}</text>
-            <text x={x + 23.5} y={y + 27} fontSize={h.length > 16 ? 3.2 : 3.9} fontWeight="900" textAnchor="middle" fill={k < 3 ? "#1d4ed8" : "#047857"} fontFamily="system-ui">{h}</text>
-            <text x={x + 23.5} y={y + 35} fontSize="3.1" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
-          </g>
-        );
-      })}
-    </Frame>
-  ),
+  "arm-signals": () => <ArmSignalsAll />,
 
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
@@ -5777,15 +5857,87 @@ export const VISUAL_IDS = Object.keys(DRAW);
 
 /* `id` may carry a variant after a colon: "rear-lights:stop".
    `bare` hides the labels. */
-export function Visual({ id, className = "", bare = false }) {
+/* Full-screen viewer so small labels can be read: pinch, + / −, or
+   double-tap to zoom; drag or scroll to pan. The app's viewport blocks the
+   browser's own pinch-zoom, so this does it in-app. */
+function ZoomViewer({ children, onClose }) {
+  const [scale, setScale] = useState(1);
+  const box = useRef(null);
+  const pinch = useRef(null);
+  const clamp = (v) => Math.min(5, Math.max(1, v));
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+  }, [onClose]);
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    const start = (e) => { if (e.touches.length === 2) pinch.current = { d: dist(e.touches), s: null }; };
+    const move = (e) => {
+      if (e.touches.length !== 2 || !pinch.current) return;
+      e.preventDefault();
+      const ratio = dist(e.touches) / pinch.current.d;
+      setScale(prev => {
+        if (pinch.current.s === null) pinch.current.s = prev;
+        return clamp(pinch.current.s * ratio);
+      });
+    };
+    const end = (e) => { if (e.touches.length < 2) pinch.current = null; };
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end, { passive: true });
+    return () => { el.removeEventListener("touchstart", start); el.removeEventListener("touchmove", move); el.removeEventListener("touchend", end); };
+  }, []);
+  const btn = "w-11 h-11 rounded-full bg-white/15 text-white text-2xl font-black flex items-center justify-center active:bg-white/30";
+  return createPortal(
+    <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col" role="dialog" aria-modal="true" aria-label="Enlarged picture">
+      <div className="flex items-center justify-between gap-2 px-3 pt-[max(env(safe-area-inset-top),12px)] pb-2">
+        <p className="text-white/80 text-sm font-semibold">Pinch, double-tap or use + / −</p>
+        <button type="button" onClick={onClose} className={btn} aria-label="Close">✕</button>
+      </div>
+      <div ref={box} className="flex-1 overflow-auto overscroll-contain" onDoubleClick={() => setScale(s => (s > 1.2 ? 1 : 2.5))}>
+        <div className="min-h-full flex items-center justify-center p-2">
+          <div className="bg-white rounded-xl overflow-hidden shrink-0"
+            style={{ width: `calc(${scale} * min(100vw - 16px, (100vh - 150px) * 1.6))` }}>
+            {children}
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center justify-center gap-4 px-3 pt-2 pb-[max(env(safe-area-inset-bottom),14px)]">
+        <button type="button" className={btn} aria-label="Zoom out" onClick={() => setScale(s => clamp(s - 0.5))}>−</button>
+        <button type="button" className="min-w-[4.5rem] h-11 rounded-full bg-white/15 text-white font-bold tabular-nums" onClick={() => setScale(1)} aria-label="Reset zoom">{Math.round(scale * 100)}%</button>
+        <button type="button" className={btn} aria-label="Zoom in" onClick={() => setScale(s => clamp(s + 0.5))}>+</button>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+export function Visual({ id, className = "", bare = false, zoom = !bare }) {
+  const [open, setOpen] = useState(false);
   if (!id) return null;
   const [name, variant] = String(id).split(":");
   const draw = DRAW[name];
   if (!draw) return null;
+  const pic = <BareContext.Provider value={bare}>{draw({ variant })}</BareContext.Provider>;
+  if (!zoom) {
+    return <div className={`rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 ${className}`}>{pic}</div>;
+  }
   return (
-    <div className={`rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 ${className}`}>
-      <BareContext.Provider value={bare}>{draw({ variant })}</BareContext.Provider>
-    </div>
+    <>
+      <button type="button" onClick={() => setOpen(true)} aria-label="Enlarge picture"
+        className={`relative block w-full text-left rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 cursor-zoom-in ${className}`}>
+        {pic}
+        <span aria-hidden="true" className="absolute bottom-1 right-1 w-7 h-7 flex items-center justify-center rounded-full bg-slate-900/60 text-white pointer-events-none">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 L21 21 M10.5 7.5 v6 M7.5 10.5 h6" /></svg>
+        </span>
+      </button>
+      {open && <ZoomViewer onClose={() => setOpen(false)}>{pic}</ZoomViewer>}
+    </>
   );
 }
 

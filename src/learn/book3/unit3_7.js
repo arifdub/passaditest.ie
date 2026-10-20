@@ -197,7 +197,7 @@ const learn = {
       icon: "🚗",
       kicker: "The drive",
       title: "Normal driving, plus manoeuvres",
-      visual: "test-manoeuvres",
+      visuals: ["test-manoeuvres", "arm-signals"],
       list: [
         "Directions given in good time — ask if unsure",
         "Turnabout, reverse round a corner, 5 hand signals, hill start, parking",

@@ -311,7 +311,7 @@ const recall = {
       before: "In the zigzag area you must not overtake, park or", after: ".",
       options: ["wait", "signal", "brake", "change gear"], answer: "wait",
       explain: "Except to let someone cross, or in circumstances beyond your control.", src: P(95, "Post-test answer 4") },
-    { id: "r5", type: "flash", concept: "zebra",
+    { id: "r5", type: "flash", concept: "zebra", visual: "arm-signal:slow",
       front: "What signal could you give approaching a zebra?",
       back: "A slowing-down arm signal.", src: P(95, "Post-test answer 6") },
     { id: "r6", type: "flash", concept: "pelican",

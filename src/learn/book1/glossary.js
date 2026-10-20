@@ -88,6 +88,42 @@ export default [
     src: P("1.2", 31, "Signals by Arm; Use of Signals"),
   },
   {
+    id: "five-arm-signals", unit: "1.2", term: "The five arm signals", visual: "arm-signals",
+    meaning: "Three signals to other road users (turning right, turning left, slowing down) and two to a Garda or person controlling traffic (straight on, turning left).",
+    key: "You may be asked to give all five on the driving test.",
+    src: P("1.2", 31, "Use of Signals — five arm signals in the Rules of the Road"),
+  },
+  {
+    id: "arm-signal-right", unit: "1.2", term: "Arm signal: turning right", visual: "arm-signal:right",
+    meaning: "Right arm held straight out of the window, palm facing forward: I intend to move out or turn right.",
+    key: "Also used to show a Garda you intend to turn right.",
+    src: P("1.2", 31, "Signals by Arm (see Rules of the Road)"),
+  },
+  {
+    id: "arm-signal-left", unit: "1.2", term: "Arm signal: turning left", visual: "arm-signal:left",
+    meaning: "Right arm out of the window, moved in an anticlockwise circle: I intend to turn left.",
+    key: "Given to traffic behind, as well as your indicator if it helps.",
+    src: P("1.2", 31, "Signals by Arm (see Rules of the Road)"),
+  },
+  {
+    id: "arm-signal-slow", unit: "1.2", term: "Arm signal: slowing down or stopping", visual: "arm-signal:slow",
+    meaning: "Right arm out, palm down, moved slowly up and down: I intend to slow down or stop.",
+    key: "Useful as the lead vehicle at a zebra crossing — it warns oncoming and following traffic.",
+    src: P("1.2", 31, "Use of Signals; Signals by Arm"),
+  },
+  {
+    id: "arm-signal-straight", unit: "1.2", term: "To a Garda: going straight on", visual: "arm-signal:straight",
+    meaning: "Left hand raised, palm facing the windscreen, so a Garda or person controlling traffic in front can see it: I intend to go straight on.",
+    key: "Hold it up where the Garda in front can clearly see it.",
+    src: P("1.2", 84, "Post-test model answer 1 (Unit 1.2)"),
+  },
+  {
+    id: "arm-signal-garda-left", unit: "1.2", term: "To a Garda: turning left", visual: "arm-signal:garda-left",
+    meaning: "Left hand pointing to the left through the windscreen, for a Garda or person controlling traffic in front: I intend to turn left.",
+    key: "Turning right? Use the turning-right signal out of the window.",
+    src: P("1.2", 31, "Signals by Arm (see Rules of the Road)"),
+  },
+  {
     id: "delayed-signal", unit: "1.2", term: "Delayed signal", visual: "side-roads",
     meaning: "Holding your signal back until it can't be misread.",
     key: "Stopping just past a side road? Signal too early and an emerging driver may think you're turning in.",

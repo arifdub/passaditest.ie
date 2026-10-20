@@ -376,3 +376,13 @@ Practices". Post-test model answers pp.83–86; retention answers p.87.
   answers. Not used: Q10, Q13's "125°", Q41, and the triangle distance,
   tow-rope length and psi figures (check the Rules of the Road and the
   handbook). Its recognition game is "Lights & Fixes". Book 4 is complete.
+
+## The five arm signals
+
+New drawings `arm-signal:<right|left|slow|straight|garda-left>` and the
+overview `arm-signals`, with six Book 1 glossary cards (Unit 1.2) and one
+Book 3 card (Unit 3.7). The three signals to other road users and the two to
+a Garda follow the Rules of the Road, which Book 1 p.31 refers to; "straight
+on" matches Book 1's model answer (p.84, answer 1). Pictures were added to
+Unit 1.2 (a new "five arm signals" card, r7, new r7b), Unit 2.10 (r5) and
+Unit 3.7 (the drive card).

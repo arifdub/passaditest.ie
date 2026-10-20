@@ -5603,6 +5603,99 @@ const DRAW = {
     </Frame>
   ),
 
+  /* ---------------- the five arm signals (Rules of the Road) ----------------
+     variant: right | left | slow | straight | garda-left.
+     The first three are given out of the driver's (right-hand) window to other
+     road users, seen from behind. The last two are shown through the
+     windscreen to a Garda or person controlling traffic, seen from in front. */
+  "arm-signal": ({ variant = "right" }) => {
+    const info = {
+      right: ["Arm signal: turning right", "I intend to move out or turn right", "right arm straight out, palm facing forward"],
+      left: ["Arm signal: turning left", "I intend to turn left", "right arm out, circling anticlockwise"],
+      slow: ["Arm signal: slowing down", "I intend to slow down or stop", "right arm out, palm down, moving up and down"],
+      straight: ["To a Garda: straight on", "I intend to go straight on", "left hand raised, palm facing the windscreen"],
+      "garda-left": ["To a Garda: turning left", "I intend to turn left", "left hand pointing left, through the windscreen"],
+    }[variant];
+    const skin = "#f2c094", edge = "#9a5b2e";
+    const rear = ["right", "left", "slow"].includes(variant);
+    return (
+      <Frame title={info[0]}>
+        <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+        {rear ? (
+          <g>
+            <rect x="34" y="34" width="70" height="34" rx="8" fill={C.blue} stroke="#0f172a" strokeWidth="0.6" />
+            <rect x="42" y="20" width="54" height="18" rx="5" fill="#1d4ed8" />
+            <rect x="46" y="23" width="46" height="11" rx="3" fill="#bfdbfe" />
+            <rect x="58" y="54" width="22" height="7" rx="1" fill="#f8fafc" stroke="#0f172a" strokeWidth="0.4" />
+            <rect x="39" y="66" width="12" height="8" rx="2" fill="#111827" />
+            <rect x="87" y="66" width="12" height="8" rx="2" fill="#111827" />
+            <circle cx="84" cy="28" r="4" fill="#78350f" />
+            <path d="M94 31 L126 31" stroke={skin} strokeWidth="5" strokeLinecap="round" />
+            <path d="M94 31 L126 31" stroke={edge} strokeWidth="0.5" fill="none" />
+            {variant === "right" && <rect x="125" y="22" width="8" height="15" rx="3" fill={skin} stroke={edge} strokeWidth="0.6" />}
+            {variant === "left" && (
+              <g>
+                <rect x="124" y="27" width="10" height="7" rx="3" fill={skin} stroke={edge} strokeWidth="0.6" />
+                <path d="M140 31 A11 11 0 1 0 129 42" fill="none" stroke="#b45309" strokeWidth="1.4" />
+                <path d="M126 39 L129 42 L132 38" fill="none" stroke="#b45309" strokeWidth="1.4" />
+              </g>
+            )}
+            {variant === "slow" && (
+              <g>
+                <rect x="124" y="28" width="12" height="6" rx="2.5" fill={skin} stroke={edge} strokeWidth="0.6" />
+                <path d="M130 14 L130 24 M127 17 L130 14 L133 17 M130 38 L130 48 M127 45 L130 48 L133 45" fill="none" stroke="#b45309" strokeWidth="1.3" />
+              </g>
+            )}
+          </g>
+        ) : (
+          <g>
+            <rect x="30" y="40" width="100" height="32" rx="9" fill={C.blue} stroke="#0f172a" strokeWidth="0.6" />
+            <path d="M42 42 L52 14 L108 14 L118 42 Z" fill="#bfdbfe" stroke="#1d4ed8" strokeWidth="1.2" />
+            <rect x="36" y="50" width="16" height="7" rx="2" fill="#fef9c3" stroke="#0f172a" strokeWidth="0.4" />
+            <rect x="108" y="50" width="16" height="7" rx="2" fill="#fef9c3" stroke="#0f172a" strokeWidth="0.4" />
+            <rect x="34" y="72" width="12" height="7" rx="2" fill="#111827" />
+            <rect x="114" y="72" width="12" height="7" rx="2" fill="#111827" />
+            <circle cx="64" cy="25" r="5" fill="#78350f" />
+            <circle cx="96" cy="27" r="4" fill="#94a3b8" />
+            {variant === "straight" ? (
+              <g>
+                <rect x="73" y="18" width="10" height="15" rx="3.5" fill={skin} stroke={edge} strokeWidth="0.6" />
+                {[0, 1, 2, 3].map(k => <line key={k} x1={74.6 + k * 2.3} y1="18.5" x2={74.6 + k * 2.3} y2="23" stroke={edge} strokeWidth="0.35" />)}
+              </g>
+            ) : (
+              <g>
+                <path d="M70 31 L86 31" stroke={skin} strokeWidth="4.5" strokeLinecap="round" />
+                <path d="M86 29 L92 31 L86 33" fill={skin} stroke={edge} strokeWidth="0.6" />
+                <path d="M100 8 L118 8 M114 5 L118 8 L114 11" fill="none" stroke="#b45309" strokeWidth="1.3" />
+                <Tag x="109" y="4" size="2.8" weight={800} color="#b45309">driver's left</Tag>
+              </g>
+            )}
+            <text x="146" y="30" fontSize="13" textAnchor="middle">👮</text>
+          </g>
+        )}
+        <Tag x="80" y="85" size="4.4" weight={900}>{info[1]}</Tag>
+        <Tag x="80" y="93" size="3.3" weight={700}>{info[2]}</Tag>
+      </Frame>
+    );
+  },
+
+  "arm-signals": () => (
+    <Frame title="The five arm signals">
+      <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
+      {[["➡️", "turning right", "arm straight out"], ["↺", "turning left", "arm circles anticlockwise"], ["⬆️⬇️", "slowing / stopping", "arm moves up and down"], ["✋", "to a Garda: straight on", "left palm at windscreen"], ["👈", "to a Garda: turning left", "left hand points left"]].map(([i, h, t], k) => {
+        const x = k < 3 ? 6 + k * 50 : 31 + (k - 3) * 50, y = k < 3 ? 6 : 52;
+        return (
+          <g key={h}>
+            <rect x={x} y={y} width="47" height="42" rx="4" fill="#ffffff" stroke={k < 3 ? "#1d4ed8" : "#047857"} strokeWidth="0.9" />
+            <text x={x + 23.5} y={y + 16} fontSize="11" fontWeight="900" textAnchor="middle" fill="#b45309">{i}</text>
+            <text x={x + 23.5} y={y + 27} fontSize={h.length > 16 ? 3.2 : 3.9} fontWeight="900" textAnchor="middle" fill={k < 3 ? "#1d4ed8" : "#047857"} fontFamily="system-ui">{h}</text>
+            <text x={x + 23.5} y={y + 35} fontSize="3.1" fontWeight="700" textAnchor="middle" fill="#0f172a" fontFamily="system-ui">{t}</text>
+          </g>
+        );
+      })}
+    </Frame>
+  ),
+
   /* ---------------- signals ---------------- */
   "rear-lights": ({ variant = "indicator" }) => {
     const L = { indicator: [C.amber, null], stop: ["#dc2626", "#dc2626"], hazard: [C.amber, C.amber], reversing: ["#f8fafc", "#f8fafc"] }[variant];

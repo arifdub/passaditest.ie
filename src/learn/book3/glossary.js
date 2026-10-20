@@ -358,4 +358,10 @@ export default [
     key: "Never put a rear-facing child seat in front of one.",
     src: P("3.10", 84, "Examples of restraint systems"),
   },
+  {
+    id: "test-hand-signals", unit: "3.7", term: "Hand signals on the driving test", visual: "arm-signals",
+    meaning: "The tester asks the candidate to demonstrate the arm signals from the Rules of the Road.",
+    key: "Know all five: right, left, slowing down, and straight on or left to a Garda.",
+    src: P("3.7", 60, "Hand signals"),
+  },
 ];

@@ -2,8 +2,8 @@
   ===========================================================================
   ADMIN — manage learner accounts
 
-  Reachable from Settings by an account whose profiles.role is 'admin'
-  (sql/admin-users.sql makes arifdub@gmail.com the admin). Everything here
+  Reachable from Settings by an admin account
+  (profiles.app_role — sql/admin-users.sql makes arifdub@gmail.com the admin). Everything here
   is enforced again in the database: the policies only let an admin read
   other people's rows, and every action is a security-definer function that
   checks is_admin() first.
@@ -94,12 +94,12 @@ export default function AdminScreen({ back }) {
     setError(null);
     const [{ data, error: err }, cfg] = await Promise.all([
       supabase.from("profiles")
-        .select("id, email, full_name, role, status, created_at, last_seen_at")
+        .select("id, email, full_name, app_role, app_status, created_at, last_seen_at")
         .order("created_at", { ascending: false }),
       supabase.from("admin_config").select("value").eq("key", "require_approval").maybeSingle(),
     ]);
     if (err) setError(err.message);
-    else setUsers(data || []);
+    else setUsers((data || []).map(u => ({ ...u, role: u.app_role, status: u.app_status || "active" })));
     if (cfg?.data) setRequireApproval(cfg.data.value === true);
     setLoading(false);
   }, []);

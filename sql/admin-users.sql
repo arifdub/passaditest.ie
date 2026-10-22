@@ -4,9 +4,12 @@
 -- Run this ONCE in Supabase → SQL Editor, after app-accounts-and-progress.sql.
 -- Safe to run again: every statement is idempotent.
 --
+-- It does NOT touch the existing profiles.role / profiles.status columns
+-- (the booking site uses them). The app has its own:
+--
 -- What it adds:
---   profiles.role            'user' | 'admin'
---   profiles.status          'active' | 'pending' | 'blocked'
+--   profiles.app_role        'user' | 'admin'
+--   profiles.app_status      'active' | 'pending' | 'blocked'
 --   profiles.last_seen_at    when the learner last opened the app
 --   profiles.admin_notified  whether the "new registration" email has gone
 --   admin_config             app-wide switches (require_approval)
@@ -16,23 +19,29 @@
 --
 -- arifdub@gmail.com is made admin (now, and automatically if they ever
 -- re-register). Nobody can make themselves admin from the app: a trigger
--- resets role and status on any change not made by an admin.
+-- resets app_role and app_status on any change not made by an admin.
+-- handle_new_user() is left exactly as it is.
 -- ===========================================================================
 
 
 -- ---------------------------------------------------------------------------
 -- 1. NEW COLUMNS
 -- ---------------------------------------------------------------------------
-alter table public.profiles add column if not exists role text not null default 'user';
-alter table public.profiles add column if not exists status text not null default 'active';
+-- The columns the app reads, in case this profiles table predates them.
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists full_name text;
+alter table public.profiles add column if not exists created_at timestamptz not null default now();
+
+alter table public.profiles add column if not exists app_role text not null default 'user';
+alter table public.profiles add column if not exists app_status text not null default 'active';
 alter table public.profiles add column if not exists last_seen_at timestamptz;
 alter table public.profiles add column if not exists admin_notified boolean not null default false;
 
 do $$ begin
-  alter table public.profiles add constraint profiles_role_chk check (role in ('user', 'admin'));
+  alter table public.profiles add constraint profiles_app_role_chk check (app_role in ('user', 'admin'));
 exception when duplicate_object then null; end $$;
 do $$ begin
-  alter table public.profiles add constraint profiles_status_chk check (status in ('active', 'pending', 'blocked'));
+  alter table public.profiles add constraint profiles_app_status_chk check (app_status in ('active', 'pending', 'blocked'));
 exception when duplicate_object then null; end $$;
 
 -- Everyone who registered before this script has already been told about.
@@ -65,10 +74,10 @@ security definer
 stable
 set search_path = public
 as $$
-  select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
+  select exists (select 1 from public.profiles where id = auth.uid() and app_role = 'admin');
 $$;
 
-update public.profiles set role = 'admin', status = 'active'
+update public.profiles set app_role = 'admin', app_status = 'active'
  where lower(email) = 'arifdub@gmail.com';
 
 
@@ -93,17 +102,21 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_caller_admin boolean := auth.uid() is not null and public.is_admin();
+  v_pending boolean := coalesce((select value::text from public.admin_config where key = 'require_approval'), 'false') = 'true';
 begin
-  if auth.uid() is not null and not public.is_admin() then
-    if tg_op = 'UPDATE' then
-      new.role := old.role;
-      new.status := old.status;
-      new.admin_notified := old.admin_notified or new.admin_notified;
-    else
-      new.role := 'user';
-      new.status := case when coalesce((select value::text from public.admin_config where key = 'require_approval'), 'false') = 'true'
-                         then 'pending' else 'active' end;
+  if tg_op = 'INSERT' then
+    -- New profile (from the sign-up trigger or the app): set the app's role
+    -- and status here, so handle_new_user() doesn't need changing.
+    if not v_caller_admin then
+      new.app_role := case when lower(coalesce(new.email, '')) = 'arifdub@gmail.com' then 'admin' else 'user' end;
+      new.app_status := case when new.app_role = 'admin' or not v_pending then 'active' else 'pending' end;
     end if;
+  elsif auth.uid() is not null and not v_caller_admin then
+    new.app_role := old.app_role;
+    new.app_status := old.app_status;
+    new.admin_notified := old.admin_notified or new.admin_notified;
   end if;
   return new;
 end;
@@ -113,33 +126,6 @@ drop trigger if exists guard_profile_fields on public.profiles;
 create trigger guard_profile_fields
   before insert or update on public.profiles
   for each row execute function public.guard_profile_fields();
-
-
--- ---------------------------------------------------------------------------
--- 6. NEW SIGN-UPS: role and status set at creation
--- ---------------------------------------------------------------------------
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  v_admin boolean := lower(new.email) = 'arifdub@gmail.com';
-  v_pending boolean := coalesce((select value::text from public.admin_config where key = 'require_approval'), 'false') = 'true';
-begin
-  insert into public.profiles (id, email, full_name, role, status)
-  values (
-    new.id,
-    new.email,
-    coalesce(new.raw_user_meta_data ->> 'full_name', ''),
-    case when v_admin then 'admin' else 'user' end,
-    case when v_admin or not v_pending then 'active' else 'pending' end
-  )
-  on conflict (id) do nothing;
-  return new;
-end;
-$$;
 
 
 -- ---------------------------------------------------------------------------
@@ -155,7 +141,7 @@ begin
   if not public.is_admin() then raise exception 'Admins only'; end if;
   if p_status not in ('active', 'pending', 'blocked') then raise exception 'Bad status'; end if;
   if p_user = auth.uid() then raise exception 'You cannot change your own status'; end if;
-  update public.profiles set status = p_status, updated_at = now() where id = p_user;
+  update public.profiles set app_status = p_status where id = p_user;
 end;
 $$;
 
@@ -168,7 +154,7 @@ as $$
 begin
   if not public.is_admin() then raise exception 'Admins only'; end if;
   if p_user = auth.uid() then raise exception 'Use Delete my account for your own account'; end if;
-  if exists (select 1 from public.profiles where id = p_user and role = 'admin') then
+  if exists (select 1 from public.profiles where id = p_user and app_role = 'admin') then
     raise exception 'Another admin cannot be deleted from the app';
   end if;
   delete from auth.users where id = p_user;   -- cascades to profiles and progress

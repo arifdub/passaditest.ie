@@ -344,8 +344,10 @@ export function AuthProvider({ children }) {
 
   /* Account standing. Missing columns (SQL not run yet) mean an ordinary,
      active account — nobody is locked out by a half-finished setup. */
-  const role = profile?.role === "admin" ? "admin" : "user";
-  const status = !user ? "guest" : (profile?.status || "active");
+  /* app_role / app_status, not role / status: profiles already had role and
+     status columns with other values, used elsewhere on the site. */
+  const role = profile?.app_role === "admin" ? "admin" : "user";
+  const status = !user ? "guest" : (profile?.app_status || "active");
 
   const value = useMemo(() => ({
     user,

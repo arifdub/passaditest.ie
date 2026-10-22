@@ -131,13 +131,13 @@ export default [
     src: P("3.3", 18, "Vehicle warning instrument"),
   },
   {
-    id: "overtake-on-left", unit: "3.3", term: "Overtaking on the left", visual: "overtake-left",
+    id: "overtake-on-left", unit: "3.3", term: "Overtaking on the left", visual: "overtake-left-law",
     meaning: "Allowed only when the car ahead turns right, you turn left soon, or the left lane moves faster in a queue.",
     key: "Otherwise overtake on the right.",
     src: P("3.3", 20, "You may only overtake on the left"),
   },
   {
-    id: "long-vehicle", unit: "3.3", term: "LONG VEHICLE sign", visual: "overtake-left",
+    id: "long-vehicle", unit: "3.3", term: "LONG VEHICLE sign", visual: "overtake-left-law",
     meaning: "Marks a vehicle at least 13 metres long.",
     key: "Allow extra road to overtake it.",
     src: P("3.3", 20, "Overtaking procedure"),

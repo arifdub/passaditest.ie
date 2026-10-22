@@ -109,3 +109,30 @@ file plus a flag — no new screens.
   theory mock you'll probably want the official topic weightings instead.
 - No email verification flow beyond Supabase's own. If you turn on "Confirm
   email", people sign up, get a link, then come back and log in.
+
+## Admin, user status and account deletion (October 2026)
+
+**One-off setup:** run `sql/admin-users.sql` in Supabase → SQL Editor (after
+`app-accounts-and-progress.sql`). Until it's run, everyone is treated as an
+ordinary active account and the Admin card doesn't appear.
+
+- **Who's admin:** `arifdub@gmail.com` (set by the script). Settings shows an
+  Admin card with a count of new registrations since you last looked.
+- **Admin panel** (`src/AdminScreen.jsx`): search, filter (new / pending /
+  blocked), approve, block, unblock, delete, and each learner's progress
+  (exam sections, mocks, flashcards, Interactive Learning books).
+- **Approval switch:** "New accounts need approval" (admin_config
+  `require_approval`, off by default). Pending accounts get guest-level access.
+- **Locks:** guests and pending accounts get Book 1 of Interactive Learning,
+  Section 1 and the flashcards; Books 2–4, Sections 2–5 and the mocks need an
+  active account (`bookLockedFor` / `lockedForGuest` in appStructure.js).
+  Blocked accounts see only a "blocked" screen and Settings.
+- **New-registration email:** `api/notify-signup.js` sends one email per
+  account to OWNER_NOTIFICATION_EMAIL (fallback arifdub@gmail.com) via Resend,
+  using the same Vercel env vars as the booking emails.
+- **Delete my account:** Settings → Account. `delete_my_account()` removes the
+  login; profile and progress cascade.
+- **Security:** the database enforces all of this — admin-only policies and
+  security-definer functions that check `is_admin()`, and a trigger that stops
+  anyone changing their own role or status. The lesson content itself ships in
+  the app bundle, so the book lock is an app-level lock, not encryption.

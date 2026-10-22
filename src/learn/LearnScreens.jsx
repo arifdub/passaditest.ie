@@ -29,6 +29,8 @@ import { useProgress } from "../progressStore";
 import { ItemView } from "./items";
 import HazardHunt from "./HazardHunt";
 import { Visual, Visuals } from "./visuals";
+import { useAuth } from "../appAuth";
+import { bookLockedFor } from "../appStructure";
 
 const ACTIVITY_ICON = {
   learn: "📖", recall: "⚡", hunt: "🔎", spot: "🚦", lanes: "🛣️", junctions: "🗺️", parking: "🅿️", overtake: "🏎️", crossings: "🚂", motorway: "🛣️", lights: "🔦", weather: "🌦️", tunnels: "🚇", controls: "🎛️", mirrors: "🪞", ready: "✅", gears: "⚙️", brakes: "🛑", grip: "🛞", manoeuvres: "🔄", selector: "🕹️", systems: "🔧", share: "🚸", signs: "🪧", qualities: "🧑‍🏫", docs: "📄", law: "⚖️", stages: "3️⃣", licence: "🔢", records: "📋", testday: "📝", markings: "✏️", solutions: "♿", restraints: "🔒", signals: "🙂", domains: "🎯", tests: "📝", mind: "🧠", learners: "🧓", lesson: "🗂️", questions: "❓", onroad: "🧭", carcare: "🔧", fixes: "🚨", matching: "🧩", procedure: "🔁",
@@ -100,7 +102,9 @@ function LevelStrip({ xp, lvl }) {
 
 function BookCard({ book, go }) {
   const { record } = useLearn(book.id);
+  const { isLimited, isPending } = useAuth();
   const ready = book.units.some(u => u.content);
+  const locked = ready && bookLockedFor(book.id, isLimited);
   const bp = ready ? bookProgress(record, book) : null;
 
   return (
@@ -131,7 +135,11 @@ function BookCard({ book, go }) {
             </div>
           )}
         </div>
-        {ready
+        {locked
+          ? <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 shrink-0 mt-1">
+              <Lock size={11} /> {isPending ? "Approval" : "Free account"}
+            </span>
+          : ready
           ? <ChevronRight size={18} className="text-slate-300 dark:text-slate-600 shrink-0 mt-3" />
           : <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 shrink-0 mt-1">Soon</span>}
       </div>

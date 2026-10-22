@@ -4601,7 +4601,7 @@ const DRAW = {
     </Frame>
   ),
 
-  "overtake-left": () => (
+  "overtake-left-law": () => (
     <Frame title="When you may overtake on the left">
       <rect x="0" y="0" width="160" height="100" fill="#f8fafc" />
       {[[27, "turn-right"], [80, "turn-left"], [133, "queue"]].map(([cx, kind], i) => (

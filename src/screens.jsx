@@ -14,12 +14,13 @@ import {
   ClipboardCheck, ShieldCheck, GraduationCap, Wrench, Truck, Layers,
   TrendingUp, User, LogOut, Shield, ChevronRight, Trash2, Timer,
   Smartphone, Download, Share2, Check, Lock, Play, AlertTriangle, Target,
-  Sun, Moon, Type, Coffee, ExternalLink,
+  Sun, Moon, Type, Coffee, ExternalLink, Users,
 } from "lucide-react";
 import {
   ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
 } from "./appStructure";
 import { useAuth } from "./appAuth";
+import { supabase, HAS_SUPABASE } from "./supabaseClient";
 import { useProgress } from "./progressStore";
 import usePwaInstall from "./usePwaInstall";
 import { getDeck } from "./contentSources";
@@ -43,7 +44,7 @@ const SECTION_ICON = {
    HOME
    =========================================================================== */
 export function HomeScreen({ go }) {
-  const { displayName, subscription, isGuest, exitGuest } = useAuth();
+  const { displayName, subscription, isGuest, isLimited, isPending, exitGuest } = useAuth();
   const { getSection, getModule, overall, entries } = useProgress();
   const [lockedPrompt, setLockedPrompt] = React.useState(null);
 
@@ -184,7 +185,7 @@ export function HomeScreen({ go }) {
           {ADI_SECTIONS.map(section => {
             const Icon = SECTION_ICON[section.id] || ClipboardCheck;
             const p = getSection(section.id);
-            const locked = lockedForGuest(section.id, isGuest);
+            const locked = lockedForGuest(section.id, isLimited);
             return (
               <button
                 key={section.id}
@@ -284,7 +285,7 @@ export function HomeScreen({ go }) {
         <div className="space-y-2.5">
           {MOCKS.map(paper => {
             const m = getModule(paper.id);
-            const locked = lockedForGuest(paper.id, isGuest);
+            const locked = lockedForGuest(paper.id, isLimited);
             return (
               <button
                 key={paper.id}
@@ -452,17 +453,26 @@ export function HomeScreen({ go }) {
             <h2 className="mt-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
               {lockedPrompt}
             </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Guests get Section&nbsp;1 and the flashcards in full. Create a free
-              account to open the other four sections and the mock exam — and
-              your progress will follow you to any device.
-            </p>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Everything you've already studied comes with you.
-            </p>
+            {isPending ? (
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Your account is waiting for approval. Section&nbsp;1, the flashcards
+                and Book&nbsp;1 are open now; everything else unlocks once you're approved.
+              </p>
+            ) : (
+              <>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Guests get Section&nbsp;1 and the flashcards in full. Create a free
+                  account to open the other four sections and the mock exam — and
+                  your progress will follow you to any device.
+                </p>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Everything you've already studied comes with you.
+                </p>
+              </>
+            )}
 
             <div className="mt-5 space-y-2.5">
-              <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>
+              {!isPending && <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>}
               <button
                 onClick={() => setLockedPrompt(null)}
                 className="w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2.5"
@@ -501,7 +511,7 @@ export function HomeScreen({ go }) {
    =========================================================================== */
 export function MockHubScreen({ go }) {
   const { getModule, mockReadiness } = useProgress();
-  const { isGuest, exitGuest } = useAuth();
+  const { isGuest, isLimited, isPending, exitGuest } = useAuth();
 
   const r = mockReadiness;
   const papers = MOCKS.map(p => ({ ...p, progress: getModule(p.id) }));
@@ -515,7 +525,7 @@ export function MockHubScreen({ go }) {
   /* Guests can't sit a mock. Rather than a screen of padlocks, explain what
      the exam is and what an account gets them — this tab is the strongest
      reason to sign up, so it should read like one. */
-  if (isGuest) {
+  if (isLimited) {
     return (
       <>
         <ScreenHeader
@@ -529,16 +539,18 @@ export function MockHubScreen({ go }) {
               <Lock size={22} className="text-slate-400" />
             </div>
             <h2 className="mt-3 font-bold text-slate-900 dark:text-white">
-              Mock papers need an account
+              {isPending ? "Waiting for approval" : "Mock papers need an account"}
             </h2>
             <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              A mock is {MOCK_LENGTH} questions over {MOCK_MINUTES} minutes, and it's only
-              worth sitting if the result is still there next week. An account keeps your
-              scores and section breakdown across every device.
+              {isPending
+                ? "Your account has been created and is waiting to be approved. Mock papers open as soon as it is."
+                : `A mock is ${MOCK_LENGTH} questions over ${MOCK_MINUTES} minutes, and it's only worth sitting if the result is still there next week. An account keeps your scores and section breakdown across every device.`}
             </p>
-            <div className="mt-4">
-              <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>
-            </div>
+            {!isPending && (
+              <div className="mt-4">
+                <PrimaryButton onClick={exitGuest}>Create a free account</PrimaryButton>
+              </div>
+            )}
           </div>
         </Screen>
       </>
@@ -1067,8 +1079,95 @@ function InstallStep({ n, children }) {
 /* ===========================================================================
    PROFILE
    =========================================================================== */
-export function ProfileScreen({ theme, toggleTheme }) {
-  const { profile, displayName, subscription, signOut, mode, isGuest, exitGuest } = useAuth();
+/* The admin's way in, with a count of registrations since they last looked. */
+function AdminCard({ go }) {
+  const [fresh, setFresh] = useState(null);
+  React.useEffect(() => {
+    if (!HAS_SUPABASE) return;
+    let since = 0;
+    try { since = Number(localStorage.getItem("pdt-admin-last-seen")) || 0; } catch { /* ignore */ }
+    supabase.from("profiles").select("id", { count: "exact", head: true })
+      .gt("created_at", new Date(since).toISOString())
+      .then(({ count }) => setFresh(count ?? null), () => {});
+  }, []);
+  return (
+    <button
+      onClick={() => go({ screen: "admin" })}
+      className="mt-4 w-full text-left bg-slate-900 text-white rounded-2xl p-4 flex items-center gap-3 active:scale-[0.99] transition"
+    >
+      <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
+        <Users size={20} className="text-slate-900" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-bold">Admin</p>
+        <p className="text-xs text-white/60">Users, approvals, progress</p>
+      </div>
+      {fresh > 0 && (
+        <span className="text-xs font-black px-2 py-1 rounded-full bg-emerald-500 text-slate-900 shrink-0">
+          {fresh} new
+        </span>
+      )}
+      <ChevronRight size={18} className="text-white/50 shrink-0" />
+    </button>
+  );
+}
+
+/* Deleting your own account: two taps, says exactly what goes. */
+function DeleteAccountCard() {
+  const { deleteAccount } = useAuth();
+  const { resetAll } = useProgress();
+  const [step, setStep] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(null);
+
+  async function go() {
+    setBusy(true);
+    setErr(null);
+    const r = await deleteAccount();
+    if (!r.ok) { setErr(r.error || "Couldn't delete the account. Please try again."); setBusy(false); return; }
+    await resetAll();   // clear what's left on this device
+  }
+
+  return (
+    <SettingsGroup title="Account">
+      <div className="px-4 py-4">
+        <div className="flex items-center gap-3">
+          <Trash2 size={18} className="text-red-500 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-slate-900 dark:text-white">Delete my account</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Removes your login, profile and all saved progress
+            </p>
+          </div>
+        </div>
+        {step === 0 ? (
+          <button onClick={() => setStep(1)} className="mt-3.5 w-full rounded-xl border border-red-300 dark:border-red-900 text-red-600 dark:text-red-400 font-bold py-3">
+            Delete my account
+          </button>
+        ) : (
+          <div className="mt-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3.5">
+            <p className="text-sm text-red-700 dark:text-red-300 leading-relaxed">
+              This permanently deletes your account and every score, mock result and
+              lesson you've completed. It can't be undone.
+            </p>
+            {err && <p className="mt-2 text-sm font-semibold text-red-700 dark:text-red-300">{err}</p>}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button onClick={() => setStep(0)} disabled={busy} className="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold py-2.5 text-slate-700 dark:text-slate-200">
+                Keep it
+              </button>
+              <button onClick={go} disabled={busy} className="rounded-xl bg-red-600 text-white font-bold py-2.5 disabled:opacity-60">
+                {busy ? "Deleting…" : "Delete forever"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </SettingsGroup>
+  );
+}
+
+export function ProfileScreen({ theme, toggleTheme, go }) {
+  const { profile, displayName, subscription, signOut, mode, isGuest, exitGuest, isAdmin, isPending, isBlocked } = useAuth();
   const { resetAll, overall } = useProgress();
   const { sizeId, setSizeId, sizes } = useTextSize();
 
@@ -1136,6 +1235,18 @@ export function ProfileScreen({ theme, toggleTheme }) {
             )}
           </div>
         )}
+
+        {(isPending || isBlocked) && (
+          <div className={`mt-4 rounded-2xl p-4 border text-sm leading-relaxed ${isBlocked
+            ? "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300"
+            : "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"}`}>
+            {isBlocked
+              ? "This account is blocked. You can still sign out or delete the account here."
+              : "Your account is waiting for approval. Book 1, Section 1 and the flashcards are open meanwhile."}
+          </div>
+        )}
+
+        {isAdmin && go && <AdminCard go={go} />}
 
         <InstallCard />
 
@@ -1314,6 +1425,8 @@ export function ProfileScreen({ theme, toggleTheme }) {
             )}
           </div>
         </SettingsGroup>
+
+        {!isGuest && <DeleteAccountCard />}
 
         {!isGuest && (
           <div className="mt-4">

@@ -24,7 +24,7 @@
 */
 
 import React, {
-  createContext, useContext, useState, useEffect, useCallback, useMemo,
+  createContext, useContext, useState, useEffect, useCallback, useMemo, useRef,
 } from "react";
 import { supabase, HAS_SUPABASE } from "./supabaseClient";
 
@@ -160,6 +160,47 @@ export function AuthProvider({ children }) {
       sub?.subscription?.unsubscribe?.();
     };
   }, [loadProfile]);
+
+  /* ---- once per session: last seen, and the one-time "new registration"
+     email to the owner (the server makes sure it's only ever sent once) ---- */
+  const touched = useRef(null);
+  useEffect(() => {
+    if (!HAS_SUPABASE || !user || !profile || touched.current === user.id) return;
+    touched.current = user.id;
+    supabase.from("profiles").update({ last_seen_at: new Date().toISOString() }).eq("id", user.id)
+      .then(() => {}, () => {});
+    if (profile.admin_notified === false) {
+      supabase.auth.getSession().then(({ data }) => {
+        const token = data?.session?.access_token;
+        if (!token) return;
+        fetch("/api/notify-signup", { method: "POST", headers: { Authorization: `Bearer ${token}` } })
+          .catch(() => {});
+      });
+    }
+  }, [user, profile]);
+
+  const refreshProfile = useCallback(() => loadProfile(user), [loadProfile, user]);
+
+  /* ---- delete my account ----
+     Removes the login, profile and synced progress in one step on the
+     server (delete_my_account cascades), then signs out. */
+  const deleteAccount = useCallback(async () => {
+    if (!HAS_SUPABASE) {
+      const users = readLocal(LOCAL_USERS_KEY, {});
+      if (user?.email) delete users[user.email.trim().toLowerCase()];
+      writeLocal(LOCAL_USERS_KEY, users);
+      writeLocal(LOCAL_SESSION_KEY, null);
+      setUser(null);
+      setProfile(null);
+      return { ok: true };
+    }
+    const { error: err } = await supabase.rpc("delete_my_account");
+    if (err) return { ok: false, error: err.message };
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+    return { ok: true };
+  }, [user]);
 
   /* ---- sign up ---- */
   const signUp = useCallback(async ({ email, password, fullName }) => {
@@ -301,9 +342,23 @@ export function AuthProvider({ children }) {
     };
   }, [profile]);
 
+  /* Account standing. Missing columns (SQL not run yet) mean an ordinary,
+     active account — nobody is locked out by a half-finished setup. */
+  const role = profile?.role === "admin" ? "admin" : "user";
+  const status = !user ? "guest" : (profile?.status || "active");
+
   const value = useMemo(() => ({
     user,
     profile,
+    role,
+    status,
+    isAdmin: Boolean(user) && role === "admin",
+    isBlocked: status === "blocked",
+    isPending: status === "pending",
+    /* Guests and accounts awaiting approval see the open content only. */
+    isLimited: (guest && !user) || status === "pending",
+    refreshProfile,
+    deleteAccount,
     loading,
     error,
     setError,
@@ -325,8 +380,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     continueAsGuest,
     exitGuest,
-  }), [user, profile, loading, error, subscription, guest, signUp, signIn,
-       signOut, resetPassword, continueAsGuest, exitGuest]);
+  }), [user, profile, role, status, loading, error, subscription, guest, signUp, signIn,
+       signOut, resetPassword, continueAsGuest, exitGuest, refreshProfile, deleteAccount]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

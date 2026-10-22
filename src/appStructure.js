@@ -261,6 +261,13 @@ export const DECK_BY_ID = Object.fromEntries(DECKS.map(d => [d.id, d]));
    --------------------------------------------------------------------------- */
 export const GUEST_SECTION_ID = "adi.sec.procedure";
 
+/* Interactive Learning: Book 1 is open to everyone; Books 2–4 need an
+   account (an approved one, when approval is switched on). */
+export const OPEN_BOOK_ID = "b1";
+export function bookLockedFor(bookId, isLimited) {
+  return Boolean(isLimited) && bookId !== OPEN_BOOK_ID;
+}
+
 export function lockedForGuest(id, isGuest) {
   if (!isGuest) return false;
   if (id === GUEST_SECTION_ID) return false;

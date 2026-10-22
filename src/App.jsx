@@ -27,7 +27,8 @@ import InstallPrompt from "./InstallPrompt";
 import { scrollAppToTop } from "./appScroll";
 import FlashcardPlayer from "./FlashcardPlayer";
 import { SECTION_BY_ID, buildMockTest } from "./adiSections";
-import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest } from "./appStructure";
+import { MOCKS, MOCK_BY_ID, DECK_BY_ID, PASS_MARK, lockedForGuest, bookLockedFor } from "./appStructure";
+import AdminScreen from "./AdminScreen";
 import { getDeck } from "./contentSources";
 import { EmptyState } from "./ui";
 import { LearnHome, BookScreen, UnitScreen, LearnPlayer, GlossaryScreen } from "./learn/LearnScreens";
@@ -211,7 +212,13 @@ function isFullScreen(view) {
    home -> deck. There are no nested paths left to walk through.
    =========================================================================== */
 function CurrentScreen({ view, go, back, theme, toggleTheme }) {
-  const { isGuest, exitGuest } = useAuth();
+  const { isLimited, isPending, isBlocked, isAdmin, signOut, exitGuest } = useAuth();
+
+  /* A blocked account keeps Settings (to sign out or delete the account) and
+     nothing else. */
+  if (isBlocked && view.screen !== "profile") {
+    return <BlockedScreen onSignOut={signOut} onSettings={() => go({ screen: "profile" })} />;
+  }
 
   /* A guest can reach a locked section from the Progress tab as well as the
      home screen, so the check lives here too. The home screen's lock is the
@@ -219,8 +226,12 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
   const gated = view.screen === "section" ? view.sectionId
     : view.screen === "mock" ? (view.mockId || MOCKS[0].id)
     : null;
-  if (gated && lockedForGuest(gated, isGuest)) {
-    return <GuestLocked onBack={back} onCreateAccount={exitGuest} />;
+  if (gated && lockedForGuest(gated, isLimited)) {
+    return <GuestLocked onBack={back} onCreateAccount={exitGuest} pending={isPending} />;
+  }
+  /* Interactive Learning: Book 1 is open; Books 2–4 need an account. */
+  if (view.bookId && view.screen?.startsWith("learn") && bookLockedFor(view.bookId, isLimited)) {
+    return <GuestLocked onBack={back} onCreateAccount={exitGuest} pending={isPending} book />;
   }
 
   switch (view.screen) {
@@ -236,7 +247,10 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
       return <ProgressScreen go={go} />;
 
     case "profile":
-      return <ProfileScreen theme={theme} toggleTheme={toggleTheme} />;
+      return <ProfileScreen theme={theme} toggleTheme={toggleTheme} go={go} />;
+
+    case "admin":
+      return isAdmin ? <AdminScreen back={back} /> : <HomeScreen go={go} />;
 
     /* One of the five exam sections — practice its questions. */
     case "section": {
@@ -333,7 +347,32 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
   }
 }
 
-function GuestLocked({ onBack, onCreateAccount }) {
+function BlockedScreen({ onSignOut, onSettings }) {
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6">
+      <div className="max-w-sm text-center">
+        <div className="w-12 h-12 rounded-2xl bg-red-500 flex items-center justify-center mx-auto">
+          <Lock size={22} className="text-white" />
+        </div>
+        <h2 className="mt-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+          Your account is blocked
+        </h2>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+          Access to the app has been switched off for this account. If you think
+          this is a mistake, contact PassDrivingTest.ie.
+        </p>
+        <button onClick={onSignOut} className="mt-5 w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl">
+          Sign out
+        </button>
+        <button onClick={onSettings} className="mt-2 w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2.5">
+          Settings
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GuestLocked({ onBack, onCreateAccount, pending = false, book = false }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6">
       <div className="max-w-sm text-center">
@@ -341,19 +380,23 @@ function GuestLocked({ onBack, onCreateAccount }) {
           <Lock size={22} className="text-white" />
         </div>
         <h2 className="mt-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
-          Create a free account
+          {pending ? "Waiting for approval" : "Create a free account"}
         </h2>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Guests get Section 1 and the flashcards in full. An account opens the
-          other four sections and the mock exam, and keeps everything you've
-          already studied.
+          {pending
+            ? "Your account has been created and is waiting to be approved. Section 1, the flashcards and Book 1 of Interactive Learning are open now."
+            : book
+              ? "Book 1 of Interactive Learning is free for everyone. Create a free account to unlock Books 2, 3 and 4 — and keep everything you've already studied."
+              : "Guests get Section 1 and the flashcards in full. An account opens the other four sections and the mock exam, and keeps everything you've already studied."}
         </p>
-        <button
-          onClick={onCreateAccount}
-          className="mt-5 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl"
-        >
-          Create a free account
-        </button>
+        {!pending && (
+          <button
+            onClick={onCreateAccount}
+            className="mt-5 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 rounded-xl"
+          >
+            Create a free account
+          </button>
+        )}
         <button
           onClick={onBack}
           className="mt-2 w-full text-sm font-semibold text-slate-500 dark:text-slate-400 py-2.5"

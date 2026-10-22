@@ -77,6 +77,18 @@ export default [
     src: P("3.2", 13, "Essential Driver Training"),
   },
   {
+    id: "edt-order", unit: "3.2", term: "EDT lesson order", visual: "learner-path",
+    meaning: "Lessons 1 to 8 are taken in sequence; lessons 9 to 12 follow lesson 8 in any order.",
+    key: "Move on only when the instructor is satisfied the lesson's standard is met.",
+    src: P("3.2", 13, "EDT — S.I. 173/2011"),
+  },
+  {
+    id: "reduced-edt", unit: "3.2", term: "Reduced EDT", visual: "learner-path",
+    meaning: "Six lessons — 1, 5, 6, 7, 9 and 10 — for a full licence holder from a non-exchange country (held 2+ years).",
+    key: "1, 5, 6, 7 in sequence, then 9 and 10 in either order.",
+    src: P("3.2", 13, "Reduced EDT — S.I. 9/2019"),
+  },
+  {
     id: "sponsor", unit: "3.2", term: "Sponsor", visual: "plates",
     meaning: "A qualified driver who supervises practice outside lessons.",
     key: "Tracks practice in the logbook.",

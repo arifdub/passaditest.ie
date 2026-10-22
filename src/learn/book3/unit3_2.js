@@ -14,6 +14,12 @@
     authority", key a): the unit says to visit a doctor before applying,
     so "discussed with your doctor" (b) is just as defensible.
 
+  Added from the regulations (not in the book): the order EDT lessons must
+  be taken in (S.I. 173/2011: lessons 1–8 in sequence, 9–12 after lesson 8
+  in any order; the instructor must be satisfied before the next lesson),
+  and reduced EDT = six lessons (1, 5, 6, 7, 9, 10; S.I. 9/2019 excuses
+  2, 3, 4, 8, 11, 12). The book's list of reduced sessions left out lesson 9.
+
   Fees, ages and procedures change: the unit itself advises checking the
   NDLS and RSA for updates, and the app shows the rules as the book gives
   them.
@@ -63,8 +69,8 @@ export const CONCEPTS = {
   },
   "edt": {
     title: "Essential Driver Training",
-    text: "All first learner permit holders for cars must complete EDT with an ADI: 12 one-hour sessions following a set syllabus, recorded in the learner's logbook with the ADI's stamp and signature, and uploaded to the RSA portal. A sponsor — a qualified driver — supervises practice outside lessons. Not every ADI lesson is an EDT lesson: make it clear. Drivers with a full B licence from a country without a licence exchange agreement do a reduced EDT (sessions 1, 5, 6, 7 and 10) and needn't wait 6 months.",
-    src: P(13, "Essential Driver Training; Sponsor; Reduced EDT"),
+    text: "All first learner permit holders for cars must complete EDT with an ADI: 12 one-hour sessions following a set syllabus, recorded in the learner's logbook with the ADI's stamp and signature, and uploaded to the RSA portal. A sponsor — a qualified driver — supervises practice outside lessons. Not every ADI lesson is an EDT lesson: make it clear. Drivers with a full B licence from a country without a licence exchange agreement (held for at least 2 years) can do a reduced EDT of six lessons — 1, 5, 6, 7, 9 and 10 — and can apply to be excused the six-month wait. Order matters: lessons 1 to 8 must be taken in sequence, each only when the instructor is satisfied the pupil has met its standard; lessons 9 to 12 come after lesson 8 and can be taken in any order. Reduced EDT follows the same rule: 1, 5, 6 and 7 in sequence, then 9 and 10 in either order.",
+    src: P(13, "Essential Driver Training; Sponsor; Reduced EDT; S.I. 173/2011 and S.I. 9/2019"),
   },
   "insurance": {
     title: "Motor insurance",
@@ -197,11 +203,30 @@ const learn = {
         "Essential Driver Training with an ADI for all first car permits",
         "Set syllabus, recorded in the logbook — stamped, signed, uploaded",
         "A sponsor supervises practice between lessons",
-        "Reduced EDT (5 sessions) for some foreign licence holders",
+        "Reduced EDT (6 sessions: 1, 5, 6, 7, 9, 10) for some foreign licence holders",
       ],
       callout: "Not every ADI lesson is an EDT lesson — tell your pupils which they're booking.",
       concept: "edt",
       src: P(13, "Essential Driver Training; Sponsor; Reduced EDT"),
+    },
+    {
+      icon: "🔢",
+      kicker: "EDT order",
+      title: "Lessons 1–8 in sequence",
+      ask: {
+        prompt: "Can a pupil take EDT lesson 3 before lesson 2?",
+        options: ["Yes, any order is fine", "No — lessons 1 to 8 must be taken in sequence", "Only with the RSA's permission"],
+        answer: 1,
+      },
+      list: [
+        "Lessons 1 to 8: strictly in order, 1 → 2 → 3 … → 8",
+        "Move on only when the instructor is satisfied the standard is met",
+        "Lessons 9 to 12: after lesson 8, in any order",
+        "Reduced EDT: 1, 5, 6, 7 in order, then 9 and 10 (either order)",
+      ],
+      callout: "Lessons build on each other — a pupil who isn't ready repeats the lesson rather than skipping ahead.",
+      concept: "edt",
+      src: P(13, "EDT — S.I. 173/2011 Reg. 4 and Schedule; reduced course S.I. 9/2019"),
     },
     {
       icon: "🛡️",
@@ -290,6 +315,13 @@ const recall = {
       before: "Essential Driver Training is", after: "one-hour sessions with an ADI.",
       options: ["12", "6", "10", "20"], answer: "12",
       explain: "Recorded in the logbook and uploaded to the RSA portal.", src: P(13, "Essential Driver Training") },
+    { id: "r9b", type: "truefalse", concept: "edt",
+      statement: "EDT lessons 9 to 12 can be taken in any order, once lesson 8 is done.", answer: true,
+      explain: "Lessons 1 to 8 must be in sequence; 9 to 12 are flexible after that.", src: P(13, "EDT order — S.I. 173/2011") },
+    { id: "r9c", type: "fill", concept: "edt",
+      before: "Reduced EDT is six lessons: 1, 5, 6, 7,", after: ".",
+      options: ["9 and 10", "8 and 12", "2 and 3", "11 and 12"], answer: "9 and 10",
+      explain: "Lessons 2, 3, 4, 8, 11 and 12 are excused.", src: P(13, "Reduced EDT — S.I. 9/2019") },
     { id: "r10", type: "flash", concept: "six-month",
       front: "What is the six-month rule?",
       back: "A first-time permit holder (A, A2, A1, B, AM, W) can't take the driving test until six months after the permit starts.", src: P(12, "The six-month rule") },
@@ -413,6 +445,10 @@ const procedure = {
       prompt: "Becoming a full licence holder — in order.",
       steps: ["Pass the driver theory test", "Apply for a learner permit", "Complete EDT with an ADI", "Wait six months from the permit date", "Pass the driving test", "Display N-plates for 2 years"],
       explain: "With L-plates and a supervisor until the test.", src: P(11, "Driving licence; p.12; p.13") },
+    { id: "p1b", type: "order", concept: "edt",
+      prompt: "Reduced EDT — put the six lessons in order.",
+      steps: ["Lesson 1", "Lesson 5", "Lesson 6", "Lesson 7", "Lessons 9 and 10 (either order)"],
+      explain: "1, 5, 6 and 7 keep their sequence; 9 and 10 come after and may be taken in either order.", src: P(13, "Reduced EDT — S.I. 9/2019") },
     { id: "p2", type: "order", concept: "nct",
       prompt: "Your car fails the NCT for minor faults — in order.",
       steps: ["Arrange the repair", "Book the re-test", "Have the repairs done", "Have the vehicle re-tested"],
@@ -470,6 +506,16 @@ const scenarios = {
       prompt: "What should you do?",
       options: ["Let them think so", "Make it clear which lessons are EDT sessions", "Count every lesson as EDT", "Skip the logbook"], answer: 1,
       explain: "Not all ADI lessons are EDT lessons — pupils should know what they're booking.", src: P(13, "What is a sponsor") },
+    { id: "s8", type: "choice", label: "Scenario", concept: "edt",
+      scene: "🔀 A pupil has done EDT lesson 2 and asks to do lesson 4 next because it's on a road they like.",
+      prompt: "What do you say?",
+      options: ["Fine — any order", "Lesson 3 comes next: lessons 1 to 8 are taken in sequence", "Skip to lesson 9", "Do 3 and 4 together"], answer: 1,
+      explain: "And only when you're satisfied lesson 2's standard is met.", src: P(13, "EDT order — S.I. 173/2011") },
+    { id: "s9", type: "choice", label: "Scenario", concept: "edt",
+      scene: "🌍 A pupil with a full licence from a non-exchange country, held 5 years, has approval for reduced EDT.",
+      prompt: "Which lessons do they take?",
+      options: ["All 12", "Lessons 1, 5, 6, 7, 9 and 10", "Lessons 1 to 6", "Any six they choose"], answer: 1,
+      explain: "Lesson 1 first; lessons 2, 3, 4, 8, 11 and 12 are excused.", src: P(13, "Reduced EDT — S.I. 9/2019") },
   ],
 };
 

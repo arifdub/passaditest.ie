@@ -396,3 +396,13 @@ Every non-bare `<Visual>` is a button that opens `ZoomViewer` (full screen,
 pinch, double-tap, + / −, up to 500%). The app viewport sets
 maximum-scale=1, so browser pinch-zoom is off and this does it in-app.
 Picture answer options (`bare`) are not zoomable — tapping them answers.
+
+## EDT lesson order (added October 2026, from a user's exam)
+
+Unit 3.2 and the Pedagogy MCQ bank (adiBankTeaching.js) now cover the order
+EDT lessons are taken in, from the regulations rather than the book:
+S.I. 173/2011 — lessons 1–8 in sequence, each only when the instructor is
+satisfied; 9–12 after lesson 8 in any order. S.I. 9/2019 — reduced EDT is
+lessons 1, 5, 6, 7, 9, 10 (excusing 2, 3, 4, 8, 11, 12) for a non-exchange
+foreign licence held 2+ years. The book's reduced list ("1, 5, 6, 7 and 10")
+omitted lesson 9 and was corrected.

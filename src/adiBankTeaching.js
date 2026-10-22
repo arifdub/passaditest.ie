@@ -22,6 +22,9 @@
 
   ACCURACY — checked September 2026
   · EDT is 12 mandatory lessons for category B learner permit holders.
+    Lessons 1–8 in sequence; 9–12 after lesson 8 in any order (S.I.
+    173/2011). Reduced EDT is lessons 1, 5, 6, 7, 9, 10 for a non-exchange
+    foreign licence held 2+ years (S.I. 9/2019; checked October 2026).
   · A learner permit holder must be accompanied at all times by someone who
     has held a full licence in that category for at least two years.
   · Stage 3 is two 30-minute phases: a beginner, then a driving-test-level
@@ -935,6 +938,86 @@ const ADI_BANK_TEACHING = [
         ],
         correct: 2,
         explain: "Well-meaning sponsors often teach a different method and undo the lesson. A short brief on what to work on, and how, turns practice from a risk into an accelerator.",
+      },
+
+      /* ---- EDT lesson order and reduced EDT (S.I. 173/2011, S.I. 9/2019) ---- */
+      {
+        q: "EDT lessons 1 to 8 for a category B learner must be taken:",
+        options: [
+          "In any order the instructor and pupil agree",
+          "In sequence, from lesson 1 through to lesson 8",
+          "In any order, as long as lesson 1 comes first",
+          "In reverse order, starting with the hardest",
+        ],
+        correct: 1,
+        explain: "The regulations set lessons 1 to 8 in sequence — each builds on the one before. Only lessons 9 to 12 are flexible.",
+      },
+      {
+        q: "Once a pupil has completed EDT lesson 8, lessons 9 to 12:",
+        options: [
+          "Must also be taken strictly in number order",
+          "Can be skipped if the pupil is confident",
+          "Can be taken in any order",
+          "Must all be taken on the same day",
+        ],
+        correct: 2,
+        explain: "Lessons 9 to 12 may only start after lesson 8, but among themselves they can be taken in any order.",
+      },
+      {
+        q: "Your pupil has finished EDT lesson 2 and asks to do lesson 4 next, then come back to lesson 3. You should:",
+        options: [
+          "Agree, as long as all 12 are done before the test",
+          "Agree, but note it in the logbook",
+          "Ask the RSA for permission to change the order",
+          "Explain that lesson 3 comes next — lessons 1 to 8 are taken in sequence",
+        ],
+        correct: 3,
+        explain: "Changing the order of lessons 1 to 8 isn't allowed. Reordering would also break the progression the syllabus is built on.",
+      },
+      {
+        q: "Before moving a pupil on to the next of EDT lessons 1 to 8, the instructor must be:",
+        options: [
+          "Satisfied the pupil has shown the knowledge and ability that lesson requires",
+          "Paid in full for the lesson",
+          "Told by the sponsor that the pupil has practised",
+          "Sure at least a week has passed since the last lesson",
+        ],
+        correct: 0,
+        explain: "A pupil who hasn't reached the lesson's standard repeats or continues it rather than moving ahead — the logbook entry certifies that standard.",
+      },
+      {
+        q: "How many lessons make up reduced EDT for an eligible foreign licence holder?",
+        options: ["4", "6", "8", "12"],
+        correct: 1,
+        explain: "Six instead of twelve: lessons 1, 5, 6, 7, 9 and 10.",
+      },
+      {
+        q: "Under reduced EDT, which lessons is the pupil excused from?",
+        options: [
+          "Lessons 2, 3, 4, 8, 11 and 12",
+          "Lessons 1 to 6",
+          "Lessons 7 to 12",
+          "Any six the instructor chooses",
+        ],
+        correct: 0,
+        explain: "The pupil takes 1, 5, 6, 7, 9 and 10 — the excused lessons cover the basics an experienced licence holder already has.",
+      },
+      {
+        q: "A reduced EDT pupil is ready to start. The correct order is:",
+        options: [
+          "Any order, since they already drive",
+          "Lessons 9 and 10 first, then 1, 5, 6 and 7",
+          "Lesson 1, then 5, 6 and 7 in sequence, then 9 and 10 in either order",
+          "Lessons 5, 6 and 7 first, then lesson 1",
+        ],
+        correct: 2,
+        explain: "The same rule as full EDT applies: the lessons from 1 to 8 are in sequence, and those from 9 to 12 come after them in any order.",
+      },
+      {
+        q: "Reduced EDT is open to a learner who holds a full car licence from a country without a licence exchange agreement with Ireland, held for at least:",
+        options: ["6 months", "1 year", "2 years", "5 years"],
+        correct: 2,
+        explain: "At least two years. They apply to the NDLS with the original licence and a letter of entitlement, and can also ask to be excused the six-month wait before the test.",
       },
 
       /* ---- Stage 3 and instructional assessment ---- */

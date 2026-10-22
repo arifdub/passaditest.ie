@@ -9,7 +9,7 @@
 
   Home screen, in order:
     · the five exam sections, each with its own progress
-    · the mock test, 100 questions across all five
+    · the mock test, 105 questions across all five
     · flashcards, kept separate as study material rather than testing
 
   The sections themselves are defined in adiSections.js, which is where the
@@ -19,7 +19,7 @@
 
 import {
   ADI_SECTIONS, SECTION_BY_ID, MOCK_LENGTH, MOCK_MINUTES,
-  MOCK_WEIGHTS, TOTAL_QUESTIONS, MOCK_CAPACITY,
+  MOCK_WEIGHTS, MOCK_SECTION_MINUTES, TOTAL_QUESTIONS, MOCK_CAPACITY,
 } from "./adiSections";
 
 /* ---------------------------------------------------------------------------
@@ -30,7 +30,7 @@ import {
    no section — and the highest of the five, so the fallback is never the
    lenient option.
    --------------------------------------------------------------------------- */
-export const PASS_MARK = 75;
+export const PASS_MARK = 72;
 
 export function passMarkFor(sectionId) {
   return SECTION_BY_ID[sectionId]?.passMark ?? PASS_MARK;
@@ -38,21 +38,22 @@ export function passMarkFor(sectionId) {
 
 export {
   ADI_SECTIONS, SECTION_BY_ID, MOCK_LENGTH, MOCK_MINUTES,
-  TOTAL_QUESTIONS, MOCK_CAPACITY,
+  MOCK_WEIGHTS, MOCK_SECTION_MINUTES, TOTAL_QUESTIONS, MOCK_CAPACITY,
 };
 
 /* ---------------------------------------------------------------------------
    MOCK TEST
 
-   Set up to mirror the real paper: 100 questions, 20 per section, 90 minutes
-   on a countdown, and a result that grades each section separately.
+   Set up to mirror the real paper: five sections, each on its own clock
+   (25 questions in 25 minutes for Road Safety, 20 in 20 for the rest), and a
+   result, shown only at the very end, that grades each section separately.
    --------------------------------------------------------------------------- */
 export const MOCKS = [
   {
     id: "adi.mock",          // unchanged, so existing scores stay attached
     paper: 1,
     label: "Mock Test 1",
-    blurb: `Exam conditions — ${MOCK_LENGTH} questions, ${MOCK_MINUTES} minutes, every section must pass.`,
+    blurb: `Exam conditions — ${MOCK_LENGTH} questions in five timed sections, every section must pass.`,
     questionCount: MOCK_LENGTH,
     minutes: MOCK_MINUTES,
   },

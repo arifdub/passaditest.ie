@@ -139,9 +139,9 @@ const CATEGORIES = [
       },
       {
         q: "How long is the ADI Stage 1 theory test, and how many questions does it contain?",
-        options: ["60 minutes, 60 questions", "90 minutes, 100 questions", "120 minutes, 80 questions", "45 minutes, 50 questions"],
+        options: ["60 minutes, 60 questions", "105 questions over 105 minutes, in five separately timed sections", "120 minutes, 80 questions", "45 minutes, 50 questions"],
         correct: 1,
-        explain: "The Stage 1 theory test is 90 minutes (plus 15 minutes' familiarisation beforehand) and consists of 100 multiple-choice questions."
+        explain: "The Stage 1 theory test has 105 multiple-choice questions in five sections, each with its own clock: 25 questions in 25 minutes for Road Safety, and 20 questions in 20 minutes for each of the other four — 105 minutes in all."
       },
       {
         q: "What is the current fee for sitting the ADI Stage 1 theory test?",

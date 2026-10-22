@@ -118,7 +118,7 @@ export default function AuthScreen() {
               <Feature icon={ListChecks} title={`${TOTAL_QUESTIONS}+ questions`}
                        body="Across all five exam sections" />
               <Feature icon={Timer} title="Mock tests"
-                       body="100 questions, timed, like the real paper" />
+                       body="105 questions in five timed sections, like the real paper" />
               <Feature icon={Layers} title="Flashcards"
                        body="Rules of the Road, road signs, ADI topics" />
               <Feature icon={TrendingUp} title="Progress tracking"

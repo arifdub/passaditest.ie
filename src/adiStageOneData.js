@@ -18,8 +18,8 @@
     pedagogy    WB4  communication, lesson structure, learning theory,
                      Q&A technique, fault assessment
 
-  ACCURACY — checked September 2026. Stage 1 is computer-based, 100 questions
-  in 90 minutes, sat through Prometric. Sections carry their own pass marks,
+  ACCURACY — checked September 2026. Stage 1 is computer-based, sat through Prometric.
+  October 2026: 105 questions in five separately timed sections. Sections carry their own pass marks,
   so a good overall score with one weak section is still a fail. Attempts are
   unlimited, but all three stages must be completed within two years of
   passing the theory test. Verify fees and pass marks at rsa.ie.

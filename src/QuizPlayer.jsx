@@ -115,7 +115,7 @@ function shuffle(arr) {
   return out;
 }
 
-function formatClock(seconds) {
+export function formatClock(seconds) {
   const safe = Math.max(0, Math.floor(seconds));
   const m = Math.floor(safe / 60);
   const s = safe % 60;
@@ -959,7 +959,7 @@ function Celebration({ streak, onDone }) {
 /* ===========================================================================
    RESULT
    =========================================================================== */
-function QuizResult({ module, result, onRetry, onExit }) {
+export function QuizResult({ module, result, onRetry, onExit }) {
   const [reviewing, setReviewing] = useState(false);
   const [filter, setFilter] = useState(null);   // section id, in a mock review
 
@@ -1067,14 +1067,15 @@ function QuizResult({ module, result, onRetry, onExit }) {
       <ScreenHeader title={module.label} subtitle={module.sectionLabel} />
       <Screen>
         {/* Ran out of time. Said before the score, because it explains it. */}
-        {result.timedOut && (
+        {(result.timedOut || result.timedOutSections?.length > 0) && (
           <div className="mb-4 flex gap-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-2xl p-4">
             <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-bold text-slate-900 dark:text-white text-sm">Time ran out</p>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                The paper submitted itself at zero, as it would in the exam. Anything
-                you hadn't answered is marked wrong.
+                {result.timedOutSections?.length
+                  ? `The clock reached zero in ${result.timedOutSections.join(", ")}, and the next section started, as it would in the exam. Anything you hadn't answered is marked wrong.`
+                  : "The paper submitted itself at zero, as it would in the exam. Anything you hadn't answered is marked wrong."}
               </p>
             </div>
           </div>

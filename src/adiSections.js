@@ -145,36 +145,29 @@ const pick = (bank, id) => bank.find(c => c.id === id)?.questions || [];
 /* ---------------------------------------------------------------------------
    SECTION PASS MARKS  —  read this before changing a number below
 
-   The real Stage 1 paper is not marked as one score out of 100. Each section
-   carries its own pass mark and every one of them must be reached. 90 out of
-   100 overall is still a fail if Teaching Ability came in under its mark. That
-   is the single most important thing this app has to model, because it changes
-   how a candidate should revise: the weakest section decides the result, not
-   the average.
+   The real Stage 1 paper is not marked as one score. Each section carries its
+   own pass mark and every one of them must be reached: a strong overall score
+   with one weak section is still a fail. The weakest section decides the
+   result, not the average.
 
-   Where the numbers come from, and how far to trust them:
+   The shape and marks below are as reported by a candidate who sat the exam
+   (October 2026):
 
-     · 100 questions in 90 minutes, five sections, every section must pass
-       — agreed by both Irish training providers below, and consistent with
-       the RSA's own description of the syllabus.
+         Section                     Questions  Minutes  Pass mark
+         1 Driver testing procedure      20        20       60%
+         2 Road safety knowledge         25        25       72%
+         3 Teaching ability              20        20       60%
+         4 Vehicle maintenance           20        20       60%
+         5 Category B & BE               20        20       60%
+                                        105       105
 
-     · The per-section percentages are NOT published by the RSA. They come
-       from two Irish ADI training providers who quote them:
+   Each section has its own clock; when it runs out the next section starts.
 
-         Section                 Leinster   NUI      used here
-         Driver testing procs.      75%      70%        75%
-         Road safety knowledge      72%      72%        72%
-         Teaching ability           60%      60%        60%
-         Vehicle maintenance        70%      70%        70%
-         Category-specific          70%      70%        70%
-
-       Four of the five agree exactly. The one disagreement is taken at the
-       stricter figure — a candidate over-prepared for Section 1 loses nothing,
-       one under-prepared loses the exam.
-
-   If the RSA publishes official figures, change them here. Everything
-   downstream — the mock result screen, the section screens, the progress
-   page — reads these values rather than holding its own copy.
+   These replace figures quoted earlier by two Irish training providers
+   (75 / 72 / 60 / 70 / 70 over 100 questions in 90 minutes). The RSA does not
+   publish the marks, so if it ever does, change them here. Everything
+   downstream — the mock, the section screens, the progress page — reads these
+   values rather than holding its own copy.
    --------------------------------------------------------------------------- */
 
 const SECTION_DEFS = [
@@ -184,7 +177,7 @@ const SECTION_DEFS = [
     label: "Driving Test Procedure & Documentation",
     short: "Test Procedure",
     examLabel: "Driver Testing Procedures",
-    passMark: 75,          // see SECTION PASS MARKS note above
+    passMark: 60,          // see SECTION PASS MARKS note above
     blurb: "The driving test, fault marking, forms, licensing and ADI regulation.",
     accent: "emerald",
     sources: [
@@ -244,7 +237,7 @@ const SECTION_DEFS = [
     label: "Basic Mechanics & Vehicle Maintenance",
     short: "Mechanics",
     examLabel: "Vehicle Maintenance",
-    passMark: 70,
+    passMark: 60,
     blurb: "Engine, transmission, brakes, tyres, electrics and routine maintenance.",
     accent: "emerald",
     sources: [
@@ -260,7 +253,7 @@ const SECTION_DEFS = [
     label: "Category B & BE Towing",
     short: "Category B & BE",
     examLabel: "Category-Specific Knowledge",
-    passMark: 70,
+    passMark: 60,
     blurb: "Licence categories, weights, coupling, stability and towing rules.",
     accent: "emerald",
     sources: [
@@ -306,34 +299,34 @@ export const QUESTION_BY_QID = Object.fromEntries(ALL_QUESTIONS.map(q => [q.qid,
 /* ---------------------------------------------------------------------------
    MOCK TEST
 
-   100 questions in 90 minutes, the shape of the real Stage 1 paper.
+   105 questions over five separately timed sections, the shape of the real
+   Stage 1 paper (see SECTION PASS MARKS above): 25 Road Safety questions in
+   25 minutes, and 20 questions in 20 minutes for each of the other four.
 
-   Twenty per section. The real paper is described as 80 core questions across
-   four sections plus 20 category-specific ones, which is an even split, and an
-   even split is also what the per-section pass marks require to be meaningful:
-   with 10 questions in a section, 70% and 80% are the same thing, because
-   there is no score between 7 and 8 out of 10. At 20 questions each mark lands
-   on a real boundary — 72% of 20 is 14.4, so 15 right passes and 14 fails.
-
-   This replaced an earlier 25/30/20/15/10 split of my own estimating. Drawing
-   in proportion to bank size was never an option: that gave Road Safety 54 of
-   the 100 simply because it absorbs all 240 road sign questions, which trains
-   a candidate for the wrong exam.
+   Drawing in proportion to bank size was never an option: that gave Road
+   Safety over half the paper simply because it absorbs all the road sign
+   questions, which trains a candidate for the wrong exam.
    --------------------------------------------------------------------------- */
-export const MOCK_LENGTH = 100;
-
-/* The real exam is 90 minutes. Prometric also allow a 15-minute familiarisation
-   period beforehand which is not part of the timed paper, so it isn't modelled
-   here — this clock is the 90 that counts. */
-export const MOCK_MINUTES = 90;
-
 export const MOCK_WEIGHTS = {
   "adi.sec.procedure": 20,
-  "adi.sec.safety":    20,
+  "adi.sec.safety":    25,
   "adi.sec.pedagogy":  20,
   "adi.sec.mechanics": 20,
   "adi.sec.categoryb": 20,
 };
+
+/* Each section has its own clock — a minute a question. Time left over in
+   one section does not carry into the next. */
+export const MOCK_SECTION_MINUTES = {
+  "adi.sec.procedure": 20,
+  "adi.sec.safety":    25,
+  "adi.sec.pedagogy":  20,
+  "adi.sec.mechanics": 20,
+  "adi.sec.categoryb": 20,
+};
+
+export const MOCK_LENGTH = Object.values(MOCK_WEIGHTS).reduce((a, b) => a + b, 0);       // 105
+export const MOCK_MINUTES = Object.values(MOCK_SECTION_MINUTES).reduce((a, b) => a + b, 0); // 105
 
 function shuffle(arr, rand) {
   const out = [...arr];
@@ -347,9 +340,9 @@ function shuffle(arr, rand) {
 /* ---------------------------------------------------------------------------
    NAMED MOCK PAPERS
 
-   Each mock is a fixed set of 100 questions, not a fresh random draw. That is
+   Each mock is a fixed set of 105 questions, not a fresh random draw. That is
    what makes it a paper you can sit, score, and come back to — two attempts at
-   Mock 2 are comparable, because they are the same 100 questions.
+   Mock 2 are comparable, because they are the same 105 questions.
 
    The papers do not share questions. Each section's pool is shuffled once with
    a fixed seed, then sliced: Mock 1 takes the first 25 procedure questions,
@@ -414,12 +407,12 @@ function questionsForPaper(index) {
 
 /* Public: the questions for a paper.
 
-   Sections run in order — all 20 Test Procedure questions, then all 20 Road
+   Sections run in order — all 20 Test Procedure questions, then all 25 Road
    Safety, and so on — because the real paper is sectioned and a candidate
    should feel that. Inside a section the order is reshuffled on every attempt,
    so nobody learns an answer by its position.
 
-   Sitting the same paper twice is therefore the same 100 questions in a
+   Sitting the same paper twice is therefore the same 105 questions in a
    different order, which is what makes two scores comparable. */
 export function buildMockTest(paperNumber = 1, length = MOCK_LENGTH) {
   const index = Math.max(0, (Number(paperNumber) || 1) - 1);

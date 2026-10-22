@@ -23,6 +23,7 @@ import { TextSizeProvider } from "./textSize";
 import AuthScreen from "./AuthScreen";
 import { HomeScreen, MockHubScreen, ProgressScreen, ProfileScreen } from "./screens";
 import QuizPlayer from "./QuizPlayer";
+import MockExamPlayer from "./MockExamPlayer";
 import InstallPrompt from "./InstallPrompt";
 import { scrollAppToTop } from "./appScroll";
 import FlashcardPlayer from "./FlashcardPlayer";
@@ -36,7 +37,7 @@ import { LearnHome, BookScreen, UnitScreen, LearnPlayer, GlossaryScreen } from "
 /* The tab ids double as screen ids, so a tab's id must not collide with a
    screen that means something else. "mocks" (the list) is deliberately not
    "mock" (a paper being sat) — one tap of the tab would otherwise drop the
-   learner straight into a 90-minute timed exam. */
+   learner straight into a timed exam. */
 const TABS = [
   { id: "home",     label: "Home",      icon: HomeIcon },
   { id: "mocks",    label: "Mock Test", icon: Timer },
@@ -282,14 +283,15 @@ function CurrentScreen({ view, go, back, theme, toggleTheme }) {
       );
     }
 
-    /* A named mock paper. Each is a fixed set of 100 questions with its own
-       score history; the order is reshuffled on every attempt. */
+    /* A named mock paper. Each is a fixed set of 105 questions with its own
+       score history, sat in five separately timed sections; the order inside
+       each section is reshuffled on every attempt. */
     case "mock": {
       const paper = MOCK_BY_ID[view.mockId] || MOCKS[0];
       const questions = buildMockTest(paper.paper, paper.questionCount);
       if (!questions.length) return <NotReady onBack={back} />;
       return (
-        <QuizPlayer
+        <MockExamPlayer
           key={paper.id}
           module={{
             id: paper.id,

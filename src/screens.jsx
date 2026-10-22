@@ -17,7 +17,8 @@ import {
   Sun, Moon, Type, Coffee, ExternalLink, Users,
 } from "lucide-react";
 import {
-  ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, lockedForGuest,
+  ADI_SECTIONS, MOCKS, DECKS, PASS_MARK, MOCK_LENGTH, MOCK_MINUTES, MOCK_WEIGHTS, MOCK_SECTION_MINUTES,
+  lockedForGuest,
 } from "./appStructure";
 import { useAuth } from "./appAuth";
 import { supabase, HAS_SUPABASE } from "./supabaseClient";
@@ -544,7 +545,7 @@ export function MockHubScreen({ go }) {
             <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {isPending
                 ? "Your account has been created and is waiting to be approved. Mock papers open as soon as it is."
-                : `A mock is ${MOCK_LENGTH} questions over ${MOCK_MINUTES} minutes, and it's only worth sitting if the result is still there next week. An account keeps your scores and section breakdown across every device.`}
+                : `A mock is ${MOCK_LENGTH} questions in five timed sections, and it's only worth sitting if the result is still there next week. An account keeps your scores and section breakdown across every device.`}
             </p>
             {!isPending && (
               <div className="mt-4">
@@ -561,7 +562,7 @@ export function MockHubScreen({ go }) {
     <>
       <ScreenHeader
         title="Mock Test"
-        subtitle={`${MOCK_LENGTH} questions · ${MOCK_MINUTES} minutes · five sections`}
+        subtitle={`${MOCK_LENGTH} questions · five timed sections · ${MOCK_MINUTES} minutes`}
       />
       <Screen>
         {/* ---- 1. Where you stand ---- */}
@@ -796,9 +797,9 @@ function ExamConditionsCard() {
     <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
       <h2 className="font-bold text-slate-900 dark:text-white">The real Stage 1 paper</h2>
       <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-        {MOCK_LENGTH} questions in {MOCK_MINUTES} minutes, 20 in each section. Every section
-        carries its own pass mark and you have to reach all five — a strong overall score
-        with one weak section is still a fail.
+        {MOCK_LENGTH} questions in five sections, each on its own clock — {MOCK_MINUTES} minutes
+        in all. Every section carries its own pass mark and you have to reach all five — a
+        strong overall score with one weak section is still a fail.
       </p>
       <div className="mt-4 space-y-1.5">
         {ADI_SECTIONS.map(s => (
@@ -809,7 +810,8 @@ function ExamConditionsCard() {
             <span className="font-bold text-slate-900 dark:text-white shrink-0 tabular-nums">
               {s.passMark ?? PASS_MARK}%
               <span className="ml-1.5 font-semibold text-slate-400">
-                {Math.ceil((s.passMark ?? PASS_MARK) / 5)}/20
+                {Math.ceil(((s.passMark ?? PASS_MARK) / 100) * (MOCK_WEIGHTS[s.id] || 20))}/{MOCK_WEIGHTS[s.id] || 20}
+                {" · "}{MOCK_SECTION_MINUTES[s.id] || 20} min
               </span>
             </span>
           </div>

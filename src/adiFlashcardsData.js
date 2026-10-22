@@ -68,8 +68,8 @@ const RAW_ADI_CARDS = [
   // ---- Category B & BE Towing ----
   { c: "categoryb", q: "What's the maximum vehicle weight under category B?", a: "3.5 tonnes." },
   { c: "categoryb", q: "What is a BE licence?", a: "A category B vehicle combined with a (heavier) trailer." },
-  { c: "categoryb", q: "What's the minimum combined length of vehicle + trailer for a BE test?", a: "4.25 metres." },
-  { c: "categoryb", q: "What's the minimum trailer size for a BE test?", a: "2.4 metres long, 1.2 metres wide." },
+  { c: "categoryb", q: "How long must the towing car be for a BE test?", a: "At least 4.25 metres (or a four-wheel-drive)." },
+  { c: "categoryb", q: "What body must the BE test trailer have?", a: "A permanent closed box at least 2.4 m long, as wide and as high as the car." },
   { c: "categoryb", q: "Who chooses the direction of the reverse manoeuvre in a BE test?", a: "The examiner — it may be left or right." },
   { c: "categoryb", q: "What's the maximum gap allowed between a towing vehicle and a trailer?", a: "4.5 metres." },
   { c: "categoryb", q: "Above what trailer weight are a parking brake, service brake and breakaway brake all required?", a: "750kg Maximum Authorised Mass." },

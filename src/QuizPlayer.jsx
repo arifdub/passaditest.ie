@@ -46,6 +46,7 @@ import {
   ADI_SECTIONS, MOCK_MINUTES,
 } from "./appStructure";
 import { QUESTION_BY_QID } from "./adiSections";
+import QuestionImage, { preloadImages } from "./QuestionImage";
 
 /* ---------------------------------------------------------------------------
    Paused attempts
@@ -611,6 +612,11 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
     return () => clearInterval(t);
   }, [timed, limitSeconds]);
 
+  // The next few pictures load while this question is being read.
+  useEffect(() => {
+    preloadImages(questions.slice(index + 1, index + 6).map(x => x.image));
+  }, [questions, index]);
+
   const q = questions[index];
   const picked = answers[index];
   const hasPicked = picked !== null && picked !== undefined;
@@ -777,11 +783,7 @@ function QuizRun({ session, module, instantFeedback, limitSeconds, onFinish, onP
         )}
 
         {/* Sign questions carry an image — the sign is the question. */}
-        {q.image && (
-          <div className="mb-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex justify-center">
-            <img src={q.image} alt="" className="max-h-36 w-auto object-contain" />
-          </div>
-        )}
+        {q.image && <QuestionImage src={q.image} className="mb-4" />}
 
         {/* rd-lead rather than text-lg: this is the text the Reading size
             setting scales. See textSize.jsx. */}

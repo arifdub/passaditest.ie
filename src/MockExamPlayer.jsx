@@ -42,6 +42,7 @@ import {
 } from "./appStructure";
 import { QUESTION_BY_QID } from "./adiSections";
 import { QuizResult, formatClock } from "./QuizPlayer";
+import QuestionImage, { preloadImages } from "./QuestionImage";
 
 /* ---------------------------------------------------------------------------
    Saved attempts
@@ -504,6 +505,13 @@ function ExamRun({ initial, module, onSave, onLeave, onFinish }) {
     return () => clearInterval(t);
   }, [clockRunning, exam.current]);
 
+  /* Pictures for this section and the next start downloading now, so a sign
+     is already in the cache when its question comes up. */
+  useEffect(() => {
+    const secs = exam.sections.slice(exam.current, exam.current + 2);
+    preloadImages(secs.flatMap(s => s.questions.map(q => q.image)));
+  }, [exam.current, exam.sections.length]);
+
   // A section that closed on time can't leave a dialog hanging over the next.
   useEffect(() => {
     if (!clockRunning) { setModal(null); setFlaggedOnly(false); }
@@ -829,11 +837,7 @@ function ExamRun({ initial, module, onSave, onLeave, onFinish }) {
           </button>
         </div>
 
-        {q.image && (
-          <div className="mb-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex justify-center">
-            <img src={q.image} alt="" className="max-h-36 w-auto object-contain" />
-          </div>
-        )}
+        {q.image && <QuestionImage src={q.image} className="mb-4" />}
 
         <h2 className="rd-lead font-bold text-slate-900 dark:text-white">{q.q}</h2>
 

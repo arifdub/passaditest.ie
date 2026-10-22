@@ -32,6 +32,8 @@ import ADI_PRACTICE from "./adiTheoryPracticeData";
 import ADI_BANK_TEACHING from "./adiBankTeaching";
 import ADI_BANK_VEHICLE from "./adiBankVehicle";
 import RULES_QUESTIONS from "./rulesQuestions";
+/* Bank 3 — topics reported from the real paper (October 2026). */
+import ADI_BANK_EXAM from "./adiBankExam";
 import { ROAD_SIGNS, ROAD_SIGN_CAT } from "./roadSignsData";
 
 /* Small, fast, stable string hash (FNV-1a). Not cryptographic — it only has
@@ -187,6 +189,7 @@ const SECTION_DEFS = [
       ...pick(ADI_EXPANSION, "adi-exp-procedure"),
       ...pick(RULES_QUESTIONS, "documents"),
       ...pick(ADI_BANK_TEACHING, "adi-b2-procedure"),
+      ...pick(ADI_BANK_EXAM, "adi-b3-procedure"),
     ],
   },
   {
@@ -210,6 +213,7 @@ const SECTION_DEFS = [
       ...pick(RULES_QUESTIONS, "responsible"),
       ...SIGN_QUESTIONS,
       ...pick(ADI_BANK_VEHICLE, "adi-b2-safety"),
+      ...pick(ADI_BANK_EXAM, "adi-b3-safety"),
     ],
   },
   {
@@ -260,6 +264,7 @@ const SECTION_DEFS = [
       ...pick(ADI_PRACTICE, "category-b-be-towing"),
       ...pick(ADI_EXPANSION, "adi-exp-categoryb"),
       ...pick(ADI_BANK_VEHICLE, "adi-b2-categoryb"),
+      ...pick(ADI_BANK_EXAM, "adi-b3-categoryb"),
     ],
   },
 ];
